@@ -16,6 +16,7 @@
   }
 }
 
+
 body {
   color: rgb(var(--foreground-rgb));
   background: linear-gradient(
@@ -30,4 +31,12 @@ body {
   .text-balance {
     text-wrap: balance;
   }
+}
+
+.main-color {
+  color: #D42B53;
+}
+
+.sub-color {
+  color: #FF364A;
 }
