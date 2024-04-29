@@ -6,17 +6,24 @@ import axios from 'axios';
 import LogoButton from '../../../public/LogoButton.png'
 import Image from 'next/image';
 
+import { Login } from '@/services/auth';
+import Cookies from 'js-cookie';
+
 const LoginPage = () => {
-  const [email, setEmail] = useState('');
+  const [memberId, setMemberId] = useState('');
   const [password, setPassword] = useState('');
   const router = useRouter();
-  const [accessToken, setAccessToken] = useState('');
 
   const handleLogin = async () => {
     try {
-      const response = await axios.post(`${process.env.BACKEND_URL}/login`, { email, password });
-      // 로그인 성공 시 처리
-      console.log(response.data);
+      const response = await Login(memberId, password);
+      console.log(response);
+      const { accessToken, refreshToken } = response.result;
+
+      Cookies.set('accessToken', accessToken);
+      Cookies.set('refreshToken', refreshToken);
+
+      router.push("/myPage");
     } catch (error) {
       // 로그인 실패 시 처리
       console.error('Error during login:', error);
@@ -28,7 +35,6 @@ const LoginPage = () => {
     try {
       const response = await axios.get(`${process.env.BACKEND_URL}/api/member/login/oauth2/${socialName}`);
       const { accessToken } = response.data;
-      setAccessToken(accessToken);
       console.log(response.data);
       console.log(response);
       console.log(response.data.result);
@@ -48,14 +54,13 @@ const LoginPage = () => {
 
     <div className="mb-4">
       <label htmlFor="email" className="block mb-2">이메일</label>
-      <input type="email" id="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="trippy@trippy.co.kr" className="border-b border-gray-300 rounded-none py-2 w-[320px]" />
+      <input type="email" id="email" onChange={(e) => setMemberId(e.target.value)} placeholder="trippy@trippy.co.kr" className="border-b border-gray-300 rounded-none py-2 w-[320px]" />
     </div>
 
     <div className="mb-4">
       <label htmlFor="password" className="block mb-2">비밀번호</label>
       <input type="password" id="password" value={password} onChange={(e) => setPassword(e.target.value)} className="border-b border-gray-300 rounded-none py-2 w-[320px]" />
     </div>
-
 
       <button onClick={handleLogin} className="bg-btn-color text-white px-4 rounded-md my-4 w-[320px] h-[44px]">로그인</button>
 
