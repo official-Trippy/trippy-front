@@ -6,9 +6,6 @@ import axios from 'axios';
 import LogoButton from '../../../public/LogoButton.png'
 import Image from 'next/image';
 
-const frontendUrl = 'http://localhost:3000'; // 프론트엔드 도메인 URL
-const backendUrl = 'http://localhost:8080'; // 백엔드 서버 URL
-
 const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -17,7 +14,7 @@ const LoginPage = () => {
 
   const handleLogin = async () => {
     try {
-      const response = await axios.post(`${backendUrl}/login`, { email, password });
+      const response = await axios.post(`${process.env.BACKEND_URL}/login`, { email, password });
       // 로그인 성공 시 처리
       console.log(response.data);
     } catch (error) {
@@ -27,9 +24,9 @@ const LoginPage = () => {
   };
 
   const handleSocialLogin = async (socialName: string) => {
-    const redirectUri = `${frontendUrl}/login`; // 로그인 후 리다이렉트할 주소
+    const redirectUri = `${process.env.frontendUrl}/login`; 
     try {
-      const response = await axios.get(`${backendUrl}/api/member/login/oauth2/${socialName}`);
+      const response = await axios.get(`${process.env.BACKEND_URL}/api/member/login/oauth2/${socialName}`);
       const { accessToken } = response.data;
       setAccessToken(accessToken);
       console.log(response.data);

@@ -6,10 +6,6 @@ import { useState } from 'react';
 import LogoButton from '../../../public/LogoButton.png'
 import Image from 'next/image';
 
-
-const frontendUrl = 'http://localhost:3000'; // 프론트엔드 도메인 URL
-const backendUrl = 'http://158.180.85.187:8080'; // 백엔드 서버 URL
-
 const RegisterPage = () => {
   const router = useRouter();
   const [accessToken, setAccessToken] = useState('');
@@ -34,7 +30,7 @@ const RegisterPage = () => {
   const handleSubmit = async (e: { preventDefault: () => void; }) => {
     e.preventDefault();
     try {
-      const response = await axios.post(`${backendUrl}/api/member/signup`, formData);
+      const response = await axios.post(`${process.env.BACKEND_URL}/api/member/signup`, formData);
       console.log(response.data);
     } catch (error) {
       console.error('Error during signup:', error);
