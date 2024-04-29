@@ -49,14 +49,14 @@ const LoginPage = () => {
         <Image src={LogoButton} alt="Logo" />
       </div>
 
-      <div className="mb-4">
-      <label htmlFor="email" className="block mb-2">이메일</label>
-      <input type="email" id="email" value={email} onChange={(e) => setEmail(e.target.value)} className="border-b border-gray-300 rounded-none px-4 py-2 w-[320px]" />
+    <div className="mb-4">
+      <label htmlFor="email" className="block mb-2">Email</label>
+      <input type="email" id="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="trippy@trippy.co.kr" className="border-b border-gray-300 rounded-none py-2 w-[320px]" />
     </div>
 
     <div className="mb-4">
       <label htmlFor="password" className="block mb-2">비밀번호</label>
-      <input type="password" id="password" value={password} onChange={(e) => setPassword(e.target.value)} className="border-b border-gray-300 rounded-none px-4 py-2 w-[320px]" />
+      <input type="password" id="password" value={password} onChange={(e) => setPassword(e.target.value)} className="border-b border-gray-300 rounded-none py-2 w-[320px]" />
     </div>
 
 
