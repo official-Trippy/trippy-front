@@ -65,7 +65,7 @@ const LoginPage = () => {
       <div className="flex justify-center">
         <a href="#" className="mx-4 text-[#9D9D9D]">계정 찾기</a>
         <a href="#" className="mx-4 text-[#9D9D9D]">비밀번호 찾기</a>
-        <a href="#" className="mx-4 text-[#9D9D9D]">회원가입하기</a>
+        <a href="/register" className="mx-4 text-[#9D9D9D]">회원가입하기</a>
       </div>
       <div className="flex flex-col my-10 items-center">
         <div className="bg-kakao-btn text-black px-4 rounded-md my-2 w-[320px] h-[44px] flex items-center justify-center" onClick={() => handleSocialLogin('kakao')}>
