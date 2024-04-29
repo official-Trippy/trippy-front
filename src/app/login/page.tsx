@@ -47,7 +47,7 @@ const LoginPage = () => {
       </div>
 
     <div className="mb-4">
-      <label htmlFor="email" className="block mb-2">Email</label>
+      <label htmlFor="email" className="block mb-2">이메일</label>
       <input type="email" id="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="trippy@trippy.co.kr" className="border-b border-gray-300 rounded-none py-2 w-[320px]" />
     </div>
 

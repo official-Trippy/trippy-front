@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@tanstack/react-query-next-experimental": "^5.32.0",
     "axios": "^1.6.8",
     "cors": "^2.8.5",
     "http-proxy": "^1.18.1",
