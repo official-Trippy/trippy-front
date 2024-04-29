@@ -15,6 +15,9 @@ const config: Config = {
       },
       colors: {
         'btn-color': '#FB3463',
+        'kakao-btn': '#FFE617',
+        'naver-btn': '#03C75A',
+        'google-btn': '#CFCFCF',
       }
     },
   },
