@@ -7,13 +7,16 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { isLoggedIn } from '@/services/auth';
+import Cookies from 'js-cookie';
 
 export default function Header() {
   const [loggedIn, setLoggedIn] = useState(false);
+  const [accessToken, setAccessToken] = useState('');
 
   useEffect(() => {
     setLoggedIn(isLoggedIn());
-  }, []);
+    setAccessToken(Cookies.get('accessToken') || '');
+  }, [Cookies.get('accessToken')]); // accessToken이 변경될 때마다 useEffect 실행
 
   return (
     <>
@@ -36,7 +39,7 @@ export default function Header() {
           <div className="mr-4">
             {/* 검색창 컴포넌트 */}
           </div>
-          {loggedIn ? (
+          {accessToken ? (
             <div className='flex'>
               <Link href="/write">
                 <button className="bg-btn-color text-white px-7 py-2 rounded-lg mr-8">글쓰기</button>
