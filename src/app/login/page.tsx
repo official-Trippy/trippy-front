@@ -23,15 +23,13 @@ const LoginPage = () => {
       Cookies.set('accessToken', accessToken);
       Cookies.set('refreshToken', refreshToken);
 
-      router.push("/myPage");
+      router.push("/home");
     } catch (error) {
-      // 로그인 실패 시 처리
       console.error('Error during login:', error);
     }
   };
 
   const handleSocialLogin = async (socialName: string) => {
-    const redirectUri = `${process.env.frontendUrl}/login`; 
     try {
       const response = await axios.get(`${process.env.BACKEND_URL}/api/member/login/oauth2/${socialName}`);
       const { accessToken } = response.data;

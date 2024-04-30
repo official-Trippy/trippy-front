@@ -1,4 +1,5 @@
 import axios from 'axios';
+import Cookies from 'js-cookie';
 
 const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
@@ -21,3 +22,10 @@ export async function Login(memberId: string, password: string) {
       throw new Error(`Error during login: ${error}`);
     }
 };
+
+export const isLoggedIn = () => {
+    const accessToken = Cookies.get('accessToken');
+    const refreshToken = Cookies.get('refreshToken');
+    return !!accessToken && !!refreshToken;
+};
+  
