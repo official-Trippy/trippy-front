@@ -5,25 +5,49 @@ import AlertImg from '../../../../public/AlertImg.png';
 import Profile from '../../../../public/Profile.png';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRecoilValue } from 'recoil';
 import { useState, useEffect } from 'react';
-import { isLoggedIn } from '@/services/auth';
+import { useRouter } from 'next/navigation';
+import { useRecoilState } from 'recoil';
+import { loginState } from '@/atoms/user';
 import Cookies from 'js-cookie';
 
 export default function Header() {
-  const [loggedIn, setLoggedIn] = useState(false);
-  const [accessToken, setAccessToken] = useState('');
+
+  const { isLoggedIn } = useRecoilValue(loginState);
+  const [, setLogin] = useRecoilState(loginState);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    setLoggedIn(isLoggedIn());
-    setAccessToken(Cookies.get('accessToken') || '');
-  }, [Cookies.get('accessToken')]); // accessToken이 변경될 때마다 useEffect 실행
+    const fetchLoginState = async () => {
+      try {
+        const accessToken = Cookies.get('accessToken');
+        const refreshToken = Cookies.get('refreshToken');
+        if (accessToken && refreshToken) {
+          setLogin({
+            isLoggedIn: true,
+            accessToken,
+            refreshToken,
+          });
+        }
+      } catch (error) {
+        console.error('Error fetching login state:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchLoginState();
+  }, []);
 
   return (
     <>
       <header className="flex justify-between items-center px-4 py-8 w-[80%] mx-auto">
         <div className="flex items-center">
           <div className="mr-4">
-            <Image src={LogoButton} alt="Logo" />
+            <Link href="/">
+                <Image src={LogoButton} alt="Logo" />
+            </Link>
           </div>
           <div className="flex space-x-4 text-lg">
             <Link href="/home">
@@ -39,7 +63,9 @@ export default function Header() {
           <div className="mr-4">
             {/* 검색창 컴포넌트 */}
           </div>
-          {accessToken ? (
+          {loading ? null : (
+             <>
+          {isLoggedIn ? (
             <div className='flex'>
               <Link href="/write">
                 <button className="bg-btn-color text-white px-7 py-2 rounded-lg mr-8">글쓰기</button>
@@ -60,6 +86,8 @@ export default function Header() {
               </Link>
             </div>
           )}
+          </>
+           )}
         </div>
       </header>
       <div className="my-[1%] border-[1px] border-lightGray/30"></div>

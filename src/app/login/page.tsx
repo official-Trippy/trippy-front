@@ -5,14 +5,20 @@ import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import LogoButton from '../../../public/LogoButton.png'
 import Image from 'next/image';
-
+import { useEffect } from 'react';
 import { Login } from '@/services/auth';
 import Cookies from 'js-cookie';
+import { useSetRecoilState } from 'recoil';
+import { loginState } from '@/atoms/user';
+import { useRecoilState } from 'recoil';
+
 
 const LoginPage = () => {
   const [memberId, setMemberId] = useState('');
   const [password, setPassword] = useState('');
   const router = useRouter();
+  const [login, setLogin] = useRecoilState(loginState);
+  const { isLoggedIn } = login;
 
   const handleLogin = async () => {
     try {
@@ -23,11 +29,18 @@ const LoginPage = () => {
       Cookies.set('accessToken', accessToken);
       Cookies.set('refreshToken', refreshToken);
 
+      setLogin({
+        isLoggedIn: true,
+        accessToken,
+        refreshToken,
+      });
+
       router.push("/home");
     } catch (error) {
       console.error('Error during login:', error);
     }
   };
+
 
   const handleSocialLogin = async (socialName: string) => {
     try {
@@ -37,7 +50,7 @@ const LoginPage = () => {
       console.log(response);
       console.log(response.data.result);
       console.log(accessToken);
-      router.push('/login');
+      router.push('/');
       console.log('Redirecting to login page...');
     } catch (error) {
       console.error('Error during social login:', error);
