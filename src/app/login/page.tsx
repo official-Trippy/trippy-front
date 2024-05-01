@@ -34,8 +34,8 @@ const LoginPage = () => {
         accessToken,
         refreshToken,
       });
-
       router.push("/home");
+      router.refresh();
     } catch (error) {
       console.error('Error during login:', error);
     }
