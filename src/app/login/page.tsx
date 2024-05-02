@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
-import LogoButton from '../../../public/LogoButton.png'
+import LogoMain from '../../../public/LogoMain.svg';
 import Image from 'next/image';
 import { useEffect } from 'react';
 import { Login } from '@/services/auth';
@@ -60,7 +60,7 @@ const LoginPage = () => {
   return (
     <div className="flex flex-col items-center pt-20">
       <div className="mb-8">
-        <Image src={LogoButton} alt="Logo" />
+        <Image src={LogoMain} alt="Logo" />
       </div>
 
     <div className="mb-4">

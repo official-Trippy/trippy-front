@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import Image from 'next/image';
-import LogoButton from '../../../public/LogoButton.png';
+import LogoMain from '../../../public/LogoMain.svg';
 import { signUp } from '@/services/auth';
 import SignUpData from '@/types/auth';
 import { useRouter } from 'next/navigation';
@@ -10,7 +10,7 @@ const BlogRegisterPage = () => {
   return (
     <div className="flex flex-col pt-20">
       <div className="flex items-center mb-8 justify-center"> 
-        <Image src={LogoButton} alt="Logo" />
+        <Image src={LogoMain} alt="Logo" />
       </div>
       <div className='w-[80%] mx-auto'>
         <div>
