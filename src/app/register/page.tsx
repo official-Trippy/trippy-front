@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
-import LogoButton from '../../../public/LogoButton.png';
+import LogoMain from '../../../public/LogoMain.svg';
 import { signUp } from '@/services/auth';
 import SignUpData from '@/types/auth';
 import { useRouter } from 'next/navigation';
@@ -41,8 +41,8 @@ const RegisterPage = () => {
     console.log(formData);
     try {
       await signUp(formData);
-      alert('회원가입이 성공적으로 완료되었습니다. 로그인 페이지로 이동합니다.');
-      router.push('/login');
+      alert('회원가입이 성공적으로 완료되었습니다. 블로그 설정 페이지로 이동합니다.');
+      router.push('/blogRegister');
     } catch (error) {
       console.error('Error during signup:', error);
     }
@@ -51,7 +51,7 @@ const RegisterPage = () => {
   return (
     <div className="flex flex-col items-center pt-20">
       <div className="mb-8">
-        <Image src={LogoButton} alt="Logo" />
+        <Image src={LogoMain} alt="Logo" />
       </div>
       <div>
         <form className="flex flex-col" onSubmit={handleSubmit}>

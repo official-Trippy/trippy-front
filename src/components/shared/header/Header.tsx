@@ -1,6 +1,6 @@
 'use client'
 
-import LogoButton from '../../../../public/LogoButton.png';
+import LogoHeader from '../../../../public/LogoHeader.svg';
 import AlertImg from '../../../../public/AlertImg.png';
 import Profile from '../../../../public/Profile.png';
 import Image from 'next/image';
@@ -42,11 +42,11 @@ export default function Header() {
 
   return (
     <>
-      <header className="flex justify-between items-center px-4 py-8 w-[80%] mx-auto">
+      <header className="flex justify-between items-center py-8 w-[80%] mx-auto">
         <div className="flex items-center">
           <div className="mr-4">
             <Link href="/">
-                <Image src={LogoButton} alt="Logo" />
+                <Image src={LogoHeader} alt="Logo" />
             </Link>
           </div>
           <div className="flex space-x-4 text-lg">
