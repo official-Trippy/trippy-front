@@ -113,6 +113,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSubmit }) => {
         </div>
       </div>
       <div className="mb-4 flex items-center">
+        
         <input type="checkbox" id="agreement" checked={agreementChecked} onChange={handleAgreementChange} className="mr-2" />
         <label htmlFor="agreement" className="text-black">
           <span onClick={() => router.push('/serviceInfo')} style={{ color: 'gray', textDecoration: 'underline', cursor: 'pointer' }}>서비스 이용약관</span>과
@@ -124,7 +125,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSubmit }) => {
       <div className="text-center">
         <button
           type="submit"
-          className={`mx-auto mt-32 mb-32 w-56 h-16 bg-btn-color bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 focus:outline-none focus:bg-blue-600 ${
+          className={`mx-auto mt-32 mb-32 w-56 h-16 bg-btn-color text-white py-2 rounded-lg focus:outline-none ${
           !verificationClicked || !passwordValid || !passwordMatch || !agreementChecked ? 'cursor-not-allowed bg-gray-400 hover:bg-gray-400' : ''
           }`}
           disabled={!verificationClicked || !passwordValid || !passwordMatch || !agreementChecked}>
