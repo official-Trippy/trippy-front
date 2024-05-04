@@ -51,10 +51,10 @@ export default function Header() {
           </div>
           <div className="flex space-x-4 text-lg">
             <Link href="/home">
-              <div className="text-gray-800 px-10">홈</div>
+              <div className="text-gray-800 px-10" style={{fontSize: '1.4rem'}}>홈</div>
             </Link>
             <Link href="/ootd">
-              <div className="text-gray-800">OOTD</div>
+              <div className="text-gray-800" style={{fontSize: '1.4rem'}}>OOTD</div>
             </Link>
           </div>
         </div>
@@ -68,7 +68,7 @@ export default function Header() {
           {isLoggedIn ? (
             <div className='flex'>
               <Link href="/write">
-                <button className="bg-btn-color text-white px-7 py-2 rounded-lg mr-8">글쓰기</button>
+                <button className="-[8.6rem] h-[3.5rem] bg-btn-color text-white px-7 py-2 rounded-lg mr-8" style={{fontSize: '1.6rem'}}>글쓰기</button>
               </Link>
               <div className="mr-8 w-[24px] my-auto">
                 <Image src={AlertImg} alt="alert" />
@@ -82,7 +82,7 @@ export default function Header() {
           ) : (
             <div>
               <Link href="/login">
-                <button className="bg-btn-color text-white px-6 py-2 rounded-lg">로그인</button>
+                <button className="w-[8.6rem] h-[3.5rem] bg-btn-color text-white px-6 py-2 rounded-lg" style={{fontSize: '1.6rem'}}>로그인</button>
               </Link>
             </div>
           )}
