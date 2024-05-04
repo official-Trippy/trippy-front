@@ -42,7 +42,7 @@ export default function Header() {
 
   return (
     <>
-      <header className="flex justify-between items-center py-8 w-[80%] mx-auto">
+      <header className="header flex justify-between items-center w-[80%] mx-auto">
         <div className="flex items-center">
           <div className="mr-4">
             <Link href="/">
@@ -90,7 +90,7 @@ export default function Header() {
            )}
         </div>
       </header>
-      <div className="my-[1%] border-[1px] border-lightGray/30"></div>
+      <div className="border-[0.5px] border-lightGray/30"></div>
     </>
   );
 }

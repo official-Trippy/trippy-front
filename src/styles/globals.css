@@ -31,6 +31,10 @@ body {
   .text-balance {
     text-wrap: balance;
   }
+
+  .header {
+    height: 104px;
+  }
 }
 
 .sign-up-info {
