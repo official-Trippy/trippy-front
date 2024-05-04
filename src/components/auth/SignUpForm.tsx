@@ -90,7 +90,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSubmit }) => {
       <div className="mb-4 relative">
         <label htmlFor="email" className="sign-up-info block mt-16">이메일</label>
         <input type="email" id="email" value={email} onChange={handleEmailChange} placeholder="이메일 입력" className="w-full px-4 py-2 mt-8 mb-2 h-16 rounded-xl border border-gray-300 focus:border-blue-500 focus:outline-none" />
-        <button type="button" onClick={handleEmailVerification} disabled={!emailValid || duplicateMessage !== '사용 가능한 이메일입니다.'} className={`absolute top-1/2 mt-0.5 mb-1 transform -translate-y-1/2 right-0 mr-2 px-4 py-2 ${duplicateMessage === '사용 가능한 이메일입니다.' ? 'bg-black text-white hover:bg-gray-900 focus:outline-none focus:bg-gray-900' : 'bg-gray-400 text-white cursor-not-allowed'} rounded-lg`}>인증하기</button>
+        <button type="button" onClick={handleEmailVerification} disabled={!emailValid || duplicateMessage !== '사용 가능한 이메일입니다.'} className={`absolute top-1/2 mb-1 transform -translate-y-1/2 right-0 mr-2 px-4 py-2 ${duplicateMessage === '사용 가능한 이메일입니다.' ? 'bg-black text-white hover:bg-gray-900 focus:outline-none focus:bg-gray-900' : 'bg-gray-400 text-white cursor-not-allowed'} rounded-lg`}>인증하기</button>
         <div className='h-12'>
           <p className="text-red-500">{emailErrorMessage}</p>
           <p className="text-green-500">{duplicateMessage}</p>
