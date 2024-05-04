@@ -20,7 +20,7 @@ export default function Home() {
 
             </div>
             <div className="px-[1rem]">
-              <h1 className="font-medium text-[2rem]">제목이라고요?</h1>
+              <h1 className="font-medium text-[2rem]">제목입니두우우</h1>
               <span className="font-normal text-[1.2rem]">머시머시기</span>
             </div>
           </div>
