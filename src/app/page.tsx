@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Profile from "../../public/Profile.png"
-import Recommend from "@/components/home/recommend";
-import RecentPost from "@/components/home/RecentPost";
+import Recommend from "@/components/pages/home/recommend";
+import RecentPost from "@/components/pages/home/RecentPost";
 
 
 export default function Home() {

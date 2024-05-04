@@ -78,9 +78,9 @@ const RegisterPage = () => {
           <div className="flex flex-col">
             <label htmlFor="gender" className="text-sm mt-2">성별</label>
             <select className="border-b border-gray-300 rounded-none py-2 w-[320px]" name="gender" value={formData.gender} onChange={handleChange}>
-                <option value="">성별을 선택해주세요</option>
-                <option value="male">남성</option>
-                <option value="female">여성</option>
+              <option value="">성별을 선택해주세요</option>
+              <option value="male">남성</option>
+              <option value="female">여성</option>
             </select>
           </div>
           <button className="bg-btn-color text-white px-4 rounded-md my-4 w-[320px] h-[44px]" type="submit">회원가입</button>

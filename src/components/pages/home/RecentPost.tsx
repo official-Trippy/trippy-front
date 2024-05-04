@@ -20,6 +20,7 @@ function RecentPost({ children }: HomeRecentProps) {
                     </select>
                 </div>
             </div>
+
             {children}
         </div>
     )
