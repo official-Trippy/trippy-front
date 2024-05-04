@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import Swal from 'sweetalert2';
 import { checkEmailDuplicate } from '@/services/auth';
 
 interface SignUpFormProps {
@@ -15,6 +16,8 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSubmit }) => {
   const [passwordValid, setPasswordValid] = useState(false);
   const [passwordErrorMessage, setPasswordErrorMessage] = useState('');
   const [passwordMatch, setPasswordMatch] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false); // 모달 열림 여부
+  const [verificationClicked, setVerificationClicked] = useState(false); // 인증하기 버튼 클릭 여부
 
   const handleEmailChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -37,6 +40,17 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSubmit }) => {
       }
     } else {
       setDuplicateMessage('');
+    }
+  };
+
+  const handleEmailVerification = async () => {
+    // 사용 가능한 이메일인 경우에만 실행
+    if (duplicateMessage === '사용 가능한 이메일입니다.') {
+      setVerificationClicked(true); // 인증하기 버튼 클릭 처리
+      Swal.fire({
+        title: '이메일을 보냈습니다.',
+        icon: 'success', // 체크 이모티콘
+      });
     }
   };
 
@@ -67,11 +81,11 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSubmit }) => {
 
   return (
     <form onSubmit={handleSubmit} className="w-[80%] mx-auto mt-24">
-        <div className='sign-up-info'>로그인 정보를 설정해주세요</div>
+      <div className='sign-up-info'>로그인 정보를 설정해주세요</div>
       <div className="mb-4 relative">
         <label htmlFor="email" className="sign-up-info block mt-16">이메일</label>
         <input type="email" id="email" value={email} onChange={handleEmailChange} placeholder="이메일 입력" className="w-full px-4 py-2 mt-8 h-16 rounded border border-gray-300 focus:border-blue-500 focus:outline-none" />
-        <button type="button" className="absolute top-1/2 mt-0.5 transform -translate-y-1/2 right-0 mr-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none focus:bg-blue-600">인증하기</button>
+        <button type="button" onClick={handleEmailVerification} disabled={!emailValid || duplicateMessage !== '사용 가능한 이메일입니다.'} className={`absolute top-1/2 mt-0.5 transform -translate-y-1/2 right-0 mr-2 px-4 py-2 ${duplicateMessage === '사용 가능한 이메일입니다.' ? 'bg-black text-white hover:bg-gray-900 focus:outline-none focus:bg-gray-900' : 'bg-gray-400 text-gray-600 cursor-not-allowed'} rounded`}>인증하기</button>
         <div className='h-12'>
           <p className="text-red-500 mt-1">{emailErrorMessage}</p>
           <p className="text-green-500 mt-1">{duplicateMessage}</p>
@@ -81,18 +95,29 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSubmit }) => {
         <label htmlFor="password" className="sign-up-info block">비밀번호</label>
         <input type="password" id="password" value={password} onChange={handlePasswordChange} placeholder="비밀번호 입력" className="w-full px-4 py-2 mt-8 h-16 rounded border border-gray-300 focus:border-blue-500 focus:outline-none" />
         <div className='h-12'>
-        {passwordErrorMessage && <p className="text-red-500">{passwordErrorMessage}</p>}
+          {passwordErrorMessage && <p className="text-red-500">{passwordErrorMessage}</p>}
         </div>
       </div>
       <div className="mb-4">
         <label htmlFor="confirmPassword" className="sign-up-info block">비밀번호 확인</label>
         <input type="password" id="confirmPassword" value={confirmPassword} onChange={handleConfirmPasswordChange} placeholder="비밀번호 재입력" className="w-full px-4 py-2 mt-8 h-16 rounded border border-gray-300 focus:border-blue-500 focus:outline-none" />
         <div className='h-12'>
-        {confirmPassword && !passwordMatch && <p className={`text-red-500`}>비밀번호가 일치하지 않습니다.</p>}
-        {passwordMatch && confirmPassword && <p className={`text-green-500`}>비밀번호가 일치합니다.</p>}
+          {confirmPassword && !passwordMatch && <p className={`text-red-500`}>비밀번호가 일치하지 않습니다.</p>}
+          {passwordMatch && confirmPassword && <p className={`text-green-500`}>비밀번호가 일치합니다.</p>}
         </div>
       </div>
-      <button type="submit" className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 focus:outline-none focus:bg-blue-600">회원가입</button>
+      <button type="submit" className={`w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 focus:outline-none focus:bg-blue-600 ${!verificationClicked || !passwordValid || !passwordMatch ? 'cursor-not-allowed bg-gray-400 hover:bg-gray-400' : ''}`} disabled={!verificationClicked || !passwordValid || !passwordMatch}>회원가입</button>
+      
+      {/* 모달 */}
+      {/* 모달 */}
+      {modalOpen && (
+        <div className="modal">
+          <div className="modal-content">
+            <p>이메일을 보냈습니다. 확인해주세요.</p>
+            <button onClick={() => setModalOpen(false)}>확인</button>
+          </div>
+        </div>
+      )}
     </form>
   );
 };
