@@ -16,6 +16,10 @@
   }
 }
 
+html {
+  font-size: 62.5%;
+  /* 1rem = 10px */
+}
 
 body {
   color: rgb(var(--foreground-rgb));
@@ -33,7 +37,7 @@ body {
   }
 
   .header {
-    height: 104px;
+    height: 80px;
   }
 }
 

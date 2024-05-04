@@ -90,7 +90,7 @@ export default function Header() {
            )}
         </div>
       </header>
-      <div className="border-[0.5px] border-lightGray/30"></div>
+      {/* <div className="border-[0.5px] border-lightGray/30"></div> */}
     </>
   );
 }
