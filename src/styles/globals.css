@@ -32,3 +32,11 @@ body {
     text-wrap: balance;
   }
 }
+
+.sign-up-info {
+  color: #292929;
+  font-family: Pretendard;
+  font-size: 20px;
+  font-weight: 600;
+  line-height: normal;
+}
