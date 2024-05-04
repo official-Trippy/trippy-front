@@ -59,7 +59,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSubmit }) => {
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setPassword(value);
-    const isValid = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,14}$/.test(value);
+    const isValid = /^(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,14}$/.test(value);
     setPasswordValid(isValid);
     setPasswordErrorMessage(isValid ? '' : '비밀번호 형식이 맞지 않습니다.');
     setPasswordMatch(false);
@@ -101,6 +101,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSubmit }) => {
         <input type="password" id="password" value={password} onChange={handlePasswordChange} placeholder="비밀번호 입력" className="w-full px-4 py-2 mt-8 mb-2 h-16 rounded-xl border border-gray-300 focus:border-blue-500 focus:outline-none" />
         <div className='h-12'>
           {passwordErrorMessage && <p className="text-red-500">{passwordErrorMessage}</p>}
+          {passwordValid && <p className="text-green-500">사용 가능한 비밀번호입니다.</p>}
         </div>
       </div>
       <div className="mb-4">
