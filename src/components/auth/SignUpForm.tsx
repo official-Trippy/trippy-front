@@ -89,7 +89,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSubmit }) => {
       <div className='sign-up-info'>로그인 정보를 설정해주세요</div>
       <div className="mb-4 relative">
         <label htmlFor="email" className="sign-up-info block mt-16">이메일</label>
-        <input type="email" id="email" value={email} onChange={handleEmailChange} placeholder="이메일 입력" className="w-full px-4 py-2 mt-8 mb-2 h-16 rounded-xl border border-gray-300 focus:border-blue-500 focus:outline-none" />
+        <input type="email" id="email" value={email} onChange={handleEmailChange} placeholder="Trippy@trip.com" className="w-full px-4 py-2 mt-8 mb-2 h-16 rounded-xl border border-gray-300 focus:border-blue-500 focus:outline-none" />
         <button type="button" onClick={handleEmailVerification} disabled={!emailValid || duplicateMessage !== '사용 가능한 이메일입니다.'} className={`absolute top-1/2 mb-1 transform -translate-y-1/2 right-0 mr-2 px-4 py-2 ${duplicateMessage === '사용 가능한 이메일입니다.' ? 'bg-black text-white hover:bg-gray-900 focus:outline-none focus:bg-gray-900' : 'bg-gray-400 text-white cursor-not-allowed'} rounded-lg`}>인증하기</button>
         <div className='h-12'>
           <p className="text-red-500">{emailErrorMessage}</p>
@@ -98,7 +98,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSubmit }) => {
       </div>
       <div className="mb-4">
         <label htmlFor="password" className="sign-up-info block">비밀번호</label>
-        <input type="password" id="password" value={password} onChange={handlePasswordChange} placeholder="비밀번호 입력" className="w-full px-4 py-2 mt-8 mb-2 h-16 rounded-xl border border-gray-300 focus:border-blue-500 focus:outline-none" />
+        <input type="password" id="password" value={password} onChange={handlePasswordChange} placeholder="영어, 숫자, 특수 기호를 포함한 8~14자리" className="w-full px-4 py-2 mt-8 mb-2 h-16 rounded-xl border border-gray-300 focus:border-blue-500 focus:outline-none" />
         <div className='h-12'>
           {passwordErrorMessage && <p className="text-red-500">{passwordErrorMessage}</p>}
           {passwordValid && <p className="text-green-500">사용 가능한 비밀번호입니다.</p>}
@@ -106,7 +106,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSubmit }) => {
       </div>
       <div className="mb-4">
         <label htmlFor="confirmPassword" className="sign-up-info block">비밀번호 확인</label>
-        <input type="password" id="confirmPassword" value={confirmPassword} onChange={handleConfirmPasswordChange} placeholder="비밀번호 재입력" className="w-full px-4 py-2 mt-8 mb-2 h-16 rounded-xl border border-gray-300 focus:border-blue-500 focus:outline-none" />
+        <input type="password" id="confirmPassword" value={confirmPassword} onChange={handleConfirmPasswordChange} placeholder="영어, 숫자, 특수 기호를 포함한 8~14자리" className="w-full px-4 py-2 mt-8 mb-2 h-16 rounded-xl border border-gray-300 focus:border-blue-500 focus:outline-none" />
         <div className='h-12'>
           {confirmPassword && !passwordMatch && <p className={`text-red-500`}>비밀번호가 일치하지 않습니다.</p>}
           {passwordMatch && confirmPassword && <p className={`text-green-500`}>비밀번호가 일치합니다.</p>}
