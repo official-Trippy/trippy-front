@@ -18,7 +18,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <RecoilRoot>
-        {pathname !== "/signUp" && pathname !== "/login" && pathname !== "/blogRegister" && <Header />}
+        {pathname !== "/signUp" && pathname !== "/login" && pathname !== "/blogRegister" && pathname !== "/blogRegister2" && <Header />}
           {children}
         </RecoilRoot>
       </body>
