@@ -84,6 +84,44 @@ body {
   line-height: normal;
 }
 
+.grid-cols-5 {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 1.35rem 1rem; 
+}
+
+.favorite-btn-font {
+  font-family: Pretendard;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+
+.favorite-btn-inactive {
+  display: flex;
+  width: 126px;
+  height: 63px;
+  padding: 12px 30px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 12.081px;
+  background:#F5F5F5;
+  color: #9D9D9D;
+}
+
+.favorite-btn-active {
+  display: flex;
+  width: 126px;
+  height: 63px;
+  padding: 12px 30px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 12.081px;
+  background:#FB3463;
+  color: #FFF;
+}
+
 .custom-label {
   display: flex;
   width: 220px;

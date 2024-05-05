@@ -1,7 +1,9 @@
 import { useState } from "react";
 import Swal from "sweetalert2";
+import Image from "next/image";
 import { checkEmailDuplicate } from "@/services/auth";
 import { useRouter } from "next/navigation";
+import LogoMain from "../../../public/LogoMain.svg";
 
 interface SignUpFormProps {
   onSubmit: (data: { email: string; password: string }) => void;
@@ -94,8 +96,9 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSubmit }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="w-[80%] mx-auto mt-[9.5rem]">
-      <div className="sign-up-info">로그인 정보를 설정해주세요</div>
+    <form onSubmit={handleSubmit} className="w-[80%] mx-auto mt-[15rem]">
+         <Image src={LogoMain} alt="Logo" className="mx-auto"/>
+      <div className="sign-up-info mt-[8rem]">로그인 정보를 설정해주세요</div>
       <label htmlFor="email" className="sign-up-info block mt-[6.9rem]">
         이메일
       </label>

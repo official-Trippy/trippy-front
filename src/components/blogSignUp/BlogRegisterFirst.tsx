@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 import BlogStep1 from "../../../public/BlogStep1.svg";
 import DefaultProfileImg from "../../../public/DefaultProfileImg.svg";
+import LogoMain from "../../../public/LogoMain.svg";
 import {
   checkNickNameDuplicate,
   checkBlogNameDuplicate,
@@ -104,9 +105,10 @@ const BlogRegisterFirst = () => {
   };
 
   return (
-    <div className="w-[80%] mx-auto mt-[10.9rem]">
+    <div className="w-[80%] mx-auto mt-[15rem]">
+       {/* <Image src={LogoMain} alt="Logo" className="mx-auto"/> */}
       <Image src={BlogStep1} alt="Logo" className="w-[47.7rem] mx-auto" />
-      <div className="mt-[9.4rem]">
+      <div className="mt-[8rem]">
         <div className="sign-up-info">기본 회원 정보를 등록해주세요</div>
         <div className="mt-[6.82rem]">
           <div className="sign-up-info">프로필 사진</div>

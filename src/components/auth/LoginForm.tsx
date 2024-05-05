@@ -24,7 +24,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSubmit }) => {
   };
 
   return (
-    <div className="w-[80%] mx-auto mt-[17rem]">
+    <div className="w-[80%] mx-auto mt-[15rem]">
       <form
         onSubmit={handleSubmit}
         className="flex flex-col items-center"
@@ -39,7 +39,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSubmit }) => {
             id="email"
             onChange={(e) => setMemberId(e.target.value)}
             placeholder="trippy@trippy.co.kr"
-            className="font-[1.2rem] border-b border-gray-300 rounded-none py-2 w-[320px]"
+            className="border-b border-gray-300 rounded-none py-2 w-[320px]"
             style={{ fontSize: "1.6rem" }}
           />
         </div>
@@ -62,13 +62,13 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSubmit }) => {
         </button>
       </form>
       <div className="flex justify-center mt-[2rem] mb-[4rem]">
-        <a href="#" className="mx-4 text-[#9D9D9D]">
+        <a href="#" className="mx-4 text-[#9D9D9D] font-[1.2rem]" style={{ fontSize: "1.2rem" }}>
           계정 찾기
         </a>
-        <a href="#" className="mx-4 text-[#9D9D9D]">
+        <a href="#" className="mx-4 text-[#9D9D9D]" style={{ fontSize: "1.2rem" }}>
           비밀번호 찾기
         </a>
-        <a href="/register" className="mx-4 text-[#9D9D9D]">
+        <a href="/register" className="mx-4 text-[#9D9D9D]" style={{ fontSize: "1.2rem" }}>
           회원가입하기
         </a>
       </div>
