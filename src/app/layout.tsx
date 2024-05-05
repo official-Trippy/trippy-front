@@ -4,6 +4,7 @@ import { RecoilRoot } from 'recoil';
 import { Inter } from "next/font/google";
 import "../styles/globals.css";
 import Header from "@/components/shared/header/Header";
+import { usePathname } from "next/navigation";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -12,11 +13,12 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const pathname = usePathname();
   return (
     <html lang="en">
       <body className={inter.className}>
         <RecoilRoot>
-          <Header />
+        {pathname !== "/signUp" && pathname !== "/login" && pathname !== "/blogRegister" && <Header />}
           {children}
         </RecoilRoot>
       </body>

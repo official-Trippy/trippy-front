@@ -64,8 +64,8 @@ const BlogRegisterFirst = () => {
 
   const handleBlogNameBlur = async (value: string) => {
     try {
-      const { isDuplicated } = await checkBlogNameDuplicate(value);
-      if (isDuplicated) {
+      const { duplicated } = await checkBlogNameDuplicate(value);
+      if (duplicated) {
         setBlogNameError("중복된 블로그 이름입니다.");
       } else {
         setBlogNameError("사용 가능한 블로그 이름입니다.");

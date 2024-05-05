@@ -25,10 +25,10 @@ export async function checkBlogNameDuplicate(blogName: string) {
       const data = response.data;
       console.log(response);
       console.log(data);
-      if (data.isSuccess && data.result && data.result.isDuplicated) {
-        return { isDuplicated: true };
+      if (data.isSuccess && data.result && data.result.duplicated) {
+        return { duplicated: true };
       } else {
-        return { isDuplicated: false };
+        return { duplicated: false };
       }
     } catch (error) {
       throw new Error(`Error checking email duplication: ${error}`);
