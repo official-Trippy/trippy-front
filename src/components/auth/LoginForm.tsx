@@ -24,16 +24,14 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSubmit }) => {
   };
 
   return (
-    <div className="w-[80%] mx-auto mt-[9.5rem]">
+    <div className="w-[80%] mx-auto mt-[19rem]">
       <form
         onSubmit={handleSubmit}
-        className="flex flex-col items-center pt-20"
+        className="flex flex-col items-center"
       >
-        <div className="mb-8">
           <Image src={LogoMain} alt="Logo" />
-        </div>
-        <div className="mb-4">
-          <label htmlFor="email" className="block mb-2">
+        <div className="flex flex-col mt-[6rem]">
+          <label htmlFor="email" className="login-info mb-2">
             이메일
           </label>
           <input
@@ -45,8 +43,8 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSubmit }) => {
           />
         </div>
 
-        <div className="mb-4">
-          <label htmlFor="password" className="block mb-2">
+        <div className="flex flex-col mt-[2rem]">
+          <label htmlFor="password" className="login-info mb-2">
             비밀번호
           </label>
           <input
@@ -54,14 +52,14 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSubmit }) => {
             id="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="border-b border-gray-300 rounded-none py-2 w-[320px]"
+            className=".email-input border-b border-gray-300 rounded-none py-2 w-[320px]"
           />
         </div>
-        <button className="bg-btn-color text-white px-4 rounded-md my-4 w-[320px] h-[44px]">
+        <button className="login-btn bg-btn-color text-white mt-[2.4rem] px-4 rounded-md w-[320px] h-[44px]">
           로그인
         </button>
       </form>
-      <div className="flex justify-center">
+      <div className="flex justify-center mt-[2rem] mb-[4rem]">
         <a href="#" className="mx-4 text-[#9D9D9D]">
           계정 찾기
         </a>

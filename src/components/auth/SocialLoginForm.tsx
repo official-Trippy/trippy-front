@@ -25,19 +25,19 @@ const SocialLoginForm = () => {
   return (
     <div className="flex flex-col my-10 items-center">
       <div
-        className="bg-kakao-btn text-black px-4 rounded-md my-2 w-[320px] h-[44px] flex items-center justify-center"
+        className="login-btn bg-kakao-btn text-black px-4 rounded-md my-2 w-[320px] h-[44px] flex items-center justify-center"
         onClick={() => handleSocialLogin("kakao")}
       >
         카카오로 계속하기
       </div>
       <div
-        className="bg-naver-btn text-white px-4 rounded-md my-2 w-[320px] h-[44px] flex items-center justify-center"
+        className="login-btn bg-naver-btn text-white px-4 rounded-md my-2 w-[320px] h-[44px] flex items-center justify-center"
         onClick={() => handleSocialLogin("naver")}
       >
         네이버로 계속하기
       </div>
       <div
-        className="bg-google-btn text-black px-4 rounded-md my-2 w-[320px] h-[44px] flex items-center justify-center"
+        className="login-btn bg-google-btn text-black px-4 rounded-md my-2 w-[320px] h-[44px] flex items-center justify-center"
         onClick={() => handleSocialLogin("google")}
       >
         구글로 계속하기

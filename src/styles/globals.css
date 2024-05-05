@@ -28,7 +28,7 @@ body {
       transparent,
       rgb(var(--background-end-rgb))
     ) */
-    /* rgb(var(--background-start-rgb)); */
+  /* rgb(var(--background-start-rgb)); */
 }
 
 @layer utilities {
@@ -49,6 +49,32 @@ body {
   line-height: normal;
 }
 
+.login-info {
+  color: #292929;
+  font-family: Pretendard;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: normal;
+}
+
+.email-input {
+  color: #cfcfcf;
+  font-family: Pretendard;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+
+.login-btn {
+  text-align: center;
+  font-family: Pretendard;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+}
+
 .custom-label {
   display: flex;
   width: 220px;
@@ -58,22 +84,22 @@ body {
   align-items: center;
   flex-shrink: 0;
   border-radius: 8px;
-  background: var(--4, #F5F5F5);
-  cursor: pointer; 
+  background: var(--4, #f5f5f5);
+  cursor: pointer;
   color: black;
   font-size: 16px;
-  font-weight: bold; 
-  text-align: center; 
+  font-weight: bold;
+  text-align: center;
   text-transform: uppercase;
-  text-decoration: none; 
+  text-decoration: none;
 }
 
 .custom-label:hover {
-  background-color: #FB3463;
+  background-color: #fb3463;
   color: white;
 }
 
 .custom-label:focus {
-  background-color: #FB3463;
+  background-color: #fb3463;
   color: white;
 }
