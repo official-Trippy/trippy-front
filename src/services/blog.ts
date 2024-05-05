@@ -9,7 +9,7 @@ export async function checkNickNameDuplicate(nickName: string) {
       const data = response.data;
       console.log(response);
       console.log(data);
-      if (data.isSuccess && data.result && data.result.isDuplicated) {
+      if (data.isSuccess && data.result && data.result.duplicated) {
         return { duplicated: true };
       } else {
         return { duplicated: false };
@@ -19,16 +19,16 @@ export async function checkNickNameDuplicate(nickName: string) {
     }
 }
 
-export async function checkBlogDuplicate(blogName: string) {
+export async function checkBlogNameDuplicate(blogName: string) {
     try {
       const response = await axios.get(`${backendUrl}/api/member/isDuplicated?blogName=${blogName}`);
       const data = response.data;
       console.log(response);
       console.log(data);
       if (data.isSuccess && data.result && data.result.isDuplicated) {
-        return { duplicated: true };
+        return { isDuplicated: true };
       } else {
-        return { duplicated: false };
+        return { isDuplicated: false };
       }
     } catch (error) {
       throw new Error(`Error checking email duplication: ${error}`);

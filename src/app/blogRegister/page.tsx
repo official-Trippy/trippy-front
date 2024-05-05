@@ -1,26 +1,9 @@
-import { useState } from 'react';
-import Image from 'next/image';
-import LogoMain from '../../../public/LogoMain.svg';
-import { signUp } from '@/services/auth';
-import SignUpData from '@/types/auth';
-import { useRouter } from 'next/navigation';
+import BlogRegisterFirst from "@/components/blogSignUp/BlogRegisterFirst";
 
 const BlogRegisterPage = () => {
   
   return (
-    <div className="flex flex-col pt-20">
-      <div className="flex items-center mb-8 justify-center"> 
-        <Image src={LogoMain} alt="Logo" />
-      </div>
-      <div className='w-[80%] mx-auto'>
-        <div>
-            <a className=''>회원가입</a>
-        </div>
-        <div>
-            <a className=''>프로필사진</a>
-        </div>
-      </div>
-    </div>
+    <BlogRegisterFirst />
   );
 };
 

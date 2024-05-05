@@ -48,3 +48,32 @@ body {
   font-weight: 600;
   line-height: normal;
 }
+
+.custom-label {
+  display: flex;
+  width: 220px;
+  height: 60px;
+  padding: 20px 50px 20px 50px;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+  border-radius: 8px;
+  background: var(--4, #F5F5F5);
+  cursor: pointer; 
+  color: black;
+  font-size: 16px;
+  font-weight: bold; 
+  text-align: center; 
+  text-transform: uppercase;
+  text-decoration: none; 
+}
+
+.custom-label:hover {
+  background-color: #FB3463;
+  color: white;
+}
+
+.custom-label:focus {
+  background-color: #FB3463;
+  color: white;
+}
