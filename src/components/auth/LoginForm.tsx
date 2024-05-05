@@ -24,7 +24,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSubmit }) => {
   };
 
   return (
-    <div className="w-[80%] mx-auto mt-[19rem]">
+    <div className="w-[80%] mx-auto mt-[17rem]">
       <form
         onSubmit={handleSubmit}
         className="flex flex-col items-center"
@@ -39,7 +39,8 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSubmit }) => {
             id="email"
             onChange={(e) => setMemberId(e.target.value)}
             placeholder="trippy@trippy.co.kr"
-            className="border-b border-gray-300 rounded-none py-2 w-[320px]"
+            className="font-[1.2rem] border-b border-gray-300 rounded-none py-2 w-[320px]"
+            style={{ fontSize: "1.6rem" }}
           />
         </div>
 
@@ -53,6 +54,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSubmit }) => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             className=".email-input border-b border-gray-300 rounded-none py-2 w-[320px]"
+            style={{ fontSize: "1.6rem" }}
           />
         </div>
         <button className="login-btn bg-btn-color text-white mt-[2.4rem] px-4 rounded-md w-[320px] h-[44px]">
