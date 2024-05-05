@@ -4,7 +4,10 @@ import React, { useState } from "react";
 import Image from "next/image";
 import BlogStep1 from "../../../public/BlogStep1.svg";
 import DefaultProfileImg from "../../../public/DefaultProfileImg.svg";
-import { checkNickNameDuplicate, checkBlogNameDuplicate } from "@/services/blog";
+import {
+  checkNickNameDuplicate,
+  checkBlogNameDuplicate,
+} from "@/services/blog";
 
 const BlogRegisterFirst = () => {
   const [profileImage, setProfileImage] = useState<string | null>(null);
@@ -35,7 +38,9 @@ const BlogRegisterFirst = () => {
       }
     } catch (error) {
       console.error("Error checking nickname duplication:", error);
-      setNickNameError("서버에서 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
+      setNickNameError(
+        "서버에서 오류가 발생했습니다. 잠시 후 다시 시도해주세요."
+      );
     }
   };
 
@@ -67,7 +72,9 @@ const BlogRegisterFirst = () => {
       }
     } catch (error) {
       console.error("Error checking blog name duplication:", error);
-      setBlogNameError("서버에서 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
+      setBlogNameError(
+        "서버에서 오류가 발생했습니다. 잠시 후 다시 시도해주세요."
+      );
     }
   };
 
@@ -162,7 +169,13 @@ const BlogRegisterFirst = () => {
               />
               <div className="h-[1.7rem] mt-[1.2rem]">
                 {nickNameError && (
-                  <p className={`text-${nickNameError.includes("사용 가능") ? "green" : "red"}-500`}>{nickNameError}</p>
+                  <p
+                    className={`text-${
+                      nickNameError.includes("사용 가능") ? "green" : "red"
+                    }-500`}
+                  >
+                    {nickNameError}
+                  </p>
                 )}
               </div>
             </div>
@@ -180,9 +193,15 @@ const BlogRegisterFirst = () => {
                 style={{ background: "var(--4, #F5F5F5)", fontSize: "1.5rem" }}
               />
               <div className="h-[1.7rem] mt-[1.2rem]">
-              {blogNameError && (
-                <p className={`text-${blogNameError.includes("사용 가능") ? "green" : "red"}-500`}>{blogNameError}</p>
-              )}
+                {blogNameError && (
+                  <p
+                    className={`text-${
+                      blogNameError.includes("사용 가능") ? "green" : "red"
+                    }-500`}
+                  >
+                    {blogNameError}
+                  </p>
+                )}
               </div>
             </div>
             <div className="mt-[6rem]">
@@ -195,9 +214,26 @@ const BlogRegisterFirst = () => {
                 className="w-full px-4 py-2  mt-[2.5rem] mb-2 h-[6rem] rounded-xl border border-gray-300 focus:border-[#FB3463] focus:outline-none"
                 style={{ background: "var(--4, #F5F5F5)", fontSize: "1.5rem" }}
               />
-              <div className="h-[1.7rem]">
-              </div>
+              <div className="h-[1.7rem]"></div>
             </div>
+          </div>
+          <div className="text-center">
+            <button
+              type="submit"
+              className={`mx-auto mt-32 mb-32 w-[22rem] h-[6rem] bg-btn-color text-white py-2 rounded-lg focus:outline-none ${
+                !nickNameError.includes("사용 가능") ||
+                !blogNameError.includes("사용 가능")
+                  ? "cursor-not-allowed bg-gray-400 hover:bg-gray-400"
+                  : ""
+              }`}
+              style={{ fontSize: "2rem" }}
+              disabled={
+                !nickNameError.includes("사용 가능") ||
+                !blogNameError.includes("사용 가능")
+              }
+            >
+              다음
+            </button>
           </div>
         </div>
       </div>
