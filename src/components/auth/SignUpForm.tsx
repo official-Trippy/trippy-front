@@ -7,6 +7,7 @@ import { checkEmailDuplicate } from "@/services/auth";
 import LogoMain from "../../../public/LogoMain.svg";
 import { useRouter } from "next/navigation";
 import { signUp } from "@/services/auth";
+import Link from "next/link";
 
 const SignUpForm = () => {
   const [email, setEmail] = useState("");
@@ -107,9 +108,8 @@ const SignUpForm = () => {
         이메일
       </label>
       <div
-        className={`flex w-full px-4 py-2 mt-[2.5rem] mb-2 h-[6rem] rounded-xl border ${
-          isInputFocused ? "border-[#FB3463]" : "border-gray-300"
-        } focus:border-[#FB3463] focus:outline-none`}
+        className={`flex w-full px-4 py-2 mt-[2.5rem] mb-2 h-[6rem] rounded-xl border ${isInputFocused ? "border-[#FB3463]" : "border-gray-300"
+          } focus:border-[#FB3463] focus:outline-none`}
         style={{ background: "var(--4, #F5F5F5)" }}
       >
         <input
@@ -128,11 +128,10 @@ const SignUpForm = () => {
           disabled={
             !emailValid || duplicateMessage !== "사용 가능한 이메일입니다."
           }
-          className={`${
-            duplicateMessage === "사용 가능한 이메일입니다."
+          className={`${duplicateMessage === "사용 가능한 이메일입니다."
               ? "bg-black text-white hover:bg-gray-900 focus:outline-none focus:bg-gray-900"
               : "bg-gray-400 text-white cursor-not-allowed"
-          } w-[8.6rem] h-[3.5rem] my-auto rounded-lg`}
+            } w-[8.6rem] h-[3.5rem] my-auto rounded-lg`}
           style={{ fontSize: "1.6rem" }}
         >
           인증하기
@@ -198,41 +197,45 @@ const SignUpForm = () => {
           className="mr-2"
         />
         <label htmlFor="agreement" className="text-black">
-          <span
-            // onClick={() => router.push("/serviceInfo")}
-            style={{
-              color: "gray",
-              textDecoration: "underline",
-              cursor: "pointer",
-            }}
-          >
-            서비스 이용약관
+          <span>
+            <Link href="/serviceInfo">
+              <span
+                style={{
+                  color: "gray",
+                  textDecoration: "underline",
+                  cursor: "pointer",
+                }}
+              >
+                서비스 이용약관
+              </span>
+            </Link>
           </span>
           과{" "}
-          <span
-            // onClick={() => router.push("/privacy")}
-            style={{
-              color: "gray",
-              textDecoration: "underline",
-              cursor: "pointer",
-            }}
-          >
-            개인정보 처리 방침
-          </span>
+          <Link href="/privacy">
+            <span
+
+              style={{
+                color: "gray",
+                textDecoration: "underline",
+                cursor: "pointer",
+              }}
+            >
+              개인정보 처리 방침
+            </span>
+          </Link>
           에 동의합니다.
         </label>
       </div>
       <div className="text-center">
         <button
           type="submit"
-          className={`mx-auto mt-32 mb-32 w-[22rem] h-[6rem] bg-btn-color text-white py-2 rounded-lg focus:outline-none ${
-            !verificationClicked ||
-            !passwordValid ||
-            !passwordMatch ||
-            !agreementChecked
+          className={`mx-auto mt-32 mb-32 w-[22rem] h-[6rem] bg-btn-color text-white py-2 rounded-lg focus:outline-none ${!verificationClicked ||
+              !passwordValid ||
+              !passwordMatch ||
+              !agreementChecked
               ? "cursor-not-allowed bg-gray-400 hover:bg-gray-400"
               : ""
-          }`}
+            }`}
           style={{ fontSize: "2rem" }}
           disabled={
             !verificationClicked ||
