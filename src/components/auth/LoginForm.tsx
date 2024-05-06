@@ -1,26 +1,33 @@
-"use client";
+'use client'
 
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 import LogoMain from "../../../public/LogoMain.svg";
 import Image from "next/image";
 import { loginState } from "@/atoms/user";
 import { useRecoilState } from "recoil";
+import Link from "next/link";
+import Cookies from "js-cookie";
+import { Login } from "@/services/auth";
 
-interface LoginFormProps {
-  onSubmit: (data: { memberId: string; password: string }) => void;
-}
-
-const LoginForm: React.FC<LoginFormProps> = ({ onSubmit }) => {
+const LoginForm= () => {
   const [memberId, setMemberId] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
-  const [login, setLogin] = useRecoilState(loginState);
-  const { isLoggedIn } = login;
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    onSubmit({ memberId, password });
+    try {
+      const response = await Login(memberId, password);
+      const { accessToken, refreshToken } = response.result;
+      Cookies.set("accessToken", accessToken);
+      Cookies.set("refreshToken", refreshToken);
+      console.log(response);
+      router.push("/home");
+      router.refresh();
+    } catch (error) {
+      console.error("Error during login:", error);
+    }
   };
 
   return (
@@ -62,15 +69,15 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSubmit }) => {
         </button>
       </form>
       <div className="flex justify-center mt-[2rem] mb-[4rem]">
-        <a href="#" className="mx-4 text-[#9D9D9D] font-[1.2rem]" style={{ fontSize: "1.2rem" }}>
+        <Link href="#" className="mx-4 text-[#9D9D9D] font-[1.2rem]" style={{ fontSize: "1.2rem" }}>
           계정 찾기
-        </a>
-        <a href="#" className="mx-4 text-[#9D9D9D]" style={{ fontSize: "1.2rem" }}>
+        </Link>
+        <Link href="#" className="mx-4 text-[#9D9D9D]" style={{ fontSize: "1.2rem" }}>
           비밀번호 찾기
-        </a>
-        <a href="/register" className="mx-4 text-[#9D9D9D]" style={{ fontSize: "1.2rem" }}>
+        </Link>
+        <Link href="/signUp" className="mx-4 text-[#9D9D9D]" style={{ fontSize: "1.2rem" }}>
           회원가입하기
-        </a>
+        </Link>
       </div>
     </div>
   );

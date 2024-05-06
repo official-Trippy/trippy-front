@@ -1,10 +1,8 @@
-'use client';
-
-import { RecoilRoot } from 'recoil';
 import { Inter } from "next/font/google";
 import "../styles/globals.css";
 import Header from "@/components/shared/header/Header";
-import { usePathname } from "next/navigation";
+import FallingContainer from '@/components/falling/FallingContainer';
+import '@/styles/globals.css';
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -13,14 +11,12 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const pathname = usePathname();
+
   return (
     <html lang="en">
-      <body className={inter.className}>
-        <RecoilRoot>
-        {pathname !== "/signUp" && pathname !== "/login" && pathname !== "/blogRegister" && pathname !== "/blogRegister2" && <Header />}
+      <body className="flex flex-col">
           {children}
-        </RecoilRoot>
+          <FallingContainer/>
       </body>
     </html>
   );

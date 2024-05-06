@@ -4,7 +4,6 @@ import React, { useState } from "react";
 import Image from "next/image";
 import BlogStep1 from "../../../public/BlogStep1.svg";
 import DefaultProfileImg from "../../../public/DefaultProfileImg.svg";
-import LogoMain from "../../../public/LogoMain.svg";
 import {
   checkNickNameDuplicate,
   checkBlogNameDuplicate,

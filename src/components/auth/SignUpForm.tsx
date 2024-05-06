@@ -1,15 +1,14 @@
+"use client";
+
 import { useState } from "react";
 import Swal from "sweetalert2";
 import Image from "next/image";
 import { checkEmailDuplicate } from "@/services/auth";
-import { useRouter } from "next/navigation";
 import LogoMain from "../../../public/LogoMain.svg";
+import { useRouter } from "next/navigation";
+import { signUp } from "@/services/auth";
 
-interface SignUpFormProps {
-  onSubmit: (data: { email: string; password: string }) => void;
-}
-
-const SignUpForm: React.FC<SignUpFormProps> = ({ onSubmit }) => {
+const SignUpForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -23,9 +22,9 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSubmit }) => {
   const [verificationClicked, setVerificationClicked] = useState(false);
   const [agreementChecked, setAgreementChecked] = useState(false);
 
-  const router = useRouter();
-
   const [isInputFocused, setIsInputFocused] = useState(false);
+
+  const router = useRouter();
 
   const handleInputFocus = () => {
     setIsInputFocused(true);
@@ -86,9 +85,14 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSubmit }) => {
     setPasswordMatch(password === value);
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    onSubmit({ email, password });
+    try {
+      await signUp({ email, password });
+      router.push("/blogRegister");
+    } catch (error) {
+      console.error("Error during signup:", error);
+    }
   };
 
   const handleAgreementChange = () => {
@@ -97,7 +101,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSubmit }) => {
 
   return (
     <form onSubmit={handleSubmit} className="w-[80%] mx-auto mt-[15rem]">
-         <Image src={LogoMain} alt="Logo" className="mx-auto"/>
+      <Image src={LogoMain} alt="Logo" className="mx-auto" />
       <div className="sign-up-info mt-[8rem]">로그인 정보를 설정해주세요</div>
       <label htmlFor="email" className="sign-up-info block mt-[6.9rem]">
         이메일
@@ -195,7 +199,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSubmit }) => {
         />
         <label htmlFor="agreement" className="text-black">
           <span
-            onClick={() => router.push("/serviceInfo")}
+            // onClick={() => router.push("/serviceInfo")}
             style={{
               color: "gray",
               textDecoration: "underline",
@@ -206,7 +210,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSubmit }) => {
           </span>
           과{" "}
           <span
-            onClick={() => router.push("/privacy")}
+            // onClick={() => router.push("/privacy")}
             style={{
               color: "gray",
               textDecoration: "underline",
