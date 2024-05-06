@@ -38,25 +38,37 @@ const SignUpForm = () => {
   const handleEmailChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setEmail(value);
+    console.log(value);
     const isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
     setEmailValid(isValid);
     setEmailErrorMessage(isValid ? "" : "이메일 형식이 올바르지 않습니다.");
 
     if (isValid) {
       try {
-        const { duplicated } = await checkEmailDuplicate(value);
-        if (duplicated) {
-          setDuplicateMessage("해당 이메일이 이미 존재합니다.");
+        const { isSuccess, duplicated } = await checkEmailDuplicate(value);
+        console.log("Duplicate:", duplicated);
+        if (isSuccess) {
+          if (duplicated) {
+            setDuplicateMessage("해당 이메일이 이미 존재합니다.");
+          } else {
+            setDuplicateMessage("사용 가능한 이메일입니다.");
+          }
         } else {
-          setDuplicateMessage("사용 가능한 이메일입니다.");
+          // 중복 확인 요청에 실패한 경우
+          console.error("이메일 중복 확인 오류:", isSuccess);
+          setDuplicateMessage("이메일 중복 확인에 실패했습니다.");
         }
       } catch (error) {
         console.error("이메일 중복 확인 오류:", error);
+        setDuplicateMessage("이메일 중복 확인에 실패했습니다.");
       }
     } else {
       setDuplicateMessage("");
     }
   };
+
+
+
 
   const handleEmailVerification = async () => {
     if (duplicateMessage === "사용 가능한 이메일입니다.") {
@@ -129,8 +141,8 @@ const SignUpForm = () => {
             !emailValid || duplicateMessage !== "사용 가능한 이메일입니다."
           }
           className={`${duplicateMessage === "사용 가능한 이메일입니다."
-              ? "bg-black text-white hover:bg-gray-900 focus:outline-none focus:bg-gray-900"
-              : "bg-gray-400 text-white cursor-not-allowed"
+            ? "bg-black text-white hover:bg-gray-900 focus:outline-none focus:bg-gray-900"
+            : "bg-gray-400 text-white cursor-not-allowed"
             } w-[8.6rem] h-[3.5rem] my-auto rounded-lg`}
           style={{ fontSize: "1.6rem" }}
         >
@@ -138,8 +150,14 @@ const SignUpForm = () => {
         </button>
       </div>
       <div className="h-[1.7rem]">
-        <p className="text-red-500">{emailErrorMessage}</p>
-        <p className="text-green-500">{duplicateMessage}</p>
+        {emailErrorMessage && (
+          <p className="text-red-500">{emailErrorMessage}</p>
+        )}
+        {duplicateMessage && (
+          <p className={`text-${duplicateMessage.includes("존재합니다") ? "red" : "green"}-500`}>
+            {duplicateMessage}
+          </p>
+        )}
       </div>
       <div className="mt-[6rem]">
         <label htmlFor="password" className="sign-up-info block">
@@ -230,11 +248,11 @@ const SignUpForm = () => {
         <button
           type="submit"
           className={`mx-auto mt-32 mb-32 w-[22rem] h-[6rem] bg-btn-color text-white py-2 rounded-lg focus:outline-none ${!verificationClicked ||
-              !passwordValid ||
-              !passwordMatch ||
-              !agreementChecked
-              ? "cursor-not-allowed bg-gray-400 hover:bg-gray-400"
-              : ""
+            !passwordValid ||
+            !passwordMatch ||
+            !agreementChecked
+            ? "cursor-not-allowed bg-gray-400 hover:bg-gray-400"
+            : ""
             }`}
           style={{ fontSize: "2rem" }}
           disabled={

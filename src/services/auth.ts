@@ -42,18 +42,19 @@ export async function checkEmailDuplicate(email: string) {
     const response = await axios.get(
       `${backendUrl}/api/member/isDuplicated?email=${email}`
     );
-    const data = response.data;
+    const data = response.data.result.duplicated;
     console.log(response);
     console.log(data);
-    if (data.isSuccess && data.result && data.result.isDuplicated) {
-      return { duplicated: true };
+    if (data) {
+      return { isSuccess: true, duplicated: true };
     } else {
-      return { duplicated: false };
+      return { isSuccess: true, duplicated: false };
     }
   } catch (error) {
     throw new Error(`Error checking email duplication: ${error}`);
   }
 }
+
 
 // Axios 설정: 헤더에 accessToken 추가
 axios.interceptors.request.use(
