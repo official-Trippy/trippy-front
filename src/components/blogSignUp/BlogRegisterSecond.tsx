@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import BlogStep2 from "../../../public/BlogStep2.svg";
+import Link from "next/link";
 
 const interests = [
   "국내여행",
@@ -69,6 +70,7 @@ const BlogRegisterSecond = () => {
           ))}
         </div>
         <div className="text-center">
+          <Link href="/blogRegister3">
           <button
             type="submit"
             className={`mx-auto ${
@@ -79,6 +81,7 @@ const BlogRegisterSecond = () => {
           >
             다음
           </button>
+          </Link>
         </div>
       </div>
     </div>

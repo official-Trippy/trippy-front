@@ -87,7 +87,7 @@ body {
 .grid-cols-5 {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 1.35rem 1rem; 
+  gap: 1.35rem 1rem;
 }
 
 .favorite-btn-font {
@@ -106,8 +106,8 @@ body {
   justify-content: center;
   align-items: center;
   border-radius: 12.081px;
-  background:#F5F5F5;
-  color: #9D9D9D;
+  background: #f5f5f5;
+  color: #9d9d9d;
 }
 
 .favorite-btn-active {
@@ -118,8 +118,8 @@ body {
   justify-content: center;
   align-items: center;
   border-radius: 12.081px;
-  background:#FB3463;
-  color: #FFF;
+  background: #fb3463;
+  color: #fff;
 }
 
 .custom-label {
@@ -149,4 +149,23 @@ body {
 .custom-label:focus {
   background-color: #fb3463;
   color: white;
+}
+
+.sign-up-complete {
+  color: #fb3463;
+  font-family: Pretendard;
+  font-size: 36px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+}
+
+.sign-up-complete2 {
+  color: #9d9d9d;
+  text-align: center;
+  font-family: Pretendard;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
 }
