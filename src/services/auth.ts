@@ -16,19 +16,33 @@ export async function signUp(formData: any) {
 };
 
 export async function Login(memberId: string, password: string) {
-    try {
-      const response = await axios.post(`${backendUrl}/api/member/login`, { memberId, password });
-      accessToken = response.data.result.accessToken;
-      return response.data;
-    } catch (error) {
-      throw new Error(`Error during login: ${error}`);
-    }
+  try {
+    const response = await axios.post(`${backendUrl}/api/member/login`, { memberId, password });
+    accessToken = response.data.result.accessToken;
+    return response.data;
+  } catch (error) {
+    throw new Error(`Error during login: ${error}`);
+  }
 };
 
+export async function MemberInfo(accessToken: any, refreshToken: any) {
+  try {
+    const res = await axios.get(`${backendUrl}/api/member`, {
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+        'Authorization-refresh': `Bearer ${refreshToken}`
+      }
+    });
+    return res
+  } catch (e) {
+    return null;
+  }
+}
+
 export const isLoggedIn = () => {
-    const accessToken = Cookies.get('accessToken');
-    const refreshToken = Cookies.get('refreshToken');
-    return !!accessToken && !!refreshToken;
+  const accessToken = Cookies.get('accessToken');
+  const refreshToken = Cookies.get('refreshToken');
+  return !!accessToken && !!refreshToken;
 };
 
 // Axios 설정: 헤더에 accessToken 추가
