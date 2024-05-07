@@ -3,52 +3,50 @@
 import FirstBg from "@/components/pages/onboarding/firstbg";
 import SecondBg from "@/components/pages/onboarding/secondbg";
 import ThirdBg from "@/components/pages/onboarding/thirdbg";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 const OnBoradingPage = () => {
   const zeroRef = useRef<HTMLDivElement | null>(null);
   const firstRef = useRef<HTMLDivElement | null>(null);
   const secondRef = useRef<HTMLDivElement | null>(null);
   const thirdRef = useRef<HTMLDivElement | null>(null);
+  const refsArray = [zeroRef, firstRef, secondRef, thirdRef];
 
   useEffect(() => {
-    let throttleTimeout: any = null; // 스로틀링을 위한 타임아웃 변수
+    const handleScroll = (e: WheelEvent) => {
+      e.preventDefault();
+      // 스크롤 방향 감지
+      const { deltaY } = e;
+      const direction = deltaY > 0 ? 1 : -1;
 
-    const handleScroll = () => {
-      if (throttleTimeout) return; // 스로틀링 중이면 함수 실행 중지
+      // 현재 활성화된 섹션을 기준으로 다음 또는 이전 섹션으로 이동
+      const sections = document.querySelectorAll('.section');
+      const currentSection = document.querySelector('.section.active') as HTMLElement; // HTMLElement로 타입 단언
+      let index = Array.from(sections).indexOf(currentSection);
+      index = Math.max(0, Math.min(sections.length - 1, index + direction));
+      const nextSection = sections[index] as HTMLElement; // HTMLElement로 타입 단언
 
-      throttleTimeout = setTimeout(() => {
-        throttleTimeout = null;
-        const scrollY = window.scrollY;
-        const zeroBgHeight = zeroRef.current?.offsetHeight || 0;
-        const firstBgHeight = firstRef.current?.offsetHeight || 0;
-        const secondBgHeight = secondRef.current?.offsetHeight || 0;
-        if (scrollY < zeroBgHeight / 2) {
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-        else if (scrollY < firstBgHeight / 2.5) {
-          window.scrollTo({ top: 120, behavior: 'smooth' });
-        } else if (scrollY < firstBgHeight + secondBgHeight / 2) {
-          window.scrollTo({ top: firstBgHeight, behavior: 'smooth' });
-        } else {
-          window.scrollTo({ top: firstBgHeight + secondBgHeight + 150, behavior: 'smooth' });
-        }
-      }, 50); // 200ms 동안 스로틀링
+      // 부드러운 스크롤 이동
+      window.scrollTo({
+        top: nextSection.offsetTop,
+        behavior: 'smooth',
+      });
+
+      // 활성화된 섹션 변경
+      currentSection.classList.remove('active');
+      nextSection.classList.add('active');
     };
 
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('wheel', handleScroll);
 
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-      if (throttleTimeout) clearTimeout(throttleTimeout); // 컴포넌트 언마운트 시 타임아웃 제거
-    };
+    // 컴포넌트 언마운트 시 이벤트 리스너 제거
+    return () => window.removeEventListener('wheel', handleScroll);
   }, []);
 
-
   return (
-    <div>
-      <div ref={zeroRef}></div>
-      <div ref={firstRef}>
+    <div className="pages">
+      <div className="section active"></div>
+      <div className="section">
         <FirstBg>
           <div className="w-[80%] flex mx-auto">
             <div className="pt-[10rem]">
@@ -58,7 +56,7 @@ const OnBoradingPage = () => {
           </div>
         </FirstBg>
       </div>
-      <div ref={secondRef}>
+      <div className="section">
         <SecondBg>
           <div className="w-[80%] flex mx-auto">
             <div className="pt-[10rem] flex flex-col ml-auto">
@@ -68,7 +66,7 @@ const OnBoradingPage = () => {
           </div>
         </SecondBg>
       </div>
-      <div ref={thirdRef}>
+      <div className="section">
         <ThirdBg>
           <div className="w-[80%] flex flex-col mx-auto my-auto">
             <div className="pt-[10rem] flex flex-col mx-auto text-center">
