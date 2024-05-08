@@ -14,10 +14,15 @@ export default function Home() {
   const refreshToken = Cookies.get('refreshToken');
 
 
-  const { data: memberData } = useQuery({
-    queryKey: ['member'],
-    queryFn: () => MemberInfo(accessToken, refreshToken)
-  })
+  const { data: memberData, error, status } = useQuery({
+    queryKey: ['member', accessToken],
+    queryFn: () => MemberInfo(accessToken),
+    onError: (error) => {
+      // 에러 처리 로직
+      console.error(error);
+    }
+  });
+
 
   console.log(memberData);
 
