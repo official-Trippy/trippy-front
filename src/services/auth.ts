@@ -25,11 +25,12 @@ export async function Login(memberId: string, password: string) {
   }
 };
 
-export async function MemberInfo(accessToken: any) {
+export async function MemberInfo(accessToken: any, refreshToken: any) {
   try {
     const res = await axios.get(`${backendUrl}/api/member`, {
       headers: {
         'Authorization': `Bearer ${accessToken}`,
+        'Authorization-refresh': `Bearer ${refreshToken}`
       }
     });
     return res

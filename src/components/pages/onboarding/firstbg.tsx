@@ -10,10 +10,10 @@ interface FirstProps {
 function FirstBg({ children }: FirstProps) {
 
     return (
-        <div className='bg-cover flex flex-col w-full h-screen'>
+        <div className='relative bg-cover flex flex-col w-full h-screen'>
             {children}
-            <div className='flex mt-auto mx-auto mr-[25%]'>
-                <Image src={FirstBgimg} width={500} height={500} alt='' />
+            <div className='flex ml-auto mt-[-25rem] z-10'>
+                <Image src={FirstBgimg} width={1600} height={900} alt='' />
             </div>
         </div>
     )

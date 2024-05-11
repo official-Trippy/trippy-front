@@ -15,8 +15,8 @@ export default function Home() {
 
 
   const { data: memberData, error, status } = useQuery({
-    queryKey: ['member', accessToken],
-    queryFn: () => MemberInfo(accessToken),
+    queryKey: ['member', accessToken, refreshToken],
+    queryFn: () => MemberInfo(accessToken, refreshToken),
     onError: (error) => {
       // 에러 처리 로직
       console.error(error);
