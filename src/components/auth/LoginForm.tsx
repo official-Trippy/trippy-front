@@ -4,8 +4,6 @@ import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 import LogoMain from "../../../public/LogoMain.svg";
 import Image from "next/image";
-import { loginState } from "@/atoms/user";
-import { useRecoilState } from "recoil";
 import Link from "next/link";
 import Cookies from "js-cookie";
 import { Login } from "@/services/auth";

@@ -42,7 +42,21 @@ export async function checkEmailDuplicate(email: string) {
     const response = await axios.get(
       `${backendUrl}/api/member/isDuplicated?email=${email}`
     );
-    const data = response.data.result.duplicated;
+    const data = response.data.result;
+    console.log(response);
+    console.log(data);
+      return response.data;
+  } catch (error) {
+    throw new Error(`Error sending email: ${error}`);
+  }
+}
+
+export async function emailSend(email: string) {
+  try {
+    const response = await axios.post(
+      `${backendUrl}/api/email/send?email=${email}`
+    );
+    const data = response.data.result;
     console.log(response);
     console.log(data);
     if (data) {
@@ -54,6 +68,7 @@ export async function checkEmailDuplicate(email: string) {
     throw new Error(`Error checking email duplication: ${error}`);
   }
 }
+
 
 
 // Axios 설정: 헤더에 accessToken 추가

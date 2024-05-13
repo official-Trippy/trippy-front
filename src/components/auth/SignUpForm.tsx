@@ -6,7 +6,7 @@ import Image from "next/image";
 import { checkEmailDuplicate } from "@/services/auth";
 import LogoMain from "../../../public/LogoMain.svg";
 import { useRouter } from "next/navigation";
-import { signUp } from "@/services/auth";
+import { signUp, emailSend } from "@/services/auth";
 import Link from "next/link";
 
 const SignUpForm = () => {
@@ -67,16 +67,22 @@ const SignUpForm = () => {
     }
   };
 
-
-
-
   const handleEmailVerification = async () => {
     if (duplicateMessage === "사용 가능한 이메일입니다.") {
       setVerificationClicked(true);
-      Swal.fire({
-        title: "이메일을 보냈습니다.",
-        icon: "success",
-      });
+      try {
+        const response = await emailSend(email);
+        if (response.isSuccess) {
+          Swal.fire({
+            title: "이메일을 보냈습니다.",
+            icon: "success",
+          });
+        } else {
+          console.error("Failed to send email.");
+        }
+      } catch (error) {
+        console.error("Error sending email:", error);
+      }
     }
   };
 
@@ -101,13 +107,13 @@ const SignUpForm = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      await signUp({ email, password });
+      await signUp({  memberId: email ,email, password });
       router.push("/blogRegister");
     } catch (error) {
       console.error("Error during signup:", error);
     }
   };
-
+  
   const handleAgreementChange = () => {
     setAgreementChecked(!agreementChecked);
   };
