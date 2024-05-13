@@ -1,9 +1,11 @@
-'use client';
+import Header from "@/components/shared/header/Header";
 
 const HomePage = () => {
- 
   return (
-   <div>홈인데요?</div>
+    <>
+      <Header />
+      <div>홈인데요?</div>
+    </>
   );
 };
 

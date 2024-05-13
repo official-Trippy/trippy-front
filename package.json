@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@tailwindcss/typography": "^0.5.13",
     "@tanstack/react-query-next-experimental": "^5.32.0",
     "axios": "^1.6.8",
     "cors": "^2.8.5",
@@ -18,8 +19,12 @@
     "next-auth": "^5.0.0-beta.16",
     "react": "^18",
     "react-dom": "^18",
+    "react-hook-form": "^7.51.3",
     "react-query": "^3.39.3",
-    "recoil": "^0.7.7"
+    "recoil": "^0.7.7",
+    "sakura-js": "^1.1.1",
+    "sweetalert2": "^11.10.8",
+    "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
     "@types/js-cookie": "^3.0.6",

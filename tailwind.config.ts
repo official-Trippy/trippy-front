@@ -18,9 +18,27 @@ const config: Config = {
         'kakao-btn': '#FFE617',
         'naver-btn': '#03C75A',
         'google-btn': '#CFCFCF',
-      }
+      },
+      keyframes: {
+        fall: {
+          '0%': { opacity: '0' },
+          '3%, 90%': { opacity: '0.9' },
+          '100%': {
+            transform: 'translateY(97%)',
+            opacity: '0',
+          },
+        },
+      },
+      animation: {
+        fall: 'fall 3.5s linear infinite',
+      },
     },
   },
-  plugins: [],
+  plugins: [
+    // Tailwind plugins
+    require('tailwindcss'),
+    require('@tailwindcss/typography'),
+    require('tailwindcss-animate'),
+  ],
 };
 export default config;

@@ -1,9 +1,8 @@
-'use client';
-
-import { RecoilRoot } from 'recoil';
 import { Inter } from "next/font/google";
 import "../styles/globals.css";
 import Header from "@/components/shared/header/Header";
+import FallingContainer from '@/components/falling/FallingContainer';
+import '@/styles/globals.css';
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -12,13 +11,12 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
   return (
     <html lang="en">
-      <body className={inter.className}>
-        <RecoilRoot>
-          <Header />
+      <body className="flex flex-col">
           {children}
-        </RecoilRoot>
+          <FallingContainer/>
       </body>
     </html>
   );

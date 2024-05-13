@@ -16,6 +16,10 @@
   }
 }
 
+html {
+  font-size: 62.5%;
+  /* 1rem = 10px */
+}
 
 body {
   color: rgb(var(--foreground-rgb));
@@ -24,11 +28,144 @@ body {
       transparent,
       rgb(var(--background-end-rgb))
     ) */
-    /* rgb(var(--background-start-rgb)); */
+  /* rgb(var(--background-start-rgb)); */
 }
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
   }
+
+  .header {
+    height: 80px;
+  }
+}
+
+.sign-up-info {
+  color: #292929;
+  font-family: Pretendard;
+  font-size: 20px;
+  font-weight: 600;
+  line-height: normal;
+}
+
+.login-info {
+  color: #292929;
+  font-family: Pretendard;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: normal;
+}
+
+.email-input {
+  color: #cfcfcf;
+  font-family: Pretendard;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+
+.login-btn {
+  text-align: center;
+  font-family: Pretendard;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+}
+
+.social-login-btn {
+  text-align: center;
+  font-family: Pretendard;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+}
+
+.grid-cols-5 {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 1.35rem 1rem;
+}
+
+.favorite-btn-font {
+  font-family: Pretendard;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+
+.favorite-btn-inactive {
+  display: flex;
+  width: 126px;
+  height: 63px;
+  padding: 12px 30px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 12.081px;
+  background: #f5f5f5;
+  color: #9d9d9d;
+}
+
+.favorite-btn-active {
+  display: flex;
+  width: 126px;
+  height: 63px;
+  padding: 12px 30px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 12.081px;
+  background: #fb3463;
+  color: #fff;
+}
+
+.custom-label {
+  display: flex;
+  width: 220px;
+  height: 60px;
+  padding: 20px 50px 20px 50px;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+  border-radius: 8px;
+  background: var(--4, #f5f5f5);
+  cursor: pointer;
+  color: black;
+  font-size: 16px;
+  font-weight: bold;
+  text-align: center;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+.custom-label:hover {
+  background-color: #fb3463;
+  color: white;
+}
+
+.custom-label:focus {
+  background-color: #fb3463;
+  color: white;
+}
+
+.sign-up-complete {
+  color: #fb3463;
+  font-family: Pretendard;
+  font-size: 36px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+}
+
+.sign-up-complete2 {
+  color: #9d9d9d;
+  text-align: center;
+  font-family: Pretendard;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
 }
