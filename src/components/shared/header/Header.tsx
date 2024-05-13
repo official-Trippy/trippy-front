@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import { useState, useEffect } from "react";
 import Cookies from "js-cookie";
@@ -7,10 +7,23 @@ import Link from "next/link";
 import LogoHeader from "../../../../public/LogoHeader.svg";
 import AlertImg from "../../../../public/AlertImg.png";
 import Profile from "../../../../public/Profile.png";
+import { useSession, signIn, signOut } from "next-auth/react";
 
 export default function Header() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loading, setLoading] = useState(true);
+
+  const { data } = useSession();
+
+  const onClickTotalLogin = async (e: React.MouseEvent) => {
+    e.preventDefault();
+
+    if (data) {
+      await signOut();
+    } else {
+      await signIn();
+    }
+  };
 
   useEffect(() => {
     const checkLoginState = () => {
@@ -35,10 +48,7 @@ export default function Header() {
         </div>
         <div className="flex space-x-4 text-lg">
           <Link href="/home">
-            <div
-              className="text-gray-800 px-10"
-              style={{ fontSize: "1.4rem" }}
-            >
+            <div className="text-gray-800 px-10" style={{ fontSize: "1.4rem" }}>
               홈
             </div>
           </Link>
@@ -79,8 +89,9 @@ export default function Header() {
                   <button
                     className="w-[8.6rem] h-[3.5rem] bg-btn-color text-white px-6 py-2 rounded-lg"
                     style={{ fontSize: "1.6rem" }}
+                    onClick={onClickTotalLogin}
                   >
-                    로그인
+                    {data ? "로그아웃" : "로그인"}
                   </button>
                 </Link>
               </div>

@@ -2,6 +2,12 @@
 
 import { useRouter } from "next/navigation";
 import axios from "axios";
+import { signIn, signOut, useSession } from "next-auth/react";
+import Image from "next/image";
+
+import kakao from "../../../public/kakao.svg";
+import naver from "../../../public/naver.svg";
+import google from "../../../public/google.svg";
 
 const SocialLoginForm = () => {
   const router = useRouter();
@@ -22,25 +28,55 @@ const SocialLoginForm = () => {
       console.error("Error during social login:", error);
     }
   };
+
+  const handleSocial = async (name: string) => {
+    if (name === "kakao") {
+      await signIn("kakao", {
+        redirect: true,
+        callbackUrl: "/",
+      });
+    } else if (name === "naver") {
+      await signIn("naver", {
+        redirect: true,
+        callbackUrl: "/",
+      });
+    } else {
+      await signIn("google", {
+        redirect: true,
+        callbackUrl: "/",
+      });
+    }
+  };
   return (
     <div className="flex flex-col my-10 items-center">
       <div
-        className="social-login-btn bg-kakao-btn text-black px-4 rounded-md my-2 w-[320px] h-[44px] flex items-center justify-center"
-        onClick={() => handleSocialLogin("kakao")}
+        className="bg-kakao-btn text-black px-4 rounded-md my-2 w-[320px] h-[44px] flex items-center justify-center"
+        onClick={() => {
+          handleSocial("kakao");
+        }}
       >
-        카카오 로그인
+        <Image src={kakao} alt="kakao" width={330} height={44} />
       </div>
       <div
-        className="social-login-btn bg-naver-btn text-white px-4 rounded-md my-2 w-[320px] h-[44px] flex items-center justify-center"
-        onClick={() => handleSocialLogin("naver")}
+        className="bg-naver-btn text-white px-4 rounded-md my-2 w-[320px] h-[44px] flex items-center justify-center"
+        onClick={() => {
+          handleSocial("naver");
+        }}
       >
-        네이버 로그인
+        <Image src={naver} alt="naver" width={330} height={44}></Image>
       </div>
+      {/* <div
+          className="bg-google-btn text-black px-4 rounded-md my-2 w-[320px] h-[44px] flex items-center justify-center"
+          onClick={() => handleSocialLogin("google")}
+        >
+          <Image src={googlekorea} alt="google"></Image>
+        </div> */}
       <div
-        className="social-login-btn bg-google-btn text-black px-4 rounded-md my-2 w-[320px] h-[44px] flex items-center justify-center"
-        onClick={() => handleSocialLogin("google")}
+        onClick={() => {
+          handleSocial("google");
+        }}
       >
-        Google 로그인
+        <Image src={google} width={340} height={44} alt="google"></Image>
       </div>
     </div>
   );
