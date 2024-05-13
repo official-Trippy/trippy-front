@@ -16,7 +16,7 @@ export default function RootLayout({
     <html lang="en">
       <body className="flex flex-col">
           {children}
-          <FallingContainer/>
+          {/* <FallingContainer/> */}
       </body>
     </html>
   );

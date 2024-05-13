@@ -69,6 +69,21 @@ export async function emailSend(email: string) {
   }
 }
 
+export async function confirmEmail(email: string, authNumber: string) {
+  try {
+    const response = await axios.post(
+      `${backendUrl}/api/email/confirm`,
+      { email, authNumber }
+    );
+    const data = response.data.result;
+    console.log(response);
+    console.log(data);
+    return data;
+  } catch (error) {
+    throw new Error(`Error confirming email: ${error}`);
+  }
+}
+
 // Axios 설정: 헤더에 accessToken 추가
 axios.interceptors.request.use(
   async (config) => {
