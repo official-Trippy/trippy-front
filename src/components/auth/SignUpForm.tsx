@@ -1,7 +1,6 @@
-"use client";
+'use client'
 
-import { useState } from "react";
-import Swal from "sweetalert2";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { checkEmailDuplicate } from "@/services/auth";
 import LogoMain from "../../../public/LogoMain.svg";
@@ -22,7 +21,8 @@ const SignUpForm = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [verificationClicked, setVerificationClicked] = useState(false);
   const [agreementChecked, setAgreementChecked] = useState(false);
-
+  const [verificationCode, setVerificationCode] = useState("");
+  const [timer, setTimer] = useState(180);
   const [isInputFocused, setIsInputFocused] = useState(false);
 
   const router = useRouter();
@@ -38,7 +38,6 @@ const SignUpForm = () => {
   const handleEmailChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setEmail(value);
-    console.log(value);
     const isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
     setEmailValid(isValid);
     setEmailErrorMessage(isValid ? "" : "이메일 형식이 올바르지 않습니다.");
@@ -46,7 +45,6 @@ const SignUpForm = () => {
     if (isValid) {
       try {
         const { isSuccess, duplicated } = await checkEmailDuplicate(value);
-        console.log("Duplicate:", duplicated);
         if (isSuccess) {
           if (duplicated) {
             setDuplicateMessage("해당 이메일이 이미 존재합니다.");
@@ -54,7 +52,6 @@ const SignUpForm = () => {
             setDuplicateMessage("사용 가능한 이메일입니다.");
           }
         } else {
-          // 중복 확인 요청에 실패한 경우
           console.error("이메일 중복 확인 오류:", isSuccess);
           setDuplicateMessage("이메일 중복 확인에 실패했습니다.");
         }
@@ -64,25 +61,6 @@ const SignUpForm = () => {
       }
     } else {
       setDuplicateMessage("");
-    }
-  };
-
-  const handleEmailVerification = async () => {
-    if (duplicateMessage === "사용 가능한 이메일입니다.") {
-      setVerificationClicked(true);
-      try {
-        const response = await emailSend(email);
-        if (response.isSuccess) {
-          Swal.fire({
-            title: "이메일을 보냈습니다.",
-            icon: "success",
-          });
-        } else {
-          console.error("Failed to send email.");
-        }
-      } catch (error) {
-        console.error("Error sending email:", error);
-      }
     }
   };
 
@@ -107,16 +85,75 @@ const SignUpForm = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      await signUp({  memberId: email ,email, password });
+      await signUp({ memberId: email, email, password });
       router.push("/blogRegister");
     } catch (error) {
       console.error("Error during signup:", error);
     }
   };
-  
+
   const handleAgreementChange = () => {
     setAgreementChecked(!agreementChecked);
   };
+
+  const handleTimerExpired = () => {
+    setVerificationCode("");
+    setTimer(180);
+    setVerificationClicked(false);
+  };
+
+  const handleEmailVerification = async () => {
+    if (duplicateMessage === "사용 가능한 이메일입니다.") {
+      setVerificationClicked(true);
+      setTimer(180);
+      try {
+        const response = await emailSend(email);
+        if (response.isSuccess) {
+          console.log('success');
+        } else {
+          console.error("Failed to send email.");
+        }
+      } catch (error) {
+        console.error("Error sending email:", error);
+      }
+    }
+  };
+
+  const handleResendVerification = async () => {
+    if (duplicateMessage === "사용 가능한 이메일입니다.") {
+      setVerificationClicked(true);
+      setTimer(180);
+      try {
+        const response = await emailSend(email);
+        if (response.isSuccess) {
+          console.log('Resend success');
+        } else {
+          console.error("Failed to resend email.");
+        }
+      } catch (error) {
+        console.error("Error resending email:", error);
+      }
+    }
+  };
+
+
+  const timerRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    if (timer > 0) {
+      timerRef.current = window.setTimeout(() => {
+        setTimer(timer - 1);
+      }, 1000);
+    } else {
+      handleTimerExpired();
+    }
+
+    return () => {
+      if (timerRef.current !== null) {
+        clearTimeout(timerRef.current);
+      }
+    };
+  }, [timer]);
 
   return (
     <form onSubmit={handleSubmit} className="w-[80%] mx-auto mt-[15rem]">
@@ -142,7 +179,7 @@ const SignUpForm = () => {
         />
         <button
           type="button"
-          onClick={handleEmailVerification}
+          onClick={verificationClicked ? handleResendVerification : handleEmailVerification}
           disabled={
             !emailValid || duplicateMessage !== "사용 가능한 이메일입니다."
           }
@@ -152,8 +189,9 @@ const SignUpForm = () => {
             } w-[8.6rem] h-[3.5rem] my-auto rounded-lg`}
           style={{ fontSize: "1.6rem" }}
         >
-          인증하기
+          {verificationClicked ? "재전송" : "인증하기"}
         </button>
+
       </div>
       <div className="h-[1.7rem]">
         {emailErrorMessage && (
@@ -165,6 +203,31 @@ const SignUpForm = () => {
           </p>
         )}
       </div>
+      {verificationClicked && (
+        <div>
+          <label htmlFor="verificationCode" className="sign-up-info block mt-[6rem]">
+            인증 코드
+          </label>
+          <div
+            className={`flex w-full px-4 py-2 mt-[2.5rem] mb-2 h-[6rem] rounded-xl border ${isInputFocused ? "border-[#FB3463]" : "border-gray-300"
+              } focus:border-[#FB3463] focus:outline-none`}
+            style={{ background: "var(--4, #F5F5F5)" }}
+          >
+            <input
+              type="text"
+              id="verificationCode"
+              value={verificationCode}
+              onChange={(e) => setVerificationCode(e.target.value)}
+              placeholder="인증 코드를 입력하세요"
+              className="flex-1 border-gray-300 focus:border-[#FB3463] focus:outline-none"
+              style={{ background: "var(--4, #F5F5F5)", fontSize: "1.5rem" }}
+            />
+            <div className="text-[1.5rem] my-auto mr-[1rem]">
+              {timer > 0 ? `${Math.floor(timer / 60)}:${timer % 60 < 10 ? `0${timer % 60}` : timer % 60}` : "인증 코드가 만료되었습니다."}
+            </div>
+          </div>
+        </div>
+      )}
       <div className="mt-[6rem]">
         <label htmlFor="password" className="sign-up-info block">
           비밀번호

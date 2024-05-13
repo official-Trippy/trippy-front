@@ -60,16 +60,14 @@ export async function emailSend(email: string) {
     console.log(response);
     console.log(data);
     if (data) {
-      return { isSuccess: true, duplicated: true };
+      return { isSuccess: true };
     } else {
-      return { isSuccess: true, duplicated: false };
+      return { isSuccess: false };
     }
   } catch (error) {
     throw new Error(`Error checking email duplication: ${error}`);
   }
 }
-
-
 
 // Axios 설정: 헤더에 accessToken 추가
 axios.interceptors.request.use(
