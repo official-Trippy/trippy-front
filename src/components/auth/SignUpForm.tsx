@@ -1,11 +1,11 @@
 'use client'
 
-import { useEffect, useRef, useState } from "react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { checkEmailDuplicate } from "@/services/auth";
 import LogoMain from "../../../public/LogoMain.svg";
 import { useRouter } from "next/navigation";
-import { signUp, emailSend } from "@/services/auth";
+import { signUp, emailSend, confirmEmail } from "@/services/auth";
 import Link from "next/link";
 
 const SignUpForm = () => {
@@ -21,9 +21,14 @@ const SignUpForm = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [verificationClicked, setVerificationClicked] = useState(false);
   const [agreementChecked, setAgreementChecked] = useState(false);
-  const [verificationCode, setVerificationCode] = useState("");
+  const [verificationCode, setVerificationCode] = useState<string>('');
   const [timer, setTimer] = useState(180);
   const [isInputFocused, setIsInputFocused] = useState(false);
+  const [isCodeFocused, setIsCodeFocused] = useState(false);
+  const [codeMessage, setCodeMessage] = useState("");
+  const [isCodeVerified, setIsCodeVerified] = useState(false);
+
+  const isVerificationButtonDisabled = codeMessage === '인증이 완료되었습니다.' || isCodeVerified;
 
   const router = useRouter();
 
@@ -35,6 +40,14 @@ const SignUpForm = () => {
     setIsInputFocused(false);
   };
 
+  const handleCodeFocus = () => {
+    setIsCodeFocused(true);
+  };
+
+  const handleCodeBlur = () => {
+    setIsCodeFocused(false);
+  };
+
   const handleEmailChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setEmail(value);
@@ -44,8 +57,9 @@ const SignUpForm = () => {
 
     if (isValid) {
       try {
-        const { isSuccess, duplicated } = await checkEmailDuplicate(value);
+        const { isSuccess, result } = await checkEmailDuplicate(value);
         if (isSuccess) {
+          const duplicated = result.duplicated;
           if (duplicated) {
             setDuplicateMessage("해당 이메일이 이미 존재합니다.");
           } else {
@@ -58,7 +72,7 @@ const SignUpForm = () => {
       } catch (error) {
         console.error("이메일 중복 확인 오류:", error);
         setDuplicateMessage("이메일 중복 확인에 실패했습니다.");
-      }
+      }      
     } else {
       setDuplicateMessage("");
     }
@@ -136,6 +150,26 @@ const SignUpForm = () => {
     }
   };
 
+  const handleValidNumberChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const regex = e.target.value.replace(/[^0-9]/g, '');
+    setVerificationCode(regex);
+  };
+
+  const handleCodeVerification = async () => {
+    try {
+      const response = await confirmEmail(email, verificationCode);
+      const valid = response.success;
+      if (valid) {
+        setCodeMessage('인증이 완료되었습니다.');
+        setIsCodeVerified(true);
+      } else {
+        console.log(isCodeVerified);
+        setCodeMessage('인증에 실패하였습니다. 다시 입력해주세요.');
+      }
+    } catch (error) {
+      console.error("이메일 확인 오류:", error);
+    }
+  };
 
   const timerRef = useRef<number | null>(null);
 
@@ -176,21 +210,24 @@ const SignUpForm = () => {
           placeholder="Trippy@trip.com"
           className="flex-1 border-gray-300 focus:border-[#FB3463] focus:outline-none"
           style={{ background: "var(--4, #F5F5F5)", fontSize: "1.5rem" }}
+          disabled={isCodeVerified}
         />
-        <button
-          type="button"
-          onClick={verificationClicked ? handleResendVerification : handleEmailVerification}
-          disabled={
-            !emailValid || duplicateMessage !== "사용 가능한 이메일입니다."
-          }
-          className={`${duplicateMessage === "사용 가능한 이메일입니다."
-            ? "bg-black text-white hover:bg-gray-900 focus:outline-none focus:bg-gray-900"
-            : "bg-gray-400 text-white cursor-not-allowed"
-            } w-[8.6rem] h-[3.5rem] my-auto rounded-lg`}
-          style={{ fontSize: "1.6rem" }}
-        >
-          {verificationClicked ? "재전송" : "인증하기"}
-        </button>
+        {!isCodeVerified && (
+          <button
+            type="button"
+            onClick={handleResendVerification}
+            disabled={
+              !emailValid || duplicateMessage !== "사용 가능한 이메일입니다." || isCodeVerified
+            }
+            className={`${duplicateMessage === "사용 가능한 이메일입니다."
+              ? "bg-black text-white hover:bg-gray-900 focus:outline-none focus:bg-gray-900"
+              : "bg-gray-400 text-white cursor-not-allowed"
+              } w-[8.6rem] h-[3.5rem] my-auto rounded-lg`}
+            style={{ fontSize: "1.6rem" }}
+          >
+            {isCodeVerified ? "인증 완료" : (verificationClicked ? "재전송" : "인증하기")}
+          </button>
+        )}
 
       </div>
       <div className="h-[1.7rem]">
@@ -205,26 +242,48 @@ const SignUpForm = () => {
       </div>
       {verificationClicked && (
         <div>
-          <label htmlFor="verificationCode" className="sign-up-info block mt-[6rem]">
-            인증 코드
-          </label>
+          <div className="flex">
+            <label htmlFor="verificationCode" className="sign-up-info block mt-[6rem]">
+              인증 코드
+            </label>
+            {!isCodeVerified && (
+              <div className="text-[1.5rem] mt-auto ml-[1rem] text-red-500">
+                {timer > 0 ? `${Math.floor(timer / 60)}:${timer % 60 < 10 ? `0${timer % 60}` : timer % 60}` : "인증 코드가 만료되었습니다."}
+              </div>
+            )}
+          </div>
           <div
-            className={`flex w-full px-4 py-2 mt-[2.5rem] mb-2 h-[6rem] rounded-xl border ${isInputFocused ? "border-[#FB3463]" : "border-gray-300"
+            className={`flex w-full px-4 py-2 mt-[2.5rem] mb-2 h-[6rem] rounded-xl border ${isCodeFocused ? "border-[#FB3463]" : "border-gray-300"
               } focus:border-[#FB3463] focus:outline-none`}
             style={{ background: "var(--4, #F5F5F5)" }}
           >
             <input
               type="text"
+              maxLength={6}
               id="verificationCode"
-              value={verificationCode}
-              onChange={(e) => setVerificationCode(e.target.value)}
+              onBlur={handleCodeBlur}
+              onFocus={handleCodeFocus}
+              onChange={handleValidNumberChange}
               placeholder="인증 코드를 입력하세요"
               className="flex-1 border-gray-300 focus:border-[#FB3463] focus:outline-none"
               style={{ background: "var(--4, #F5F5F5)", fontSize: "1.5rem" }}
+              disabled={isCodeVerified}
             />
-            <div className="text-[1.5rem] my-auto mr-[1rem]">
-              {timer > 0 ? `${Math.floor(timer / 60)}:${timer % 60 < 10 ? `0${timer % 60}` : timer % 60}` : "인증 코드가 만료되었습니다."}
-            </div>
+            <button
+              type="button"
+              onClick={handleCodeVerification}
+              disabled={isVerificationButtonDisabled}
+              className={`${isVerificationButtonDisabled
+                ? "bg-gray-400 text-white cursor-not-allowed"
+                : "bg-black text-white hover:bg-gray-900 focus:outline-none focus:bg-gray-900"
+                } w-[8.6rem] h-[3.5rem] my-auto rounded-lg`}
+              style={{ fontSize: "1.6rem" }}
+            >
+              {codeMessage === '인증이 완료되었습니다.' ? '인증 완료' : '확인하기'}
+            </button>
+          </div>
+          <div className={`text-${codeMessage.includes('완료') ? 'green' : 'red'}-500 mt-2`}>
+            {codeMessage}
           </div>
         </div>
       )}
@@ -300,7 +359,6 @@ const SignUpForm = () => {
           과{" "}
           <Link href="/privacy">
             <span
-
               style={{
                 color: "gray",
                 textDecoration: "underline",
@@ -319,17 +377,18 @@ const SignUpForm = () => {
           className={`mx-auto mt-32 mb-32 w-[22rem] h-[6rem] bg-btn-color text-white py-2 rounded-lg focus:outline-none ${!verificationClicked ||
             !passwordValid ||
             !passwordMatch ||
-            !agreementChecked
+            !agreementChecked ||
+            !isCodeVerified
             ? "cursor-not-allowed bg-gray-400 hover:bg-gray-400"
             : ""
             }`}
           style={{ fontSize: "2rem" }}
           disabled={
-            !verificationClicked ||
+            !isCodeVerified ||
             !passwordValid ||
             !passwordMatch ||
-            !agreementChecked
-          }
+            !agreementChecked ||
+            !verificationClicked}
         >
           다음
         </button>

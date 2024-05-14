@@ -42,8 +42,8 @@ export async function checkEmailDuplicate(email: string) {
     const response = await axios.get(
       `${backendUrl}/api/member/isDuplicated?email=${email}`
     );
-    const data = response.data.result;
-    console.log(response);
+    const data = response.data.result.duplicated;
+    console.log(response.data);
     console.log(data);
       return response.data;
   } catch (error) {
@@ -66,6 +66,21 @@ export async function emailSend(email: string) {
     }
   } catch (error) {
     throw new Error(`Error checking email duplication: ${error}`);
+  }
+}
+
+export async function confirmEmail(email: string, authNumber: string) {
+  try {
+    const response = await axios.post(
+      `${backendUrl}/api/email/confirm`,
+      { email, authNumber }
+    );
+    const data = response.data.result;
+    console.log(response);
+    console.log(data);
+    return data;
+  } catch (error) {
+    throw new Error(`Error confirming email: ${error}`);
   }
 }
 
