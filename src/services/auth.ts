@@ -84,10 +84,24 @@ export async function confirmEmail(email: string, authNumber: string) {
   }
 }
 
+export async function getMyInfo() {
+  try {
+    const response = await axios.get(
+      `${backendUrl}/api/member`);
+    const data = response.data.result;
+    console.log(data);
+    return data;
+  } catch (error) {
+    console.log(isLoggedIn);
+    throw new Error(`Error getting my info: ${error}`);
+  }
+}
+
 // Axios 설정: 헤더에 accessToken 추가
 axios.interceptors.request.use(
   async (config) => {
-    if (isLoggedIn()) {
+    const accessToken = Cookies.get("accessToken");
+    if (accessToken) {
       config.headers.Authorization = `Bearer ${accessToken}`;
     }
     return config;
