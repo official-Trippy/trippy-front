@@ -3,7 +3,7 @@
 import React from "react";
 import Image from "next/image";
 import useUserInfo from "@/hooks/useUserInfo";
-import BlogStep3 from "../../../public/BlogStep2.svg";
+import BlogStep3 from "../../../public/BlogStep3.svg";
 import CheckIcon from "../../../public/CheckIcon.svg";
 import Link from "next/link";
 
