@@ -163,6 +163,7 @@ const SignUpForm = () => {
         setCodeMessage('인증이 완료되었습니다.');
         setIsCodeVerified(true);
       } else {
+        console.log(isCodeVerified);
         setCodeMessage('인증에 실패하였습니다. 다시 입력해주세요.');
       }
     } catch (error) {
@@ -376,7 +377,8 @@ const SignUpForm = () => {
           className={`mx-auto mt-32 mb-32 w-[22rem] h-[6rem] bg-btn-color text-white py-2 rounded-lg focus:outline-none ${!verificationClicked ||
             !passwordValid ||
             !passwordMatch ||
-            !agreementChecked
+            !agreementChecked ||
+            !isCodeVerified
             ? "cursor-not-allowed bg-gray-400 hover:bg-gray-400"
             : ""
             }`}
