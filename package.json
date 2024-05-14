@@ -13,6 +13,7 @@
     "@tanstack/react-query-next-experimental": "^5.32.0",
     "axios": "^1.6.8",
     "cors": "^2.8.5",
+    "framer-motion": "^11.2.0",
     "http-proxy": "^1.18.1",
     "js-cookie": "^3.0.5",
     "next": "14.2.2",

@@ -97,6 +97,19 @@ export async function getMyInfo() {
   }
 }
 
+export async function changePassword(code: string, email: string, newPassword: string) {
+  try {
+    const response = await axios.patch(`${backendUrl}/api/member/password?code=${code}`, {
+      email: email,
+      newPassword: newPassword
+    });
+    const data = response.data;
+    return data;
+  } catch (error) {
+    throw new Error(`Error changing password: ${error}`);
+  }
+}
+
 // Axios 설정: 헤더에 accessToken 추가
 axios.interceptors.request.use(
   async (config) => {
