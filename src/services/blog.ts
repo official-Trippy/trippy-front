@@ -47,3 +47,19 @@ export async function signupCommon(data: { nickName: string; blogName: string; b
     throw new Error(`Error signing up: ${error}`);
   }
 }
+
+export async function submitInterests(selectedInterests: string[]) {
+  try {
+    const response = await axios.post(`${backendUrl}/api/member/interest`, {
+      koreanInterestedTypes: selectedInterests,
+    });
+
+    if (response.data.isSuccess) {
+      return { success: true };
+    } else {
+      return { success: false, message: "Failed to submit interests" };
+    }
+  } catch (error) {
+    throw new Error(`Error submitting interests: ${error}`);
+  }
+}
