@@ -2,12 +2,13 @@
 
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { Login, checkEmailDuplicate } from "@/services/auth";
-import LogoMain from "../../../public/LogoMain.svg";
 import { useRouter } from "next/navigation";
-import { signUp, emailSend, confirmEmail } from "@/services/auth";
 import Link from "next/link";
 import Cookies from "js-cookie";
+
+import { signUp, emailSend, confirmEmail } from "@/services/auth";
+import { Login, checkEmailDuplicate } from "@/services/auth";
+import LogoMain from "../../../public/LogoMain.svg";
 
 const SignUpForm = () => {
   const [email, setEmail] = useState("");
