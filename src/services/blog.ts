@@ -23,7 +23,7 @@ export async function checkNickNameDuplicate(nickName: string) {
 export async function checkBlogNameDuplicate(blogName: string) {
   try {
     const response = await axios.get(
-      `${backendUrl}/api/blog/isDuplicated?blogName=${blogName}`
+      `${backendUrl}/api/member/isDuplicated?blogName=${blogName}`
     );
     const data = response.data;
     console.log(response);
@@ -35,5 +35,15 @@ export async function checkBlogNameDuplicate(blogName: string) {
     }
   } catch (error) {
     throw new Error(`Error checking email duplication: ${error}`);
+  }
+}
+
+export async function signupCommon(data: { nickName: string; blogName: string; blogIntroduce: string; }) {
+  try {
+    const response = await axios.post(`${backendUrl}/api/member/signup/common`, data);
+    console.log(response);
+    return response.data;
+  } catch (error) {
+    throw new Error(`Error signing up: ${error}`);
   }
 }

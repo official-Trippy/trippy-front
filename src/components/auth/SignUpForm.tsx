@@ -2,11 +2,12 @@
 
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { checkEmailDuplicate } from "@/services/auth";
+import { Login, checkEmailDuplicate } from "@/services/auth";
 import LogoMain from "../../../public/LogoMain.svg";
 import { useRouter } from "next/navigation";
 import { signUp, emailSend, confirmEmail } from "@/services/auth";
 import Link from "next/link";
+import Cookies from "js-cookie";
 
 const SignUpForm = () => {
   const [email, setEmail] = useState("");
@@ -100,6 +101,11 @@ const SignUpForm = () => {
     e.preventDefault();
     try {
       await signUp({ memberId: email, email, password });
+      const response = await Login(email, password);
+      const { accessToken, refreshToken } = response.result;
+      Cookies.set("accessToken", accessToken);
+      Cookies.set("refreshToken", refreshToken);
+      console.log(accessToken);
       router.push("/blogRegister");
     } catch (error) {
       console.error("Error during signup:", error);
@@ -114,23 +120,6 @@ const SignUpForm = () => {
     setVerificationCode("");
     setTimer(180);
     setVerificationClicked(false);
-  };
-
-  const handleEmailVerification = async () => {
-    if (duplicateMessage === "사용 가능한 이메일입니다.") {
-      setVerificationClicked(true);
-      setTimer(180);
-      try {
-        const response = await emailSend(email);
-        if (response.isSuccess) {
-          console.log('success');
-        } else {
-          console.error("Failed to send email.");
-        }
-      } catch (error) {
-        console.error("Error sending email:", error);
-      }
-    }
   };
 
   const handleResendVerification = async () => {
