@@ -42,8 +42,8 @@ export async function checkEmailDuplicate(email: string) {
     const response = await axios.get(
       `${backendUrl}/api/member/isDuplicated?email=${email}`
     );
-    const data = response.data.result;
-    console.log(response);
+    const data = response.data.result.duplicated;
+    console.log(response.data);
     console.log(data);
       return response.data;
   } catch (error) {

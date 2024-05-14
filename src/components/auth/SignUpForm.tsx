@@ -57,8 +57,9 @@ const SignUpForm = () => {
 
     if (isValid) {
       try {
-        const { isSuccess, duplicated } = await checkEmailDuplicate(value);
+        const { isSuccess, result } = await checkEmailDuplicate(value);
         if (isSuccess) {
+          const duplicated = result.duplicated;
           if (duplicated) {
             setDuplicateMessage("해당 이메일이 이미 존재합니다.");
           } else {
@@ -71,7 +72,7 @@ const SignUpForm = () => {
       } catch (error) {
         console.error("이메일 중복 확인 오류:", error);
         setDuplicateMessage("이메일 중복 확인에 실패했습니다.");
-      }
+      }      
     } else {
       setDuplicateMessage("");
     }
@@ -381,11 +382,11 @@ const SignUpForm = () => {
             }`}
           style={{ fontSize: "2rem" }}
           disabled={
-            !verificationClicked ||
+            !isCodeVerified ||
             !passwordValid ||
             !passwordMatch ||
-            !agreementChecked
-          }
+            !agreementChecked ||
+            !verificationClicked}
         >
           다음
         </button>
