@@ -187,8 +187,8 @@ const SignUpForm = () => {
       <label htmlFor="email" className="sign-up-info block mt-[6.9rem]">
         이메일
       </label>
-      <EmailVerification />
-      {/* <div
+      {/* <EmailVerification /> */}
+      <div
         className={`flex w-full px-4 py-2 mt-[2.5rem] mb-2 h-[6rem] rounded-xl border ${isInputFocused ? "border-[#FB3463]" : "border-gray-300"
           } focus:border-[#FB3463] focus:outline-none`}
         style={{ background: "var(--4, #F5F5F5)" }}
@@ -277,8 +277,8 @@ const SignUpForm = () => {
           <div className={`text-${codeMessage.includes('완료') ? 'green' : 'red'}-500 mt-2`}>
             {codeMessage}
           </div>
-        </div> */}
-      {/* )} */}
+        </div> 
+      )}
       <div className="mt-[6rem]">
         <label htmlFor="password" className="sign-up-info block">
           비밀번호
