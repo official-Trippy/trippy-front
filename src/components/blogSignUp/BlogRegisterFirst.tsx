@@ -10,6 +10,7 @@ import {
   checkBlogNameDuplicate,
   signupCommon,
 } from "@/services/blog";
+import useUserInfo from '@/hooks/useUserInfo';
 
 const BlogRegisterFirst = () => {
   const [profileImage, setProfileImage] = useState<string | null>(null);
@@ -20,6 +21,8 @@ const BlogRegisterFirst = () => {
   const [blogIntroduce, setBlogIntroduce] = useState<string>("");
 
   const router = useRouter();
+
+  const { setUserInfo } = useUserInfo();
 
   const handleNickName = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -108,7 +111,7 @@ const BlogRegisterFirst = () => {
     setProfileImage(null);
   };
 
-  const handleNextButtonClick = async () => {
+  const handleSubmit = async () => {
     if (!nickNameError.includes("사용 가능") || !blogNameError.includes("사용 가능")) {
       return; 
     }
@@ -118,6 +121,8 @@ const BlogRegisterFirst = () => {
         blogName: blogName,
         blogIntroduce: blogIntroduce 
       };
+      console.log(data);
+      setUserInfo(data);
       const response = await signupCommon(data);
       console.log("Signup success:", response);
       router.push("/blogRegister2");
@@ -251,7 +256,7 @@ const BlogRegisterFirst = () => {
                   ? "cursor-not-allowed bg-gray-400 hover:bg-gray-400"
                   : ""
               }`}
-              onClick={handleNextButtonClick}
+              onClick={handleSubmit}
               style={{ fontSize: "2rem" }}
               disabled={
                 !nickNameError.includes("사용 가능") ||
