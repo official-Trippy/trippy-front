@@ -82,12 +82,21 @@ const Password = () => {
     if (duplicateMessage === "해당 이메일로 가입된 기록이 있습니다. 인증을 진행해주세요.") {
       setVerificationClicked(true);
       setTimer(180);
+      Swal.fire({
+        icon: 'success',
+        title: '인증 메일이 발송되었습니다.',
+        html: `<div style="text-align: center;">${email}로 인증 메일을 발송했습니다.<br>메일에 첨부된 링크를 클릭하여 인증을 완료해주세요.</div>`,
+        iconColor: '#FB3463', 
+        showConfirmButton: true, 
+        confirmButtonText: '확인',
+        confirmButtonColor: '#FB3463'
+      })
       try {
         const response = await emailSend(email);
         if (response.isSuccess) {
-          console.log('Resend success');
+          console.log("Success to send email")
         } else {
-          console.error("Failed to resend email.");
+          console.error("Failed to send email.");
         }
       } catch (error) {
         console.error("Error resending email:", error);
