@@ -3,9 +3,10 @@
 import { motion } from 'framer-motion';
 import Image from "next/image";
 import LogoMain from "../../../public/LogoMain.svg";
-import Link from "next/link";
 import { checkEmailDuplicate, confirmEmail, emailSend, changePassword } from "@/services/auth";
 import React, { useState, useEffect, useRef, ChangeEvent } from "react";
+import Swal from 'sweetalert2';
+import { useRouter } from 'next/navigation';
 
 const Password = () => {
 
@@ -27,8 +28,9 @@ const Password = () => {
   const [isCodeVerified, setIsCodeVerified] = useState(false);
   const [showPasswordFields, setShowPasswordFields] = useState(false);
 
-
   const isVerificationButtonDisabled = codeMessage === '인증이 완료되었습니다.' || isCodeVerified;
+
+  const router = useRouter();
 
   const handleInputFocus = () => {
     setIsInputFocused(true);
@@ -161,6 +163,19 @@ const Password = () => {
     try {
       const response = await changePassword(verificationCode, email, password);
       if (response.isSuccess) {
+        Swal.fire({
+          icon: 'success',
+          title: '비밀번호 변경 성공',
+          html: '<div style="text-align: center;">비밀번호 변경이 완료되었습니다.<br>변경된 비밀번호로 로그인해주세요.</div>',
+          iconColor: '#FB3463', 
+          showConfirmButton: true, 
+          confirmButtonText: '로그인하기',
+          confirmButtonColor: '#FB3463'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            router.push('/login');
+          }
+        });
         console.log('비밀번호 변경 성공');
       } else {
         console.log('비밀번호 변경 실패');
@@ -169,6 +184,7 @@ const Password = () => {
       console.error("비밀번호 변경 오류:", error);
     }
   };
+  
 
   return (
     <div className="flex flex-col items-center justify-center w-[80%] mx-auto mt-[19rem]">
@@ -337,7 +353,7 @@ const Password = () => {
                   !passwordMatch}
                 onClick={changeAccountPassword}
               >
-                다음
+                비밀번호 변경
               </button>
             </div>
           </motion.div></>
