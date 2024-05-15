@@ -11,6 +11,7 @@ const Account = () => {
   const [email, setEmail] = useState("");
   const [accountFound, setAccountFound] = useState(false);
   const [badRequest, setBadRequest] = useState(false);
+  const [maskedEmail, setMaskedEmail] = useState("");
 
   const isNicknameValid = () => {
     return /^[A-Za-z]{4,}$/.test(nickname) || /^[가-힣]{2,}$/.test(nickname);
@@ -31,6 +32,9 @@ const Account = () => {
         setEmail(response.result.email);
         setAccountFound(true);
         setBadRequest(false);
+        const [username, domain] = response.result.email.split("@");
+        const maskedUsername = `${username.substring(0, 3)}***`;
+        setMaskedEmail(`${maskedUsername}@${domain}`);
       } else {
         setBadRequest(true);
         setAccountFound(false);
@@ -59,7 +63,7 @@ const Account = () => {
           {accountFound && '해당 닉네임으로 가입한 이메일 정보입니다.'}
           {accountFound && (
             <>
-              <div className="text-center text-black text-xl font-bold font-['Pretendard'] mt-[8.4rem]" style={{ fontSize: "1.6rem" }}>{email}</div>
+              <div className="text-center text-black text-xl font-bold font-['Pretendard'] mt-[8.4rem]" style={{ fontSize: "1.6rem" }}>{maskedEmail}</div>
             </>
           )}
           {badRequest && (
@@ -112,7 +116,6 @@ const Account = () => {
             </div>
           </Link>
         )}
-
       </div>
     </div>
   );
