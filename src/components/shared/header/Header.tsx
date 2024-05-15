@@ -7,10 +7,14 @@ import Link from "next/link";
 import LogoHeader from "../../../../public/LogoHeader.svg";
 import AlertImg from "../../../../public/AlertImg.png";
 import Profile from "../../../../public/Profile.png";
+import { getMyInfo } from "@/services/auth";
+import { UserInfoType } from "@/types/auth";
 
 export default function Header() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userInfo, setUserInfo] = useState<UserInfoType | null>(null);
   const [loading, setLoading] = useState(true);
+  const [modalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
     const checkLoginState = () => {
@@ -24,6 +28,16 @@ export default function Header() {
 
     checkLoginState();
   }, []);
+
+  const toggleModal = async () => {
+    try {
+      const data = await getMyInfo();
+      setUserInfo(data);
+    } catch (error) {
+      console.error("Error getting user info:", error);
+    }
+    setModalVisible(!modalVisible);
+  };
 
   return (
     <header className="header flex justify-between items-center w-[80%] mx-auto">
@@ -68,9 +82,17 @@ export default function Header() {
                   <Image src={AlertImg} alt="alert" />
                 </div>
                 <div className="w-[32px] my-auto">
-                  <Link href="/myPage">
+                  <div onClick={toggleModal}>
                     <Image src={Profile} alt="profile" />
-                  </Link>
+                  </div>
+                  {modalVisible && (
+                    <div className="profile-modal">
+                      <div>{userInfo && userInfo.nickName}</div>
+                      <div>{userInfo && userInfo.email}</div>
+                      <div>{userInfo && userInfo.blogName}</div>
+                      <div>{userInfo && userInfo.blogIntroduce}</div>
+                    </div>
+                  )}
                 </div>
               </div>
             ) : (

@@ -67,10 +67,10 @@ const LoginForm= () => {
         </button>
       </form>
       <div className="flex justify-center mt-[2rem] mb-[4rem]">
-        <Link href="#" className="mx-4 text-[#9D9D9D] font-[1.2rem]" style={{ fontSize: "1.2rem" }}>
+        <Link href="/findAccount" className="mx-4 text-[#9D9D9D] font-[1.2rem]" style={{ fontSize: "1.2rem" }}>
           계정 찾기
         </Link>
-        <Link href="#" className="mx-4 text-[#9D9D9D]" style={{ fontSize: "1.2rem" }}>
+        <Link href="/findPassword" className="mx-4 text-[#9D9D9D]" style={{ fontSize: "1.2rem" }}>
           비밀번호 찾기
         </Link>
         <Link href="/signUp" className="mx-4 text-[#9D9D9D]" style={{ fontSize: "1.2rem" }}>

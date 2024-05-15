@@ -2,12 +2,15 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import BlogStep1 from "../../../public/BlogStep1.svg";
 import DefaultProfileImg from "../../../public/DefaultProfileImg.svg";
 import {
   checkNickNameDuplicate,
   checkBlogNameDuplicate,
+  signupCommon,
 } from "@/services/blog";
+import useUserInfo from '@/hooks/useUserInfo';
 
 const BlogRegisterFirst = () => {
   const [profileImage, setProfileImage] = useState<string | null>(null);
@@ -15,6 +18,11 @@ const BlogRegisterFirst = () => {
   const [nickNameError, setNickNameError] = useState<string>("");
   const [blogName, setBlogName] = useState<string>("");
   const [blogNameError, setBlogNameError] = useState<string>("");
+  const [blogIntroduce, setBlogIntroduce] = useState<string>("");
+
+  const router = useRouter();
+
+  const { setUserInfo } = useUserInfo();
 
   const handleNickName = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -103,9 +111,28 @@ const BlogRegisterFirst = () => {
     setProfileImage(null);
   };
 
+  const handleSubmit = async () => {
+    if (!nickNameError.includes("사용 가능") || !blogNameError.includes("사용 가능")) {
+      return; 
+    }
+    try {
+      const data = {
+        nickName: nickName,
+        blogName: blogName,
+        blogIntroduce: blogIntroduce 
+      };
+      console.log(data);
+      setUserInfo(data);
+      const response = await signupCommon(data);
+      console.log("Signup success:", response);
+      router.push("/blogRegister2");
+    } catch (error) {
+      console.error("Error signing up:", error);
+    }
+  };
+
   return (
     <div className="w-[80%] mx-auto mt-[15rem]">
-       {/* <Image src={LogoMain} alt="Logo" className="mx-auto"/> */}
       <Image src={BlogStep1} alt="Logo" className="w-[47.7rem] mx-auto" />
       <div className="mt-[8rem]">
         <div className="sign-up-info">기본 회원 정보를 등록해주세요</div>
@@ -211,6 +238,8 @@ const BlogRegisterFirst = () => {
               </label>
               <input
                 type="text"
+                value={blogIntroduce}
+                onChange={(e) => setBlogIntroduce(e.target.value)}
                 placeholder="50글자 이내로 소개글을 작성해보세요."
                 className="w-full px-4 py-2  mt-[2.5rem] mb-2 h-[6rem] rounded-xl border border-gray-300 focus:border-[#FB3463] focus:outline-none"
                 style={{ background: "var(--4, #F5F5F5)", fontSize: "1.5rem" }}
@@ -227,6 +256,7 @@ const BlogRegisterFirst = () => {
                   ? "cursor-not-allowed bg-gray-400 hover:bg-gray-400"
                   : ""
               }`}
+              onClick={handleSubmit}
               style={{ fontSize: "2rem" }}
               disabled={
                 !nickNameError.includes("사용 가능") ||
