@@ -97,6 +97,16 @@ export async function getMyInfo() {
   }
 }
 
+export async function findAccount(nickName: string) {
+  try {
+    const response = await axios.get(`${backendUrl}/api/member/find?nickName=${nickName}`);
+    const data = response.data;
+    return data;
+  } catch (error) {
+    throw new Error(`Error getting Nickname: ${error}`);
+  }
+}
+
 export async function changePassword(code: string, email: string, newPassword: string) {
   try {
     const response = await axios.patch(`${backendUrl}/api/member/password?code=${code}`, {
