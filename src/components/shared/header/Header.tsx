@@ -1,5 +1,4 @@
 'use client'
-
 import { useState, useEffect } from "react";
 import Cookies from "js-cookie";
 import Image from "next/image";
@@ -7,19 +6,18 @@ import Link from "next/link";
 import LogoHeader from "../../../../public/LogoHeader.svg";
 import AlertImg from "../../../../public/AlertImg.png";
 import Profile from "../../../../public/Profile.png";
+import UserModal from "@/components/userInfo/userModal";
 import { getMyInfo } from "@/services/auth";
 import { UserInfoType } from "@/types/auth";
-import UserModal from "@/components/userInfo/userModal";
 
 export default function Header() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userInfo, setUserInfo] = useState<UserInfoType | null>(null);
   const [loading, setLoading] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
-  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
-    const checkLoginState = () => {
+    const checkLoginState = async () => {
       const accessToken = Cookies.get("accessToken");
       const refreshToken = Cookies.get("refreshToken");
       if (accessToken && refreshToken) {
@@ -31,22 +29,20 @@ export default function Header() {
     checkLoginState();
   }, []);
 
-  // const toggleModal = async () => {
-  //   try {
-  //     const data = await getMyInfo();
-  //     setUserInfo(data);
-  //   } catch (error) {
-  //     console.error("Error getting user info:", error);
-  //   }
-  //   setModalVisible(!modalVisible);
-  // };
-
-  const handleModalToggle = () => {
-    setShowModal(!showModal);
+  const handleModalToggle = async () => {
+    if (!modalVisible) {
+      try {
+        const userData = await getMyInfo();
+        setUserInfo(userData);
+      } catch (error) {
+        console.error("Error getting user info:", error);
+      }
+    }
+    setModalVisible(!modalVisible);
   };
 
   return (
-    <header className="header flex justify-between items-center w-[80%] mx-auto">
+    <header className="header flex justify-between items-center w-[80%] mx-auto relative">
       <div className="flex items-center">
         <div className="mr-4">
           <Link href="/">
@@ -87,19 +83,20 @@ export default function Header() {
                 <div className="mr-8 w-[24px] my-auto">
                   <Image src={AlertImg} alt="alert" />
                 </div>
-                <div className="w-[32px] my-auto">
+                <div className="w-[32px] my-auto relative">
                   <div onClick={handleModalToggle}>
-                  {showModal && <UserModal />}
                     <Image src={Profile} alt="profile" />
                   </div>
-                  {modalVisible && (
-                    <div className="profile-modal">
-                      <div>{userInfo && userInfo.nickName}</div>
-                      <div>{userInfo && userInfo.email}</div>
-                      <div>{userInfo && userInfo.blogName}</div>
-                      <div>{userInfo && userInfo.blogIntroduce}</div>
-                    </div>
-                  )}
+                  <UserModal
+                    isOpen={modalVisible}
+                    onClose={() => setModalVisible(false)}
+                    userInfo={userInfo}
+                    style={{
+                      position: "absolute",
+                      bottom: "-260px", 
+                      left: "-290px", 
+                    }}
+                  />
                 </div>
               </div>
             ) : (

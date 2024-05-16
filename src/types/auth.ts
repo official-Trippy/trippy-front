@@ -31,3 +31,13 @@ export interface UserInfoType {
     blogIntroduce: string;
   }
   
+export interface UserModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  userInfo: {
+    nickName: string;
+    email: string;
+    blogName: string;
+    blogIntroduce: string;
+  } | null;
+}
