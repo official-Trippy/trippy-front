@@ -3,6 +3,7 @@
 import FirstBg from "@/components/pages/onboarding/firstbg";
 import SecondBg from "@/components/pages/onboarding/secondbg";
 import ThirdBg from "@/components/pages/onboarding/thirdbg";
+import Header from "@/components/shared/header/Header";
 import React, { useEffect, useRef, useState } from "react";
 
 const OnBoradingPage = () => {
@@ -10,41 +11,45 @@ const OnBoradingPage = () => {
   const firstRef = useRef<HTMLDivElement | null>(null);
   const secondRef = useRef<HTMLDivElement | null>(null);
   const thirdRef = useRef<HTMLDivElement | null>(null);
-  const refsArray = [zeroRef, firstRef, secondRef, thirdRef];
+  const refsArray = [zeroRef, firstRef, secondRef, thirdRef]; // Refs 배열 생성
 
   useEffect(() => {
     const handleScroll = (e: WheelEvent) => {
       e.preventDefault();
-      // 스크롤 방향 감지
       const { deltaY } = e;
       const direction = deltaY > 0 ? 1 : -1;
 
-      // 현재 활성화된 섹션을 기준으로 다음 또는 이전 섹션으로 이동
-      const sections = document.querySelectorAll('.section');
-      const currentSection = document.querySelector('.section.active') as HTMLElement; // HTMLElement로 타입 단언
-      let index = Array.from(sections).indexOf(currentSection);
-      index = Math.max(0, Math.min(sections.length - 1, index + direction));
-      const nextSection = sections[index] as HTMLElement; // HTMLElement로 타입 단언
+      const currentSectionIndex = refsArray.findIndex(ref => ref.current?.classList.contains('active'));
+      let nextSectionIndex = currentSectionIndex + direction;
 
-      // 부드러운 스크롤 이동
-      window.scrollTo({
-        top: nextSection.offsetTop,
-        behavior: 'smooth',
-      });
+      nextSectionIndex = Math.max(0, Math.min(refsArray.length - 1, nextSectionIndex)); // 범위를 벗어나지 않도록 조정
 
-      // 활성화된 섹션 변경
-      currentSection.classList.remove('active');
-      nextSection.classList.add('active');
+      const nextSection = refsArray[nextSectionIndex].current; // 다음 섹션의 ref
+
+      if (nextSection) {
+        nextSection.scrollIntoView({ behavior: 'smooth' }); // 부드러운 스크롤 이동
+
+        // 활성화된 섹션 변경
+        refsArray.forEach((ref, index) => {
+          if (ref.current) {
+            if (index === nextSectionIndex) {
+              ref.current.classList.add('active');
+            } else {
+              ref.current.classList.remove('active');
+            }
+          }
+        });
+      }
     };
 
     window.addEventListener('wheel', handleScroll);
 
-    // 컴포넌트 언마운트 시 이벤트 리스너 제거
     return () => window.removeEventListener('wheel', handleScroll);
   }, []);
 
   return (
     <div className="pages">
+      <Header />
       <div className="section active"></div>
       <div className="section">
         <FirstBg>
