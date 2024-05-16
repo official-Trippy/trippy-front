@@ -4,55 +4,41 @@ import FirstBg from "@/components/pages/onboarding/firstbg";
 import SecondBg from "@/components/pages/onboarding/secondbg";
 import ThirdBg from "@/components/pages/onboarding/thirdbg";
 import Header from "@/components/shared/header/Header";
+import Slider from "@/components/slider";
 import React, { useEffect, useRef, useState } from "react";
 
 const OnBoradingPage = () => {
-  const zeroRef = useRef<HTMLDivElement | null>(null);
-  const firstRef = useRef<HTMLDivElement | null>(null);
-  const secondRef = useRef<HTMLDivElement | null>(null);
-  const thirdRef = useRef<HTMLDivElement | null>(null);
-  const refsArray = [zeroRef, firstRef, secondRef, thirdRef]; // Refs 배열 생성
+  const pagesRef = useRef(null);
+  const paginationRef = useRef(null);
+  const [showSecondAnimation, setShowSecondAnimation] = useState(false);
 
   useEffect(() => {
-    const handleScroll = (e: WheelEvent) => {
-      e.preventDefault();
-      const { deltaY } = e;
-      const direction = deltaY > 0 ? 1 : -1;
+    const handleScroll = () => {
+      // SecondBg 컴포넌트의 위치를 계산하기 위해 pagesRef를 사용합니다.
+      // 이 예제에서는 SecondBg가 페이지의 두 번째 섹션으로 가정합니다.
+      // 실제 위치에 따라 값을 조정해야 할 수 있습니다.
+      const secondBgPosition = pagesRef.current ? pagesRef.current.children[1].offsetTop : 0;
+      const onSecondBg = window.scrollY + window.innerHeight > secondBgPosition;
 
-      const currentSectionIndex = refsArray.findIndex(ref => ref.current?.classList.contains('active'));
-      let nextSectionIndex = currentSectionIndex + direction;
-
-      nextSectionIndex = Math.max(0, Math.min(refsArray.length - 1, nextSectionIndex)); // 범위를 벗어나지 않도록 조정
-
-      const nextSection = refsArray[nextSectionIndex].current; // 다음 섹션의 ref
-
-      if (nextSection) {
-        nextSection.scrollIntoView({ behavior: 'smooth' }); // 부드러운 스크롤 이동
-
-        // 활성화된 섹션 변경
-        refsArray.forEach((ref, index) => {
-          if (ref.current) {
-            if (index === nextSectionIndex) {
-              ref.current.classList.add('active');
-            } else {
-              ref.current.classList.remove('active');
-            }
-          }
-        });
+      if (onSecondBg) {
+        setShowSecondAnimation(true);
+      } else {
+        setShowSecondAnimation(false);
       }
     };
 
-    window.addEventListener('wheel', handleScroll);
+    window.addEventListener('scroll', handleScroll);
 
-    return () => window.removeEventListener('wheel', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
   }, []);
 
   return (
-    <div className="pages">
+    <div className="">
       <Header />
-      <div className="section active"></div>
-      <div className="section">
-        <FirstBg>
+      <div className="pages" ref={pagesRef}>
+        <FirstBg className={`page slide-up-animation`} >
           <div className="w-[80%] flex mx-auto">
             <div className="pt-[10rem]">
               <h1 className="text-[4rem] font-bold text-btn-color">나만의 여행을<br />기록할 수 있어요</h1>
@@ -60,9 +46,7 @@ const OnBoradingPage = () => {
             </div>
           </div>
         </FirstBg>
-      </div>
-      <div className="section">
-        <SecondBg>
+        <SecondBg className={`page ${showSecondAnimation ? 'slide-up-animation' : ''}`}>
           <div className="w-[80%] flex mx-auto">
             <div className="pt-[10rem] flex flex-col ml-auto">
               <h1 className="text-[4rem] font-bold text-white flex flex-col ml-auto">서로의 여행 기록을<a className="flex ml-auto">공유할 수 있어요</a></h1>
@@ -70,9 +54,7 @@ const OnBoradingPage = () => {
             </div>
           </div>
         </SecondBg>
-      </div>
-      <div className="section">
-        <ThirdBg>
+        <ThirdBg className="page slide-up-animation">
           <div className="w-[80%] flex flex-col relative z-10  mx-auto my-auto">
             <div className="pt-[10rem] flex flex-col mx-auto text-center">
               <h1 className="text-[4rem] font-bold text-white flex mx-auto">나만의 특별한 OOTD와<br />정보를 공유할 수 있어요</h1>
@@ -82,6 +64,8 @@ const OnBoradingPage = () => {
           </div>
         </ThirdBg>
       </div>
+      <ul className="pagination appearance-none" ref={paginationRef}></ul>
+      <Slider pagesRef={pagesRef} paginationRef={paginationRef} />
     </div>
   );
 };

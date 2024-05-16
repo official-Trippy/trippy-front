@@ -5,14 +5,15 @@ import FirstBgimg from '@/dummy/onboardingfirst.svg'
 
 interface FirstProps {
     children: ReactNode;
+    className: any;
 }
 
-function FirstBg({ children }: FirstProps) {
+function FirstBg({ children, className }: FirstProps) {
 
     return (
-        <div className='flex flex-col w-full h-screen'>
+        <div className={`flex flex-col w-full h-[20%] ${className}`}>
             {children}
-            <div className='flex flex-col ml-auto mt-auto z-10'>
+            <div className='flex flex-col ml-auto mt-auto z-0'>
                 <Image src={FirstBgimg} alt='' />
             </div>
         </div>

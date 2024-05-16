@@ -5,12 +5,13 @@ import secondimg from "@/dummy/secondimg.svg"
 
 interface FirstProps {
     children: ReactNode;
+    className: any;
 }
 
-function SecondBg({ children }: FirstProps) {
+function SecondBg({ children, className }: FirstProps) {
 
     return (
-        <div className='relative flex flex-col w-full h-screen bg-btn-color z-20'>
+        <div className={`relative flex flex-col w-full h-screen bg-btn-color z-20 ${className}`}>
             {children}
             <div className='flex mt-auto'>
                 <Image src={secondimg} alt='' />

@@ -6,35 +6,35 @@ import Cookies from 'js-cookie';
 
 interface HomeRecentProps {
     children: ReactNode;
+    isLoading: any;
 }
 
-function RecentOotdPost({ children }: HomeRecentProps) {
+function RecentOotdPost({ children, isLoading }: HomeRecentProps) {
     const accessToken = Cookies.get('accessToken');
 
     return (
         <div className='w-[80%] mx-auto py-[5rem]'>
-
-            <div className=''>
-                {accessToken ? (
-                    <h1 className='font-bold text-[2rem]'>최근 업로드 된 OOTD를 만나보세요</h1>
-                ) : (
-                    <h1 className='font-bold text-[2rem]'>트리피인들의 다양한 스타일을 만나보세요</h1>
-                )
-                }
-                <div className='flex text-[1.6rem] pt-[5rem] px-[1rem]'>
-                    <span className='pr-[1rem]'>팔로잉</span>
-                    <span className='px-[1rem]'>전체글</span>
-                    <select className='flex w-[8rem] h-[3rem] ml-auto font-medium selectshadow'>
-                        <option>기본</option>
-                        <option>최신순</option>
-                        <option>날짜순</option>
-                        <option>인기순</option>
-                    </select>
+            {isLoading ? (<div></div>) : (
+                <div className=''>
+                    {accessToken ? (
+                        <h1 className='font-bold text-[2rem]'>최근 업로드 된 OOTD를 만나보세요</h1>
+                    ) : (
+                        <h1 className='font-bold text-[2rem]'>트리피인들의 다양한 스타일을 만나보세요</h1>
+                    )
+                    }
                 </div>
+            )
+            }
+            <div className='flex text-[1.6rem] pt-[5rem] px-[1rem]'>
+                <span className='pr-[1rem]'>팔로잉</span>
+                <span className='px-[1rem]'>전체글</span>
+                <select className='flex w-[8rem] h-[3rem] ml-auto font-medium selectshadow'>
+                    <option>기본</option>
+                    <option>최신순</option>
+                    <option>날짜순</option>
+                    <option>인기순</option>
+                </select>
             </div>
-
-
-
             {children}
         </div>
     )
