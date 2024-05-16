@@ -11,6 +11,7 @@ import {
   signupCommon,
 } from "@/services/blog";
 import useUserInfo from '@/hooks/useUserInfo';
+import { swear_words_arr } from "@/constants/wearWordsArr";
 
 const BlogRegisterFirst = () => {
   const [profileImage, setProfileImage] = useState<string | null>(null);
@@ -19,6 +20,7 @@ const BlogRegisterFirst = () => {
   const [blogName, setBlogName] = useState<string>("");
   const [blogNameError, setBlogNameError] = useState<string>("");
   const [blogIntroduce, setBlogIntroduce] = useState<string>("");
+  const [blogIntroduceError, setBlogIntroduceError] = useState<string>("");
 
   const router = useRouter();
 
@@ -27,6 +29,11 @@ const BlogRegisterFirst = () => {
   const handleNickName = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setNickName(value);
+
+    if (checkSwearWords(value)) {
+      setNickNameError("욕설이 포함되었습니다. 다시 입력해주세요.");
+      return;
+    }
 
     if (!validateNickName(value)) {
       setNickNameError("형식이 올바르지 않습니다. 다시 입력해 주세요.");
@@ -60,7 +67,19 @@ const BlogRegisterFirst = () => {
 
   const handleBlogName = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
+
+    if (!value) {
+      setBlogNameError("");
+      setBlogName(value);
+      return;
+    }
+
     setBlogName(value);
+
+    if (checkSwearWords(value)) {
+      setBlogNameError("욕설이 포함되었습니다. 다시 입력해주세요.");
+      return;
+    }
 
     if (!validateBlogName(value)) {
       setBlogNameError("형식이 올바르지 않습니다. 다시 입력해 주세요.");
@@ -111,15 +130,32 @@ const BlogRegisterFirst = () => {
     setProfileImage(null);
   };
 
+  const handleBlogIntroduce = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setBlogIntroduce(value);
+
+    if (checkSwearWords(value)) {
+      setBlogIntroduceError("욕설이 포함되었습니다. 다시 입력해주세요.");
+      return;
+    }
+
+    setBlogIntroduceError("");
+  };
+
+  const checkSwearWords = (value: string) => {
+    const lowerValue = value.toLowerCase();
+    return swear_words_arr.some((swearWord: string) => lowerValue.includes(swearWord));
+  };
+
   const handleSubmit = async () => {
     if (!nickNameError.includes("사용 가능") || !blogNameError.includes("사용 가능")) {
-      return; 
+      return;
     }
     try {
       const data = {
         nickName: nickName,
         blogName: blogName,
-        blogIntroduce: blogIntroduce 
+        blogIntroduce: blogIntroduce
       };
       console.log(data);
       setUserInfo(data);
@@ -198,9 +234,8 @@ const BlogRegisterFirst = () => {
               <div className="h-[1.7rem] mt-[1.2rem]">
                 {nickNameError && (
                   <p
-                    className={`text-${
-                      nickNameError.includes("사용 가능") ? "green" : "red"
-                    }-500`}
+                    className={`text-${nickNameError.includes("사용 가능") ? "green" : "red"
+                      }-500`}
                   >
                     {nickNameError}
                   </p>
@@ -215,7 +250,6 @@ const BlogRegisterFirst = () => {
                 type="text"
                 value={blogName}
                 onChange={handleBlogName}
-                onBlur={() => handleBlogNameBlur(blogName)}
                 placeholder="블로그 이름은 한글 2-15자, 영어 4-30자 이내로 입력 가능합니다."
                 className="w-full px-4 py-2 mt-[2.5rem] mb-2 h-[6rem] rounded-xl border border-gray-300 focus:border-[#FB3463] focus:outline-none"
                 style={{ background: "var(--4, #F5F5F5)", fontSize: "1.5rem" }}
@@ -223,9 +257,8 @@ const BlogRegisterFirst = () => {
               <div className="h-[1.7rem] mt-[1.2rem]">
                 {blogNameError && (
                   <p
-                    className={`text-${
-                      blogNameError.includes("사용 가능") ? "green" : "red"
-                    }-500`}
+                    className={`text-${blogNameError.includes("사용 가능") ? "green" : "red"
+                      }-500`}
                   >
                     {blogNameError}
                   </p>
@@ -239,23 +272,26 @@ const BlogRegisterFirst = () => {
               <input
                 type="text"
                 value={blogIntroduce}
-                onChange={(e) => setBlogIntroduce(e.target.value)}
+                onChange={handleBlogIntroduce}
                 placeholder="50글자 이내로 소개글을 작성해보세요."
                 className="w-full px-4 py-2  mt-[2.5rem] mb-2 h-[6rem] rounded-xl border border-gray-300 focus:border-[#FB3463] focus:outline-none"
                 style={{ background: "var(--4, #F5F5F5)", fontSize: "1.5rem" }}
               />
-              <div className="h-[1.7rem]"></div>
+              <div className="h-[1.7rem]">
+                {blogIntroduceError && (
+                  <p className="text-red-500">{blogIntroduceError}</p>
+                )}
+              </div>
             </div>
           </div>
           <div className="text-center">
             <button
               type="submit"
-              className={`mx-auto mt-32 mb-32 w-[22rem] h-[6rem] bg-btn-color text-white py-2 rounded-lg focus:outline-none ${
-                !nickNameError.includes("사용 가능") ||
-                !blogNameError.includes("사용 가능")
+              className={`mx-auto mt-32 mb-32 w-[22rem] h-[6rem] bg-btn-color text-white py-2 rounded-lg focus:outline-none ${!nickNameError.includes("사용 가능") ||
+                  !blogNameError.includes("사용 가능")
                   ? "cursor-not-allowed bg-gray-400 hover:bg-gray-400"
                   : ""
-              }`}
+                }`}
               onClick={handleSubmit}
               style={{ fontSize: "2rem" }}
               disabled={
