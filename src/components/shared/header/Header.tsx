@@ -8,17 +8,18 @@ import LogoHeader from "../../../../public/LogoHeader.svg";
 import AlertImg from "../../../../public/AlertImg.png";
 import Profile from "../../../../public/Profile.png";
 import { useSession, signIn, signOut } from "next-auth/react";
+import userData from "@/components/auth/userData";
 
 export default function Header() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  const { data } = useSession();
+  const { data: session, status } = useSession();
 
   const onClickTotalLogin = async (e: React.MouseEvent) => {
     e.preventDefault();
 
-    if (data) {
+    if (session) {
       await signOut();
     } else {
       await signIn();
@@ -91,8 +92,19 @@ export default function Header() {
                     style={{ fontSize: "1.6rem" }}
                     onClick={onClickTotalLogin}
                   >
-                    {data ? "로그아웃" : "로그인"}
+                    {session ? "로그아웃" : "로그인"}
                   </button>
+                  {/* <button
+                    className="w-[13.6rem] h-[3.5rem] bg-btn-color text-white px-6 py-2 rounded-lg mr-30"
+                    style={{ fontSize: "1.6rem" }}
+                  >
+                    data : {session?.user?.name} | {session?.user?.image};
+                  </button> */}
+
+                  {/* <p className="bg-black"> */}
+                  {/* status : {status} | data : {session?.user?.name} | email :{" "} */}
+                  {/* {session?.user?.email} */}
+                  {/* </p> */}
                 </Link>
               </div>
             )}

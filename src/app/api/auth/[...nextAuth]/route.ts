@@ -2,6 +2,12 @@ import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import KakaoProvider from "next-auth/providers/kakao";
 import NaverProvider from "next-auth/providers/naver";
+import { signOut } from "next-auth/react";
+
+interface UserData {
+  accessToken: string;
+  refreshToken: string;
+}
 
 const handler = NextAuth({
   providers: [
@@ -22,9 +28,12 @@ const handler = NextAuth({
     signIn: "/login",
   },
   callbacks: {
-    // async jwt({ token, user }) {
-    //   return { ...token, ...user };
-    // },
+    async jwt({ token, account }) {
+      if (account) {
+        token.accessToken = account.accessToken;
+      }
+      return token;
+    },
 
     async session({ session, token }) {
       session.user = token as any;

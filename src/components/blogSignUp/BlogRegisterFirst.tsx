@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import BlogStep1 from "../../../public/BlogStep1.svg";
 import DefaultProfileImg from "../../../public/DefaultProfileImg.svg";
@@ -8,13 +8,37 @@ import {
   checkNickNameDuplicate,
   checkBlogNameDuplicate,
 } from "@/services/blog";
-
+import { useSession } from "next-auth/react";
+import axios from "axios";
+import { signUp } from "@/services/auth";
+import { socialSignUp } from "@/services/auth";
+import Cookies from "js-cookie";
 const BlogRegisterFirst = () => {
   const [profileImage, setProfileImage] = useState<string | null>(null);
   const [nickName, setNickName] = useState<string>("");
   const [nickNameError, setNickNameError] = useState<string>("");
   const [blogName, setBlogName] = useState<string>("");
   const [blogNameError, setBlogNameError] = useState<string>("");
+
+  const { data: session, status } = useSession();
+  const sessionToken = Cookies.get("next-auth.session-token");
+
+  useEffect(() => {
+    const password = "1004";
+    const email = session?.user?.email;
+
+    if (status === "authenticated") {
+      signUp({ memberId: session.user?.email, email, password });
+
+      // socialSignUp(sessionToken);
+      // console.log(sessionToken);
+      // console.log("사용자 정보:", session.user);
+      // console.log(session.user?.email);
+      // console.log("사용자 정보:", session.user?.email);
+    } else {
+      console.log("error");
+    }
+  }, [session]);
 
   const handleNickName = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -105,7 +129,7 @@ const BlogRegisterFirst = () => {
 
   return (
     <div className="w-[80%] mx-auto mt-[15rem]">
-       {/* <Image src={LogoMain} alt="Logo" className="mx-auto"/> */}
+      {/* <Image src={LogoMain} alt="Logo" className="mx-auto"/> */}
       <Image src={BlogStep1} alt="Logo" className="w-[47.7rem] mx-auto" />
       <div className="mt-[8rem]">
         <div className="sign-up-info">기본 회원 정보를 등록해주세요</div>

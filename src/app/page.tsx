@@ -7,7 +7,6 @@ export default function Home() {
   return (
     <AuthSession>
       <Header />
-      <div>온보딩</div>
     </AuthSession>
   );
 }

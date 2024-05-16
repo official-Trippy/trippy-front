@@ -4,12 +4,24 @@ import { useRouter } from "next/navigation";
 import axios from "axios";
 import { signIn, signOut, useSession } from "next-auth/react";
 import Image from "next/image";
+import { useEffect } from "react";
 
 import kakao from "../../../public/kakao.svg";
 import naver from "../../../public/naver.svg";
 import google from "../../../public/google.svg";
+import { socialSignUp } from "@/services/auth";
 
 const SocialLoginForm = () => {
+  const { data: session } = useSession();
+
+  useEffect(() => {
+    // 세션 값이 로그인 상태인 경우
+    if (session) {
+      // 여기에 사용자를 구별하고 필요한 작업을 수행하는 코드 작성
+      console.log("사용자 정보:", session.user);
+      // console.log("사용자 정보:", session.user?.email);
+    }
+  }, [session]);
   const router = useRouter();
 
   const handleSocialLogin = async (socialName: string) => {
@@ -33,17 +45,17 @@ const SocialLoginForm = () => {
     if (name === "kakao") {
       await signIn("kakao", {
         redirect: true,
-        callbackUrl: "/",
+        callbackUrl: "/checkResister",
       });
     } else if (name === "naver") {
       await signIn("naver", {
         redirect: true,
-        callbackUrl: "/",
+        callbackUrl: "/blogRegister",
       });
     } else {
       await signIn("google", {
         redirect: true,
-        callbackUrl: "/",
+        callbackUrl: "/blogRegister",
       });
     }
   };
@@ -65,12 +77,6 @@ const SocialLoginForm = () => {
       >
         <Image src={naver} alt="naver" width={330} height={44}></Image>
       </div>
-      {/* <div
-          className="bg-google-btn text-black px-4 rounded-md my-2 w-[320px] h-[44px] flex items-center justify-center"
-          onClick={() => handleSocialLogin("google")}
-        >
-          <Image src={googlekorea} alt="google"></Image>
-        </div> */}
       <div
         onClick={() => {
           handleSocial("google");
