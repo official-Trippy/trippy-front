@@ -1,6 +1,6 @@
 'use client'
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import LogoMain from "../../../public/LogoMain.svg";
 import Image from "next/image";
@@ -12,6 +12,18 @@ const LoginForm= () => {
   const [memberId, setMemberId] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
+
+  useEffect(() => {
+    checkLoginStatus();
+  }, []);
+
+  const checkLoginStatus = async () => {
+    const accessToken = Cookies.get("accessToken");
+    const refreshToken = Cookies.get("refreshToken");
+    if (accessToken && refreshToken) {
+      router.push("/home");
+    }
+  };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
