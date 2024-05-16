@@ -9,12 +9,14 @@ import AlertImg from "../../../../public/AlertImg.png";
 import Profile from "../../../../public/Profile.png";
 import { getMyInfo } from "@/services/auth";
 import { UserInfoType } from "@/types/auth";
+import UserModal from "@/components/userInfo/userModal";
 
 export default function Header() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userInfo, setUserInfo] = useState<UserInfoType | null>(null);
   const [loading, setLoading] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     const checkLoginState = () => {
@@ -29,14 +31,18 @@ export default function Header() {
     checkLoginState();
   }, []);
 
-  const toggleModal = async () => {
-    try {
-      const data = await getMyInfo();
-      setUserInfo(data);
-    } catch (error) {
-      console.error("Error getting user info:", error);
-    }
-    setModalVisible(!modalVisible);
+  // const toggleModal = async () => {
+  //   try {
+  //     const data = await getMyInfo();
+  //     setUserInfo(data);
+  //   } catch (error) {
+  //     console.error("Error getting user info:", error);
+  //   }
+  //   setModalVisible(!modalVisible);
+  // };
+
+  const handleModalToggle = () => {
+    setShowModal(!showModal);
   };
 
   return (
@@ -82,7 +88,8 @@ export default function Header() {
                   <Image src={AlertImg} alt="alert" />
                 </div>
                 <div className="w-[32px] my-auto">
-                  <div onClick={toggleModal}>
+                  <div onClick={handleModalToggle}>
+                  {showModal && <UserModal />}
                     <Image src={Profile} alt="profile" />
                   </div>
                   {modalVisible && (

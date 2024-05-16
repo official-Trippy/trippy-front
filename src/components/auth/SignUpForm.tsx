@@ -9,10 +9,10 @@ import Cookies from "js-cookie";
 import { signUp, emailSend, confirmEmail } from "@/services/auth";
 import { Login, checkEmailDuplicate } from "@/services/auth";
 import LogoMain from "../../../public/LogoMain.svg";
-import EmailVerification from "./EmailVerification";
+import useEmail from "@/hooks/useUserEmail";
 
 const SignUpForm = () => {
-  const [email, setEmail] = useState("");
+  const { email, setEmail } = useEmail();
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [emailValid, setEmailValid] = useState(false);
