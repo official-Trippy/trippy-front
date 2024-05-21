@@ -1,9 +1,26 @@
 import axios from "axios";
 import Cookies from "js-cookie";
+import { headers } from "next/headers";
 
 const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 let accessToken = "";
+
+export async function socialSignUp(accessToken: any) {
+  try {
+    const res = await axios.get(
+      `${backendUrl}/api/member/login/oauth2/{socialName}`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    return res.data;
+  } catch (e) {
+    return null;
+  }
+}
 
 export async function signUp(formData: any) {
   try {
@@ -15,6 +32,19 @@ export async function signUp(formData: any) {
     return response.data;
   } catch (error) {
     throw new Error(`Error during signup: ${error}`);
+  }
+}
+
+export async function checkSocial(memberId: string) {
+  try {
+    const response = await axios.get(
+      `${backendUrl}/api/member/isNewMember=${memberId}`
+    );
+    const data = response.data.memberId;
+    console.log(data);
+    return data;
+  } catch (error) {
+    throw new Error("Error data");
   }
 }
 
@@ -146,3 +176,16 @@ axios.interceptors.request.use(
     return Promise.reject(error);
   }
 );
+
+export async function MemberInfo(accessToken: any) {
+  try {
+    const res = await axios.get(`${backendUrl}/api/member`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    return res.data;
+  } catch (e) {
+    return null;
+  }
+}

@@ -1,6 +1,6 @@
-"use client"
+"use client";
 import Image from "next/image";
-import Profile from "../../public/Profile.png"
+import Profile from "../../public/Profile.png";
 import Recommend from "@/components/pages/home/recommend";
 import RecentPost from "@/components/pages/home/RecentPost";
 import { useQuery } from "react-query";
@@ -8,21 +8,21 @@ import { MemberInfo } from "@/services/auth";
 import Cookies from "js-cookie";
 import Header from "@/components/shared/header/Header";
 
-
 export default function Home() {
+  const accessToken = Cookies.get("accessToken");
 
-  const accessToken = Cookies.get('accessToken');
-
-
-  const { data: memberData, error, isLoading } = useQuery({
-    queryKey: ['member', accessToken],
+  const {
+    data: memberData,
+    error,
+    isLoading,
+  } = useQuery({
+    queryKey: ["member", accessToken],
     queryFn: () => MemberInfo(accessToken),
     onError: (error) => {
       // 에러 처리 로직
       console.error(error);
-    }
+    },
   });
-
 
   console.log(memberData);
 
@@ -39,7 +39,6 @@ export default function Home() {
                 <span className="font-bold">닉네임</span>
                 <span className="font-medium">날짜</span>
               </div>
-
             </div>
             <div className="px-[1rem]">
               <h1 className="font-medium text-[2rem]">제목입니두우우</h1>
@@ -58,7 +57,6 @@ export default function Home() {
             </div>
             <div className="flex flex-col w-full">
               <img className="ml-auto flex rounded-[0.8rem]" src="https://picsum.photos/120/120" alt="dd" />
-
             </div>
           </div>
           <div className="flex mt-[1.6rem]">
@@ -77,5 +75,5 @@ export default function Home() {
         </div>
       </RecentPost>
     </div>
-  )
-};
+  );
+}

@@ -1,3 +1,4 @@
+
 import { create } from 'zustand'
 
 interface userInfoType {
@@ -24,3 +25,4 @@ const useUserInfo  = create<UserInfoState & UserInfoActions>((set) => ({
 }))
 
 export default useUserInfo;
+
