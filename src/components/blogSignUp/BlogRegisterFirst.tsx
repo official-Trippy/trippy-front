@@ -11,8 +11,8 @@ import {
 import { useSession } from "next-auth/react";
 import axios from "axios";
 import { signUp } from "@/services/auth";
-import { socialSignUp } from "@/services/auth";
 import Cookies from "js-cookie";
+import CheckUserRegistration from "../auth/CheckUserResister";
 const BlogRegisterFirst = () => {
   const [profileImage, setProfileImage] = useState<string | null>(null);
   const [nickName, setNickName] = useState<string>("");
@@ -27,7 +27,7 @@ const BlogRegisterFirst = () => {
     const password = "1004";
     const email = session?.user?.email;
 
-    if (status === "authenticated") {
+    if (status === "authenticated" ) {
       signUp({ memberId: session.user?.email, email, password });
 
       // socialSignUp(sessionToken);
