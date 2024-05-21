@@ -31,6 +31,19 @@ export async function Login(memberId: string, password: string) {
   }
 }
 
+export async function MemberInfo(accessToken: any) {
+  try {
+    const res = await axios.get(`${backendUrl}/api/member`, {
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+      }
+    });
+    return res.data
+  } catch (e) {
+    return null;
+  }
+}
+
 export const isLoggedIn = () => {
   const accessToken = Cookies.get("accessToken");
   const refreshToken = Cookies.get("refreshToken");
@@ -45,7 +58,7 @@ export async function checkEmailDuplicate(email: string) {
     const data = response.data.result.duplicated;
     console.log(response.data);
     console.log(data);
-      return response.data;
+    return response.data;
   } catch (error) {
     throw new Error(`Error sending email: ${error}`);
   }
