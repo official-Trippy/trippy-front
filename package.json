@@ -24,7 +24,8 @@
     "recoil": "^0.7.7",
     "sakura-js": "^1.1.1",
     "sweetalert2": "^11.10.8",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "zustand": "^4.5.2"
   },
   "devDependencies": {
     "@types/js-cookie": "^3.0.6",

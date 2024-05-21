@@ -7,27 +7,35 @@ import DefaultProfileImg from "../../../public/DefaultProfileImg.svg";
 import {
   checkNickNameDuplicate,
   checkBlogNameDuplicate,
+  signupCommon,
 } from "@/services/blog";
 import { useSession } from "next-auth/react";
 import axios from "axios";
 import { signUp } from "@/services/auth";
 import Cookies from "js-cookie";
 import CheckUserRegistration from "../auth/CheckUserResister";
+import { useRouter } from "next/router";
+import useUserInfo from "@/hooks/useUserInfo";
+import { swear_words_arr } from "@/constants/wearWordsArr";
+
 const BlogRegisterFirst = () => {
   const [profileImage, setProfileImage] = useState<string | null>(null);
   const [nickName, setNickName] = useState<string>("");
   const [nickNameError, setNickNameError] = useState<string>("");
   const [blogName, setBlogName] = useState<string>("");
   const [blogNameError, setBlogNameError] = useState<string>("");
+  const [blogIntroduce, setBlogIntroduce] = useState<string>("");
+  const [blogIntroduceError, setBlogIntroduceError] = useState<string>("");
 
   const { data: session, status } = useSession();
   const sessionToken = Cookies.get("next-auth.session-token");
+  const { setUserInfo } = useUserInfo();
 
   useEffect(() => {
     const password = "1004";
     const email = session?.user?.email;
 
-    if (status === "authenticated" ) {
+    if (status === "authenticated") {
       signUp({ memberId: session.user?.email, email, password });
 
       // socialSignUp(sessionToken);
@@ -40,9 +48,21 @@ const BlogRegisterFirst = () => {
     }
   }, [session]);
 
+  const checkSwearWords = (value: string) => {
+    const lowerValue = value.toLowerCase();
+    return swear_words_arr.some((swearWord: string) =>
+      lowerValue.includes(swearWord)
+    );
+  };
+
   const handleNickName = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setNickName(value);
+
+    if (checkSwearWords(value)) {
+      setNickNameError("욕설이 포함되었습니다. 다시 입력해주세요.");
+      return;
+    }
 
     if (!validateNickName(value)) {
       setNickNameError("형식이 올바르지 않습니다. 다시 입력해 주세요.");
@@ -127,9 +147,43 @@ const BlogRegisterFirst = () => {
     setProfileImage(null);
   };
 
+  const handleBlogIntroduce = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setBlogIntroduce(value);
+
+    if (checkSwearWords(value)) {
+      setBlogIntroduceError("욕설이 포함되었습니다. 다시 입력해주세요.");
+      return;
+    }
+
+    setBlogIntroduceError("");
+  };
+
+  const handleSubmit = async () => {
+    if (
+      !nickNameError.includes("사용 가능") ||
+      !blogNameError.includes("사용 가능")
+    ) {
+      return;
+    }
+    try {
+      const data = {
+        nickName: nickName,
+        blogName: blogName,
+        blogIntroduce: blogIntroduce,
+      };
+      console.log(data);
+      setUserInfo(data);
+      const response = await signupCommon(data);
+      console.log("Signup success:", response);
+      router.push("/blogRegister2");
+    } catch (error) {
+      console.error("Error signing up:", error);
+    }
+  };
+
   return (
     <div className="w-[80%] mx-auto mt-[15rem]">
-      {/* <Image src={LogoMain} alt="Logo" className="mx-auto"/> */}
       <Image src={BlogStep1} alt="Logo" className="w-[47.7rem] mx-auto" />
       <div className="mt-[8rem]">
         <div className="sign-up-info">기본 회원 정보를 등록해주세요</div>
@@ -212,7 +266,6 @@ const BlogRegisterFirst = () => {
                 type="text"
                 value={blogName}
                 onChange={handleBlogName}
-                onBlur={() => handleBlogNameBlur(blogName)}
                 placeholder="블로그 이름은 한글 2-15자, 영어 4-30자 이내로 입력 가능합니다."
                 className="w-full px-4 py-2 mt-[2.5rem] mb-2 h-[6rem] rounded-xl border border-gray-300 focus:border-[#FB3463] focus:outline-none"
                 style={{ background: "var(--4, #F5F5F5)", fontSize: "1.5rem" }}
@@ -235,11 +288,17 @@ const BlogRegisterFirst = () => {
               </label>
               <input
                 type="text"
+                value={blogIntroduce}
+                onChange={handleBlogIntroduce}
                 placeholder="50글자 이내로 소개글을 작성해보세요."
                 className="w-full px-4 py-2  mt-[2.5rem] mb-2 h-[6rem] rounded-xl border border-gray-300 focus:border-[#FB3463] focus:outline-none"
                 style={{ background: "var(--4, #F5F5F5)", fontSize: "1.5rem" }}
               />
-              <div className="h-[1.7rem]"></div>
+              <div className="h-[1.7rem]">
+                {blogIntroduceError && (
+                  <p className="text-red-500">{blogIntroduceError}</p>
+                )}
+              </div>
             </div>
           </div>
           <div className="text-center">
@@ -251,6 +310,7 @@ const BlogRegisterFirst = () => {
                   ? "cursor-not-allowed bg-gray-400 hover:bg-gray-400"
                   : ""
               }`}
+              onClick={handleSubmit}
               style={{ fontSize: "2rem" }}
               disabled={
                 !nickNameError.includes("사용 가능") ||

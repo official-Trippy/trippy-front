@@ -42,21 +42,29 @@ const SocialLoginForm = () => {
   };
 
   const handleSocial = async (name: string) => {
-    if (name === "kakao") {
-      await signIn("kakao", {
-        redirect: true,
-        callbackUrl: "/checkResister",
-      });
-    } else if (name === "naver") {
-      await signIn("naver", {
-        redirect: true,
-        callbackUrl: "/blogRegister",
-      });
-    } else {
-      await signIn("google", {
-        redirect: true,
-        callbackUrl: "/blogRegister",
-      });
+    try {
+      const response = await axios.get(
+        `${process.env.BACKEND_URL}/api/member/signup}`
+      );
+      const { accessToken } = response.data;
+      if (name === "kakao") {
+        await signIn("kakao", {
+          redirect: true,
+          callbackUrl: "/blogRegister",
+        });
+      } else if (name === "naver") {
+        await signIn("naver", {
+          redirect: true,
+          callbackUrl: "/blogRegister",
+        });
+      } else {
+        await signIn("google", {
+          redirect: true,
+          callbackUrl: "/blogRegister",
+        });
+      }
+    } catch (error) {
+      console.log("소셜 토큰 주기 실패");
     }
   };
   return (
