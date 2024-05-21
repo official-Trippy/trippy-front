@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import BlogStep1 from "../../../public/BlogStep1.svg";
 import DefaultProfileImg from "../../../public/DefaultProfileImg.svg";
 import {
@@ -9,14 +10,14 @@ import {
   checkBlogNameDuplicate,
   signupCommon,
 } from "@/services/blog";
+import useUserInfo from "@/hooks/useUserInfo";
+import { swear_words_arr } from "@/constants/wearWordsArr";
 import { useSession } from "next-auth/react";
 import axios from "axios";
 import { signUp } from "@/services/auth";
 import Cookies from "js-cookie";
 import CheckUserRegistration from "../auth/CheckUserResister";
 import { useRouter } from "next/router";
-import useUserInfo from "@/hooks/useUserInfo";
-import { swear_words_arr } from "@/constants/wearWordsArr";
 
 const BlogRegisterFirst = () => {
   const [profileImage, setProfileImage] = useState<string | null>(null);
@@ -30,6 +31,7 @@ const BlogRegisterFirst = () => {
   const { data: session, status } = useSession();
   const sessionToken = Cookies.get("next-auth.session-token");
   const { setUserInfo } = useUserInfo();
+  const router = useRouter();
 
   useEffect(() => {
     const password = "1004";
@@ -37,12 +39,6 @@ const BlogRegisterFirst = () => {
 
     if (status === "authenticated") {
       signUp({ memberId: session.user?.email, email, password });
-
-      // socialSignUp(sessionToken);
-      // console.log(sessionToken);
-      // console.log("사용자 정보:", session.user);
-      // console.log(session.user?.email);
-      // console.log("사용자 정보:", session.user?.email);
     } else {
       console.log("error");
     }
@@ -96,7 +92,19 @@ const BlogRegisterFirst = () => {
 
   const handleBlogName = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
+
+    if (!value) {
+      setBlogNameError("");
+      setBlogName(value);
+      return;
+    }
+
     setBlogName(value);
+
+    if (checkSwearWords(value)) {
+      setBlogNameError("욕설이 포함되었습니다. 다시 입력해주세요.");
+      return;
+    }
 
     if (!validateBlogName(value)) {
       setBlogNameError("형식이 올바르지 않습니다. 다시 입력해 주세요.");
@@ -160,17 +168,14 @@ const BlogRegisterFirst = () => {
   };
 
   const handleSubmit = async () => {
-    if (
-      !nickNameError.includes("사용 가능") ||
-      !blogNameError.includes("사용 가능")
-    ) {
+    if (!nickNameError.includes("사용 가능") || !blogNameError.includes("사용 가능")) {
       return;
     }
     try {
       const data = {
         nickName: nickName,
         blogName: blogName,
-        blogIntroduce: blogIntroduce,
+        blogIntroduce: blogIntroduce
       };
       console.log(data);
       setUserInfo(data);
@@ -249,9 +254,8 @@ const BlogRegisterFirst = () => {
               <div className="h-[1.7rem] mt-[1.2rem]">
                 {nickNameError && (
                   <p
-                    className={`text-${
-                      nickNameError.includes("사용 가능") ? "green" : "red"
-                    }-500`}
+                    className={`text-${nickNameError.includes("사용 가능") ? "green" : "red"
+                      }-500`}
                   >
                     {nickNameError}
                   </p>
@@ -273,9 +277,8 @@ const BlogRegisterFirst = () => {
               <div className="h-[1.7rem] mt-[1.2rem]">
                 {blogNameError && (
                   <p
-                    className={`text-${
-                      blogNameError.includes("사용 가능") ? "green" : "red"
-                    }-500`}
+                    className={`text-${blogNameError.includes("사용 가능") ? "green" : "red"
+                      }-500`}
                   >
                     {blogNameError}
                   </p>
@@ -304,12 +307,11 @@ const BlogRegisterFirst = () => {
           <div className="text-center">
             <button
               type="submit"
-              className={`mx-auto mt-32 mb-32 w-[22rem] h-[6rem] bg-btn-color text-white py-2 rounded-lg focus:outline-none ${
-                !nickNameError.includes("사용 가능") ||
+              className={`mx-auto mt-32 mb-32 w-[22rem] h-[6rem] bg-btn-color text-white py-2 rounded-lg focus:outline-none ${!nickNameError.includes("사용 가능") ||
                 !blogNameError.includes("사용 가능")
-                  ? "cursor-not-allowed bg-gray-400 hover:bg-gray-400"
-                  : ""
-              }`}
+                ? "cursor-not-allowed bg-gray-400 hover:bg-gray-400"
+                : ""
+                }`}
               onClick={handleSubmit}
               style={{ fontSize: "2rem" }}
               disabled={

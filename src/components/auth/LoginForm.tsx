@@ -1,6 +1,6 @@
 'use client'
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import LogoMain from "../../../public/LogoMain.svg";
 import Image from "next/image";
@@ -12,6 +12,18 @@ const LoginForm= () => {
   const [memberId, setMemberId] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
+
+  useEffect(() => {
+    checkLoginStatus();
+  }, []);
+
+  const checkLoginStatus = async () => {
+    const accessToken = Cookies.get("accessToken");
+    const refreshToken = Cookies.get("refreshToken");
+    if (accessToken && refreshToken) {
+      router.push("/home");
+    }
+  };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -67,10 +79,10 @@ const LoginForm= () => {
         </button>
       </form>
       <div className="flex justify-center mt-[2rem] mb-[4rem]">
-        <Link href="#" className="mx-4 text-[#9D9D9D] font-[1.2rem]" style={{ fontSize: "1.2rem" }}>
+        <Link href="/findAccount" className="mx-4 text-[#9D9D9D] font-[1.2rem]" style={{ fontSize: "1.2rem" }}>
           계정 찾기
         </Link>
-        <Link href="#" className="mx-4 text-[#9D9D9D]" style={{ fontSize: "1.2rem" }}>
+        <Link href="/findPassword" className="mx-4 text-[#9D9D9D]" style={{ fontSize: "1.2rem" }}>
           비밀번호 찾기
         </Link>
         <Link href="/signUp" className="mx-4 text-[#9D9D9D]" style={{ fontSize: "1.2rem" }}>

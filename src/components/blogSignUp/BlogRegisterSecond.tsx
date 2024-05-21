@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 import BlogStep2 from "../../../public/BlogStep2.svg";
 import Link from "next/link";
+import { submitInterests } from "@/services/blog"
 
 const interests = [
   "국내여행",
@@ -44,6 +45,21 @@ const BlogRegisterSecond = () => {
   const isButtonActive =
     selectedInterests.length >= 2 && selectedInterests.length <= 5;
 
+  const handleSubmit = async () => {
+    console.log(selectedInterests);
+    try {
+      const result = await submitInterests(selectedInterests);
+
+      if (result.success) {
+        console.log("Successfully submitted interests!");
+      } else {
+        console.error(result.message);
+      }
+    } catch (error) {
+      console.error("Error submitting interests:", error);
+    }
+  };
+
   return (
     <div className="w-[80%] mx-auto mt-[15rem]">
       <Image src={BlogStep2} alt="Logo" className="w-[47.7rem] mx-auto" />
@@ -58,11 +74,10 @@ const BlogRegisterSecond = () => {
           {interests.map((interest, index) => (
             <button
               key={index}
-              className={`favorite-btn-font ${
-                selectedInterests.includes(interest)
-                  ? "favorite-btn-active"
-                  : "favorite-btn-inactive"
-              }`}
+              className={`favorite-btn-font ${selectedInterests.includes(interest)
+                ? "favorite-btn-active"
+                : "favorite-btn-inactive"
+                }`}
               onClick={() => toggleInterest(interest)}
             >
               {interest}
@@ -71,16 +86,16 @@ const BlogRegisterSecond = () => {
         </div>
         <div className="text-center">
           <Link href="/blogRegister3">
-          <button
-            type="submit"
-            className={`mx-auto ${
-              isButtonActive ? "bg-btn-color" : "bg-gray-400"
-            } mt-[8rem] mb-[10rem] items-center w-[22rem] h-[6rem] text-white py-2 rounded-2xl focus:outline-none`}
-            style={{ fontSize: "1.6rem" }}
-            disabled={!isButtonActive}
-          >
-            다음
-          </button>
+            <button
+              type="submit"
+              className={`mx-auto ${isButtonActive ? "bg-btn-color" : "bg-gray-400"
+                } mt-[8rem] mb-[10rem] items-center w-[22rem] h-[6rem] text-white py-2 rounded-2xl focus:outline-none`}
+              onClick={handleSubmit}
+              style={{ fontSize: "1.6rem" }}
+              disabled={!isButtonActive}
+            >
+              다음
+            </button>
           </Link>
         </div>
       </div>
