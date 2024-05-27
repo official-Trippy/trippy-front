@@ -18,7 +18,6 @@ import axios from "axios";
 import { signUp } from "@/services/auth";
 import Cookies from "js-cookie";
 import CheckUserRegistration from "../auth/CheckUserResister";
-import { useRouter } from "next/router";
 
 const BlogRegisterFirst = () => {
   const [profileImage, setProfileImage] = useState<string | null>(null);
