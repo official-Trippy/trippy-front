@@ -11,6 +11,7 @@ import { useSession, signIn, signOut } from "next-auth/react";
 import { getMyInfo } from "@/services/auth";
 import Cookies from "js-cookie";
 import { UserInfoType } from "@/types/auth";
+import { useRouter } from "next/navigation";
 
 const Header = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -29,6 +30,11 @@ const Header = () => {
       await signIn();
     }
   };
+  const router = useRouter();
+  
+  const onClickLogin = () => {
+    router.push('/login');
+  }
 
   useEffect(() => {
     const checkLoginState = async () => {
@@ -116,7 +122,7 @@ const Header = () => {
                   <button
                     className="w-[8.6rem] h-[3.5rem] bg-btn-color text-white px-6 py-2 rounded-lg"
                     style={{ fontSize: "1.6rem" }}
-                    onClick={onClickTotalLogin}
+                    onClick={onClickLogin}
                   >
                     {session ? "로그아웃" : "로그인"}
                   </button>
