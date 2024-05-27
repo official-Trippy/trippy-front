@@ -176,16 +176,3 @@ axios.interceptors.request.use(
     return Promise.reject(error);
   }
 );
-
-export async function MemberInfo(accessToken: any) {
-  try {
-    const res = await axios.get(`${backendUrl}/api/member`, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    });
-    return res.data;
-  } catch (e) {
-    return null;
-  }
-}
