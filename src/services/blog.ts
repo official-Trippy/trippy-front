@@ -63,3 +63,23 @@ export async function submitInterests(selectedInterests: string[]) {
     throw new Error(`Error submitting interests: ${error}`);
   }
 }
+
+export async function uploadImage(imageFile: File) {
+  try {
+    const formData = new FormData();
+    formData.append('image', imageFile);
+
+    const response = await axios.post(`${backendUrl}/api/image`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    if (response.data.isSuccess) {
+      return response.data.result.accessUri;
+    } else {
+      throw new Error("Image upload failed");
+    }
+  } catch (error) {
+    throw new Error(`Error uploading image: ${error}`);
+  }
+}

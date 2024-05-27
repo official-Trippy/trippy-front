@@ -8,9 +8,10 @@ import Link from "next/link";
 import Cookies from "js-cookie";
 import { Login } from "@/services/auth";
 
-const LoginForm= () => {
+const LoginForm = () => {
   const [memberId, setMemberId] = useState("");
   const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState(""); 
   const router = useRouter();
 
   useEffect(() => {
@@ -32,21 +33,18 @@ const LoginForm= () => {
       const { accessToken, refreshToken } = response.result;
       Cookies.set("accessToken", accessToken);
       Cookies.set("refreshToken", refreshToken);
-      console.log(response);
       router.push("/home");
       router.refresh();
     } catch (error) {
       console.error("Error during login:", error);
+      setErrorMessage("이메일이 올바르지 않거나 비밀번호가 틀렸습니다");
     }
   };
 
   return (
     <div className="w-[80%] mx-auto mt-[15rem]">
-      <form
-        onSubmit={handleSubmit}
-        className="flex flex-col items-center"
-      >
-          <Image src={LogoMain} alt="Logo" />
+      <form onSubmit={handleSubmit} className="flex flex-col items-center">
+        <Image src={LogoMain} alt="Logo" />
         <div className="flex flex-col mt-[6rem]">
           <label htmlFor="email" className="login-info mb-2">
             이메일
@@ -74,12 +72,18 @@ const LoginForm= () => {
             style={{ fontSize: "1.6rem" }}
           />
         </div>
+        {errorMessage && (
+          <div className="text-red-500 mt-2" style={{ fontSize: "1.2rem" }}>
+            {errorMessage}
+          </div>
+        )}
+
         <button className="login-btn bg-btn-color text-white mt-[2.4rem] px-4 rounded-md w-[320px] h-[44px]">
           로그인
         </button>
       </form>
       <div className="flex justify-center mt-[2rem] mb-[4rem]">
-        <Link href="/findAccount" className="mx-4 text-[#9D9D9D] font-[1.2rem]" style={{ fontSize: "1.2rem" }}>
+        <Link href="/findAccount" className="mx-4 text-[#9D9D9D]" style={{ fontSize: "1.2rem" }}>
           계정 찾기
         </Link>
         <Link href="/findPassword" className="mx-4 text-[#9D9D9D]" style={{ fontSize: "1.2rem" }}>

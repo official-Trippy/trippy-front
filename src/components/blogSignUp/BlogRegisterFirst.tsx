@@ -9,6 +9,7 @@ import {
   checkNickNameDuplicate,
   checkBlogNameDuplicate,
   signupCommon,
+  uploadImage
 } from "@/services/blog";
 import useUserInfo from "@/hooks/useUserInfo";
 import { swear_words_arr } from "@/constants/wearWordsArr";
@@ -136,20 +137,18 @@ const BlogRegisterFirst = () => {
     return koreanRegex.test(blogName) || englishRegex.test(blogName);
   };
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0];
-      const reader = new FileReader();
-
-      reader.onloadend = () => {
-        if (typeof reader.result === "string") {
-          setProfileImage(reader.result);
-        }
-      };
-
-      reader.readAsDataURL(file);
+      try {
+        const imageUrl = await uploadImage(file);
+        setProfileImage(imageUrl);
+      } catch (error) {
+        console.error(error);
+      }
     }
   };
+  
 
   const handleImageDelete = () => {
     setProfileImage(null);
