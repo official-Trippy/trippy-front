@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import BlogStep1 from "../../../public/BlogStep1.svg";
@@ -11,8 +11,14 @@ import {
   signupCommon,
   uploadImage
 } from "@/services/blog";
-import useUserInfo from '@/hooks/useUserInfo';
+import useUserInfo from "@/hooks/useUserInfo";
 import { swear_words_arr } from "@/constants/wearWordsArr";
+import { useSession } from "next-auth/react";
+import axios from "axios";
+import { signUp } from "@/services/auth";
+import Cookies from "js-cookie";
+import CheckUserRegistration from "../auth/CheckUserResister";
+import { useRouter } from "next/router";
 
 const BlogRegisterFirst = () => {
   const [profileImage, setProfileImage] = useState<string | null>(null);
@@ -23,9 +29,28 @@ const BlogRegisterFirst = () => {
   const [blogIntroduce, setBlogIntroduce] = useState<string>("");
   const [blogIntroduceError, setBlogIntroduceError] = useState<string>("");
 
+  const { data: session, status } = useSession();
+  const sessionToken = Cookies.get("next-auth.session-token");
+  const { setUserInfo } = useUserInfo();
   const router = useRouter();
 
-  const { setUserInfo } = useUserInfo();
+  useEffect(() => {
+    const password = "1004";
+    const email = session?.user?.email;
+
+    if (status === "authenticated") {
+      signUp({ memberId: session.user?.email, email, password });
+    } else {
+      console.log("error");
+    }
+  }, [session]);
+
+  const checkSwearWords = (value: string) => {
+    const lowerValue = value.toLowerCase();
+    return swear_words_arr.some((swearWord: string) =>
+      lowerValue.includes(swearWord)
+    );
+  };
 
   const handleNickName = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -139,11 +164,6 @@ const BlogRegisterFirst = () => {
     }
 
     setBlogIntroduceError("");
-  };
-
-  const checkSwearWords = (value: string) => {
-    const lowerValue = value.toLowerCase();
-    return swear_words_arr.some((swearWord: string) => lowerValue.includes(swearWord));
   };
 
   const handleSubmit = async () => {
@@ -287,9 +307,9 @@ const BlogRegisterFirst = () => {
             <button
               type="submit"
               className={`mx-auto mt-32 mb-32 w-[22rem] h-[6rem] bg-btn-color text-white py-2 rounded-lg focus:outline-none ${!nickNameError.includes("사용 가능") ||
-                  !blogNameError.includes("사용 가능")
-                  ? "cursor-not-allowed bg-gray-400 hover:bg-gray-400"
-                  : ""
+                !blogNameError.includes("사용 가능")
+                ? "cursor-not-allowed bg-gray-400 hover:bg-gray-400"
+                : ""
                 }`}
               onClick={handleSubmit}
               style={{ fontSize: "2rem" }}

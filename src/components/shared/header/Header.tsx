@@ -1,20 +1,34 @@
-'use client'
-import { useState, useEffect } from "react";
-import Cookies from "js-cookie";
+"use client";
+
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import LogoHeader from "../../../../public/LogoHeader.svg";
 import AlertImg from "../../../../public/AlertImg.png";
 import Profile from "../../../../public/Profile.png";
 import UserModal from "@/components/userInfo/userModal";
+import { useSession, signIn, signOut } from "next-auth/react";
 import { getMyInfo } from "@/services/auth";
+import Cookies from "js-cookie";
 import { UserInfoType } from "@/types/auth";
 
-export default function Header() {
+const Header = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userInfo, setUserInfo] = useState<UserInfoType | null>(null);
   const [loading, setLoading] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
+
+  const { data: session, status } = useSession();
+
+  const onClickTotalLogin = async (e: React.MouseEvent) => {
+    e.preventDefault();
+
+    if (session) {
+      await signOut();
+    } else {
+      await signIn();
+    }
+  };
 
   useEffect(() => {
     const checkLoginState = async () => {
@@ -51,10 +65,7 @@ export default function Header() {
         </div>
         <div className="flex space-x-4 text-lg">
           <Link href="/home">
-            <div
-              className="text-gray-800 px-10"
-              style={{ fontSize: "1.4rem" }}
-            >
+            <div className="text-gray-800 px-10" style={{ fontSize: "1.4rem" }}>
               홈
             </div>
           </Link>
@@ -105,8 +116,9 @@ export default function Header() {
                   <button
                     className="w-[8.6rem] h-[3.5rem] bg-btn-color text-white px-6 py-2 rounded-lg"
                     style={{ fontSize: "1.6rem" }}
+                    onClick={onClickTotalLogin}
                   >
-                    로그인
+                    {session ? "로그아웃" : "로그인"}
                   </button>
                 </Link>
               </div>
@@ -116,4 +128,6 @@ export default function Header() {
       </div>
     </header>
   );
-}
+};
+
+export default Header;

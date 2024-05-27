@@ -15,9 +15,9 @@
 //       ];
 //     },
 //   };
-  
+
 //   export default nextConfig;
-  
+
 // export async function rewrites() {
 //     return [
 //         {
@@ -29,16 +29,16 @@
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    reactStrictMode: true,
-    swcMinify: true,
-    async rewrites() {
-      return [
-        {
-          source: "/:path*",
-          destination: "http://localhost:8080/:path*",
-        },
-      ];
-    },
-  };
-  
-  export default nextConfig;
+  // reactStrictMode: true,
+  // swcMinify: true,
+  // async rewrites() {
+  //   return [
+  //     {
+  //       source: "/:path*",
+  //       destination: "http://localhost:8080/:path*",
+  //     },
+  //   ];
+  // },
+};
+
+export default nextConfig;
