@@ -1,4 +1,4 @@
-"use client";
+'use client'
 
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
@@ -14,13 +14,17 @@ import {
 import useUserInfo from "@/hooks/useUserInfo";
 import { swear_words_arr } from "@/constants/wearWordsArr";
 import { useSession } from "next-auth/react";
-import axios from "axios";
-import { signUp } from "@/services/auth";
 import Cookies from "js-cookie";
+import { signUp } from "@/services/auth";
 import CheckUserRegistration from "../auth/CheckUserResister";
 
 const BlogRegisterFirst = () => {
-  const [profileImage, setProfileImage] = useState<string | null>(null);
+  const [profileImage, setProfileImage] = useState<{
+    accessUri: string;
+    authenticateId: string;
+    imgUrl: string;
+  } | null>(null);
+
   const [nickName, setNickName] = useState<string>("");
   const [nickNameError, setNickNameError] = useState<string>("");
   const [blogName, setBlogName] = useState<string>("");
@@ -140,14 +144,13 @@ const BlogRegisterFirst = () => {
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0];
       try {
-        const imageUrl = await uploadImage(file);
-        setProfileImage(imageUrl);
+        const response = await uploadImage(file);
+        setProfileImage(response.result);
       } catch (error) {
-        console.error(error);
+        console.error("Image upload failed:", error);
       }
     }
   };
-  
 
   const handleImageDelete = () => {
     setProfileImage(null);
@@ -170,11 +173,17 @@ const BlogRegisterFirst = () => {
       return;
     }
     try {
+      if (!profileImage) {
+        throw new Error("프로필 이미지가 업로드되지 않았습니다.");
+      }
+
       const data = {
+        profileImage: profileImage,
         nickName: nickName,
         blogName: blogName,
         blogIntroduce: blogIntroduce
       };
+
       console.log(data);
       setUserInfo(data);
       const response = await signupCommon(data);
@@ -196,7 +205,7 @@ const BlogRegisterFirst = () => {
             <div className="rounded-full overflow-hidden w-[16rem] h-[16rem]">
               {profileImage ? (
                 <Image
-                  src={profileImage}
+                  src={profileImage.accessUri}
                   alt="Profile"
                   width="0"
                   height="0"
@@ -284,7 +293,7 @@ const BlogRegisterFirst = () => {
               </div>
             </div>
             <div className="mt-[6rem]">
-              <label htmlFor="info" className="sign-up-info block">
+              <label htmlFor="blogIntroduce" className="sign-up-info block">
                 한 줄 소개(선택)
               </label>
               <input
@@ -292,10 +301,10 @@ const BlogRegisterFirst = () => {
                 value={blogIntroduce}
                 onChange={handleBlogIntroduce}
                 placeholder="50글자 이내로 소개글을 작성해보세요."
-                className="w-full px-4 py-2  mt-[2.5rem] mb-2 h-[6rem] rounded-xl border border-gray-300 focus:border-[#FB3463] focus:outline-none"
+                className="w-full px-4 py-2 mt-[2.5rem] mb-2 h-[6rem] rounded-xl border border-gray-300 focus:border-[#FB3463] focus:outline-none"
                 style={{ background: "var(--4, #F5F5F5)", fontSize: "1.5rem" }}
               />
-              <div className="h-[1.7rem]">
+              <div className="h-[1.7rem] mt-[1.2rem]">
                 {blogIntroduceError && (
                   <p className="text-red-500">{blogIntroduceError}</p>
                 )}
