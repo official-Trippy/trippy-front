@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import LogoHeader from "../../../../public/LogoHeader.svg";
 import AlertImg from "../../../../public/AlertImg.png";
-import Profile from "../../../../public/Profile.png";
+import Profile from "../../../../public/Profile.png"; 
 import UserModal from "@/components/userInfo/userModal";
 import { useSession, signIn, signOut } from "next-auth/react";
 import { getMyInfo } from "@/services/auth";
@@ -30,11 +30,12 @@ const Header = () => {
       await signIn();
     }
   };
+
   const router = useRouter();
-  
+
   const onClickLogin = () => {
-    router.push('/login');
-  }
+    router.push("/login");
+  };
 
   useEffect(() => {
     const checkLoginState = async () => {
@@ -102,7 +103,12 @@ const Header = () => {
                 </div>
                 <div className="w-[32px] my-auto relative">
                   <div onClick={handleModalToggle}>
-                    <Image src={Profile} alt="profile" />
+                    <Image
+                      src={userInfo?.profileImageUrl || Profile}
+                      alt="profile"
+                      width={32}
+                      height={32}
+                    />
                   </div>
                   <UserModal
                     isOpen={modalVisible}
@@ -110,8 +116,8 @@ const Header = () => {
                     userInfo={userInfo}
                     style={{
                       position: "absolute",
-                      bottom: "-260px", 
-                      left: "-290px", 
+                      bottom: "-260px",
+                      left: "-290px",
                     }}
                   />
                 </div>
