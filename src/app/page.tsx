@@ -2,7 +2,7 @@
 import Image from "next/image";
 import Profile from "../../public/Profile.png";
 import Recommend from "@/components/pages/home/recommend";
-import RecentPost from "@/components/pages/home/recentPost";
+import RecentPost from "@/components/pages/home/RecentPost";
 import { useQuery } from "react-query";
 import { MemberInfo } from "@/services/auth";
 import Cookies from "js-cookie";
