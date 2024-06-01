@@ -80,12 +80,27 @@ const Header = () => {
                 </div>
                 <div className="w-[32px] my-auto relative">
                   <div onClick={handleModalToggle}>
-                    <Image
-                      src={userInfo.profileImageUrl || Profile}
-                      alt="profile"
-                      width={32}
-                      height={32}
-                    />
+                    <div
+                      style={{
+                        width: "32px",
+                        height: "32px",
+                        borderRadius: "50%",
+                        overflow: "hidden",
+                      }}
+                    >
+                      <Image
+                        className="my-auto"
+                        src={userInfo.profileImageUrl || Profile}
+                        alt="profile"
+                        width={32}
+                        height={32}
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          objectFit: "cover",
+                        }}
+                      />
+                    </div>
                   </div>
                   <UserModal
                     isOpen={modalVisible}
