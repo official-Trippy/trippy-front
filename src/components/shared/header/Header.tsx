@@ -1,25 +1,25 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import LogoHeader from "../../../../public/LogoHeader.svg";
 import AlertImg from "../../../../public/AlertImg.png";
-import Profile from "../../../../public/Profile.png"; 
+import Profile from "../../../../public/Profile.png";
 import UserModal from "@/components/userInfo/userModal";
 import { useSession, signIn, signOut } from "next-auth/react";
-import { getMyInfo } from "@/services/auth";
-import Cookies from "js-cookie";
-import { UserInfoType } from "@/types/auth";
+import { useUserStore } from "@/store/useUserStore";
 import { useRouter } from "next/navigation";
 
 const Header = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [userInfo, setUserInfo] = useState<UserInfoType | null>(null);
-  const [loading, setLoading] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
+  const { data: session } = useSession();
+  const { userInfo, loading, fetchUserInfo } = useUserStore();
+  const router = useRouter();
 
-  const { data: session, status } = useSession();
+  useEffect(() => {
+    fetchUserInfo();
+  }, [fetchUserInfo]);
 
   const onClickTotalLogin = async (e: React.MouseEvent) => {
     e.preventDefault();
@@ -31,34 +31,11 @@ const Header = () => {
     }
   };
 
-  const router = useRouter();
-
   const onClickLogin = () => {
-    router.push("/login");
+    router.push('/login');
   };
 
-  useEffect(() => {
-    const checkLoginState = async () => {
-      const accessToken = Cookies.get("accessToken");
-      const refreshToken = Cookies.get("refreshToken");
-      if (accessToken && refreshToken) {
-        setIsLoggedIn(true);
-      }
-      setLoading(false);
-    };
-
-    checkLoginState();
-  }, []);
-
-  const handleModalToggle = async () => {
-    if (!modalVisible) {
-      try {
-        const userData = await getMyInfo();
-        setUserInfo(userData);
-      } catch (error) {
-        console.error("Error getting user info:", error);
-      }
-    }
+  const handleModalToggle = () => {
     setModalVisible(!modalVisible);
   };
 
@@ -88,7 +65,7 @@ const Header = () => {
         <div className="mr-4">{/* 검색창 컴포넌트 */}</div>
         {!loading && (
           <>
-            {isLoggedIn ? (
+            {userInfo ? (
               <div className="flex">
                 <Link href="/write">
                   <button
@@ -104,7 +81,7 @@ const Header = () => {
                 <div className="w-[32px] my-auto relative">
                   <div onClick={handleModalToggle}>
                     <Image
-                      src={userInfo?.profileImageUrl || Profile}
+                      src={userInfo.profileImageUrl || Profile}
                       alt="profile"
                       width={32}
                       height={32}
