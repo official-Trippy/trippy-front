@@ -26,10 +26,22 @@ const SocialLoginForm = () => {
 
   const handleSocialLogin = async (socialName: string) => {
     try {
-      const response = await axios.get(
-        `${process.env.BACKEND_URL}/api/member/login/oauth2/${socialName}`
+      const tokenResponse = await axios.post(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/member/login/oauth2/${socialName}`
       );
-      const { accessToken } = response.data;
+      const accessToken = tokenResponse.data.accessToken;
+  
+      // accessToken을 헤더에 포함하여 요청을 보내도록 수정
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/member/login/oauth2/${socialName}`,
+        null,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`
+          }
+        }
+      );
+  
       console.log(response.data);
       console.log(response);
       console.log(response.data.result);
@@ -40,11 +52,14 @@ const SocialLoginForm = () => {
       console.error("Error during social login:", error);
     }
   };
+  
+  
+  
 
   const handleSocial = async (name: string) => {
     try {
       const response = await axios.get(
-        `${process.env.BACKEND_URL}/api/member/signup}`
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/member/signup}`
       );
       const { accessToken } = response.data;
       if (name === "kakao") {
@@ -65,6 +80,7 @@ const SocialLoginForm = () => {
       }
     } catch (error) {
       console.log("소셜 토큰 주기 실패");
+      console.log(error);
     }
   };
   return (
@@ -72,7 +88,7 @@ const SocialLoginForm = () => {
       <div
         className="bg-kakao-btn text-black px-4 rounded-md my-2 w-[320px] h-[44px] flex items-center justify-center"
         onClick={() => {
-          handleSocial("kakao");
+          handleSocialLogin("kakao");
         }}
       >
         <Image src={kakao} alt="kakao" width={330} height={44} />
@@ -80,14 +96,14 @@ const SocialLoginForm = () => {
       <div
         className="bg-naver-btn text-white px-4 rounded-md my-2 w-[320px] h-[44px] flex items-center justify-center"
         onClick={() => {
-          handleSocial("naver");
+          handleSocialLogin("naver");
         }}
       >
         <Image src={naver} alt="naver" width={330} height={44}></Image>
       </div>
       <div
         onClick={() => {
-          handleSocial("google");
+          handleSocialLogin("google");
         }}
       >
         <Image src={google} width={340} height={44} alt="google"></Image>

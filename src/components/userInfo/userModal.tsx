@@ -38,8 +38,8 @@ const UserModal: React.FC<UserModalProps & { style: React.CSSProperties }> = ({ 
                         </div>
                     </div>
                     <div className="mt-[0.8rem]">
-                        <span className="text-neutral-500 text-2xl font-normal font-Pretendard">설정</span>
-                        <span className="text-rose-500 text-2xl font-normal font-Pretendard" onClick={handleLogout}>  로그아웃</span>
+                        <span className="text-neutral-500 text-2xl font-normal font-Pretendard cursor-pointer">설정</span>
+                        <span className="text-rose-500 text-2xl font-normal font-Pretendard cursor-pointer ml-[10px]" onClick={handleLogout}>로그아웃</span>
                     </div>
                 </div>
             </div>

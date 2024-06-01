@@ -64,22 +64,25 @@ export async function submitInterests(selectedInterests: string[]) {
   }
 }
 
-export async function uploadImage(imageFile: File) {
-  try {
-    const formData = new FormData();
-    formData.append('image', imageFile);
+export const uploadImage = async (file: File) => {
+  const formData = new FormData();
+  formData.append('image', file);
 
+  try {
     const response = await axios.post(`${backendUrl}/api/image`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
     });
+
     if (response.data.isSuccess) {
-      return response.data.result.accessUri;
+      console.log(response.data);
+      return response.data;
     } else {
-      throw new Error("Image upload failed");
+      throw new Error(response.data.message || 'Image upload failed');
     }
   } catch (error) {
-    throw new Error(`Error uploading image: ${error}`);
+    console.error("Image upload failed:", error);
+    throw error;
   }
-}
+};

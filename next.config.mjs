@@ -39,6 +39,10 @@ const nextConfig = {
   //     },
   //   ];
   // },
+  images: {
+    domains: ['axjoaeuyezzj.objectstorage.ap-chuncheon-1.oci.customer-oci.com'],
+  },
+  reactStrictMode: true,
 };
 
 export default nextConfig;
