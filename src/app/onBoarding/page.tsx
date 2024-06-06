@@ -21,9 +21,9 @@ const OnBoradingPage = () => {
       const onSecondBg = window.scrollY + window.innerHeight > secondBgPosition;
 
       if (onSecondBg) {
-        setShowSecondAnimation(true);
-      } else {
         setShowSecondAnimation(false);
+      } else {
+        setShowSecondAnimation(true);
       }
     };
 
