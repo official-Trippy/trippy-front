@@ -11,10 +11,10 @@ interface FirstProps {
 function FirstBg({ children, className }: FirstProps) {
 
     return (
-        <div className={`flex flex-col w-full h-[20%] ${className}`}>
+        <div className={`flex flex-col w-full ${className}`}>
             {children}
-            <div className='flex flex-col ml-auto mt-auto z-0'>
-                <Image src={FirstBgimg} alt='' />
+            <div className='flex flex-col ml-auto -mt-[30rem] -z-10'>
+                <Image className='relative z-0' src={FirstBgimg} alt='' />
             </div>
         </div>
     )

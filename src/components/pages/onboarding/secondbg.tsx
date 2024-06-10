@@ -14,7 +14,7 @@ function SecondBg({ children, className }: FirstProps) {
         <div className={`relative flex flex-col w-full h-screen bg-btn-color z-20 ${className}`}>
             {children}
             <div className='flex mt-auto'>
-                <Image src={secondimg} alt='' />
+                <Image src={secondimg} alt='' height={600} />
             </div>
         </div>
     )

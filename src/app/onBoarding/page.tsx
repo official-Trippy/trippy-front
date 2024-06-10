@@ -14,16 +14,15 @@ const OnBoradingPage = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      // SecondBg 컴포넌트의 위치를 계산하기 위해 pagesRef를 사용합니다.
-      // 이 예제에서는 SecondBg가 페이지의 두 번째 섹션으로 가정합니다.
-      // 실제 위치에 따라 값을 조정해야 할 수 있습니다.
       const secondBgPosition = pagesRef.current ? pagesRef.current.children[1].offsetTop : 0;
+      const thirdBgPosition = pagesRef.current ? pagesRef.current.children[2].offsetTop : 0;
       const onSecondBg = window.scrollY + window.innerHeight > secondBgPosition;
+      const onThirdBg = window.scrollY + window.innerHeight > thirdBgPosition;
 
       if (onSecondBg) {
-        setShowSecondAnimation(false);
-      } else {
         setShowSecondAnimation(true);
+      } else {
+        setShowSecondAnimation(false);
       }
     };
 
@@ -34,19 +33,23 @@ const OnBoradingPage = () => {
     };
   }, []);
 
+
+
   return (
     <div className="">
-      <Header />
-      <div className="pages" ref={pagesRef}>
+      <div className="pages w-full" ref={pagesRef}>
         <FirstBg className={`page slide-up-animation`} >
+          <div>
+            <Header />
+          </div>
           <div className="w-[80%] flex mx-auto">
-            <div className="pt-[10rem]">
+            <div className="pt-[10rem] z-10">
               <h1 className="text-[4rem] font-bold text-btn-color">나만의 여행을<br />기록할 수 있어요</h1>
               <span className="text-[2rem] font-normal text-btn-color ">소중한 순간들을 나만의 스타일로 특별하게 기록해보세요</span>
             </div>
           </div>
         </FirstBg>
-        <SecondBg className={`page ${showSecondAnimation ? 'slide-up-animation' : ''}`}>
+        <SecondBg className={`page slide-up-animation`}>
           <div className="w-[80%] flex mx-auto">
             <div className="pt-[10rem] flex flex-col ml-auto">
               <h1 className="text-[4rem] font-bold text-white flex flex-col ml-auto">서로의 여행 기록을<a className="flex ml-auto">공유할 수 있어요</a></h1>

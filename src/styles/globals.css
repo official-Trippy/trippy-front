@@ -171,7 +171,7 @@ body {
 }
 
 .shadowall {
-  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.5)
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.08)
 }
 
 .selectshadow {
@@ -215,6 +215,38 @@ body {
 
 .slide-up-animation {
   animation: slideUp 0.5s ease-out forwards;
+}
+
+@keyframes typing {
+  from {
+    width: 0;
+  }
+
+  to {
+    width: 100%;
+  }
+}
+
+.typing h1,
+.typing span {
+  display: inline-block;
+  overflow: hidden;
+  border-right: .15em solid orange;
+  white-space: nowrap;
+  letter-spacing: .15em;
+  animation: typing 3.5s steps(40, end), blink-caret .75s step-end infinite;
+}
+
+@keyframes blink-caret {
+
+  from,
+  to {
+    border-color: transparent;
+  }
+
+  50% {
+    border-color: orange;
+  }
 }
 
 .pages {
