@@ -43,6 +43,19 @@ const nextConfig = {
     domains: ['axjoaeuyezzj.objectstorage.ap-chuncheon-1.oci.customer-oci.com'],
   },
   reactStrictMode: true,
+  async headers() {
+    return [
+      {
+        source: '/(.*)',
+        headers: [
+          {
+            key: 'Content-Security-Policy',
+            value: 'upgrade-insecure-requests',
+          },
+        ],
+      },
+    ];
+  },
 };
 
 export default nextConfig;
