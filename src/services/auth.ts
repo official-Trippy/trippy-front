@@ -55,6 +55,7 @@ export async function Login(memberId: string, password: string) {
       password,
     });
     accessToken = response.data.result.accessToken;
+    console.log(response);
     return response.data;
   } catch (error) {
     throw new Error(`Error during login: ${error}`);
@@ -68,7 +69,8 @@ export async function MemberInfo(accessToken: any) {
         'Authorization': `Bearer ${accessToken}`,
       }
     });
-    return res.data
+    console.log(res.data);
+    return res.data;
   } catch (e) {
     return null;
   }

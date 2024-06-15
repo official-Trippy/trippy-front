@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import { FormEvent, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -7,6 +7,7 @@ import Image from "next/image";
 import Link from "next/link";
 import Cookies from "js-cookie";
 import { Login } from "@/services/auth";
+import Swal from 'sweetalert2';
 
 const LoginForm = () => {
   const [memberId, setMemberId] = useState("");
@@ -30,11 +31,23 @@ const LoginForm = () => {
     e.preventDefault();
     try {
       const response = await Login(memberId, password);
-      const { accessToken, refreshToken } = response.result;
+      const { accessToken, refreshToken, role } = response.result;
       Cookies.set("accessToken", accessToken);
       Cookies.set("refreshToken", refreshToken);
-      router.push("/home");
-      router.refresh();
+
+      if (role === 'GUEST') {
+        Swal.fire({
+          icon: 'warning',
+          title: '블로그 설정이 완료되지 않았습니다.',
+          text: '블로그 가입 페이지로 이동합니다',
+          confirmButtonText: '확인'
+        }).then(() => {
+          router.push("/blogRegister");
+        });
+      } else {
+        router.push("/home");
+        router.refresh();
+      }
     } catch (error) {
       console.error("Error during login:", error);
       setErrorMessage("이메일이 올바르지 않거나 비밀번호가 틀렸습니다");
