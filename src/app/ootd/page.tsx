@@ -3,7 +3,7 @@ import Recoootd from '@/components/pages/ootd/recoootd'
 import Image from 'next/image'
 import React from 'react'
 import Profile from "../../../public/Profile.png"
-import RecentOotdPost from '@/components/pages/ootd/RecentPost'
+import RecentOotdPost from '@/components/pages/ootd/RecentOotdPost'
 import { useQuery } from 'react-query'
 import Cookies from 'js-cookie'
 import { MemberInfo } from '@/services/auth'
