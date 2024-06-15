@@ -1,9 +1,10 @@
-/* eslint-disable @next/next/no-img-element */
-"use client";
+// src/app/page.tsx
+
+import React from "react";
 import Image from "next/image";
 import Profile from "../../public/Profile.png";
 import Recommend from "@/components/pages/home/recommend";
-import RecentPost from "@/components/pages/home/recentPost";
+import RecentPost from "@/components/pages/home/RecentPost";
 import { useQuery } from "react-query";
 import { MemberInfo } from "@/services/auth";
 import Cookies from "js-cookie";
@@ -33,7 +34,7 @@ export default function Home() {
       <Recommend memberData={memberData} isLoading={isLoading}>
         <div className="w-[30rem] h-[40rem] shadow-xl rounded-[1rem]">
           <div className="flex flex-col">
-            <img className="rounded-[1rem]" src="https://picsum.photos/300/200" alt="" />
+            {/* <img className="rounded-[1rem]" src="https://picsum.photos/300/200" alt="" /> */}
             <div className="p-[1rem] flex">
               <Image src={Profile} width={40} height={40} alt="" />
               <div className="flex flex-col justify-center pl-[1rem] text-[1.4rem]">
@@ -57,7 +58,7 @@ export default function Home() {
               <span className="w-fit px-[0.8rem] py-[0.4rem] mt-[1.2rem] bg-[#F5F5F5] text-[1.3rem] text-[#9d9d9d] rounded-[1.6rem]">태그</span>
             </div>
             <div className="flex flex-col w-full">
-              <img className="ml-auto flex rounded-[0.8rem]" src="https://picsum.photos/120/120" alt="dd" />
+              {/* <img className="ml-auto flex rounded-[0.8rem]" src="https://picsum.photos/120/120" alt="dd" /> */}
             </div>
           </div>
           <div className="flex mt-[1.6rem]">
