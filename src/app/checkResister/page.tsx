@@ -1,45 +1,9 @@
 "use client";
-import axios from "axios";
+
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
-
-const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
-
-export async function checkSocial(email: string) {
-  try {
-    const response = await axios.get(
-      `${backendUrl}/api/member/isNewMember=${email}`
-    );
-    const data = response.data.result;
-    console.log("CheckSocial response data:", data);
-    return data.isNewMember;
-  } catch (error) {
-    console.error("Error checking social status:", error);
-    throw new Error("Error data");
-  }
-}
-
-async function signUp({
-  memberId,
-  email,
-  password,
-}: {
-  memberId: string;
-  email: string;
-  password: string;
-}) {
-  try {
-    const response = await axios.post(`${backendUrl}/api/member/signup`, {
-      memberId,
-      email,
-      password,
-    });
-    console.log("SignUp response:", response.data);
-  } catch (error) {
-    console.error("Error signing up:", error);
-  }
-}
+import { checkSocial, signUp } from '@/utils/socialAuth';
 
 const CheckUserRegistration: React.FC = () => {
   const { data: session, status } = useSession();
