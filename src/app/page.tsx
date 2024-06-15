@@ -5,7 +5,7 @@ import React from "react";
 import Image from "next/image";
 import Profile from "../../public/Profile.png";
 import Recommend from "@/components/pages/home/recommend";
-import RecentPost from "@/components/pages/home/RecentPost";
+// import RecentPost from "@/components/pages/home/RecentPost";
 import { useQuery } from "react-query";
 import { MemberInfo } from "@/services/auth";
 import Cookies from "js-cookie";
@@ -50,7 +50,7 @@ export default function Home() {
           </div>
         </div>
       </Recommend>
-      <RecentPost>
+      {/* <RecentPost> */}
         <div className="w-[45rem] h-[20rem] shadowall rounded-[1rem] mt-[5rem] px-[1.6rem] py-[2rem] hover:-translate-y-4 duration-300">
           <div className="flex">
             <div className="flex flex-col w-[150%]">
@@ -76,7 +76,7 @@ export default function Home() {
             </div>
           </div>
         </div>
-      </RecentPost>
+      {/* </RecentPost> */}
     </div>
   );
 }
