@@ -44,7 +44,7 @@ async function signUp({
 const CheckUserRegistration: React.FC = () => {
   const { data: session, status } = useSession();
   const router = useRouter();
-  const [isRouterReady, setIsRouterReady] = useState(true);
+  const [isRouterReady] = useState(true);
 
   useEffect(() => {
     if (isRouterReady) {
@@ -72,6 +72,7 @@ const CheckUserRegistration: React.FC = () => {
         console.error("User is not authenticated or email is missing");
       }
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isRouterReady, session, status]);
 
   return (
