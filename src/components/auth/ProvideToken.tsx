@@ -1,15 +1,17 @@
 import axios from "axios";
 import { useEffect } from "react";
 import { useSession } from "next-auth/react";
+import { CustomSession } from "@/types/auth";
 
 const SendSessionToServer = () => {
-  const { data: session, status } = useSession();
+  const { data: session, status } = useSession() as { data: CustomSession | null; status: string };
 
   useEffect(() => {
-    if (status === "authenticated") {
+    if (status === "authenticated" && session) {
       const sendSessionInfoToServer = async () => {
         try {
-          const accessToken = user?.accessToken;
+          // session 객체에서 accessToken을 가져옵니다.
+          const accessToken = session.accessToken;
 
           const response = await axios.post(
             "http://158.180.85.187:8080/session-info",
@@ -35,5 +37,8 @@ const SendSessionToServer = () => {
       sendSessionInfoToServer();
     }
   }, [session, status]);
+
   return <></>;
 };
+
+export default SendSessionToServer;

@@ -41,3 +41,13 @@ export interface UserModalProps {
     blogIntroduce: string;
   } | null;
 }
+
+export interface CustomSession {
+  user: {
+    name: string;
+    email: string;
+    image: string;
+  };
+  accessToken: string;
+  expires: string;
+}

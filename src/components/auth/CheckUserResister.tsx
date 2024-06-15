@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
 
 const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
