@@ -44,17 +44,22 @@ const nextConfig = {
   },
   reactStrictMode: true,
   async headers() {
-    return [
-      {
-        source: '/(.*)',
-        headers: [
-          {
-            key: 'Content-Security-Policy',
-            value: 'upgrade-insecure-requests',
-          },
-        ],
-      },
-    ];
+    // Remove or adjust this header for local development
+    if (process.env.NODE_ENV === 'production') {
+      return [
+        {
+          source: '/(.*)',
+          headers: [
+            {
+              key: 'Content-Security-Policy',
+              value: 'upgrade-insecure-requests',
+            },
+          ],
+        },
+      ];
+    } else {
+      return []; // No headers for non-production environments
+    }
   },
 };
 
