@@ -7,7 +7,6 @@ import Image from "next/image";
 import Link from "next/link";
 import Cookies from "js-cookie";
 import { Login } from "@/services/auth";
-import Swal from 'sweetalert2';
 
 const LoginForm = () => {
   const [memberId, setMemberId] = useState("");
@@ -23,7 +22,7 @@ const LoginForm = () => {
     const accessToken = Cookies.get("accessToken");
     const refreshToken = Cookies.get("refreshToken");
     if (accessToken && refreshToken) {
-      router.push("/home");
+      router.push("/");
     }
   };
 
@@ -35,18 +34,10 @@ const LoginForm = () => {
       Cookies.set("accessToken", accessToken);
       Cookies.set("refreshToken", refreshToken);
 
-      if (role === 'GUEST') {
-        Swal.fire({
-          icon: 'warning',
-          title: '블로그 설정이 완료되지 않았습니다.',
-          text: '블로그 가입 페이지로 이동합니다',
-          confirmButtonText: '확인'
-        }).then(() => {
-          router.push("/blogRegister");
-        });
-      } else {
-        router.push("/home");
-        router.refresh();
+      if (role === "MEMBER") {
+        router.push("/");
+      } else if (role === "GUEST") {
+        router.push("/blogRegister");
       }
     } catch (error) {
       console.error("Error during login:", error);
@@ -59,9 +50,7 @@ const LoginForm = () => {
       <form onSubmit={handleSubmit} className="flex flex-col items-center">
         <Image src={LogoMain} alt="Logo" />
         <div className="flex flex-col mt-[6rem]">
-          <label htmlFor="email" className="login-info mb-2">
-            이메일
-          </label>
+          <label htmlFor="email" className="login-info mb-2">이메일</label>
           <input
             type="email"
             id="email"
@@ -71,11 +60,8 @@ const LoginForm = () => {
             style={{ fontSize: "1.6rem" }}
           />
         </div>
-
         <div className="flex flex-col mt-[2rem]">
-          <label htmlFor="password" className="login-info mb-2">
-            비밀번호
-          </label>
+          <label htmlFor="password" className="login-info mb-2">비밀번호</label>
           <input
             type="password"
             id="password"
@@ -90,7 +76,6 @@ const LoginForm = () => {
             {errorMessage}
           </div>
         )}
-
         <button className="login-btn bg-btn-color text-white mt-[2.4rem] px-4 rounded-md w-[320px] h-[44px]">
           로그인
         </button>

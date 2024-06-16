@@ -55,7 +55,6 @@ export async function Login(memberId: string, password: string) {
       password,
     });
     accessToken = response.data.result.accessToken;
-    console.log(response);
     return response.data;
   } catch (error) {
     throw new Error(`Error during login: ${error}`);
