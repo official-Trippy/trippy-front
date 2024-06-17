@@ -17,6 +17,7 @@ export const useUserStore = create<UserState>((set) => ({
       set({ userInfo: data });
     } catch (error) {
       console.error("Error fetching user info:", error);
+      set({ userInfo: null });
     } finally {
       set({ loading: false });
     }
