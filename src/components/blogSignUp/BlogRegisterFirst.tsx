@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import BlogStep1 from "../../../public/BlogStep1.svg";
-import DefaultProfileImg from "../../../public/DefaultProfileImg.svg";
+import DefaultProfileImg from "../../../public/DefaultProfile.svg";
 import {
   checkNickNameDuplicate,
   checkBlogNameDuplicate,
