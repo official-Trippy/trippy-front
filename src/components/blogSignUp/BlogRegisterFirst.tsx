@@ -31,6 +31,7 @@ const BlogRegisterFirst = () => {
   const [blogNameError, setBlogNameError] = useState<string>("");
   const [blogIntroduce, setBlogIntroduce] = useState<string>("");
   const [blogIntroduceError, setBlogIntroduceError] = useState<string>("");
+  const [imageUploaded, setImageUploaded] = useState(false);
 
   const { data: session, status } = useSession();
   const sessionToken = Cookies.get("next-auth.session-token");
@@ -146,6 +147,7 @@ const BlogRegisterFirst = () => {
       try {
         const response = await uploadImage(file);
         setProfileImage(response.result);
+        setImageUploaded(true);
       } catch (error) {
         console.error("Image upload failed:", error);
       }
@@ -169,21 +171,17 @@ const BlogRegisterFirst = () => {
   };
 
   const handleSubmit = async () => {
-    if (!nickNameError.includes("사용 가능") || !blogNameError.includes("사용 가능")) {
+    if (!nickNameError.includes("사용 가능") || !blogNameError.includes("사용 가능") || !imageUploaded) {
       return;
     }
     try {
-      if (!profileImage) {
-        throw new Error("프로필 이미지가 업로드되지 않았습니다.");
-      }
-
       const data = {
         profileImage: profileImage,
         nickName: nickName,
         blogName: blogName,
         blogIntroduce: blogIntroduce
       };
-
+  
       console.log(data);
       setUserInfo(data);
       const response = await signupCommon(data);
@@ -193,6 +191,7 @@ const BlogRegisterFirst = () => {
       console.error("Error signing up:", error);
     }
   };
+  
 
   return (
     <div className="w-[80%] mx-auto mt-[15rem]">
@@ -312,18 +311,21 @@ const BlogRegisterFirst = () => {
             </div>
           </div>
           <div className="text-center">
-            <button
+          <button
               type="submit"
-              className={`mx-auto mt-32 mb-32 w-[22rem] h-[6rem] bg-btn-color text-white py-2 rounded-lg focus:outline-none ${!nickNameError.includes("사용 가능") ||
-                !blogNameError.includes("사용 가능")
-                ? "cursor-not-allowed bg-gray-400 hover:bg-gray-400"
-                : ""
-                }`}
+              className={`mx-auto mt-32 mb-32 w-[22rem] h-[6rem] bg-btn-color text-white py-2 rounded-lg focus:outline-none ${
+                !nickNameError.includes("사용 가능") ||
+                !blogNameError.includes("사용 가능") ||
+                !imageUploaded
+                  ? "cursor-not-allowed bg-gray-400 hover:bg-gray-400"
+                  : ""
+              }`}
               onClick={handleSubmit}
               style={{ fontSize: "2rem" }}
               disabled={
                 !nickNameError.includes("사용 가능") ||
-                !blogNameError.includes("사용 가능")
+                !blogNameError.includes("사용 가능") ||
+                !imageUploaded
               }
             >
               다음
