@@ -90,9 +90,8 @@ const BlogRegisterFirst = () => {
   };
 
   const validateNickName = (nickName: string) => {
-    const koreanRegex = /^[가-힣]{2,8}$/;
-    const englishRegex = /^[a-zA-Z]{4,16}$/;
-    return koreanRegex.test(nickName) || englishRegex.test(nickName);
+    const regex = /^[가-힣a-zA-Z0-9]{2,16}$/;
+    return regex.test(nickName);
   };
 
   const handleBlogName = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -136,10 +135,10 @@ const BlogRegisterFirst = () => {
   };
 
   const validateBlogName = (blogName: string) => {
-    const koreanRegex = /^[가-힣]{2,15}$/;
-    const englishRegex = /^[a-zA-Z]{4,30}$/;
-    return koreanRegex.test(blogName) || englishRegex.test(blogName);
+    const regex = /^[가-힣a-zA-Z0-9]{2,30}$/;
+    return regex.test(blogName);
   };
+
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
