@@ -13,7 +13,7 @@ const UserModal: React.FC<UserModalProps & { style: React.CSSProperties, handleL
     if (!isOpen || !userInfo) return null;
 
     return (
-        <div className="w-[32rem] h-[23.4rem] relative bg-white rounded-lg shadow" style={style}>
+        <div className="w-[32rem] h-[23.4rem] relative bg-white rounded-lg shadow z-[50]" style={style}>
             <div className="px-[2rem] pt-[2rem] py-[1rem]">
                 <div className="flex-col justify-center items-start gap-3 inline-flex">
                     <div className="self-stretch justify-start items-center gap-20 inline-flex">

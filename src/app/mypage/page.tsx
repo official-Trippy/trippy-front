@@ -42,7 +42,7 @@ const MyPage = () => {
         <Image src={backgroundImg} alt="Background" layout="fill" objectFit="cover" />
       </div>
       <div className="w-[80%] mx-auto">
-      <h1 className="w-[80%] absolute ml-auto text-right top-[300px] text-white text-4xl font-bold">{userData.blogName}</h1>
+      <h1 className="w-[80%] absolute ml-auto text-right top-[320px] text-white text-4xl font-bold">{userData.blogName}</h1>
       </div>
       <div className="w-[80%] mx-auto flex p-4">
         <div className="w-[250px] mb-4">
