@@ -1,13 +1,26 @@
 import React from "react";
 import Image from "next/image";
 import backgroundImg from "../../../public/DefaultBackground.svg";
-import { UserInfoType } from "@/types/auth";
+import { useQuery } from "react-query";
+import { MemberInfo } from "@/services/auth";
+import Cookies from "js-cookie";
 
-interface UserInformationProps {
-  userData: UserInfoType;
-}
+const UserInformation: React.FC = () => {
+  const accessToken = Cookies.get("accessToken");
 
-const UserInformation: React.FC<UserInformationProps> = ({ userData }) => {
+  const { data, error, isLoading } = useQuery({
+    queryKey: ["member", accessToken],
+    queryFn: () => MemberInfo(accessToken),
+    onError: (error) => {
+      console.error(error);
+    },
+  });
+
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error loading data</div>;
+
+  const userData = data.result;
+
   return (
     <div className="w-full flex flex-col items-center relative">
 
