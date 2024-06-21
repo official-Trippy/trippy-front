@@ -10,6 +10,8 @@ import MyTicket from "@/components/profile/MyTicket";
 import MyOotd from "@/components/profile/MyOotd";
 import MyBadge from "@/components/profile/MyBadge";
 import MyBookmark from "@/components/profile/MyBookmark";
+import Image from "next/image";
+import backgroundImg from "../../../public/DefaultBackground.svg";
 
 const TABS = {
   ALL: 'ALL',
@@ -23,11 +25,7 @@ const MyPage = () => {
   const [activeTab, setActiveTab] = useState(TABS.ALL);
   const accessToken = Cookies.get("accessToken");
 
-  const {
-    data: memberData,
-    error,
-    isLoading,
-  } = useQuery({
+  const { data, error, isLoading } = useQuery({
     queryKey: ["member", accessToken],
     queryFn: () => MemberInfo(accessToken),
     onError: (error) => {
@@ -35,58 +33,71 @@ const MyPage = () => {
     },
   });
 
+  const userData = data.result;
+
   return (
     <>
       <Header />
-      <UserInformation />
-      
-      <div className="w-[65%] ml-[450px] flex flex-start space-x-4 my-[20px] text-2xl">
-        <button
-          className={`pr-4 py-2 ${activeTab === TABS.ALL ? "text-rose-500 font-blod" : "bg-white"}`}
-          onClick={() => setActiveTab(TABS.ALL)}
-        >
-          모두 보기
-        </button>
-        <button
-          className={`px-4 py-2 ${activeTab === TABS.TICKET ? "text-rose-500 font-blod" : "bg-white"}`}
-          onClick={() => setActiveTab(TABS.TICKET)}
-        >
-          티켓
-        </button>
-        <button
-          className={`px-4 py-2 ${activeTab === TABS.OOTD ? "text-rose-500 font-blod" : "bg-white"}`}
-          onClick={() => setActiveTab(TABS.OOTD)}
-        >
-          OOTD
-        </button>
-        <button
-          className={`px-4 py-2 ${activeTab === TABS.BADGE ? "text-rose-500 font-blod" : "bg-white"}`}
-          onClick={() => setActiveTab(TABS.BADGE)}
-        >
-          뱃지
-        </button>
-        <button
-          className={`px-4 py-2 ${activeTab === TABS.BOOKMARK ? "text-rose-500 font-blod" : "bg-white"}`}
-          onClick={() => setActiveTab(TABS.BOOKMARK)}
-        >
-          북마크
-        </button>
+      <div className="relative w-full h-[300px]">
+        <Image src={backgroundImg} alt="Background" layout="fill" objectFit="cover" />
       </div>
-      <hr className="mb-[20px] w-[70%] ml-[420px] h-[1px]"></hr>
+      <div className="w-[80%] mx-auto">
+      <h1 className="w-[80%] absolute ml-auto text-right top-[300px] text-white text-4xl font-bold">{userData.blogName}</h1>
+      </div>
+      <div className="w-[80%] mx-auto flex p-4">
+        <div className="w-[250px] mb-4">
+          <UserInformation />
+        </div>
+        <div className="w-[100%] ml-[50px]">
+          <div className="flex space-x-4 mb-4 ml-4 text-2xl">
+            <button
+              className={`pr-8 py-2 ${activeTab === TABS.ALL ? "text-rose-500 font-bold" : "bg-white"}`}
+              onClick={() => setActiveTab(TABS.ALL)}
+            >
+              모두 보기
+            </button>
+            <button
+              className={`pr-8 py-2 ${activeTab === TABS.TICKET ? "text-rose-500 font-bold" : "bg-white"}`}
+              onClick={() => setActiveTab(TABS.TICKET)}
+            >
+              티켓
+            </button>
+            <button
+              className={`pr-8 py-2 ${activeTab === TABS.OOTD ? "text-rose-500 font-bold" : "bg-white"}`}
+              onClick={() => setActiveTab(TABS.OOTD)}
+            >
+              OOTD
+            </button>
+            <button
+              className={`pr-8 py-2 ${activeTab === TABS.BADGE ? "text-rose-500 font-bold" : "bg-white"}`}
+              onClick={() => setActiveTab(TABS.BADGE)}
+            >
+              뱃지
+            </button>
+            <button
+              className={`pr-8 py-2 ${activeTab === TABS.BOOKMARK ? "text-rose-500 font-bold" : "bg-white"}`}
+              onClick={() => setActiveTab(TABS.BOOKMARK)}
+            >
+              북마크
+            </button>
+          </div>
+          <hr className="mb-4 w-full h-[1px]" />
 
-      <div className="w-[65%] ml-[450px] flex flex-col justify-center mt-4">
-        {activeTab === TABS.ALL && (
-          <>
-            <MyTicket />
-            <MyOotd />
-            <MyBadge />
-            <MyBookmark />
-          </>
-        )}
-        {activeTab === TABS.TICKET && <MyTicket />}
-        {activeTab === TABS.OOTD && <MyOotd />}
-        {activeTab === TABS.BADGE && <MyBadge />}
-        {activeTab === TABS.BOOKMARK && <MyBookmark />}
+          <div className="w-full ml-4">
+            {activeTab === TABS.ALL && (
+              <>
+                <MyTicket />
+                <MyOotd />
+                <MyBadge />
+                <MyBookmark />
+              </>
+            )}
+            {activeTab === TABS.TICKET && <MyTicket />}
+            {activeTab === TABS.OOTD && <MyOotd />}
+            {activeTab === TABS.BADGE && <MyBadge />}
+            {activeTab === TABS.BOOKMARK && <MyBookmark />}
+          </div>
+        </div>
       </div>
     </>
   );

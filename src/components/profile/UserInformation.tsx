@@ -22,20 +22,13 @@ const UserInformation: React.FC = () => {
   const userData = data.result;
 
   return (
-    <div className="w-full flex flex-col items-center relative">
-
-      <div className="relative w-full h-[300px]">
-        <Image src={backgroundImg} alt="Background" layout="fill" objectFit="cover" />
-        <div className="w-[80%]">
-        <div className="absolute bottom-16 text-4xl right-[200px] text-white font-bold">{userData.blogName}</div>
-        </div>
-      </div>
+    <div className="w-full flex flex-col relative">
       <div className="w-[80%]">
-      <div className="absolute top-60 w-[200px] h-[300px] bg-white px-8 py-4 rounded-lg shadow-lg flex flex-col items-center">
-        <div className="relative w-40 h-40 rounded-full overflow-hidden mb-4">
+      <div className="absolute top-[-150px] w-[200px] h-[300px] bg-white px-8 py-4 rounded-lg shadow-lg flex flex-col items-center">
+        <div className="relative w-40 h-40 rounded-full overflow-hidden my-4">
           <Image src={userData.profileImageUrl} alt="Profile" layout="fill" objectFit="cover" />
         </div>
-        <h1 className="text-4xl font-bold mt-[20px]">{userData.nickName}</h1>
+        <h1 className="text-4xl font-bold mt-[10px]">{userData.nickName}</h1>
         <span className="text-xl text-gray-600 mt-[5px]">{userData.email}</span>
         <div className="mt-[10px] flex px-4">
           <span className="text-sm text-gray-600">팔로워 2000{userData.followers}</span>
