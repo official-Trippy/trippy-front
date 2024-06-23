@@ -5,7 +5,6 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Cookies from "js-cookie";
-
 import { signUp, emailSend, confirmEmail } from "@/services/auth";
 import { Login, checkEmailDuplicate } from "@/services/auth";
 import LogoMain from "../../../public/LogoMain.svg";
@@ -29,6 +28,7 @@ const SignUpForm = () => {
   const [isCodeFocused, setIsCodeFocused] = useState(false);
   const [codeMessage, setCodeMessage] = useState("");
   const [isCodeVerified, setIsCodeVerified] = useState(false);
+  const [showServiceInfo, setShowServiceInfo] = useState(false);
 
   const isVerificationButtonDisabled = codeMessage === '인증이 완료되었습니다.' || isCodeVerified;
 
