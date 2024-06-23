@@ -3,7 +3,7 @@ import LogoMain from "../../../public/LogoMain.svg";
 
 const ServiceInfo = () => {
     return (
-        <div className="w-[50%] mx-auto mt-[15rem]">
+        <div className="w-[50%] mx-auto mt-[15rem] mb-8">
             <Image src={LogoMain} alt="Logo" className="mx-auto" />
             <div className="w-full mx-auto items-center mt-40 mb-8">
                 <span className="text-black text-[32px] font-semibold font-['Pretendard']">Trippy 서비스 이용약관<br/></span>
