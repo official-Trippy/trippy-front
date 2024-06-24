@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
@@ -9,7 +9,7 @@ import {
   checkNickNameDuplicate,
   checkBlogNameDuplicate,
   signupCommon,
-  uploadImage
+  uploadImage,
 } from "@/services/blog";
 import useUserInfo from "@/hooks/useUserInfo";
 import { swear_words_arr } from "@/constants/wearWordsArr";
@@ -32,21 +32,8 @@ const BlogRegisterFirst = () => {
   const [blogIntroduce, setBlogIntroduce] = useState<string>("");
   const [blogIntroduceError, setBlogIntroduceError] = useState<string>("");
 
-  const { data: session, status } = useSession();
-  const sessionToken = Cookies.get("next-auth.session-token");
   const { setUserInfo } = useUserInfo();
   const router = useRouter();
-
-  useEffect(() => {
-    const password = "1004";
-    const email = session?.user?.email;
-
-    if (status === "authenticated") {
-      signUp({ memberId: session.user?.email, email, password });
-    } else {
-      console.log("error");
-    }
-  }, [session]);
 
   const checkSwearWords = (value: string) => {
     const lowerValue = value.toLowerCase();
@@ -169,7 +156,10 @@ const BlogRegisterFirst = () => {
   };
 
   const handleSubmit = async () => {
-    if (!nickNameError.includes("사용 가능") || !blogNameError.includes("사용 가능")) {
+    if (
+      !nickNameError.includes("사용 가능") ||
+      !blogNameError.includes("사용 가능")
+    ) {
       return;
     }
     try {
@@ -181,7 +171,7 @@ const BlogRegisterFirst = () => {
         profileImage: profileImage,
         nickName: nickName,
         blogName: blogName,
-        blogIntroduce: blogIntroduce
+        blogIntroduce: blogIntroduce,
       };
 
       console.log(data);
@@ -261,8 +251,9 @@ const BlogRegisterFirst = () => {
               <div className="h-[1.7rem] mt-[1.2rem]">
                 {nickNameError && (
                   <p
-                    className={`text-${nickNameError.includes("사용 가능") ? "green" : "red"
-                      }-500`}
+                    className={`text-${
+                      nickNameError.includes("사용 가능") ? "green" : "red"
+                    }-500`}
                   >
                     {nickNameError}
                   </p>
@@ -284,8 +275,9 @@ const BlogRegisterFirst = () => {
               <div className="h-[1.7rem] mt-[1.2rem]">
                 {blogNameError && (
                   <p
-                    className={`text-${blogNameError.includes("사용 가능") ? "green" : "red"
-                      }-500`}
+                    className={`text-${
+                      blogNameError.includes("사용 가능") ? "green" : "red"
+                    }-500`}
                   >
                     {blogNameError}
                   </p>
@@ -314,11 +306,12 @@ const BlogRegisterFirst = () => {
           <div className="text-center">
             <button
               type="submit"
-              className={`mx-auto mt-32 mb-32 w-[22rem] h-[6rem] bg-btn-color text-white py-2 rounded-lg focus:outline-none ${!nickNameError.includes("사용 가능") ||
+              className={`mx-auto mt-32 mb-32 w-[22rem] h-[6rem] bg-btn-color text-white py-2 rounded-lg focus:outline-none ${
+                !nickNameError.includes("사용 가능") ||
                 !blogNameError.includes("사용 가능")
-                ? "cursor-not-allowed bg-gray-400 hover:bg-gray-400"
-                : ""
-                }`}
+                  ? "cursor-not-allowed bg-gray-400 hover:bg-gray-400"
+                  : ""
+              }`}
               onClick={handleSubmit}
               style={{ fontSize: "2rem" }}
               disabled={

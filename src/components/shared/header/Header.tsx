@@ -7,13 +7,12 @@ import LogoHeader from "../../../../public/LogoHeader.svg";
 import AlertImg from "../../../../public/AlertImg.png";
 import Profile from "../../../../public/Profile.png";
 import UserModal from "@/components/userInfo/userModal";
-import { useSession, signIn, signOut } from "next-auth/react";
 import { useUserStore } from "@/store/useUserStore";
 import { useRouter } from "next/navigation";
 
 const Header = () => {
   const [modalVisible, setModalVisible] = useState(false);
-  const { data: session } = useSession();
+
   const { userInfo, loading, fetchUserInfo } = useUserStore();
   const router = useRouter();
 
@@ -21,18 +20,8 @@ const Header = () => {
     fetchUserInfo();
   }, [fetchUserInfo]);
 
-  const onClickTotalLogin = async (e: React.MouseEvent) => {
-    e.preventDefault();
-
-    if (session) {
-      await signOut();
-    } else {
-      await signIn();
-    }
-  };
-
   const onClickLogin = () => {
-    router.push('/login');
+    router.push("/login");
   };
 
   const handleModalToggle = () => {
@@ -120,9 +109,8 @@ const Header = () => {
                   <button
                     className="w-[8.6rem] h-[3.5rem] bg-btn-color text-white px-6 py-2 rounded-lg"
                     style={{ fontSize: "1.6rem" }}
-                    onClick={onClickLogin}
                   >
-                    {session ? "로그아웃" : "로그인"}
+                    로그인
                   </button>
                 </Link>
               </div>
