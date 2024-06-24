@@ -13,7 +13,7 @@ import {
 } from "@/services/blog";
 import useUserInfo from "@/hooks/useUserInfo";
 import { swear_words_arr } from "@/constants/wearWordsArr";
-import { useSession } from "next-auth/react";
+
 import Cookies from "js-cookie";
 import { signUp } from "@/services/auth";
 import CheckUserRegistration from "../auth/CheckUserResister";
@@ -158,7 +158,10 @@ const BlogRegisterFirst = () => {
   const handleSubmit = async () => {
     if (
       !nickNameError.includes("사용 가능") ||
-      !blogNameError.includes("사용 가능")
+      !blogNameError.includes("사용 가능") ||
+      !nickName ||
+      !blogName ||
+      !profileImage
     ) {
       return;
     }
@@ -183,6 +186,8 @@ const BlogRegisterFirst = () => {
       console.error("Error signing up:", error);
     }
   };
+
+  const isSubmitDisabled = !nickName || !blogName || !profileImage;
 
   return (
     <div className="w-[80%] mx-auto mt-[15rem]">
@@ -314,10 +319,7 @@ const BlogRegisterFirst = () => {
               }`}
               onClick={handleSubmit}
               style={{ fontSize: "2rem" }}
-              disabled={
-                !nickNameError.includes("사용 가능") ||
-                !blogNameError.includes("사용 가능")
-              }
+              disabled={isSubmitDisabled}
             >
               다음
             </button>
