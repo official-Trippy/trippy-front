@@ -6,6 +6,7 @@ import FallingContainer from "@/components/falling/FallingContainer";
 import "@/styles/globals.css";
 import AuthSession from "@/components/AuthSession";
 import { QueryClient, QueryClientProvider } from "react-query";
+import '@toast-ui/editor/dist/toastui-editor.css';
 
 const inter = Inter({ subsets: ["latin"] });
 const queryClient = new QueryClient();
