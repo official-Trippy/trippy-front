@@ -49,14 +49,14 @@ const NaverLogin = () => {
   };
 
   return (
-    <div className="flex flex-col my-10 items-center">
+    <div className="flex flex-col my-0 items-center">
       <div
         id="naverIdLogin"
         className="hidden" // 기본 버튼을 숨깁니다.
         ref={naverRef}
       ></div>
       <div
-        className="bg-naver-btn text-white px-4 rounded-md my-2 w-[320px] h-[44px] flex items-center justify-center cursor-pointer"
+        className="bg-naver-btn text-white px-4 rounded-md my-2 w-[310px] h-[44px] flex items-center justify-center cursor-pointer"
         onClick={handleCustomButtonClick}
       >
         <Image src={kakao} alt="kakao" width={330} height={15} />

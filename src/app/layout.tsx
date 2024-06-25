@@ -38,10 +38,10 @@ export default function RootLayout({
           crossOrigin="anonymous"
         ></script>
 
-        <script>
+        {/* <script>
           Kakao.init('NEXT_PUBLIC_KAKAO_JS_KEY')
           console.log(Kakao.isInitialized());
-        </script>
+        </script> */}
       </head>
       <body className="flex flex-col">
         <QueryClientProvider client={queryClient}>
