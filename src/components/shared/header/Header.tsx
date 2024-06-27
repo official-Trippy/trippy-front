@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
@@ -9,6 +9,7 @@ import Profile from "../../../../public/Profile.png";
 import UserModal from "@/components/userInfo/userModal";
 import { useUserStore } from "@/store/useUserStore";
 import { useRouter } from "next/navigation";
+import Cookies from "js-cookie";
 
 const Header = () => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -99,6 +100,11 @@ const Header = () => {
                       position: "absolute",
                       bottom: "-260px",
                       left: "-290px",
+                    }}
+                    handleLogout={async () => {
+                      Cookies.remove("accessToken");
+                      Cookies.remove("refreshToken");
+                      await router.push("/login");
                     }}
                   />
                 </div>

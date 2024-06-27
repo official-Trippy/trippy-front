@@ -7,6 +7,7 @@ import Image from "next/image";
 import Link from "next/link";
 import Cookies from "js-cookie";
 import { Login } from "@/services/auth";
+import Swal from 'sweetalert2';
 
 const LoginForm = () => {
   const [memberId, setMemberId] = useState("");
@@ -22,7 +23,7 @@ const LoginForm = () => {
     const accessToken = Cookies.get("accessToken");
     const refreshToken = Cookies.get("refreshToken");
     if (accessToken && refreshToken) {
-      router.push("/home");
+      router.push("/");
     }
   };
 
@@ -30,16 +31,28 @@ const LoginForm = () => {
     e.preventDefault();
     try {
       const response = await Login(memberId, password);
-      const { accessToken, refreshToken } = response.result;
+      console.log(response);
+      const { accessToken, refreshToken, role } = response.result;
       Cookies.set("accessToken", accessToken);
       Cookies.set("refreshToken", refreshToken);
-      router.push("/home");
+  
+      if (role === "GUEST") {
+        Swal.fire({
+          icon: 'info',
+          title: '기존에 회원가입을 완료하지 않았습니다.',
+          text: '블로그 설정 페이지로 이동합니다.',
+        }).then(() => {
+          router.push("/blogRegister");
+        });
+      } else if (role === "MEMBER") {
+        router.push("/");
+      }
       router.refresh();
     } catch (error) {
       console.error("Error during login:", error);
       setErrorMessage("이메일이 올바르지 않거나 비밀번호가 틀렸습니다");
     }
-  };
+  };  
 
   return (
     <div className="w-[80%] mx-auto mt-[15rem]">
