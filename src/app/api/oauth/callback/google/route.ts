@@ -33,14 +33,10 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ data });
   } catch (error) {
-    console.error(
-      "Google token exchange failed:",
-      error.response?.data || error.message
-    );
+    console.error("Google token exchange failed");
 
     return NextResponse.json({
       data: "fail",
-      error: error.response?.data || error.message,
     });
   }
 }
