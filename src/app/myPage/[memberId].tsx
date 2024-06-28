@@ -28,7 +28,7 @@ const MemberPage: React.FC = () => {
 
   return (
     <div>
-      <h1>{memberData.name}'s Page</h1>
+      <h1>{memberData.name}&#39;s Page</h1>
       <p>{memberData.description}</p>
       {/* Render member-specific content here */}
     </div>
