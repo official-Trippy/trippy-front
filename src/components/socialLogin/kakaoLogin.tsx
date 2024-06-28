@@ -63,9 +63,9 @@ export default function KakaoLogin() {
   };
 
   return (
-    <div className="flex flex-col my-10 items-center">
+    <div className="flex flex-col my-1 items-center">
       <div
-        className="bg-kakao-btn text-black px-4 rounded-md my-2 w-[320px] h-[44px] flex items-center justify-center"
+        className="bg-kakao-btn text-black px-4 rounded-md my-2 w-[310px] h-[44px] flex items-center justify-center"
         onClick={kakaoLoginHandler}
       >
         <Image src={kakao} alt="kakao" width={330} height={44} />
