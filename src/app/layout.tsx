@@ -26,22 +26,16 @@ export default function RootLayout({
           src="https://static.nid.naver.com/js/naveridlogin_js_sdk_2.0.2.js"
           strategy="beforeInteractive"
         />
-
-        <script
-          type="text/javascript"
+        <Script
           src="http://code.jquery.com/jquery-1.11.3.min.js"
-        ></script>
-
-        <script
+          strategy="beforeInteractive"
+        />
+        <Script
           src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.2/kakao.min.js"
           integrity="sha384-TiCUE00h649CAMonG018J2ujOgDKW/kVWlChEuu4jK2vxfAAD0eZxzCKakxg55G4"
           crossOrigin="anonymous"
-        ></script>
-
-        {/* <script>
-          Kakao.init('NEXT_PUBLIC_KAKAO_JS_KEY')
-          console.log(Kakao.isInitialized());
-        </script> */}
+          strategy="beforeInteractive"
+        />
       </head>
       <body className="flex flex-col">
         <QueryClientProvider client={queryClient}>
