@@ -2,15 +2,8 @@ import React from "react";
 import Cookies from "js-cookie";
 import { UserModalProps } from "@/types/auth";
 
-const UserModal: React.FC<UserModalProps & { style: React.CSSProperties }> = ({ isOpen, onClose, userInfo, style }) => {
+const UserModal: React.FC<UserModalProps & { style: React.CSSProperties, handleLogout: () => Promise<void> }> = ({ isOpen, onClose, userInfo, style, handleLogout }) => {
     if (!isOpen || !userInfo) return null;
-
-    const handleLogout = () => {
-        Cookies.remove("accessToken");
-        Cookies.remove("refreshToken");
-
-        window.location.reload();
-    };
 
     return (
         <div className="w-[32rem] h-[23.4rem] relative bg-white rounded-lg shadow" style={style}>
