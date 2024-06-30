@@ -2,6 +2,8 @@
 
 import { useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
+import LogoMain from "../../../../../public/LogoMain.svg";
 
 import axios from "axios";
 
@@ -52,5 +54,15 @@ export default function KakaoTalk() {
     }
   }, []);
 
-  return <div>카카오 로그인 중...</div>;
+  return (
+    <div className="flex flex-col items-center justify-center min-h-screen text-center">
+      <div className="mb-4">
+        <Image src={LogoMain} alt="Logo" width={300} height={300} />
+      </div>
+      <div className="text-[2rem] font-medium">
+        로그인중입니다.
+        <span className="inline-block ml-2 animate-dots">...</span>
+      </div>
+    </div>
+  );
 }
