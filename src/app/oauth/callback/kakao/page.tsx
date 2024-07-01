@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
+import Cookies from "js-cookie";
 import Image from "next/image";
 import LogoMain from "../../../../../public/LogoMain.svg";
 
@@ -37,6 +38,7 @@ export default function KakaoTalk() {
           }
         );
         const role = roleRes.data.result.role;
+        Cookies.set("accessToken", roleRes.data.result.accessToken);
         console.log(roleRes.data);
         console.log("User role received:", role);
         if (role === "MEMBER") {
