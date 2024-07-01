@@ -4,6 +4,7 @@ import React, { useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import Image from "next/image";
+import Cookies from "js-cookie";
 import LogoMain from "../../../../../public/LogoMain.svg";
 
 const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
@@ -16,7 +17,6 @@ const NaverCallback = () => {
     if (executedRef.current) return;
     executedRef.current = true;
     const handleNaverCallback = async () => {
-      // 해시 부분에서 access_token 추출
       const hash = window.location.hash;
       const params = new URLSearchParams(hash.substring(1));
       const accessToken = params.get("access_token");
@@ -24,7 +24,6 @@ const NaverCallback = () => {
 
       if (accessToken && state) {
         try {
-          console.log(accessToken);
           console.log("Access token received:", accessToken);
 
           const socialName = "naver";
@@ -37,6 +36,9 @@ const NaverCallback = () => {
               },
             }
           );
+
+          Cookies.set("accessToken", accessToken);
+
           const role = roleRes.data.result.role;
           console.log(roleRes.data);
           if (role === "MEMBER") {
