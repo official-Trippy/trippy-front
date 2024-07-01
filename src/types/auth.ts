@@ -53,3 +53,10 @@ export interface CustomSession {
   accessToken: string;
   expires: string;
 }
+
+export interface RoleResponse {
+  result: {
+    accessToken: string; 
+    role: string;
+  };
+}

@@ -2,10 +2,11 @@
 
 import React, { useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-import axios from "axios";
+import axios, { AxiosResponse } from "axios"; 
 import Image from "next/image";
 import Cookies from "js-cookie";
 import LogoMain from "../../../../../public/LogoMain.svg";
+import { RoleResponse } from "@/types/auth";
 
 const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
@@ -27,7 +28,7 @@ const NaverCallback = () => {
           console.log("Access token received:", accessToken);
 
           const socialName = "naver";
-          const roleRes = await axios.post(
+          const roleRes: AxiosResponse<RoleResponse> = await axios.post(
             `${backendUrl}/api/member/login/oauth2/${socialName}`,
             {},
             {
@@ -37,10 +38,11 @@ const NaverCallback = () => {
             }
           );
 
-          Cookies.set("accessToken", accessToken);
+          Cookies.set("accessToken", roleRes.data.result.accessToken);
 
           const role = roleRes.data.result.role;
           console.log(roleRes.data);
+          console.log(roleRes.data.result.accessToken);
           if (role === "MEMBER") {
             router.push("/");
           } else if (role === "GUEST") {
