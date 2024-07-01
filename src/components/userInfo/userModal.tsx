@@ -2,6 +2,8 @@ import React from "react";
 import Cookies from "js-cookie";
 import { UserModalProps } from "@/types/auth";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
+import NaverLogo from "../../../public/NaverLogo.png";
 
 const UserModal: React.FC<UserModalProps & { style: React.CSSProperties, handleLogout: () => Promise<void> }> = ({ isOpen, onClose, userInfo, style, handleLogout }) => {
 
@@ -34,7 +36,15 @@ const UserModal: React.FC<UserModalProps & { style: React.CSSProperties, handleL
                             </div>
                         </div>
                         <div className="w-[46.61px] h-[46.61px]">
-
+                            {userInfo.socialType === "naver" && (
+                            <Image src={NaverLogo} alt="Naver Logo" width={46} height={46} />
+                            )}
+                             {userInfo.socialType === "kakao" && (
+                            <Image src={NaverLogo} alt="Kakao Logo" width={46} height={46} />
+                            )}
+                             {userInfo.socialType === "google" && (
+                            <Image src={NaverLogo} alt="Google Logo" width={46} height={46} />
+                            )}
                         </div>
                     </div>
                     <div className="mt-[0.8rem]">

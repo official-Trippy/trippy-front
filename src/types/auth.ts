@@ -41,6 +41,7 @@ export interface UserModalProps {
     email: string;
     blogName: string;
     blogIntroduce: string;
+    socialType: string;
   } | null;
 }
 
