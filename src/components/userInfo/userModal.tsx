@@ -1,12 +1,19 @@
 import React from "react";
 import Cookies from "js-cookie";
 import { UserModalProps } from "@/types/auth";
+import { useRouter } from "next/navigation";
 
 const UserModal: React.FC<UserModalProps & { style: React.CSSProperties, handleLogout: () => Promise<void> }> = ({ isOpen, onClose, userInfo, style, handleLogout }) => {
+
+    const router = useRouter();
+
+    const handleMyPage = () => {
+        router.push('/mypage');
+    }
     if (!isOpen || !userInfo) return null;
 
     return (
-        <div className="w-[32rem] h-[23.4rem] relative bg-white rounded-lg shadow" style={style}>
+        <div className="w-[32rem] h-[23.4rem] relative bg-white rounded-lg shadow z-[50]" style={style}>
             <div className="px-[2rem] pt-[2rem] py-[1rem]">
                 <div className="flex-col justify-center items-start gap-3 inline-flex">
                     <div className="self-stretch justify-start items-center gap-20 inline-flex">
@@ -31,7 +38,7 @@ const UserModal: React.FC<UserModalProps & { style: React.CSSProperties, handleL
                         </div>
                     </div>
                     <div className="mt-[0.8rem]">
-                        <span className="text-neutral-500 text-2xl font-normal font-Pretendard cursor-pointer">설정</span>
+                        <span className="text-neutral-500 text-2xl font-normal font-Pretendard cursor-pointer" onClick={handleMyPage}>설정</span>
                         <span className="text-rose-500 text-2xl font-normal font-Pretendard cursor-pointer ml-[10px]" onClick={handleLogout}>로그아웃</span>
                     </div>
                 </div>

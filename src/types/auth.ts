@@ -19,6 +19,8 @@ export default interface LoginData {
 }
 
 export interface UserInfoType {
+    following: number;
+    followers: number;
     idx: string;
     memberId: string;
     nickName: string;

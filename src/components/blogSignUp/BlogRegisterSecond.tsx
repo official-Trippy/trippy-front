@@ -5,29 +5,7 @@ import Image from "next/image";
 import BlogStep2 from "../../../public/BlogStep2.svg";
 import Link from "next/link";
 import { submitInterests } from "@/services/blog"
-
-const interests = [
-  "국내여행",
-  "해외여행",
-  "자유",
-  "코스",
-  "투어",
-  "조용한",
-  "편안한",
-  "친구",
-  "가족",
-  "혼자",
-  "힐링",
-  "액티비티",
-  "한달살기",
-  "자연",
-  "명소",
-  "축제",
-  "먹거리",
-  "숙소",
-  "배낭여행",
-  "차박",
-];
+import { blogInterests } from "@/constants/blogpreference";
 
 const BlogRegisterSecond = () => {
   const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
@@ -71,7 +49,7 @@ const BlogRegisterSecond = () => {
           </div>
         </div>
         <div className="w-[70rem] mx-auto grid grid-cols-5 gap-2 mt-[3.9rem]">
-          {interests.map((interest, index) => (
+          {blogInterests.map((interest, index) => (
             <button
               key={index}
               className={`favorite-btn-font ${selectedInterests.includes(interest)

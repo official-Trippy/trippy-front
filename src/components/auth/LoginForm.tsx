@@ -39,12 +39,12 @@ const LoginForm = () => {
       if (role === "GUEST") {
         Swal.fire({
           icon: 'info',
-          title: '기존에 회원가입을 완료하지 않았습니다.',
+          title: '기존에 회원가입을 \n완료하지 않았습니다.',
           text: '블로그 설정 페이지로 이동합니다.',
         }).then(() => {
           router.push("/blogRegister");
         });
-      } else if (role === "MEMBER") {
+      } else if (role === "MEMBER" || role === "ADMIN") {
         router.push("/");
       }
       router.refresh();

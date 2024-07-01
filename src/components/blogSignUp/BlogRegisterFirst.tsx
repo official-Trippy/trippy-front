@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import BlogStep1 from "../../../public/BlogStep1.svg";
-import DefaultProfileImg from "../../../public/DefaultProfileImg.svg";
+import DefaultProfileImg from "../../../public/DefaultProfile.svg";
 import {
   checkNickNameDuplicate,
   checkBlogNameDuplicate,
@@ -31,6 +31,7 @@ const BlogRegisterFirst = () => {
   const [blogNameError, setBlogNameError] = useState<string>("");
   const [blogIntroduce, setBlogIntroduce] = useState<string>("");
   const [blogIntroduceError, setBlogIntroduceError] = useState<string>("");
+  const [imageUploaded, setImageUploaded] = useState(false);
 
   const { setUserInfo } = useUserInfo();
   const router = useRouter();
@@ -76,9 +77,8 @@ const BlogRegisterFirst = () => {
   };
 
   const validateNickName = (nickName: string) => {
-    const koreanRegex = /^[가-힣]{2,8}$/;
-    const englishRegex = /^[a-zA-Z]{4,16}$/;
-    return koreanRegex.test(nickName) || englishRegex.test(nickName);
+    const regex = /^[가-힣a-zA-Z0-9]{2,16}$/;
+    return regex.test(nickName);
   };
 
   const handleBlogName = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -122,10 +122,10 @@ const BlogRegisterFirst = () => {
   };
 
   const validateBlogName = (blogName: string) => {
-    const koreanRegex = /^[가-힣]{2,15}$/;
-    const englishRegex = /^[a-zA-Z]{4,30}$/;
-    return koreanRegex.test(blogName) || englishRegex.test(blogName);
+    const regex = /^[가-힣a-zA-Z0-9]{2,30}$/;
+    return regex.test(blogName);
   };
+
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
@@ -133,6 +133,7 @@ const BlogRegisterFirst = () => {
       try {
         const response = await uploadImage(file);
         setProfileImage(response.result);
+        setImageUploaded(true);
       } catch (error) {
         console.error("Image upload failed:", error);
       }
@@ -156,27 +157,17 @@ const BlogRegisterFirst = () => {
   };
 
   const handleSubmit = async () => {
-    if (
-      !nickNameError.includes("사용 가능") ||
-      !blogNameError.includes("사용 가능") ||
-      !nickName ||
-      !blogName ||
-      !profileImage
-    ) {
+    if (!nickNameError.includes("사용 가능") || !blogNameError.includes("사용 가능") || !imageUploaded) {
       return;
     }
     try {
-      if (!profileImage) {
-        throw new Error("프로필 이미지가 업로드되지 않았습니다.");
-      }
-
       const data = {
         profileImage: profileImage,
         nickName: nickName,
         blogName: blogName,
         blogIntroduce: blogIntroduce,
       };
-
+  
       console.log(data);
       setUserInfo(data);
       const response = await signupCommon(data);
@@ -186,8 +177,7 @@ const BlogRegisterFirst = () => {
       console.error("Error signing up:", error);
     }
   };
-
-  const isSubmitDisabled = !nickName || !blogName || !profileImage;
+  
 
   return (
     <div className="w-[80%] mx-auto mt-[15rem]">
@@ -309,17 +299,22 @@ const BlogRegisterFirst = () => {
             </div>
           </div>
           <div className="text-center">
-            <button
+          <button
               type="submit"
               className={`mx-auto mt-32 mb-32 w-[22rem] h-[6rem] bg-btn-color text-white py-2 rounded-lg focus:outline-none ${
                 !nickNameError.includes("사용 가능") ||
-                !blogNameError.includes("사용 가능")
+                !blogNameError.includes("사용 가능") ||
+                !imageUploaded
                   ? "cursor-not-allowed bg-gray-400 hover:bg-gray-400"
                   : ""
               }`}
               onClick={handleSubmit}
               style={{ fontSize: "2rem" }}
-              disabled={isSubmitDisabled}
+              disabled={
+                !nickNameError.includes("사용 가능") ||
+                !blogNameError.includes("사용 가능") ||
+                !imageUploaded
+              }
             >
               다음
             </button>

@@ -5,10 +5,12 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Cookies from "js-cookie";
-
 import { signUp, emailSend, confirmEmail } from "@/services/auth";
 import { Login, checkEmailDuplicate } from "@/services/auth";
 import LogoMain from "../../../public/LogoMain.svg";
+import ServiceInfo from "./ServiceInfo";
+import Privacy from "./Privacy";
+import Swal from "sweetalert2";
 
 const SignUpForm = () => {
   const [email, setEmail] = useState("");
@@ -29,6 +31,8 @@ const SignUpForm = () => {
   const [isCodeFocused, setIsCodeFocused] = useState(false);
   const [codeMessage, setCodeMessage] = useState("");
   const [isCodeVerified, setIsCodeVerified] = useState(false);
+  const [serviceModalOpen, setServiceModalOpen] = useState(false);
+  const [privacyModalOpen, setPrivacyModalOpen] = useState(false);
 
   const isVerificationButtonDisabled = codeMessage === '인증이 완료되었습니다.' || isCodeVerified;
 
@@ -74,7 +78,7 @@ const SignUpForm = () => {
       } catch (error) {
         console.error("이메일 중복 확인 오류:", error);
         setDuplicateMessage("이메일 중복 확인에 실패했습니다.");
-      }      
+      }
     } else {
       setDuplicateMessage("");
     }
@@ -125,12 +129,25 @@ const SignUpForm = () => {
 
   const handleResendVerification = async () => {
     if (duplicateMessage === "사용 가능한 이메일입니다.") {
-      setVerificationClicked(true);
-      setTimer(180);
+      Swal.fire({
+        icon: 'success',
+        title: '인증 메일이 발송되었습니다.',
+        html: `${email}로 인증 메일을 발송했습니다. <br>메일에 첨부된 링크를 클릭하여 인증을 완료해 주세요.`,
+        confirmButtonText: '확인',
+        confirmButtonColor: '#FB3463', 
+        customClass: {
+          popup: 'swal-custom-popup',
+          icon: 'swal-custom-icon'
+        }
+      }).then(() => {
+        setVerificationClicked(true);
+        setTimer(180);
+      });
       try {
         const response = await emailSend(email);
         if (response.isSuccess) {
           console.log('Resend success');
+          setTimer(180);
         } else {
           console.error("Failed to resend email.");
         }
@@ -139,6 +156,7 @@ const SignUpForm = () => {
       }
     }
   };
+  
 
   const handleValidNumberChange = (e: ChangeEvent<HTMLInputElement>) => {
     const regex = e.target.value.replace(/[^0-9]/g, '');
@@ -164,11 +182,11 @@ const SignUpForm = () => {
   const timerRef = useRef<number | null>(null);
 
   useEffect(() => {
-    if (timer > 0) {
+    if (timer > 0 && verificationClicked) { // Check verificationClicked to ensure timer starts only after modal confirmation
       timerRef.current = window.setTimeout(() => {
         setTimer(timer - 1);
       }, 1000);
-    } else {
+    } else if (timer === 0) {
       handleTimerExpired();
     }
 
@@ -177,7 +195,7 @@ const SignUpForm = () => {
         clearTimeout(timerRef.current);
       }
     };
-  }, [timer]);
+  }, [timer, verificationClicked]);
 
   return (
     <form onSubmit={handleSubmit} className="w-[80%] mx-auto mt-[15rem]">
@@ -323,46 +341,48 @@ const SignUpForm = () => {
         </div>
       </div>
       <div
-        className="mt-[5.8rem] flex items-center"
-        style={{ fontSize: "1.5rem" }}
-      >
-        <input
-          type="checkbox"
-          id="agreement"
-          checked={agreementChecked}
-          onChange={handleAgreementChange}
-          className="mr-2"
-        />
-        <label htmlFor="agreement" className="text-black">
-          <span>
-            <Link href="/serviceInfo">
-              <span
-                style={{
-                  color: "gray",
-                  textDecoration: "underline",
-                  cursor: "pointer",
-                }}
-              >
-                서비스 이용약관
-              </span>
-            </Link>
-          </span>
-          과{" "}
-          <Link href="/privacy">
-            <span
-              style={{
-                color: "gray",
-                textDecoration: "underline",
-                cursor: "pointer",
-              }}
-            >
-              개인정보 처리 방침
-            </span>
-          </Link>
-          에 동의합니다.
-        </label>
-      </div>
-      <div className="text-center">
+  className="mt-[5.8rem] flex items-center"
+  style={{ fontSize: "1.5rem" }}
+>
+  <input
+    type="checkbox"
+    id="agreement"
+    checked={agreementChecked}
+    onChange={handleAgreementChange}
+    className="mr-2"
+  />
+  <label className="text-black">
+    <span
+      onClick={(event) => {
+        event.stopPropagation();
+        setServiceModalOpen(true);
+      }}
+      style={{
+        color: "gray",
+        textDecoration: "underline",
+        cursor: "pointer",
+      }}
+    >
+      서비스 이용약관
+    </span>
+    과{" "}
+    <span
+      onClick={(event) => {
+        event.stopPropagation();
+        setPrivacyModalOpen(true);
+      }}
+      style={{
+        color: "gray",
+        textDecoration: "underline",
+        cursor: "pointer",
+      }}
+    >
+      개인정보 처리 방침
+    </span>
+    에 동의합니다.
+  </label>
+</div>
+<div className="text-center">
         <button
           type="submit"
           className={`mx-auto mt-32 mb-32 w-[22rem] h-[6rem] bg-btn-color text-white py-2 rounded-lg focus:outline-none ${!verificationClicked ||
@@ -392,6 +412,56 @@ const SignUpForm = () => {
           </div>
         </div>
       )}
+
+{serviceModalOpen && (
+  <div
+    className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
+    onClick={() => setServiceModalOpen(false)}
+  >
+    <div
+      className="bg-white w-full h-full overflow-y-auto"
+      onClick={(event) => event.stopPropagation()}
+    >
+      <ServiceInfo />
+      <div className="w-full flex justify-center mb-[50px]">
+        <button
+          className="w-[8.6rem] h-[3.5rem] my-auto rounded-lg bg-black text-white hover:bg-gray-900 focus:outline-none focus:bg-gray-900"
+          onClick={(event) => {
+            event.stopPropagation();
+            setServiceModalOpen(false);
+          }}
+        >
+          닫기
+        </button>
+      </div>
+    </div>
+  </div>
+)}
+
+{privacyModalOpen && (
+  <div
+    className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
+    onClick={() => setPrivacyModalOpen(false)}
+  >
+    <div
+      className="bg-white w-full h-full overflow-y-auto"
+      onClick={(event) => event.stopPropagation()}
+    >
+      <Privacy />
+      <div className="w-full flex justify-center mb-[50px]">
+        <button
+          className="w-[8.6rem] h-[3.5rem] my-auto rounded-lg bg-black text-white hover:bg-gray-900 focus:outline-none focus:bg-gray-900"
+          onClick={(event) => {
+            event.stopPropagation();
+            setPrivacyModalOpen(false);
+          }}
+        >
+          닫기
+        </button>
+      </div>
+    </div>
+  </div>
+)}
     </form>
   );
 };
