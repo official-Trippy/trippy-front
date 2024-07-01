@@ -1,4 +1,5 @@
 import axios from "axios";
+import Cookies from "js-cookie";
 
 const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
@@ -79,7 +80,7 @@ export const uploadImage = async (file: File) => {
     const response = await axios.post(`${backendUrl}/api/image`, formData, {
       headers: {
         "Content-Type": "multipart/form-data",
-      },
+      }, 
     });
 
     if (response.data.isSuccess) {
@@ -93,3 +94,16 @@ export const uploadImage = async (file: File) => {
     throw error;
   }
 };
+
+axios.interceptors.request.use(
+  async (config) => {
+    const accessToken = Cookies.get("accessToken");
+    if (accessToken) {
+      config.headers.Authorization = `Bearer ${accessToken}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
