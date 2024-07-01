@@ -287,3 +287,15 @@ body {
 .swal2-success-line-long {
   background-color: #FB3463 !important;
 }
+
+.favorite-btn-edit {
+  display: flex;
+  width: 126px;
+  height: 63px;
+  padding: 12px 30px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50px;
+  background: #fb3463;
+  color: #fff;
+}

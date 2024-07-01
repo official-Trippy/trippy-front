@@ -291,7 +291,15 @@ const EditInfo = () => {
                   <label htmlFor="blogIntroduce" className="sign-up-info block">
                     관심분야
                   </label>
-                 
+                  <div className="w-full py-2 mt-[2.5rem] mb-2 h-[6rem]">
+                {userInfo.interestedTypes && userInfo.interestedTypes.length > 0 && (
+                    <div className="flex gap-2">
+                        {userInfo.interestedTypes.map((interest: string, index: number) => (
+                            <span key={index} className="favorite-btn-edit text-neutral-500 text-2xl font-normal font-Pretendard">{interest}</span>
+                        ))}
+                    </div>
+                )}
+            </div>
                 </div>
               </div>
               <div className="text-center">
