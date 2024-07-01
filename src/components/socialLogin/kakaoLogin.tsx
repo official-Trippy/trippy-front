@@ -7,7 +7,7 @@ import naver from "../../../public/naver.svg";
 import google from "../../../public/google.svg";
 import NaverLoginHandler from "./naverLogin";
 
-const kakaoRedirectUri = process.env.NEXT_PUBLIC_KAKAO_REDIRECT_URI;
+const kakaoRedirectUri = process.env.NEXT_PUBLIC_KAKAO_LOGIN_REDIRECT_URI;
 const kakaoScope = [
   "profile_nickname",
   "profile_image",
