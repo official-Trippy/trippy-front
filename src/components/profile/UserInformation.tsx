@@ -4,9 +4,11 @@ import backgroundImg from "../../../public/DefaultBackground.svg";
 import { useQuery } from "react-query";
 import { MemberInfo } from "@/services/auth";
 import Cookies from "js-cookie";
+import { useRouter } from "next/navigation";
 
 const UserInformation: React.FC = () => {
   const accessToken = Cookies.get("accessToken");
+  const router = useRouter();
 
   const { data, error, isLoading } = useQuery({
     queryKey: ["member", accessToken],
@@ -15,6 +17,10 @@ const UserInformation: React.FC = () => {
       console.error(error);
     },
   });
+
+  const handleEditProfile = () => {
+    router.push("/editProfile");
+  }
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error loading data</div>;
@@ -35,7 +41,7 @@ const UserInformation: React.FC = () => {
           <span className="text-sm text-gray-600">&ensp;|&ensp;{userData.followers}</span>
           <span className="text-sm text-gray-600">팔로잉 2000{userData.following}</span>
         </div>
-        <button className="mt-[20px] pl-[20px] pr-[20px] py-2 bg-neutral-100 rounded-lg justify-center items-center inline-flex">내 정보 수정</button>
+        <button className="mt-[20px] pl-[20px] pr-[20px] py-2 bg-neutral-100 rounded-lg justify-center items-center inline-flex" onClick={handleEditProfile}>내 정보 수정</button>
         <span className="mt-[10px] text-sm text-gray-600">{userData.blogIntroduce}</span>
       </div>
       </div>
