@@ -5,7 +5,7 @@ import Image from "next/image";
 import BlogStep2 from "../../../public/BlogStep2.svg";
 import Link from "next/link";
 import { submitInterests } from "@/services/blog"
-import { blogInterests } from "@/constants/blogpreference";
+import { blogInterests } from "@/constants/blogPreference";
 
 const BlogRegisterSecond = () => {
   const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
