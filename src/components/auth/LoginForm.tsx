@@ -44,7 +44,7 @@ const LoginForm = () => {
         }).then(() => {
           router.push("/blogRegister");
         });
-      } else if (role === "MEMBER") {
+      } else if (role === "MEMBER" && role === "ADMIN") {
         router.push("/");
       }
       router.refresh();
