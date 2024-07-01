@@ -182,7 +182,7 @@ const SignUpForm = () => {
   const timerRef = useRef<number | null>(null);
 
   useEffect(() => {
-    if (timer > 0 && verificationClicked) { // Check verificationClicked to ensure timer starts only after modal confirmation
+    if (timer > 0 && verificationClicked) {
       timerRef.current = window.setTimeout(() => {
         setTimer(timer - 1);
       }, 1000);
