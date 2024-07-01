@@ -49,6 +49,12 @@ body {
   line-height: normal;
 }
 
+@media (prefers-color-scheme: dark) {
+  .sign-up-info {
+    color: black; /* 다크 모드에서의 텍스트 색상 */
+  }
+}
+
 .login-info {
   color: #292929;
   font-family: Pretendard;
@@ -171,15 +177,15 @@ body {
 }
 
 .shadowall {
-  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.5)
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
 }
 
 .selectshadow {
-  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.15)
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.15);
 }
 
 .bg {
-  background: rgba(0, 0, 0, 0.40);
+  background: rgba(0, 0, 0, 0.4);
 }
 
 @keyframes fadeInUp {
@@ -229,8 +235,7 @@ body {
   width: 100%;
   position: absolute;
   bottom: -100%;
-  transition: bottom .7s;
-
+  transition: bottom 0.7s;
 
   background-attachment: fixed;
   background-position: center;
@@ -249,13 +254,13 @@ body {
   transform: translateY(-50%);
 }
 
-.pagination>li {
+.pagination > li {
   list-style: none;
   height: 20px;
   width: 20px;
   border-radius: 50%;
   margin-top: 10px;
-  transition: background .7s;
+  transition: background 0.7s;
 }
 
 .title {

@@ -1,13 +1,17 @@
 import LoginForm from "@/components/auth/LoginForm";
-import SocialLoginForm from "@/components/auth/SocialLoginForm";
 import FallingContainer from "@/components/falling/FallingContainer";
+import GoogleLogin from "@/components/socialLogin/googleLogin";
+import KakaoLogin from "@/components/socialLogin/kakaoLogin";
+import NaverLogin from "@/components/socialLogin/naverLogin";
 
 const LoginPage = () => {
   return (
     <div>
-      <FallingContainer/>
+      <FallingContainer />
       <LoginForm />
-      <SocialLoginForm />
+      <KakaoLogin />
+      <NaverLogin />
+      <GoogleLogin />
     </div>
   );
 };

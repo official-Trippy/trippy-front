@@ -38,9 +38,16 @@ export async function checkBlogNameDuplicate(blogName: string) {
   }
 }
 
-export async function signupCommon(data: { nickName: string; blogName: string; blogIntroduce: string; }) {
+export async function signupCommon(data: {
+  nickName: string;
+  blogName: string;
+  blogIntroduce: string;
+}) {
   try {
-    const response = await axios.post(`${backendUrl}/api/member/signup/common`, data);
+    const response = await axios.post(
+      `${backendUrl}/api/member/signup/common`,
+      data
+    );
     console.log(response);
     return response.data;
   } catch (error) {
@@ -66,12 +73,12 @@ export async function submitInterests(selectedInterests: string[]) {
 
 export const uploadImage = async (file: File) => {
   const formData = new FormData();
-  formData.append('image', file);
+  formData.append("image", file);
 
   try {
     const response = await axios.post(`${backendUrl}/api/image`, formData, {
       headers: {
-        'Content-Type': 'multipart/form-data',
+        "Content-Type": "multipart/form-data",
       },
     });
 
@@ -79,7 +86,7 @@ export const uploadImage = async (file: File) => {
       console.log(response.data);
       return response.data;
     } else {
-      throw new Error(response.data.message || 'Image upload failed');
+      throw new Error(response.data.message || "Image upload failed");
     }
   } catch (error) {
     console.error("Image upload failed:", error);
