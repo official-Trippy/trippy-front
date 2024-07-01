@@ -10,6 +10,7 @@ import { Login, checkEmailDuplicate } from "@/services/auth";
 import LogoMain from "../../../public/LogoMain.svg";
 import ServiceInfo from "./ServiceInfo";
 import Privacy from "./Privacy";
+import Swal from "sweetalert2";
 
 const SignUpForm = () => {
   const [email, setEmail] = useState("");
@@ -31,7 +32,7 @@ const SignUpForm = () => {
   const [codeMessage, setCodeMessage] = useState("");
   const [isCodeVerified, setIsCodeVerified] = useState(false);
   const [serviceModalOpen, setServiceModalOpen] = useState(false);
-  const [privacyModalOpen, setPrivacyModalOpen] = useState(false); 
+  const [privacyModalOpen, setPrivacyModalOpen] = useState(false);
 
   const isVerificationButtonDisabled = codeMessage === '인증이 완료되었습니다.' || isCodeVerified;
 
@@ -77,7 +78,7 @@ const SignUpForm = () => {
       } catch (error) {
         console.error("이메일 중복 확인 오류:", error);
         setDuplicateMessage("이메일 중복 확인에 실패했습니다.");
-      }      
+      }
     } else {
       setDuplicateMessage("");
     }
@@ -128,12 +129,25 @@ const SignUpForm = () => {
 
   const handleResendVerification = async () => {
     if (duplicateMessage === "사용 가능한 이메일입니다.") {
-      setVerificationClicked(true);
-      setTimer(180);
+      Swal.fire({
+        icon: 'success',
+        title: '인증 메일이 발송되었습니다.',
+        html: `${email}로 인증 메일을 발송했습니다. <br>메일에 첨부된 링크를 클릭하여 인증을 완료해 주세요.`,
+        confirmButtonText: '확인',
+        confirmButtonColor: '#FB3463', 
+        customClass: {
+          popup: 'swal-custom-popup',
+          icon: 'swal-custom-icon'
+        }
+      }).then(() => {
+        setVerificationClicked(true);
+        setTimer(180);
+      });
       try {
         const response = await emailSend(email);
         if (response.isSuccess) {
           console.log('Resend success');
+          setTimer(180);
         } else {
           console.error("Failed to resend email.");
         }
@@ -142,6 +156,7 @@ const SignUpForm = () => {
       }
     }
   };
+  
 
   const handleValidNumberChange = (e: ChangeEvent<HTMLInputElement>) => {
     const regex = e.target.value.replace(/[^0-9]/g, '');
@@ -167,11 +182,11 @@ const SignUpForm = () => {
   const timerRef = useRef<number | null>(null);
 
   useEffect(() => {
-    if (timer > 0) {
+    if (timer > 0 && verificationClicked) { // Check verificationClicked to ensure timer starts only after modal confirmation
       timerRef.current = window.setTimeout(() => {
         setTimer(timer - 1);
       }, 1000);
-    } else {
+    } else if (timer === 0) {
       handleTimerExpired();
     }
 
@@ -180,7 +195,7 @@ const SignUpForm = () => {
         clearTimeout(timerRef.current);
       }
     };
-  }, [timer]);
+  }, [timer, verificationClicked]);
 
   return (
     <form onSubmit={handleSubmit} className="w-[80%] mx-auto mt-[15rem]">

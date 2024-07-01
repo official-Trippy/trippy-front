@@ -265,3 +265,20 @@ body {
   transform: translateY(-50%);
   text-align: center;
 }
+
+.swal-custom-popup .swal2-success-ring {
+  border-color: #FB3463 !important; 
+}
+
+.swal2-icon.swal2-success {
+  border-color: #FB3463 !important; 
+  color: #FB3463 !important;
+}
+
+.swal2-success-line-tip {
+  background-color: #FB3463 !important;
+}
+
+.swal2-success-line-long {
+  background-color: #FB3463 !important;
+}
