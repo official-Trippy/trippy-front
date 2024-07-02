@@ -7,7 +7,8 @@ import LocationInput from './LocationInput';
 import DateInput from './DateInput';
 import { useMutation } from 'react-query';
 import { fetchWeather } from '@/services/ootd.ts/weather';
-import { createPost, PostRequest, OotdRequest } from '@/services/ootd.ts/ootdPost';
+import { createPost } from '@/services/ootd.ts/ootdPost';
+import { PostRequest, OotdRequest } from '@/types/ootd';
 
 const PostOotd: React.FC = () => {
   const [images, setImages] = useState<string[]>([]);
@@ -58,7 +59,7 @@ const PostOotd: React.FC = () => {
         selectedLatitude = 35.1796;
         selectedLongitude = 129.0756;
         break;
-      // 다른 지역들에 대한 위도 경도 처리 추가
+
       default:
         break;
     }
@@ -66,7 +67,6 @@ const PostOotd: React.FC = () => {
     setLatitude(selectedLatitude);
     setLongitude(selectedLongitude);
 
-    // API 호출
     weatherMutation.mutate({ latitude: selectedLatitude, longitude: selectedLongitude, date });
   };
 
@@ -75,7 +75,7 @@ const PostOotd: React.FC = () => {
       title: 'ootd 게시물',
       body: post,
       postType: 'OOTD',
-      location: `${latitude},${longitude}`, // 위도 경도 문자열로 설정
+      location: `${latitude},${longitude}`,
       images: images.map((image) => ({
         imgUrl: image,
         accessUri: image,
