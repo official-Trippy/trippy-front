@@ -8,6 +8,7 @@ interface PostInputProps {
 const PostInput: React.FC<PostInputProps> = ({ onPostChange, onTagsChange }) => {
   const [tags, setTags] = useState<string[]>([]);
   const [tagInput, setTagInput] = useState<string>('');
+  const [isComposing, setIsComposing] = useState<boolean>(false); 
 
   const handlePostChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     onPostChange(event.target.value);
@@ -17,7 +18,14 @@ const PostInput: React.FC<PostInputProps> = ({ onPostChange, onTagsChange }) => 
     setTagInput(event.target.value);
   };
 
+  const handleCompositionEvent = () => {
+    setIsComposing(prev => !prev);
+  };
+  
+
+
   const handleTagInputKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (isComposing) return;
     if (event.key === 'Enter') {
       event.preventDefault();
       const inputTag = tagInput.trim();
@@ -46,6 +54,8 @@ const PostInput: React.FC<PostInputProps> = ({ onPostChange, onTagsChange }) => 
         placeholder="태그를 입력하고 Enter 키를 누르세요."
         className="w-full border p-2 rounded"
         value={tagInput}
+        onCompositionStart={handleCompositionEvent}
+        onCompositionEnd={handleCompositionEvent}
         onChange={handleTagInputChange}
         onKeyDown={handleTagInputKeyDown}
       />
