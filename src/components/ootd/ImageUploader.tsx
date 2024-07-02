@@ -31,6 +31,8 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onImagesChange }) => {
     reader.readAsDataURL(file);
   };
 
+  const displayImages = images.length > 1 ? images : images[0] === OotdDefault.src ? [] : images;
+
   return (
     <div>
       <input 
@@ -45,15 +47,14 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onImagesChange }) => {
           position: 'relative', 
           width: '350px', 
           height: '350px', 
-          paddingBottom: '56.25%',
           cursor: 'pointer', 
           overflow: 'hidden',
-          background: images.length > 1 ? 'none' : `url(${images[0]}) no-repeat center center / cover` 
+          background: displayImages.length > 0 ? 'none' : `url(${OotdDefault.src}) no-repeat center center / cover` 
         }} 
       >
-        {images.length === 1 && (
+        {displayImages.length === 1 && (
           <img 
-            src={images[0]} 
+            src={displayImages[0]} 
             alt="Upload Default" 
             style={{ 
               position: 'absolute', 
@@ -65,7 +66,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onImagesChange }) => {
             }} 
           />
         )}
-        {images.length > 1 && (
+        {displayImages.length > 1 && (
           <Carousel 
             style={{ 
               position: 'absolute', 
@@ -75,7 +76,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onImagesChange }) => {
               height: '100%' 
             }}
           >
-            {images.map((image, index) => (
+            {displayImages.map((image, index) => (
               <Carousel.Item key={index}>
                 <img 
                   src={image} 
