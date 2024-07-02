@@ -1,7 +1,7 @@
 export const SEOUL = { value: 'Seoul', label: '서울', latitude: 37.5665, longitude: 126.9780 };
 export const BUSAN = { value: 'Busan', label: '부산', latitude: 35.1796, longitude: 129.0756 };
 export const INCHEON = { value: 'Incheon', label: '인천', latitude: 37.4563, longitude: 126.7052 };
-export const DAEGU = { value: 'Daegu', label: '대구', latitude: 35.8714, longitude: 128.6014 };
+export const DAEGU = { value: 'Daegu', label: '대구', latitude: 35.8156, longitude: 128.5327 };
 export const GWANGJU = { value: 'Gwangju', label: '광주', latitude: 35.1595, longitude: 126.8526 };
 export const DAEJEON = { value: 'Daejeon', label: '대전', latitude: 36.3504, longitude: 127.3845 };
 export const ULSAN = { value: 'Ulsan', label: '울산', latitude: 35.5384, longitude: 129.3114 };

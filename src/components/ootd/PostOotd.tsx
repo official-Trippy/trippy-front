@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ImageUploader from './ImageUploader';
 import PostInput from './PostInput';
 import LocationInput from './LocationInput';
@@ -9,12 +9,13 @@ import { useMutation } from 'react-query';
 import { fetchWeather } from '@/services/ootd.ts/weather';
 import { createPost } from '@/services/ootd.ts/ootdPost';
 import { PostRequest, OotdRequest } from '@/types/ootd';
+import { LOCATIONS, LocationKey } from '@/constants/locations';
 
 const PostOotd: React.FC = () => {
   const [images, setImages] = useState<string[]>([]);
   const [post, setPost] = useState<string>('');
   const [tags, setTags] = useState<string[]>([]);
-  const [location, setLocation] = useState<string>('');
+  const [location, setLocation] = useState<LocationKey | ''>('');
   const [latitude, setLatitude] = useState<number>(0);
   const [longitude, setLongitude] = useState<number>(0);
   const [date, setDate] = useState<string>('');
@@ -38,6 +39,12 @@ const PostOotd: React.FC = () => {
     }
   );
 
+  useEffect(() => {
+    if (latitude !== 0 && longitude !== 0 && date !== '') {
+      weatherMutation.mutate({ latitude, longitude, date });
+    }
+  }, [latitude, longitude, date]);
+
   const handleFetchWeather = () => {
     if (location === '') {
       alert('위치를 선택해주세요.');
@@ -47,31 +54,14 @@ const PostOotd: React.FC = () => {
       alert('날짜를 입력해주세요.');
       return;
     }
-    let selectedLatitude = 0;
-    let selectedLongitude = 0;
 
-    switch (location) {
-      case 'Seoul':
-        selectedLatitude = 37.5671;
-        selectedLongitude = 126.9788;
-        break;
-      case 'Busan':
-        selectedLatitude = 35.1796;
-        selectedLongitude = 129.0756;
-        break;
-
-      default:
-        break;
-    }
-
-    setLatitude(selectedLatitude);
-    setLongitude(selectedLongitude);
-
-    weatherMutation.mutate({ latitude: selectedLatitude, longitude: selectedLongitude, date });
+    const selectedLocation = LOCATIONS[location];
+    setLatitude(selectedLocation.latitude);
+    setLongitude(selectedLocation.longitude);
   };
 
   const handleCreatePost = () => {
-    const postRequest = {
+    const postRequest: PostRequest = {
       title: 'ootd 게시물',
       body: post,
       postType: 'OOTD',
@@ -83,7 +73,7 @@ const PostOotd: React.FC = () => {
       })),
       tags: tags,
     };
-    const ootdRequest = {
+    const ootdRequest: OotdRequest = {
       area: weather?.area || '',
       weatherStatus: weather?.status || '',
       weatherTemp: weather?.avgTemp || '',
