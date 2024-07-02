@@ -10,9 +10,10 @@ import { fetchWeather } from '@/services/ootd.ts/weather';
 import { createPost } from '@/services/ootd.ts/ootdPost';
 import { PostRequest, OotdRequest } from '@/types/ootd';
 import { LOCATIONS, LocationKey } from '@/constants/locations';
+import { UploadedImage } from '@/types/ootd';
 
 const PostOotd: React.FC = () => {
-  const [images, setImages] = useState<string[]>([]);
+    const [images, setImages] = useState<UploadedImage[]>([]);
   const [post, setPost] = useState<string>('');
   const [tags, setTags] = useState<string[]>([]);
   const [location, setLocation] = useState<LocationKey | ''>('');
@@ -31,13 +32,13 @@ const PostOotd: React.FC = () => {
   );
 
   const postMutation = useMutation((variables: { postRequest: PostRequest; ootdRequest: OotdRequest }) =>
-    createPost(variables.postRequest, variables.ootdRequest),
-    {
-      onSuccess: (data) => {
-        console.log(data);
-      },
-    }
-  );
+  createPost(variables.postRequest, variables.ootdRequest),
+  {
+    onSuccess: (data) => {
+      console.log('Post created:', data);
+    },
+  }
+);
 
   useEffect(() => {
     if (latitude !== 0 && longitude !== 0 && date !== '') {
@@ -72,24 +73,25 @@ const PostOotd: React.FC = () => {
     const formattedDate = formatDateString(date);
 
     const postRequest: PostRequest = {
-      title: 'ootd 게시물',
-      body: post,
-      postType: 'OOTD',
-      location: `${latitude},${longitude}`,
-      images: images.map((image) => ({
-        imgUrl: image,
-        accessUri: image,
-        authenticateId: image,
-      })),
-      tags: tags,
-    };
+        title: 'ootd 게시물',
+        body: post,
+        postType: 'OOTD',
+        location,
+        images: images.map(image => ({
+          imgUrl: image.imgUrl,
+          accessUri: image.accessUri,
+          authenticateId: image.authenticateId,
+        })),
+        tags,
+      };
+
 
     const ootdRequest: OotdRequest = {
       area: weather?.area || '',
       weatherStatus: weather?.status || '',
       weatherTemp: weather?.avgTemp || '',
       detailLocation: location,
-      date: formattedDate, // 형식 변환된 날짜 사용
+      date: formattedDate,
     };
 
     console.log('Sending postRequest:', JSON.stringify(postRequest, null, 2));

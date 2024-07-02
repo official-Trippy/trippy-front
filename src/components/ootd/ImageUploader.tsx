@@ -1,37 +1,33 @@
-'use client';
-
 import React, { useState, ChangeEvent } from 'react';
 import Carousel from 'react-bootstrap/Carousel';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import OotdDefault from '../../../public/OotdDefault.png';
+import { uploadImage } from '@/services/blog';
+import { UploadedImage } from '@/types/ootd';
 
 interface ImageUploaderProps {
-  onImagesChange: (images: string[]) => void;
+  onImagesChange: (images: UploadedImage[]) => void;
 }
 
 const ImageUploader: React.FC<ImageUploaderProps> = ({ onImagesChange }) => {
-  const [images, setImages] = useState<string[]>([OotdDefault.src]);
+  const [images, setImages] = useState<UploadedImage[]>([]);
 
-  const handleImageUpload = (event: ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = async (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      let newImages;
-      if (images[0] === OotdDefault.src) {
-        newImages = [reader.result as string];
-      } else {
-        if (images.length >= 5) return;
-        newImages = [...images, reader.result as string];
-      }
-      setImages(newImages);
-      onImagesChange(newImages);
-    };
-    reader.readAsDataURL(file);
+    try {
+      const uploadedImage = await uploadImage(file);
+      console.log(uploadedImage.result);
+      setImages([...images, uploadedImage.result]);
+      console.log(images);
+      onImagesChange([...images, uploadedImage.result]);
+    } catch (error) {
+      console.error('Error uploading image:', error);
+    }
   };
 
-  const displayImages = images.length > 1 ? images : images[0] === OotdDefault.src ? [] : images;
+  const displayImages = images.map(image => image.accessUri);
 
   return (
     <div>
@@ -55,7 +51,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onImagesChange }) => {
         {displayImages.length === 1 && (
           <img 
             src={displayImages[0]} 
-            alt="Upload Default" 
+            alt="Uploaded Image" 
             style={{ 
               position: 'absolute', 
               top: 0, 

@@ -54,3 +54,10 @@ export interface PostRequest {
       status: string;
     };
   };
+
+
+  export interface UploadedImage {
+    imgUrl: string;
+    accessUri: string;
+    authenticateId: string;
+  };
