@@ -42,6 +42,7 @@ const PostOotd: React.FC = () => {
   useEffect(() => {
     if (latitude !== 0 && longitude !== 0 && date !== '') {
       weatherMutation.mutate({ latitude, longitude, date });
+      console.log(weatherMutation);
     }
   }, [latitude, longitude, date]);
 
@@ -60,7 +61,16 @@ const PostOotd: React.FC = () => {
     setLongitude(selectedLocation.longitude);
   };
 
+  const formatDateString = (dateString: string) => {
+    if (dateString.length === 8) {
+      return `${dateString.slice(0, 4)}-${dateString.slice(4, 6)}-${dateString.slice(6, 8)}`;
+    }
+    return dateString;
+  };
+
   const handleCreatePost = () => {
+    const formattedDate = formatDateString(date);
+
     const postRequest: PostRequest = {
       title: 'ootd 게시물',
       body: post,
@@ -73,13 +83,18 @@ const PostOotd: React.FC = () => {
       })),
       tags: tags,
     };
+
     const ootdRequest: OotdRequest = {
       area: weather?.area || '',
       weatherStatus: weather?.status || '',
       weatherTemp: weather?.avgTemp || '',
       detailLocation: location,
-      date: date,
+      date: formattedDate, // 형식 변환된 날짜 사용
     };
+
+    console.log('Sending postRequest:', JSON.stringify(postRequest, null, 2));
+    console.log('Sending ootdRequest:', JSON.stringify(ootdRequest, null, 2));
+
     postMutation.mutate({ postRequest, ootdRequest });
   };
 
