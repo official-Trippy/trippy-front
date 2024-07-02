@@ -1,0 +1,17 @@
+export const SEOUL = { value: 'Seoul', label: '서울' };
+export const BUSAN = { value: 'Busan', label: '부산' };
+export const INCHEON = { value: 'Incheon', label: '인천' };
+export const DAEGU = { value: 'Daegu', label: '대구' };
+export const GWANGJU = { value: 'Gwangju', label: '광주' };
+export const DAEJEON = { value: 'Daejeon', label: '대전' };
+export const ULSAN = { value: 'Ulsan', label: '울산' };
+export const SEJONG = { value: 'Sejong', label: '세종' };
+export const GYEONGGI = { value: 'Gyeonggi', label: '경기도' };
+export const GANGWON = { value: 'Gangwon', label: '강원도' };
+export const CHUNGBUK = { value: 'Chungbuk', label: '충청북도' };
+export const CHUNGNAM = { value: 'Chungnam', label: '충청남도' };
+export const JEONBUK = { value: 'Jeonbuk', label: '전라북도' };
+export const JEONNAM = { value: 'Jeonnam', label: '전라남도' };
+export const GYEONGBUK = { value: 'Gyeongbuk', label: '경상북도' };
+export const GYEONGNAM = { value: 'Gyeongnam', label: '경상남도' };
+export const JEJU = { value: 'Jeju', label: '제주도' };
