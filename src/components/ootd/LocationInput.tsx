@@ -1,23 +1,20 @@
 import React from 'react';
 import Select from 'react-select';
-import * as locations from '@/constants/locations';
+import { LOCATIONS, LocationKey } from '@/constants/locations';
 
-const LOCATION_OPTIONS = [
-  locations.SEOUL, locations.BUSAN, locations.INCHEON, locations.DAEGU,
-  locations.GWANGJU, locations.DAEJEON, locations.ULSAN, locations.SEJONG,
-  locations.GYEONGGI, locations.GANGWON, locations.CHUNGBUK, locations.CHUNGNAM,
-  locations.JEONBUK, locations.JEONNAM, locations.GYEONGBUK, locations.GYEONGNAM,
-  locations.JEJU
-];
+const LOCATION_OPTIONS = Object.values(LOCATIONS).map(location => ({
+  value: location.value,
+  label: location.label
+}));
 
 interface LocationInputProps {
-  onLocationChange: (location: string) => void;
+  onLocationChange: (location: LocationKey | '') => void;
 }
 
 const LocationInput: React.FC<LocationInputProps> = ({ onLocationChange }) => {
   const handleChange = (selectedOption: { value: string; label: string } | null) => {
     if (selectedOption) {
-      onLocationChange(selectedOption.value);
+      onLocationChange(selectedOption.value as LocationKey);
     } else {
       onLocationChange('');
     }
