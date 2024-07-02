@@ -1,44 +1,73 @@
 'use client';
 
-import { useState } from "react";
-import { useMutation } from "react-query";
-import ImageUploader from "./ImageUploader";
-import PostInput from "./PostInput";
-import LocationInput from "./LocationInput";
-import DateInput from "./DateInput";
-import { fetchWeather } from "@/services/ootd.ts/weather";
-import { createPost, PostRequest, OotdRequest } from "@/services/ootd.ts/ootdPost";
+import React, { useState } from 'react';
+import ImageUploader from './ImageUploader';
+import PostInput from './PostInput';
+import LocationInput from './LocationInput';
+import DateInput from './DateInput';
+import { useMutation } from 'react-query';
+import { fetchWeather } from '@/services/ootd.ts/weather';
+import { createPost, PostRequest, OotdRequest } from '@/services/ootd.ts/ootdPost';
 
 const PostOotd: React.FC = () => {
   const [images, setImages] = useState<string[]>([]);
   const [post, setPost] = useState<string>('');
   const [tags, setTags] = useState<string[]>([]);
   const [location, setLocation] = useState<string>('');
+  const [latitude, setLatitude] = useState<number>(0);
+  const [longitude, setLongitude] = useState<number>(0);
   const [date, setDate] = useState<string>('');
   const [weather, setWeather] = useState<any>(null);
 
-  const weatherMutation = useMutation(
-    (variables: { latitude: number; longitude: number; date: string }) =>
-      fetchWeather(variables.latitude, variables.longitude, variables.date), {
-        onSuccess: (data) => {
-          setWeather(data.result);
-        },
-      }
+  const weatherMutation = useMutation((variables: { latitude: number; longitude: number; date: string }) =>
+    fetchWeather(variables.latitude, variables.longitude, variables.date),
+    {
+      onSuccess: (data) => {
+        setWeather(data.result);
+      },
+    }
   );
 
-  const postMutation = useMutation(
-    (variables: { postRequest: PostRequest; ootdRequest: OotdRequest }) =>
-      createPost(variables.postRequest, variables.ootdRequest), {
-        onSuccess: (data) => {
-          console.log(data);
-        },
-      }
+  const postMutation = useMutation((variables: { postRequest: PostRequest; ootdRequest: OotdRequest }) =>
+    createPost(variables.postRequest, variables.ootdRequest),
+    {
+      onSuccess: (data) => {
+        console.log(data);
+      },
+    }
   );
 
   const handleFetchWeather = () => {
-    const latitude = 37.5671; // 예시 좌표
-    const longitude = 126.9788; // 예시 좌표
-    weatherMutation.mutate({ latitude, longitude, date });
+    if (location === '') {
+      alert('위치를 선택해주세요.');
+      return;
+    }
+    if (date === '') {
+      alert('날짜를 입력해주세요.');
+      return;
+    }
+    let selectedLatitude = 0;
+    let selectedLongitude = 0;
+
+    switch (location) {
+      case 'Seoul':
+        selectedLatitude = 37.5671;
+        selectedLongitude = 126.9788;
+        break;
+      case 'Busan':
+        selectedLatitude = 35.1796;
+        selectedLongitude = 129.0756;
+        break;
+      // 다른 지역들에 대한 위도 경도 처리 추가
+      default:
+        break;
+    }
+
+    setLatitude(selectedLatitude);
+    setLongitude(selectedLongitude);
+
+    // API 호출
+    weatherMutation.mutate({ latitude: selectedLatitude, longitude: selectedLongitude, date });
   };
 
   const handleCreatePost = () => {
@@ -46,7 +75,7 @@ const PostOotd: React.FC = () => {
       title: 'ootd 게시물',
       body: post,
       postType: 'OOTD',
-      location: '24.12342,12.12344',
+      location: `${latitude},${longitude}`, // 위도 경도 문자열로 설정
       images: images.map((image) => ({
         imgUrl: image,
         accessUri: image,

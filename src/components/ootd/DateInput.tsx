@@ -1,4 +1,3 @@
-'use client';
 
 import React from 'react';
 
@@ -8,14 +7,16 @@ interface DateInputProps {
 
 const DateInput: React.FC<DateInputProps> = ({ onDateChange }) => {
   const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    onDateChange(event.target.value);
+    const value = event.target.value;
+    const formattedDate = value.replace(/\D/g, '');
+    onDateChange(formattedDate);
   };
 
   return (
     <div className="space-y-2">
       <input
-        type="date"
-        placeholder="날짜 입력"
+        type="text"
+        placeholder="날짜 입력 (YYYYMMDD)"
         className="w-full border p-2 rounded"
         onChange={handleDateChange}
       />
