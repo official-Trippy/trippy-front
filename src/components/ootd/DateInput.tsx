@@ -21,7 +21,7 @@ const DateInput: React.FC<DateInputProps> = ({ onDateChange }) => {
 
     if (formattedDate.length === 8) {
       const year = parseInt(formattedDate.slice(0, 4), 10);
-      const month = parseInt(formattedDate.slice(4, 6), 10) - 1; // 월은 0부터 시작하므로 1을 뺍니다.
+      const month = parseInt(formattedDate.slice(4, 6), 10) - 1;
       const day = parseInt(formattedDate.slice(6, 8), 10);
       const dateObj = new Date(year, month, day);
 

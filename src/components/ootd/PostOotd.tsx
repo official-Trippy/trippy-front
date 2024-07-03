@@ -157,14 +157,14 @@ const PostOotd: React.FC = () => {
               날씨 불러오기
             </button>
           )}
-          <div className='w-full'>
+          <div className="w-full flex justify-end">
             <button
-              onClick={handleCreatePost}
-              className="w-[100px] ml-auto p-2 bg-rose-500 rounded-lg justify-center items-center inline-flex px-4 py-2 text-white text-xl"
+                onClick={handleCreatePost}
+                className="w-[100px] p-2 bg-rose-500 rounded-lg justify-center items-center inline-flex px-4 py-2 text-white text-xl"
             >
-              올리기
+                올리기
             </button>
-          </div>
+            </div>
         </div>
       </div>
     </div>
