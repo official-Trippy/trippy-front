@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+import { useRouter } from  'next/navigation';
 import ImageUploader from './ImageUploader';
 import PostInput from './PostInput';
 import LocationInput from './LocationInput';
@@ -22,6 +23,7 @@ const PostOotd: React.FC = () => {
   const [longitude, setLongitude] = useState<number>(0);
   const [date, setDate] = useState<string>('');
   const [weather, setWeather] = useState<any>(null);
+  const router = useRouter();
 
   const weatherMutation = useMutation(
     (variables: { latitude: number; longitude: number; date: string }) =>
@@ -38,7 +40,23 @@ const PostOotd: React.FC = () => {
       createPost(variables.postRequest, variables.ootdRequest),
     {
       onSuccess: (data) => {
-        console.log('Post created:', data);
+        Swal.fire({
+          icon: 'success',
+          title: 'OOTD 게시글을 올렸습니다.',
+          confirmButtonText: '확인',
+        }).then((result) => {
+          if (result.isConfirmed) {
+            router.push('/ootd');
+          }
+        });
+      },
+      onError: (error) => {
+        console.error('Error creating post:', error);
+        Swal.fire({
+          icon: 'error',
+          title: '게시글 올리기 오류',
+          text: '게시글을 올리는 중 오류가 발생했습니다.',
+        });
       },
     }
   );
@@ -169,7 +187,7 @@ const PostOotd: React.FC = () => {
           <div className="w-full flex justify-end">
             <button
                 onClick={handleCreatePost}
-                className="w-[100px] p-2 bg-rose-500 rounded-lg justify-center items-center inline-flex px-4 py-2 text-white text-xl"
+                className=" p-2 bg-rose-500 rounded-lg justify-center items-center inline-flex px-4 py-2 text-white text-xl"
             >
                 올리기
             </button>
