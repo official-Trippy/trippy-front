@@ -16,7 +16,7 @@ const NaverLogin = () => {
           clientId: process.env.NEXT_PUBLIC_NAVER_CLIENT_ID,
           callbackUrl: process.env.NEXT_PUBLIC_NAVER_LOGIN_REDIRECT_URI,
           isPopup: false,
-          loginButton: { color: "green", type: 3, height: 5 }, // 이 버튼은 보이지 않지만 여전히 필요합니다.
+          loginButton: { color: "green", type: 3, height: 5 }, 
         });
 
         naverLogin.init();
