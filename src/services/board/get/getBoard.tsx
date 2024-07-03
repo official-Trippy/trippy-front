@@ -10,3 +10,12 @@ export default async function getBoard() {
         return null;
     }
 }
+
+export async function getPost(postId: number) {
+    try {
+        const res = await axios.get(`${backendUrl}/api/post/${postId}`);
+        return res.data;
+    } catch (e) {
+        return null
+    }
+}
