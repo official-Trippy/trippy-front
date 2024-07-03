@@ -42,21 +42,28 @@ const PostOotd: React.FC = () => {
       },
     }
   );
-  
 
   useEffect(() => {
-    if (latitude !== 0 && longitude !== 0 && date !== '') {
+    if (latitude !== 0 && longitude !== 0 && date.length === 8) {
       weatherMutation.mutate({ latitude, longitude, date });
     }
   }, [latitude, longitude, date]);
 
   const handleFetchWeather = () => {
     if (location === '') {
-      alert('위치를 선택해주세요.');
+      Swal.fire({
+        icon: 'error',
+        title: '위치 선택 오류',
+        text: '위치를 선택해주세요.',
+      });
       return;
     }
-    if (date === '') {
-      alert('날짜를 입력해주세요.');
+    if (date.length !== 8) {
+      Swal.fire({
+        icon: 'error',
+        title: '날짜 형식 오류',
+        text: '날짜를 YYYYMMDD 형식으로 입력해주세요.',
+      });
       return;
     }
 
@@ -74,12 +81,20 @@ const PostOotd: React.FC = () => {
 
   const handleCreatePost = () => {
     if (tags.length < 3) {
-      Swal.fire('태그를 3개 이상 등록해주세요.');
+      Swal.fire({
+        icon: 'error',
+        title: '태그 오류',
+        text: '태그를 3개 이상 등록해주세요.',
+      });
       return;
     }
 
     if (post.trim() === '') {
-      Swal.fire('OOTD 문구를 작성해주세요.');
+      Swal.fire({
+        icon: 'error',
+        title: '문구 작성 오류',
+        text: 'OOTD 문구를 작성해주세요.',
+      });
       return;
     }
 
