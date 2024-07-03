@@ -80,11 +80,11 @@ const PostOotd: React.FC = () => {
   };
 
   const handleCreatePost = () => {
-    if (tags.length < 3) {
+    if (images.length === 0) {
       Swal.fire({
         icon: 'error',
-        title: '태그 오류',
-        text: '태그를 3개 이상 등록해주세요.',
+        title: '이미지 오류',
+        text: '이미지를 업로드해주세요.',
       });
       return;
     }
@@ -94,6 +94,15 @@ const PostOotd: React.FC = () => {
         icon: 'error',
         title: '문구 작성 오류',
         text: 'OOTD 문구를 작성해주세요.',
+      });
+      return;
+    }
+
+    if (tags.length < 3) {
+      Swal.fire({
+        icon: 'error',
+        title: '태그 오류',
+        text: '태그를 3개 이상 등록해주세요.',
       });
       return;
     }
@@ -147,7 +156,7 @@ const PostOotd: React.FC = () => {
           <DateInput onDateChange={handleDateChange} />
           {weather ? (
             <div className="w-full bg-neutral-100 rounded justify-center items-center inline-flex py-4 text-neutral-500 text-xl">
-              <div>지역: {weather.area}, 평균 온도: {weather.avgTemp}°C</div>
+              <div>{weather.avgTemp}°C, {weather.status}</div>
             </div>
           ) : (
             <button
