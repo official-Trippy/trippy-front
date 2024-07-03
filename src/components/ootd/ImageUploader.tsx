@@ -41,8 +41,8 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onImagesChange }) => {
         onClick={() => document.getElementById('image-upload-input')?.click()} 
         style={{ 
           position: 'relative', 
-          width: '350px', 
-          height: '350px', 
+          width: '600px', 
+          height: '600px', 
           cursor: 'pointer', 
           overflow: 'hidden',
           background: displayImages.length > 0 ? 'none' : `url(${OotdDefault.src}) no-repeat center center / cover` 
@@ -56,8 +56,8 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onImagesChange }) => {
               position: 'absolute', 
               top: 0, 
               left: 0, 
-              width: '350px', 
-              height: '350px', 
+              width: '600px', 
+              height: '600px', 
               objectFit: 'cover' 
             }} 
           />
