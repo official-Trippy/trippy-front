@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import ImageUploader from './ImageUploader';
 import PostInput from './PostInput';
 import LocationInput from './LocationInput';
@@ -11,6 +11,7 @@ import { createPost } from '@/services/ootd.ts/ootdPost';
 import { PostRequest, OotdRequest } from '@/types/ootd';
 import { LOCATIONS, LocationKey } from '@/constants/locations';
 import { UploadedImage } from '@/types/ootd';
+import Swal from 'sweetalert2';
 
 const PostOotd: React.FC = () => {
   const [images, setImages] = useState<UploadedImage[]>([]);
@@ -41,6 +42,7 @@ const PostOotd: React.FC = () => {
       },
     }
   );
+  
 
   useEffect(() => {
     if (latitude !== 0 && longitude !== 0 && date !== '') {
@@ -71,6 +73,16 @@ const PostOotd: React.FC = () => {
   };
 
   const handleCreatePost = () => {
+    if (tags.length < 3) {
+      Swal.fire('태그를 3개 이상 등록해주세요.');
+      return;
+    }
+
+    if (post.trim() === '') {
+      Swal.fire('OOTD 문구를 작성해주세요.');
+      return;
+    }
+
     const formattedDate = formatDateString(date);
 
     const postRequest: PostRequest = {
@@ -115,7 +127,7 @@ const PostOotd: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <ImageUploader onImagesChange={setImages} />
         <div className="space-y-4">
-          <PostInput onPostChange={setPost} onTagsChange={setTags} />
+          <PostInput onPostChange={setPost} onTagsChange={setTags} tags={tags} />
           <LocationInput onLocationChange={handleLocationChange} />
           <DateInput onDateChange={handleDateChange} />
           {weather ? (
@@ -131,13 +143,13 @@ const PostOotd: React.FC = () => {
             </button>
           )}
           <div className='w-full'>
-          <button
-            onClick={handleCreatePost}
-            className="w-[100px] ml-auto p-2 bg-rose-500 rounded-lg justify-center items-center inline-flex px-4 py-2 text-white text-xl"
-          >
-            올리기
-          </button>
-        </div>
+            <button
+              onClick={handleCreatePost}
+              className="w-[100px] ml-auto p-2 bg-rose-500 rounded-lg justify-center items-center inline-flex px-4 py-2 text-white text-xl"
+            >
+              올리기
+            </button>
+          </div>
         </div>
       </div>
     </div>
