@@ -5,6 +5,7 @@ import SecondBg from "@/components/pages/onboarding/secondbg";
 import ThirdBg from "@/components/pages/onboarding/thirdbg";
 import Header from "@/components/shared/header/Header";
 import Slider from "@/components/slider";
+import Link from "next/link";
 import React, { useEffect, useRef, useState } from "react";
 
 const OnBoradingPage = () => {
@@ -63,7 +64,9 @@ const OnBoradingPage = () => {
               <h1 className="text-[4rem] font-bold text-white flex mx-auto">나만의 특별한 OOTD와<br />정보를 공유할 수 있어요</h1>
               <span className="text-[2rem] font-normal text-white ">여행 중 나의 특별한 OOTD를 공유하며 소통해보세요</span>
             </div>
-            <button className="w-[32rem] mt-[6rem] py-[1.2rem] bg-btn-color mx-auto font-semibold text-white text-[1.6rem] rounded-[0.4rem] hover:bg-btn-color/85">시작하기</button>
+            <Link className="mx-auto " href="/">
+              <button className="w-[32rem] mt-[6rem] py-[1.2rem] bg-btn-color font-semibold text-white text-[1.6rem] rounded-[0.4rem] hover:bg-btn-color/85">시작하기</button>
+            </Link>
           </div>
         </ThirdBg>
       </div>

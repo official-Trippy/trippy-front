@@ -38,7 +38,7 @@ const Header = () => {
           </Link>
         </div>
         <div className="flex space-x-4 text-lg">
-          <Link href="/home">
+          <Link href="/">
             <div className="text-gray-800 px-10" style={{ fontSize: "1.4rem" }}>
               홈
             </div>
