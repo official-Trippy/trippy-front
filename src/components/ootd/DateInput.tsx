@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Swal from 'sweetalert2';
 
 interface DateInputProps {
@@ -17,6 +17,26 @@ const DateInput: React.FC<DateInputProps> = ({ onDateChange }) => {
         text: '날짜는 YYYYMMDD 형식으로 입력해주세요.',
       });
       return;
+    }
+
+    if (formattedDate.length === 8) {
+      const year = parseInt(formattedDate.slice(0, 4), 10);
+      const month = parseInt(formattedDate.slice(4, 6), 10) - 1; // 월은 0부터 시작하므로 1을 뺍니다.
+      const day = parseInt(formattedDate.slice(6, 8), 10);
+      const dateObj = new Date(year, month, day);
+
+      if (
+        dateObj.getFullYear() !== year ||
+        dateObj.getMonth() !== month ||
+        dateObj.getDate() !== day
+      ) {
+        Swal.fire({
+          icon: 'error',
+          title: '날짜 입력 오류',
+          text: '존재하지 않는 날짜입니다. 올바른 날짜를 입력해주세요.',
+        });
+        return;
+      }
     }
 
     onDateChange(formattedDate);
