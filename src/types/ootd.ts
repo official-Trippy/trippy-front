@@ -67,30 +67,36 @@ export interface PostRequest {
     code: string;
     message: string;
     result: {
-      ootd: {
-        id: number;
-        area: string;
-        weatherStatus: string;
-        weatherTemp: string;
-        detailLocation?: string | null;
-        date: string;
-      };
-      post: {
-        id: number;
-        email: string;
-        title: string;
-        body: string;
-        createDateTime: string;
-        postType: string;
-        location: string | null;
-        images: {
-          imgUrl: string;
-          accessUri: string;
-          authenticateId: string;
-        }[];
-        tags: string[];
-        likeCount: number;
-      };
-      isSuccess: boolean;
-    }[];
+      totalCount: number;
+      ootdList: {
+        ootd: {
+          id: number;
+          area: string;
+          weatherStatus: string;
+          weatherTemp: string;
+          detailLocation?: string | null;
+          date: string;
+        };
+        post: {
+          id: number;
+          createDateTime: string;
+          nickName: string;
+          memberId: string;
+          title: string;
+          body: string;
+          postType: string;
+          location: string | null;
+          images: {
+            imgUrl: string;
+            accessUri: string;
+            authenticateId: string;
+          }[];
+          tags: string[];
+          likeCount: number;
+          commentCount: number;
+        };
+        isSuccess: boolean;
+      }[];
+    };
   }
+  

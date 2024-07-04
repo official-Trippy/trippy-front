@@ -1,9 +1,10 @@
-'use client';
+// src/components/profile/MyOotd.tsx
 
 import React from "react";
 import { useQuery } from "react-query";
 import { fetchOotdPosts } from "@/services/ootd.ts/ootdGet";
 import { UserInfoType } from "@/types/auth";
+import { OotdGetResponse } from "@/types/ootd";
 
 const PAGE_SIZE = 9;
 
@@ -22,9 +23,9 @@ const formatDate = (dateString: string) => {
 const MyOotd: React.FC<MyOotdProps> = ({ userInfo }) => {
   const [page, setPage] = React.useState(0);
 
-  const { data, isLoading, isError } = useQuery(['ootdPosts', page], () => fetchOotdPosts({ size: PAGE_SIZE, page }));
+  const { data, isLoading, isError } = useQuery<OotdGetResponse>(['ootdPosts', page], () => fetchOotdPosts({ size: PAGE_SIZE, page }));
 
-  const totalPages = Math.ceil((data?.result?.length || 0) / PAGE_SIZE);
+  const totalPages = Math.ceil((data?.result?.totalCount || 0) / PAGE_SIZE);
 
   const handleNextPage = () => {
     if (page < totalPages - 1) {
@@ -50,7 +51,7 @@ const MyOotd: React.FC<MyOotdProps> = ({ userInfo }) => {
     <div className="h-[400px]">
       <h3 className="text-2xl font-bold my-12">나의 OOTD</h3>
       <div className="flex flex-wrap gap-4">
-        {data.result.map((item) => (
+        {data.result.ootdList.map((item) => (
           <div key={item.ootd.id} className="flex-1 max-w-[30%]">
             {item.post.images.length > 0 && (
               <img src={item.post.images[0].accessUri} alt="OOTD" className="w-full h-auto" />
@@ -61,7 +62,7 @@ const MyOotd: React.FC<MyOotdProps> = ({ userInfo }) => {
                 alt="User Profile"
                 className="w-8 h-8 rounded-full mr-2"
               />
-              <span>{userInfo.nickName}</span>
+              <span>{item.post.nickName}</span>
             </div>
             <div className="flex justify-between">
               <p>{item.post.body}</p>
