@@ -80,6 +80,7 @@ export interface PostRequest {
         email: string;
         title: string;
         body: string;
+        createDateTime: string;
         postType: string;
         location: string | null;
         images: {

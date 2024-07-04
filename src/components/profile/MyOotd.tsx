@@ -11,6 +11,14 @@ interface MyOotdProps {
   userInfo: UserInfoType;
 }
 
+const formatDate = (dateString: string) => {
+  const date = new Date(dateString);
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}/${month}/${day}`;
+};
+
 const MyOotd: React.FC<MyOotdProps> = ({ userInfo }) => {
   const [page, setPage] = React.useState(0);
 
@@ -44,6 +52,9 @@ const MyOotd: React.FC<MyOotdProps> = ({ userInfo }) => {
       <div className="flex flex-wrap gap-4">
         {data.result.map((item) => (
           <div key={item.ootd.id} className="flex-1 max-w-[30%]">
+            {item.post.images.length > 0 && (
+              <img src={item.post.images[0].accessUri} alt="OOTD" className="w-full h-auto" />
+            )}
             <div className="flex items-center mb-2">
               <img
                 src={userInfo.profileImageUrl}
@@ -52,10 +63,10 @@ const MyOotd: React.FC<MyOotdProps> = ({ userInfo }) => {
               />
               <span>{userInfo.nickName}</span>
             </div>
-            {item.post.images.length > 0 && (
-              <img src={item.post.images[0].accessUri} alt="OOTD" className="w-full h-auto" />
-            )}
-            <p>{item.post.title}</p>
+            <div className="flex justify-between">
+              <p>{item.post.body}</p>
+              <p>{formatDate(item.post.createDateTime)}</p>
+            </div>
             <div className="flex gap-2 mt-2">
               {item.post.tags.map((tag, index) => (
                 <span key={index} className="bg-gray-200 px-2 py-1 rounded">
