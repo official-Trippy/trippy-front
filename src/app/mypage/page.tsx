@@ -1,4 +1,5 @@
-'use client'
+// MyPage.js
+'use client';
 
 import React, { useState } from "react";
 import Header from "@/components/shared/header/Header";
@@ -95,13 +96,13 @@ const MyPage = () => {
             {activeTab === TABS.ALL && (
               <>
                 <MyTicket />
-                <MyOotd />
+                <MyOotd userInfo={userData} />
                 <MyBadge />
                 <MyBookmark />
               </>
             )}
             {activeTab === TABS.TICKET && <MyTicket />}
-            {activeTab === TABS.OOTD && <MyOotd />}
+            {activeTab === TABS.OOTD && <MyOotd userInfo={userData} />}
             {activeTab === TABS.BADGE && <MyBadge />}
             {activeTab === TABS.BOOKMARK && <MyBookmark />}
           </div>
