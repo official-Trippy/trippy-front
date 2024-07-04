@@ -51,27 +51,27 @@ const MyOotd: React.FC<MyOotdProps> = ({ userInfo }) => {
     <div className="h-full">
       <h3 className="text-2xl font-bold my-12">나의 OOTD</h3>
       {pages[page] && (
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-3 gap-12">
           {pages[page].map((item, index) => (
             <div key={item.ootd.id} className="flex-1">
               {item.post.images.length > 0 && (
                 <img src={item.post.images[0].accessUri} alt="OOTD" className="w-full h-auto" />
               )}
-              <div className="flex items-center mb-2">
+              <div className="flex items-center my-4">
                 <img
                   src={userInfo.profileImageUrl}
                   alt="User Profile"
-                  className="w-8 h-8 rounded-full mr-2"
+                  className="w-20 h-20 rounded-full mr-2"
                 />
-                <span>{item.post.nickName}</span>
+                <div className="flex-1">
+                  <div className="text-neutral-500 text-2xl font-normal font-['Pretendard']">{item.post.nickName}</div>
+                </div>
+                <div className="ml-auto text-neutral-400 text-2xl font-normal font-['Pretendard']">{formatDate(item.post.createDateTime)}</div>
               </div>
-              <div className="flex justify-between">
-                <p>{item.post.body}</p>
-                <p>{formatDate(item.post.createDateTime)}</p>
-              </div>
+              <div className="text-neutral-500 text-2xl font-normal font-['Pretendard']">{item.post.body}</div>
               <div className="flex gap-2 mt-2">
                 {item.post.tags.map((tag, index) => (
-                  <span key={index} className="bg-gray-200 px-2 py-1 rounded">
+                  <span key={index} className="px-2 py-1 bg-neutral-100 rounded-2xl text-xl justify-center items-center gap-2.5 inline-flex">
                     {tag}
                   </span>
                 ))}
