@@ -3,16 +3,10 @@ import axios from 'axios';
 
 const backendUrl: string = process.env.NEXT_PUBLIC_BACKEND_URL || '';
 
-export const fetchOotdPosts = async ({ size = 9, page = 0 }): Promise<OotdGetResponse> => {
+export const fetchOotdPosts = async (): Promise<OotdGetResponse> => {
     try {
       const response = await axios.get<OotdGetResponse>(
         `${backendUrl}/api/ootd`,
-        {
-          params: {
-            size,
-            page
-          }
-        }
       );
       return response.data;
     } catch (error) {
