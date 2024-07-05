@@ -33,3 +33,17 @@ export const fetchOotdPosts = async (page?: number, size?: number): Promise<Ootd
     throw error;
   }
 };
+
+export const fetchOotdPostDetail = async (id: number): Promise<OotdGetResponse> => {
+    try {
+      const response = await axios.get<OotdGetResponse>(
+        `${backendUrl}/api/ootd/${id}`
+      );
+      console.log(response.data);
+      return response.data;
+    } catch (error) {
+      console.error(`OOTD 게시글 상세 정보를 가져오는 중 오류가 발생했습니다: ${error}`);
+      throw error;
+    }
+  };
+  
