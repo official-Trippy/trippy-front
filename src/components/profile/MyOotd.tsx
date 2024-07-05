@@ -1,6 +1,6 @@
 import React from "react";
 import { useQuery } from "react-query";
-import { fetchOotdPosts } from "@/services/ootd.ts/ootdGet";
+import { fetchOotdPostCount, fetchOotdPosts } from "@/services/ootd.ts/ootdGet";
 import { UserInfoType } from "@/types/auth";
 import { OotdGetResponse } from "@/types/ootd";
 
@@ -21,65 +21,64 @@ const formatDate = (dateString: string) => {
 const MyOotd: React.FC<MyOotdProps> = ({ userInfo }) => {
   const [page, setPage] = React.useState(0);
 
-  const { data, isLoading, isError } = useQuery<OotdGetResponse>(
-    ['ootdPosts', page],
-    () => fetchOotdPosts()
+  const { data: totalCount, isLoading: isCountLoading, isError: isCountError } = useQuery<number>(
+    'ootdPostCount',
+    fetchOotdPostCount
   );
 
-  const totalCount = data?.result?.totalCount || 0;
-  const totalPages = Math.ceil(totalCount / PAGE_SIZE);
+  const { data, isLoading, isError } = useQuery<OotdGetResponse>(
+    ['ootdPosts', page],
+    () => fetchOotdPosts(page, PAGE_SIZE),
+    { enabled: totalCount !== undefined }
+  );
+
+  const totalPages = totalCount ? Math.ceil(totalCount / PAGE_SIZE) : 0;
 
   const handlePageClick = (pageIndex: number) => {
     setPage(pageIndex);
   };
 
-  if (isLoading) {
+  if (isCountLoading || isLoading) {
     return <div>Loading...</div>;
   }
 
-  if (isError || !data) {
+  if (isCountError || isError || !data) {
     return <div>Error fetching data</div>;
   }
 
-  const ootdList = data.result.ootdList;
-
-  const pages = Array.from({ length: totalPages }, (_, index) =>
-    ootdList.slice(index * PAGE_SIZE, index * PAGE_SIZE + PAGE_SIZE)
-  );
+  const ootdList = data.result;
 
   return (
     <div className="h-full">
       <h3 className="text-2xl font-bold my-12">나의 OOTD</h3>
-      {pages[page] && (
-        <div className="grid grid-cols-3 gap-12">
-          {pages[page].map((item, index) => (
-            <div key={item.ootd.id} className="flex-1">
-              {item.post.images.length > 0 && (
-                <img src={item.post.images[0].accessUri} alt="OOTD" className="w-full h-auto" />
-              )}
-              <div className="flex items-center my-4">
-                <img
-                  src={userInfo.profileImageUrl}
-                  alt="User Profile"
-                  className="w-20 h-20 rounded-full mr-2"
-                />
-                <div className="flex-1">
-                  <div className="text-neutral-500 text-2xl font-normal font-['Pretendard']">{item.post.nickName}</div>
-                </div>
-                <div className="ml-auto text-neutral-400 text-2xl font-normal font-['Pretendard']">{formatDate(item.post.createDateTime)}</div>
+      <div className="grid grid-cols-3 gap-12">
+        {ootdList.map((item) => (
+          <div key={item.ootd.id} className="flex-1">
+            {item.post.images.length > 0 && (
+              <img src={item.post.images[0].accessUri} alt="OOTD" className="w-full h-auto" />
+            )}
+            <div className="flex items-center my-4">
+              <img
+                src={userInfo.profileImageUrl}
+                alt="User Profile"
+                className="w-20 h-20 rounded-full mr-2"
+              />
+              <div className="flex-1">
+                <div className="text-neutral-500 text-2xl font-normal font-['Pretendard']">{item.post.nickName}</div>
               </div>
-              <div className="text-neutral-500 text-2xl font-normal font-['Pretendard']">{item.post.body}</div>
-              <div className="flex gap-2 mt-2">
-                {item.post.tags.map((tag, index) => (
-                  <span key={index} className="px-2 py-1 bg-neutral-100 rounded-2xl text-xl justify-center items-center gap-2.5 inline-flex">
-                    {tag}
-                  </span>
-                ))}
-              </div>
+              <div className="ml-auto text-neutral-400 text-2xl font-normal font-['Pretendard']">{formatDate(item.post.createDateTime)}</div>
             </div>
-          ))}
-        </div>
-      )}
+            <div className="text-neutral-500 text-2xl font-normal font-['Pretendard']">{item.post.body}</div>
+            <div className="flex gap-2 mt-2">
+              {item.post.tags.map((tag: string, index: number) => (
+                <span key={index} className="px-2 py-1 bg-neutral-100 rounded-2xl text-xl justify-center items-center gap-2.5 inline-flex">
+                  {tag}
+                </span>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
       <div className="flex justify-center mt-4">
         {Array.from({ length: totalPages }, (_, index) => (
           <button
