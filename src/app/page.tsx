@@ -32,13 +32,13 @@ export default function Home() {
     queryKey: ['boardData'],
     queryFn: () => getBoard()
   })
-
+  console.log(boardData)
   return (
     <div>
       <Header />
       <Recommend memberData={memberData} isLoading={isLoading}>
         <div className="flex">
-          {boardData?.result.map((posts: any, index: number) => {
+          {boardData?.result.slice(0, 4).map((posts: any, index: number) => {
             return (
               <div className="w-[33rem] h-[40rem] shadow-xl rounded-[1rem] mx-[2rem]" key={index}>
                 <div className="flex flex-col">
@@ -56,7 +56,7 @@ export default function Home() {
                   </div>
                 </div>
               </div>
-            )
+            );
           })}
         </div>
       </Recommend>
@@ -89,15 +89,15 @@ export default function Home() {
                     <div className="flex flex-col w-[150%]">
                       <h1 className="text-[2rem] font-medium text-ellipsis overflow-hidden theboki">{posts.post.title}</h1>
                       <span className="text-[1.6rem] mt-[0.4rem] h-[5rem] font-normal text-[#6B6B6B] text-ellipsis overflow-hidden theboki1">{posts.post.body}</span>
-                      <div className="flex">
-                      {posts?.post.tags.map((tagData: string, index: number) => (
-                        <span
-                          key={index} 
-                          className="w-fit px-[0.8rem] py-[0.4rem] mt-[1.2rem] mr-[0.5rem] bg-[#F5F5F5] text-[1.3rem] text-[#9d9d9d] rounded-[1.6rem]"
-                        >
-                          {tagData}
-                        </span>
-                      ))}
+                      <div className="flex text-ellipsis overflow-hidden theboki">
+                        {posts?.post.tags.map((tagData: string, index: number) => (
+                          <span
+                            key={index}
+                            className="w-fit px-[0.8rem] py-[0.4rem] mt-[1.2rem] mr-[0.5rem] bg-[#F5F5F5] text-[1.3rem] text-[#9d9d9d] rounded-[1.6rem]"
+                          >
+                            {tagData}
+                          </span>
+                        ))}
                       </div>
                     </div>
                     <div className="flex flex-col w-full">
