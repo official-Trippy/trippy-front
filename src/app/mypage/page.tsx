@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import React, { useState } from "react";
 import Header from "@/components/shared/header/Header";
@@ -10,15 +10,18 @@ import MyTicket from "@/components/profile/MyTicket";
 import MyOotd from "@/components/profile/MyOotd";
 import MyBadge from "@/components/profile/MyBadge";
 import MyBookmark from "@/components/profile/MyBookmark";
+import FollowList from "@/components/profile/FollowList";
 import Image from "next/image";
 import backgroundImg from "../../../public/DefaultBackground.svg";
 
 const TABS = {
-  ALL: 'ALL',
-  TICKET: 'TICKET',
-  OOTD: 'OOTD',
-  BADGE: 'BADGE',
-  BOOKMARK: 'BOOKMARK',
+  ALL: "ALL",
+  TICKET: "TICKET",
+  OOTD: "OOTD",
+  BADGE: "BADGE",
+  BOOKMARK: "BOOKMARK",
+  FOLLOWER: "FOLLOWER",
+  FOLLOWING: "FOLLOWING",
 };
 
 const MyPage = () => {
@@ -47,14 +50,21 @@ const MyPage = () => {
     <>
       <Header />
       <div className="relative w-full h-[300px]">
-        <Image src={backgroundImg} alt="Background" layout="fill" objectFit="cover" />
+        <Image
+          src={backgroundImg}
+          alt="Background"
+          layout="fill"
+          objectFit="cover"
+        />
       </div>
       <div className="w-[80%] mx-auto">
-        <h1 className="w-[80%] absolute ml-auto text-right top-[320px] text-white text-4xl font-bold">{userData && userData.blogName}</h1>
+        <h1 className="w-[80%] absolute ml-auto text-right top-[320px] text-white text-4xl font-bold">
+          {userData && userData.blogName}
+        </h1>
       </div>
       <div className="w-[80%] mx-auto flex p-4">
         <div className="w-[250px] mb-4">
-          <UserInformation />
+          <UserInformation setActiveTab={setActiveTab} />
         </div>
         <div className="w-[100%] ml-[50px]">
           <div className="flex space-x-4 mb-4 ml-4 text-2xl">
@@ -104,6 +114,12 @@ const MyPage = () => {
             {activeTab === TABS.OOTD && <MyOotd />}
             {activeTab === TABS.BADGE && <MyBadge />}
             {activeTab === TABS.BOOKMARK && <MyBookmark />}
+            {activeTab === TABS.FOLLOWER && (
+              <FollowList memberId={userData.memberId} type="follower" />
+            )}
+            {activeTab === TABS.FOLLOWING && (
+              <FollowList memberId={userData.memberId} type="following" />
+            )}
           </div>
         </div>
       </div>
