@@ -3,20 +3,13 @@ import { useQuery } from "react-query";
 import { fetchOotdPostCount, fetchOotdPosts } from "@/services/ootd.ts/ootdGet";
 import { UserInfoType } from "@/types/auth";
 import { OotdGetResponse } from "@/types/ootd";
+import { formatDate } from "@/constants/dateFotmat";
 
 const PAGE_SIZE = 9; 
 
 interface MyOotdProps {
   userInfo: UserInfoType;
 }
-
-const formatDate = (dateString: string) => {
-  const date = new Date(dateString);
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
-  return `${year}/${month}/${day}`;
-};
 
 const MyOotd: React.FC<MyOotdProps> = ({ userInfo }) => {
   const [page, setPage] = React.useState(0);

@@ -67,6 +67,7 @@ export interface PostRequest {
     code: string;
     message: string;
     result: {
+      map(arg0: (item: any) => import("react").JSX.Element): import("react").ReactNode;
       totalCount: number;
       ootdList: {
         ootd: {
