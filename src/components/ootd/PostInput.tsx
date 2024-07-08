@@ -3,10 +3,10 @@ import React, { useState, useEffect, useRef } from 'react';
 interface PostInputProps {
   onPostChange: (post: string) => void;
   onTagsChange: (tags: string[]) => void;
+  tags: string[];
 }
 
-const PostInput: React.FC<PostInputProps> = ({ onPostChange, onTagsChange }) => {
-  const [tags, setTags] = useState<string[]>([]);
+const PostInput: React.FC<PostInputProps> = ({ onPostChange, onTagsChange, tags }) => {
   const [tagInput, setTagInput] = useState<string>('');
   const [isComposing, setIsComposing] = useState<boolean>(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -38,12 +38,16 @@ const PostInput: React.FC<PostInputProps> = ({ onPostChange, onTagsChange }) => 
         const formattedTag = `#${inputTag}`;
         if (!tags.includes(formattedTag)) {
           const newTags = [...tags, formattedTag];
-          setTags(newTags);
           onTagsChange(newTags);
         }
         setTagInput('');
       }
     }
+  };
+
+  const handleTagDelete = (tagToDelete: string) => {
+    const newTags = tags.filter(tag => tag !== tagToDelete);
+    onTagsChange(newTags);
   };
 
   return (
@@ -68,6 +72,13 @@ const PostInput: React.FC<PostInputProps> = ({ onPostChange, onTagsChange }) => 
           {tags.map((tag, index) => (
             <span key={index} className="h-[30px] text-neutral-400 px-3 py-1 bg-neutral-100 rounded-2xl justify-center items-center gap-2.5 inline-flex">
               {tag}
+              <button
+                type="button"
+                onClick={() => handleTagDelete(tag)}
+                className="ml-2 text-black mb-[2px]"
+              >
+                x
+              </button>
             </span>
           ))}
         </div>

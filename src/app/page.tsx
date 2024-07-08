@@ -90,11 +90,14 @@ export default function Home() {
                       <h1 className="text-[2rem] font-medium text-ellipsis overflow-hidden theboki">{posts.post.title}</h1>
                       <span className="text-[1.6rem] mt-[0.4rem] h-[5rem] font-normal text-[#6B6B6B] text-ellipsis overflow-hidden theboki1">{posts.post.body}</span>
                       <div className="flex">
-                        {posts?.post.tags.map((tagData: []) => {
-                          return (
-                            <span className="w-fit px-[0.8rem] py-[0.4rem] mt-[1.2rem] mr-[0.5rem] bg-[#F5F5F5] text-[1.3rem] text-[#9d9d9d] rounded-[1.6rem]">{tagData}</span>
-                          )
-                        })}
+                      {posts?.post.tags.map((tagData: string, index: number) => (
+                        <span
+                          key={index} 
+                          className="w-fit px-[0.8rem] py-[0.4rem] mt-[1.2rem] mr-[0.5rem] bg-[#F5F5F5] text-[1.3rem] text-[#9d9d9d] rounded-[1.6rem]"
+                        >
+                          {tagData}
+                        </span>
+                      ))}
                       </div>
                     </div>
                     <div className="flex flex-col w-full">
