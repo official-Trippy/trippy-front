@@ -4,7 +4,7 @@ const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 export default async function getBoard() {
     try {
-        const res = await axios.get(`${backendUrl}/api/post/all`)
+        const res = await axios.get(`${backendUrl}/api/post/all?type=POST`)
         return res.data;
     } catch (e) {
         return null;

@@ -15,7 +15,6 @@ function RecentPost({ children, allPosts, setAllPosts }: HomeRecentProps) {
                     <span className={`px-[2rem] cursor-pointer transition-all duration-300 ${allPosts === 0 ? "font-bold border-b-2 border-black" : ""}`} onClick={() => setAllPosts(0)}>전체글</span>
                     <span className={`px-[2rem] cursor-pointer transition-all duration-300 ${allPosts === 1 ? "font-bold border-b-2 border-black" : ""}`} onClick={() => setAllPosts(1)}>팔로잉</span>
                     <select className='flex w-[8rem] h-[3rem] ml-auto font-medium selectshadow'>
-                        <option>기본</option>
                         <option>최신순</option>
                         <option>날짜순</option>
                         <option>인기순</option>
