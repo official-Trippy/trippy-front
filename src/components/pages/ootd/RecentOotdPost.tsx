@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Cookies from 'js-cookie';
 import { useQuery } from 'react-query';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { OotdGetResponse } from '@/types/ootd';
 import { fetchAllOotdPostCount, fetchAllOotdPosts } from '@/services/ootd.ts/ootdGet';
 import { MemberInfo } from '@/services/auth';
@@ -14,12 +15,13 @@ const PAGE_SIZE = 10;
 const RecentOotdPost: React.FC = () => {
   const accessToken = Cookies.get('accessToken');
   const [page, setPage] = useState(0);
+  const router = useRouter();
 
   const { data: memberData, error: memberError, isLoading: memberLoading } = useQuery({
     queryKey: ['member', accessToken],
     queryFn: () => MemberInfo(accessToken),
     onError: (error) => {
-      console.error(error);
+      console.error('Error fetching member data:', error);
     }
   });
 
@@ -37,7 +39,11 @@ const RecentOotdPost: React.FC = () => {
   const totalPages = totalCount ? Math.ceil(totalCount / PAGE_SIZE) : 0;
 
   const handlePageClick = (pageIndex: number) => {
-    setPage(pageIndex); 
+    setPage(pageIndex);
+  };
+
+  const handleOotdItemClick = (id: number) => {
+    router.push(`/ootd/${id}`);
   };
 
   if (isCountLoading || isLoading) {
@@ -80,7 +86,7 @@ const RecentOotdPost: React.FC = () => {
       </div>
       <div style={gridContainerStyle}>
         {ootdList.map((item) => (
-          <div key={item.ootd.id} className='flex flex-col w-full'>
+          <div key={item.ootd.id} className='flex flex-col w-full' onClick={() => handleOotdItemClick(item.ootd.id)}>
             {item.post.images.length > 0 && (
               <img className='flex rounded-[0.8rem]' src={item.post.images[0].accessUri} alt='OOTD' />
             )}

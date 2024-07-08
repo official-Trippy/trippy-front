@@ -1,8 +1,6 @@
 import React from 'react';
 import RecentOotdPost from '@/components/pages/ootd/RecentOotdPost';
-import Profile from "../../../public/Profile.png";
 import Header from '@/components/shared/header/Header';
-import Image from 'next/image';
 
 const OotdPage = () => {
     return (

@@ -1,5 +1,6 @@
 import axios from 'axios';
-import { OotdGetResponse } from '@/types/ootd';
+import { OotdDetailGetResponse, OotdGetResponse } from '@/types/ootd';
+import Cookies from "js-cookie";
 
 const backendUrl: string = process.env.NEXT_PUBLIC_BACKEND_URL || '';
 
@@ -47,18 +48,19 @@ export const fetchOotdPosts = async (page?: number, size?: number): Promise<Ootd
   }
 };
 
-export const fetchOotdPostDetail = async (id: number): Promise<OotdGetResponse> => {
-    try {
-      const response = await axios.get<OotdGetResponse>(
-        `${backendUrl}/api/ootd/${id}`
-      );
-      console.log(response.data);
-      return response.data;
-    } catch (error) {
-      console.error(`OOTD 게시글 상세 정보를 가져오는 중 오류가 발생했습니다: ${error}`);
-      throw error;
-    }
-  };
+export const fetchOotdPostDetail = async (id: number): Promise<OotdDetailGetResponse> => {
+  try {
+    const response = await axios.get<OotdDetailGetResponse>(
+      `${backendUrl}/api/ootd/${id}`
+    );
+    console.log(response.data);
+    return response.data; 
+  } catch (error) {
+    console.error(`OOTD 게시글 상세 정보를 가져오는 중 오류가 발생했습니다: ${error}`);
+    throw error;
+  }
+};
+
 
   export const fetchAllOotdPosts = async (page?: number, size?: number): Promise<OotdGetResponse> => {
     try {
@@ -74,3 +76,16 @@ export const fetchOotdPostDetail = async (id: number): Promise<OotdGetResponse> 
         throw error;
     }
 };
+
+axios.interceptors.request.use(
+  async (config) => {
+    const accessToken = Cookies.get('accessToken');
+    if (accessToken) {
+      config.headers.Authorization = `Bearer ${accessToken}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
