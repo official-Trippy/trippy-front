@@ -4,6 +4,8 @@ import { UserModalProps } from "@/types/auth";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import NaverLogo from "../../../public/NaverLogo.png";
+import KakaoLogo from "../../../public/KakaoLogo.svg";
+import GoogleLogo from "../../../public/GoogleLogo.svg";
 
 const UserModal: React.FC<UserModalProps & { style: React.CSSProperties, handleLogout: () => Promise<void> }> = ({ isOpen, onClose, userInfo, style, handleLogout }) => {
 
@@ -40,10 +42,10 @@ const UserModal: React.FC<UserModalProps & { style: React.CSSProperties, handleL
                             <Image src={NaverLogo} alt="Naver Logo" width={46} height={46} />
                             )}
                              {userInfo.socialType === "kakao" && (
-                            <Image src={NaverLogo} alt="Kakao Logo" width={46} height={46} />
+                            <Image src={KakaoLogo} alt="Kakao Logo" width={46} height={46} />
                             )}
                              {userInfo.socialType === "google" && (
-                            <Image src={NaverLogo} alt="Google Logo" width={46} height={46} />
+                            <Image src={GoogleLogo} alt="Google Logo" width={46} height={46} />
                             )}
                         </div>
                     </div>
