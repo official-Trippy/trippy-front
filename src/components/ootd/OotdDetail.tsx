@@ -11,6 +11,7 @@ import 'slick-carousel/slick/slick-theme.css';
 import Image from 'next/image';
 import { formatDate } from '@/constants/dateFotmat';
 import LocationIcon from '../../../public/icon_pin.png';
+import CommentSection from './CommentSection';
 
 interface OotdDetailProps {
   id: number;
@@ -49,7 +50,7 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
   return (
     <div className="container mx-auto p-4">
       <div className="w-full max-w-3xl mx-auto">
-        <div className="p-4 flex items-center justify-between">
+        <div className="py-4 flex items-center justify-between">
           <div className="flex items-center">
             <Image
               className="rounded-full"
@@ -101,6 +102,11 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
             {formatDate(ootdItem.post.createDateTime)}
           </div>
         </div>
+        <CommentSection
+          postId={id}
+          initialLikeCount={ootdItem.post.likeCount}
+          initialCommentCount={ootdItem.post.commentCount}
+        />
       </div>
     </div>
   );

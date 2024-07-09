@@ -133,5 +133,16 @@ export interface PostRequest {
         commentCount: number;
       };
     };
-  }
+  };
   
+  export interface Comment {
+    id: number;
+    parentId: number;
+    memberId: string;
+    profileImageUrl: string;
+    content: string;
+    status: string;
+    depth: number;
+    createDateTime: string;
+    children: Comment[];
+  };
