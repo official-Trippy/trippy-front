@@ -4,6 +4,7 @@ import { useQuery } from "react-query";
 import { MemberInfo } from "@/services/auth";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
+import { doFollow } from "@/services/follow";
 
 const TABS = {
   ALL: "ALL",
@@ -74,6 +75,12 @@ const UserInformation: React.FC<{ setActiveTab: (tab: string) => void }> = ({
             onClick={handleEditProfile}
           >
             내 정보 수정
+          </button>
+          <button
+            className="mt-[20px] pl-[20px] pr-[20px] py-2 bg-neutral-100 rounded-lg justify-center items-center inline-flex"
+            onClick={() => doFollow(userData.memberId)}
+          >
+            팔로우
           </button>
           <span className="mt-[10px] text-sm text-gray-600">
             {userData.blogIntroduce}

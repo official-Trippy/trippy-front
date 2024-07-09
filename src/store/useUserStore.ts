@@ -1,15 +1,17 @@
-import create from 'zustand';
-import { getMyInfo } from '@/services/auth';
+import create from "zustand";
+import { getMyInfo } from "@/services/auth";
 
 interface UserState {
   userInfo: any;
   loading: boolean;
   fetchUserInfo: () => Promise<void>;
+  setUserInfo: (newInfo: any) => void;
 }
 
 export const useUserStore = create<UserState>((set) => ({
   userInfo: null,
   loading: true,
+
   fetchUserInfo: async () => {
     set({ loading: true });
     try {
@@ -22,4 +24,6 @@ export const useUserStore = create<UserState>((set) => ({
       set({ loading: false });
     }
   },
+  setUserInfo: (newInfo) =>
+    set((state) => ({ userInfo: { ...state.userInfo, ...newInfo } })),
 }));

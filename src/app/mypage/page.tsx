@@ -45,6 +45,8 @@ const MyPage = () => {
   }
 
   const userData = data && data.result;
+  console.log("userData : ", userData);
+  const member = userData.memberId;
 
   return (
     <>
@@ -67,37 +69,53 @@ const MyPage = () => {
           <UserInformation setActiveTab={setActiveTab} />
         </div>
         <div className="w-[100%] ml-[50px]">
-          <div className="flex space-x-4 mb-4 ml-4 text-2xl">
-            <button
-              className={`pr-8 py-2 ${activeTab === TABS.ALL ? "text-rose-500 font-bold" : "bg-white"}`}
-              onClick={() => setActiveTab(TABS.ALL)}
-            >
-              모두 보기
-            </button>
-            <button
-              className={`pr-8 py-2 ${activeTab === TABS.TICKET ? "text-rose-500 font-bold" : "bg-white"}`}
-              onClick={() => setActiveTab(TABS.TICKET)}
-            >
-              티켓
-            </button>
-            <button
-              className={`pr-8 py-2 ${activeTab === TABS.OOTD ? "text-rose-500 font-bold" : "bg-white"}`}
-              onClick={() => setActiveTab(TABS.OOTD)}
-            >
-              OOTD
-            </button>
-            <button
-              className={`pr-8 py-2 ${activeTab === TABS.BADGE ? "text-rose-500 font-bold" : "bg-white"}`}
-              onClick={() => setActiveTab(TABS.BADGE)}
-            >
-              뱃지
-            </button>
-            <button
-              className={`pr-8 py-2 ${activeTab === TABS.BOOKMARK ? "text-rose-500 font-bold" : "bg-white"}`}
-              onClick={() => setActiveTab(TABS.BOOKMARK)}
-            >
-              북마크
-            </button>
+          <div className="flex justify-between mb-4 ml-4 text-2xl">
+            <div className="flex space-x-4">
+              <button
+                className={`pr-8 py-2 ${activeTab === TABS.ALL ? "text-rose-500 font-bold" : "bg-white"}`}
+                onClick={() => setActiveTab(TABS.ALL)}
+              >
+                모두 보기
+              </button>
+              <button
+                className={`pr-8 py-2 ${activeTab === TABS.TICKET ? "text-rose-500 font-bold" : "bg-white"}`}
+                onClick={() => setActiveTab(TABS.TICKET)}
+              >
+                티켓
+              </button>
+              <button
+                className={`pr-8 py-2 ${activeTab === TABS.OOTD ? "text-rose-500 font-bold" : "bg-white"}`}
+                onClick={() => setActiveTab(TABS.OOTD)}
+              >
+                OOTD
+              </button>
+              <button
+                className={`pr-8 py-2 ${activeTab === TABS.BADGE ? "text-rose-500 font-bold" : "bg-white"}`}
+                onClick={() => setActiveTab(TABS.BADGE)}
+              >
+                뱃지
+              </button>
+              <button
+                className={`pr-8 py-2 ${activeTab === TABS.BOOKMARK ? "text-rose-500 font-bold" : "bg-white"}`}
+                onClick={() => setActiveTab(TABS.BOOKMARK)}
+              >
+                북마크
+              </button>
+            </div>
+            <div className="flex space-x-4">
+              <button
+                className={`pr-8 py-2 ${activeTab === TABS.FOLLOWER ? "text-rose-500 font-bold" : "bg-white"}`}
+                onClick={() => setActiveTab(TABS.FOLLOWER)}
+              >
+                팔로워
+              </button>
+              <button
+                className={`pr-8 py-2 ${activeTab === TABS.FOLLOWING ? "text-rose-500 font-bold" : "bg-white"}`}
+                onClick={() => setActiveTab(TABS.FOLLOWING)}
+              >
+                팔로윙
+              </button>
+            </div>
           </div>
           <hr className="mb-4 w-full h-[1px]" />
 
@@ -115,10 +133,10 @@ const MyPage = () => {
             {activeTab === TABS.BADGE && <MyBadge />}
             {activeTab === TABS.BOOKMARK && <MyBookmark />}
             {activeTab === TABS.FOLLOWER && (
-              <FollowList memberId={userData.memberId} type="follower" />
+              <FollowList memberId={member} type="follower" />
             )}
             {activeTab === TABS.FOLLOWING && (
-              <FollowList memberId={userData.memberId} type="following" />
+              <FollowList memberId={member} type="following" />
             )}
           </div>
         </div>
