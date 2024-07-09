@@ -2,8 +2,15 @@
 
 import React from 'react';
 import { useQuery } from 'react-query';
+import Slider from 'react-slick';
 import { fetchOotdPostDetail } from '@/services/ootd.ts/ootdGet';
 import { OotdDetailGetResponse } from '@/types/ootd';
+import { useUserStore } from '@/store/useUserStore';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
+import Image from 'next/image';
+import { formatDate } from '@/constants/dateFotmat';
+import LocationIcon from '../../../public/icon_pin.png';
 
 interface OotdDetailProps {
   id: number;
@@ -15,8 +22,10 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
     () => fetchOotdPostDetail(id)
   );
 
+  const userInfo = useUserStore((state) => state.userInfo);
+
   if (isLoading) {
-    return null;
+    return <div>Loading...</div>;
   }
 
   if (error) {
@@ -29,34 +38,67 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
 
   const ootdItem = data.result;
 
+  const settings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+  };
+
   return (
-    <div className="container">
-      <div className="w-[30rem] h-[40rem] shadow-xl rounded-[1rem]">
-        <div className="flex flex-col">
-          <img
-            className="rounded-[1rem]"
-            src={ootdItem.post.images[0].accessUri}
-            alt=""
-          />
-          <div className="p-[1rem] flex">
-            {ootdItem.post.images.length > 0 && (
-              <img src={ootdItem.post.images[0].accessUri} width={40} height={40} alt="" />
-            )}
-            <div className="flex flex-col justify-center pl-[1rem] text-[1.4rem]">
-              <span className="font-bold">{ootdItem.post.nickName}</span>
-              <span className="font-medium">{ootdItem.post.createDateTime}</span>
+    <div className="container mx-auto p-4">
+      <div className="w-full max-w-3xl mx-auto">
+        <div className="p-4 flex items-center justify-between">
+          <div className="flex items-center">
+            <Image
+              className="rounded-full"
+              width={48}
+              height={48}
+              src={userInfo.profileImageUrl}
+              alt="User Profile"
+            />
+            <div className="ml-4">
+              <span className="block font-bold text-xl ml-[2px]">{ootdItem.post.nickName}</span>
+              <div className="flex items-center gap-2">
+                <Image
+                  width={16}
+                  height={16}
+                  src={LocationIcon}
+                  alt="location"
+                />
+                <span className="block text-gray-600">{ootdItem.post.location} | {ootdItem.ootd.weatherStatus}, {ootdItem.ootd.weatherTemp}°C</span>
+              </div>
             </div>
           </div>
-          <div className="px-[1rem]">
-            <h1 className="font-medium text-[2rem]">{ootdItem.post.title}</h1>
-            <p className="font-normal text-[1.2rem]">{ootdItem.post.body}</p>
+          <div className="flex items-center space-x-2">
+            <button className="bg-red-500 text-white px-4 py-2 rounded-full">팔로우</button>
+            <i className="far fa-bookmark text-xl"></i>
+            <i className="fas fa-ellipsis-h text-xl"></i>
           </div>
-          <div className="px-[1rem] mt-[1rem]">
+        </div>
+        <div className="relative">
+          <Slider {...settings}>
+            {ootdItem.post.images.map((image, index) => (
+              <div key={index}>
+                <img className="w-full rounded-t-lg" src={image.accessUri} alt={`OOTD Image ${index + 1}`} />
+              </div>
+            ))}
+          </Slider>
+        </div>
+        <div className='py-[50px] text-[20px]'>
+          {ootdItem.post.body}
+        </div>
+        <div className="flex pt-4">
+          <div className="flex flex-wrap gap-2">
             {ootdItem.post.tags.map((tag: string, index: number) => (
-              <span key={index} className="px-2 py-1 bg-gray-200 text-gray-700 rounded-md mr-2">
+              <span key={index} className="px-4 py-2 bg-neutral-100 rounded-2xl justify-center items-center gap-2.5 inline-flex text-neutral-400 text-[13px] font-normal font-['Pretendard']">
                 {tag}
               </span>
             ))}
+          </div>
+          <div className="ml-auto text-neutral-400 text-base font-normal font-['Pretendard'] my-auto">
+            {formatDate(ootdItem.post.createDateTime)}
           </div>
         </div>
       </div>

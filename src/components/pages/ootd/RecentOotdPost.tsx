@@ -86,7 +86,7 @@ const RecentOotdPost: React.FC = () => {
       </div>
       <div style={gridContainerStyle}>
         {ootdList.map((item) => (
-          <div key={item.ootd.id} className='flex flex-col w-full' onClick={() => handleOotdItemClick(item.ootd.id)}>
+          <div key={item.post.id} className='flex flex-col w-full' onClick={() => handleOotdItemClick(item.post.id)}>
             {item.post.images.length > 0 && (
               <img className='flex rounded-[0.8rem]' src={item.post.images[0].accessUri} alt='OOTD' />
             )}
