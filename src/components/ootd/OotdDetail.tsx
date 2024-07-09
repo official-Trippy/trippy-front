@@ -56,7 +56,7 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
               className="rounded-full"
               width={48}
               height={48}
-              src={userInfo.profileImageUrl}
+              src={ootdItem.post.images[0].accessUri}
               alt="User Profile"
             />
             <div className="ml-4">
