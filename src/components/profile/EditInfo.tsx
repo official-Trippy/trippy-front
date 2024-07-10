@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { swear_words_arr } from "@/constants/wearWordsArr";
 import useUserInfo from "@/hooks/useUserInfo";
@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import DefaultProfileImg from "../../../public/DefaultProfile.svg";
 import { useUserStore } from "@/store/useUserStore";
+import { blogInterests } from "@/constants/blogPreference";
 
 const EditInfo = () => {
   const { userInfo } = useUserStore();
@@ -25,6 +26,8 @@ const EditInfo = () => {
   const [blogIntroduce, setBlogIntroduce] = useState<string>("");
   const [blogIntroduceError, setBlogIntroduceError] = useState<string>("");
   const [imageUploaded, setImageUploaded] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false); 
+  const [selectedInterests, setSelectedInterests] = useState<string[]>(userInfo?.interestedTypes || []);
 
   const { setUserInfo } = useUserInfo();
   const router = useRouter();
@@ -148,26 +151,40 @@ const EditInfo = () => {
     setBlogIntroduceError("");
   };
 
+  const handleInterestClick = (interest: string) => {
+    setSelectedInterests((prevSelected) => {
+      if (prevSelected.includes(interest)) {
+        return prevSelected.filter((item) => item !== interest);
+      } else if (prevSelected.length < 5) {
+        return [...prevSelected, interest];
+      } else {
+        return prevSelected;
+      }
+    });
+  };
+
   const handleSubmit = async () => {
     if (!nickNameError.includes("사용 가능") || !blogNameError.includes("사용 가능") || !imageUploaded) {
       return;
     }
-    // try {
-    //   const data = {
-    //     profileImage: profileImage,
-    //     nickName: nickName,
-    //     blogName: blogName,
-    //     blogIntroduce: blogIntroduce,
-    //   };
 
-    //   console.log(data);
-    //   setUserInfo(data);
-    //   const response = await signupCommon(data);
-    //   console.log("Signup success:", response);
-    //   router.push("/blogRegister2");
-    // } catch (error) {
-    //   console.error("Error signing up:", error);
-    // }
+    try {
+      const data = {
+        profileImage: profileImage,
+        nickName: nickName,
+        blogName: blogName,
+        blogIntroduce: blogIntroduce,
+        interestedTypes: selectedInterests
+      };
+
+      console.log(data);
+      setUserInfo(data);
+      const response = await signupCommon(data);
+      console.log("Signup success:", response);
+      router.push("/blogRegister2");
+    } catch (error) {
+      console.error("Error signing up:", error);
+    }
   };
 
   return (
@@ -232,18 +249,13 @@ const EditInfo = () => {
                 className="w-full px-4 py-2 mt-[2.5rem] mb-2 h-[6rem] rounded-xl border border-gray-300 focus:border-[#FB3463] focus:outline-none"
                 style={{ background: "var(--4, #F5F5F5)", fontSize: "1.5rem" }}
               />
-              <div className="h-[1.7rem] mt-[1.2rem]">
-                {nickNameError && (
-                  <p
-                    className={`text-${
-                      nickNameError.includes("사용 가능") ? "green" : "red"
-                    }-500`}
-                  >
-                    {nickNameError}
-                  </p>
-                )}
-              </div>
+              {nickNameError && (
+                <p className={`mt-2 ${nickNameError.includes("사용 가능한 닉네임입니다.") ? "text-green-500" : "text-red-500"}`}>
+                  {nickNameError}
+                </p>
+              )}
             </div>
+
             <div className="mt-[6rem]">
               <label htmlFor="blogName" className="sign-up-info block">
                 블로그 이름
@@ -256,18 +268,13 @@ const EditInfo = () => {
                 className="w-full px-4 py-2 mt-[2.5rem] mb-2 h-[6rem] rounded-xl border border-gray-300 focus:border-[#FB3463] focus:outline-none"
                 style={{ background: "var(--4, #F5F5F5)", fontSize: "1.5rem" }}
               />
-              <div className="h-[1.7rem] mt-[1.2rem]">
-                {blogNameError && (
-                  <p
-                    className={`text-${
-                      blogNameError.includes("사용 가능") ? "green" : "red"
-                    }-500`}
-                  >
-                    {blogNameError}
-                  </p>
-                )}
-              </div>
+              {blogNameError && (
+                <p className={`mt-2 ${blogNameError.includes("사용 가능한 블로그 이름입니다.") ? "text-green-500" : "text-red-500"}`}>
+                  {blogNameError}
+                </p>
+              )}
             </div>
+
             <div className="mt-[6rem]">
               <label htmlFor="blogIntroduce" className="sign-up-info block">
                 한 줄 소개(선택)
@@ -280,26 +287,32 @@ const EditInfo = () => {
                 className="w-full px-4 py-2 mt-[2.5rem] mb-2 h-[6rem] rounded-xl border border-gray-300 focus:border-[#FB3463] focus:outline-none"
                 style={{ background: "var(--4, #F5F5F5)", fontSize: "1.5rem" }}
               />
-              <div className="h-[1.7rem] mt-[1.2rem]">
-                {blogIntroduceError && (
-                  <p className="text-red-500">{blogIntroduceError}</p>
-                )}
-              </div>
+              {blogIntroduceError && (
+                <p className="mt-2 text-red-500">{blogIntroduceError}</p>
+              )}
             </div>
+
             <div className="mt-[6rem]">
-              <label htmlFor="blogIntroduce" className="sign-up-info block">
-                관심분야
+              <label htmlFor="interests" className="sign-up-info block">
+                관심 분야
               </label>
-              <div className="w-full py-2 mt-[2.5rem] mb-2 h-[6rem]">
-                {userInfo?.interestedTypes && userInfo.interestedTypes.length > 0 && (
-                  <div className="flex gap-2">
-                    {userInfo.interestedTypes.map((interest: string, index: number) => (
-                      <span key={index} className="favorite-btn-edit text-neutral-500 text-2xl font-normal font-Pretendard">
-                        {interest}
-                      </span>
-                    ))}
+              <div className="mt-[2.5rem] flex flex-wrap">
+                {selectedInterests.map((interest, index) => (
+                  <div
+                    key={index}
+                    className="flex items-center px-4 py-2 mr-2 mb-2 rounded-full bg-[#FB3463] text-white cursor-pointer"
+                    onClick={() => handleInterestClick(interest)}
+                  >
+                    {interest}
+                    <span className="ml-2">x</span>
                   </div>
-                )}
+                ))}
+                <button
+                  onClick={() => setIsModalOpen(true)}
+                  className="px-4 py-2 rounded-full border border-[#FB3463] text-[#FB3463] cursor-pointer"
+                >
+                  + 관심 분야 추가
+                </button>
               </div>
             </div>
           </div>
@@ -326,6 +339,37 @@ const EditInfo = () => {
           </div>
         </div>
       </div>
+
+      {isModalOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-8 rounded-lg w-[80%] max-w-[600px]">
+            <h2 className="text-2xl font-bold mb-4">관심 분야 선택</h2>
+            <div className="flex flex-wrap">
+              {blogInterests.map((interest: string, index: number) => (
+                <div
+                  key={index}
+                  className={`m-2 p-2 rounded-full cursor-pointer ${
+                    selectedInterests.includes(interest)
+                      ? "bg-[#FB3463] text-white"
+                      : "bg-gray-200"
+                  }`}
+                  onClick={() => handleInterestClick(interest)}
+                >
+                  {interest}
+                </div>
+              ))}
+            </div>
+            <div className="mt-4 flex justify-end">
+              <button
+                onClick={() => setIsModalOpen(false)}
+                className="px-4 py-2 bg-gray-500 text-white rounded-lg"
+              >
+                닫기
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

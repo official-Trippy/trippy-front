@@ -13,5 +13,6 @@ export const createComment = async (postId: number, content: string) => {
 
 export const fetchComments = async (postId: number) => {
   const response = await axios.get(`${backendUrl}/api/comments?postId=${postId}`);
-  return response.data.result;
+  console.log(response);
+  return response.data;
 };
