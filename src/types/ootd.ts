@@ -109,6 +109,12 @@ export interface PostRequest {
     code: string;
     message: string;
     result: {
+      member: {
+        memberId: string;
+        nickName: string;
+        profileUrl: string;
+        blogName: string;
+      };
       ootd: {
         id: number;
         area: string;

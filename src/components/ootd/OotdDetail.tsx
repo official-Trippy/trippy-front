@@ -26,7 +26,7 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
   const userInfo = useUserStore((state) => state.userInfo);
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return null;
   }
 
   if (error) {
@@ -56,11 +56,11 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
               className="rounded-full"
               width={48}
               height={48}
-              src={ootdItem.post.images[0].accessUri}
+              src={ootdItem.member.profileUrl}
               alt="User Profile"
             />
             <div className="ml-4">
-              <span className="block font-bold text-xl ml-[2px]">{ootdItem.post.nickName}</span>
+              <span className="block font-bold text-xl ml-[2px]">{ootdItem.member.nickName}</span>
               <div className="flex items-center gap-2">
                 <Image
                   width={16}
