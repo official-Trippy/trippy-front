@@ -75,7 +75,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
       </div>
       <div className="mt-4">
         {isLoading ? (
-          <div>Loading comments...</div>
+          <div></div>
         ) : (
           comments?.map((comment: { id: React.Key | null | undefined; profileImageUrl: string | StaticImport; memberId: string | number | bigint | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | Promise<React.AwaitedReactNode> | null | undefined; createDateTime: any; content: string | number | bigint | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode> | null | undefined; }) => (
             <div key={comment.id} className="mb-4">
