@@ -93,8 +93,8 @@ const RecentOotdPost: React.FC = () => {
             <div className='px-[1.6rem] py-[2rem]'>
               <div className='flex'>
                 <div className='flex w-full h-full text-[1.4rem] font-normal items-center'>
-                  <Image src={item.post.images[0].accessUri} width={24} height={24} alt='image' />
-                  <span className=' text-[#6B6B6B]'>{item.post.nickName}</span>
+                  <Image src={item.member.profileUrl} width={24} height={24} alt='image' />
+                  <span className=' text-[#6B6B6B]'>{item.member.nickName}</span>
                   <span className='flex ml-auto'>{formatDate(item.post.createDateTime)}</span>
                 </div>
               </div>
