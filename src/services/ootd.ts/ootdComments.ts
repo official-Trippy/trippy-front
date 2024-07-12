@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { Comment } from '@/types/ootd';
 
 const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
@@ -11,8 +12,13 @@ export const createComment = async (postId: number, content: string) => {
   return response.data.result;
 };
 
-export const fetchComments = async (postId: number) => {
-  const response = await axios.get(`${backendUrl}/api/comments?postId=${postId}`);
-  console.log(response);
+export interface FetchCommentsResponse {
+  result: Record<number, Comment>;
+}
+
+export const fetchComments = async (postId: number): Promise<FetchCommentsResponse> => {
+  const response = await axios.get(`${backendUrl}/api/comment`, {
+    params: { postId }
+  });
   return response.data;
 };

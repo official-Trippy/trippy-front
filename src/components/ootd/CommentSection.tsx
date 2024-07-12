@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { useQuery, useMutation, useQueryClient } from 'react-query';
+import { useQuery, useMutation } from 'react-query';
 import Image from 'next/image';
 import { useUserStore } from '@/store/useUserStore';
 import { formatDate } from '@/constants/dateFotmat';
-import { createComment, fetchComments } from '@/services/ootd.ts/ootdComments';
+import { FetchCommentsResponse, createComment, fetchComments } from '@/services/ootd.ts/ootdComments';
 import HeartIcon from '../../../public/icon_heart.svg'; 
 import CommentIcon from '../../../public/icon_comment.svg'; 
-import { StaticImport } from 'next/dist/shared/lib/get-img-props';
+import { Comment } from '@/types/ootd';
 
 interface CommentSectionProps {
   postId: number;
@@ -19,13 +19,13 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
   const [newComment, setNewComment] = useState('');
   const [likeCount] = useState(initialLikeCount);
   const [commentCount, setCommentCount] = useState(initialCommentCount);
-  const queryClient = useQueryClient();
 
-  const { data: comments, refetch, isLoading } = useQuery(
+  const { data: commentData, refetch, isLoading } = useQuery<FetchCommentsResponse>(
     ['comments', postId],
-    () => fetchComments(postId),
-    { enabled: false } 
+    () => fetchComments(postId)
   );
+
+  const comments: Comment[] = commentData?.result ? Object.values(commentData.result) : [];
 
   const mutation = useMutation(
     (content: string) => createComment(postId, content),
@@ -39,7 +39,6 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
   );
 
   const handleCommentSubmit = () => {
-    console.log(postId)
     if (newComment.trim()) {
       mutation.mutate(newComment);
     }
@@ -49,46 +48,54 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
     <div className="comment-section">
       <div className="flex items-center space-x-4">
         <button>
-          <Image src={HeartIcon} alt="Like" width={24} height={24} />
+          <Image src={HeartIcon} alt="좋아요" width={24} height={24} />
           <span>{likeCount}</span>
         </button>
         <button>
-          <Image src={CommentIcon} alt="Comment" width={24} height={24} />
+          <Image src={CommentIcon} alt="댓글" width={24} height={24} />
           <span>{commentCount}</span>
         </button>
       </div>
       <div className="flex items-center mt-4">
-        <Image src={userInfo.profileImageUrl} alt="User" width={32} height={32} className="rounded-full" />
+        {userInfo.profileImageUrl && (
+          <Image src={userInfo.profileImageUrl} alt="사용자" width={32} height={32} className="rounded-full" />
+        )}
         <input
           type="text"
           className="ml-4 p-2 border rounded flex-1"
           value={newComment}
           onChange={(e) => setNewComment(e.target.value)}
-          placeholder="Add a comment..."
+          placeholder="댓글을 입력해주세요..."
         />
         <button
           onClick={handleCommentSubmit}
           className="ml-2 p-2 bg-blue-500 text-white rounded"
         >
-          Submit
+          등록
         </button>
       </div>
       <div className="mt-4">
         {isLoading ? (
-          <div></div>
+          <div>로딩 중...</div>
         ) : (
-          comments?.map((comment: { id: React.Key | null | undefined; profileImageUrl: string | StaticImport; memberId: string | number | bigint | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | Promise<React.AwaitedReactNode> | null | undefined; createDateTime: any; content: string | number | bigint | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode> | null | undefined; }) => (
-            <div key={comment.id} className="mb-4">
-              <div className="flex items-center">
-                <Image src={comment.profileImageUrl} alt='user profile' width={32} height={32} className="rounded-full" />
-                <div className="ml-4">
-                  <div className="font-bold">{comment.memberId}</div>
-                  <div className="text-gray-600">{formatDate(comment.createDateTime)}</div>
-                  <div>{comment.content}</div>
+          comments.length === 0 ? (
+            <div>댓글이 없습니다.</div>
+          ) : (
+            comments.map((comment: Comment) => (
+              <div key={comment.id} className="mb-4">
+                <div className="flex items-center">
+                  {comment.profileImageUrl && (
+                    <Image src={comment.profileImageUrl} alt="사용자 프로필" width={32} height={32} className="rounded-full" />
+                  )}
+                  <div className="ml-4">
+                    <div className="font-bold">{comment.memberId}</div>
+                    <div className="text-gray-600">{formatDate(comment.createDateTime)}</div>
+                    <div>{comment.content}</div>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))
+            ))
+          )
         )}
       </div>
     </div>
