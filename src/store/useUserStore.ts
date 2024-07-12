@@ -5,6 +5,7 @@ interface UserState {
   userInfo: any;
   loading: boolean;
   fetchUserInfo: () => Promise<void>;
+  updateUserInfo: (newUserInfo: any) => void; 
 }
 
 export const useUserStore = create<UserState>((set) => ({
@@ -23,4 +24,10 @@ export const useUserStore = create<UserState>((set) => ({
       set({ loading: false });
     }
   },
+  updateUserInfo: (newUserInfo) => set((state) => ({
+    userInfo: {
+      ...state.userInfo, 
+      ...newUserInfo,   
+    },
+  })),
 }));

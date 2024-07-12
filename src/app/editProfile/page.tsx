@@ -18,9 +18,6 @@ const EditProfile = () => {
   return (
     <>
       <Header />
-      <div className="relative w-full h-[300px]">
-        <Image src={backgroundImg} alt="Background" layout="fill" objectFit="cover" />
-      </div>
       <EditInfo/>
     </>
   );
