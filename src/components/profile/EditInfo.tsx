@@ -179,7 +179,8 @@ const EditInfo = () => {
       }
     });
   };
-
+  
+  
   const updateUserInfoMutation = useMutation(updateMemberInfo, {
     onSuccess: () => {
       queryClient.invalidateQueries('userInfo');
@@ -209,6 +210,7 @@ const EditInfo = () => {
     updateUserInfoMutation.mutate(data);
     updateUserInfo(data);
   };
+  
   
   return (
     <><div className="relative w-full h-[300px]">
@@ -446,9 +448,11 @@ const EditInfo = () => {
                 {blogInterests.map((interest: string, index: number) => (
                   <div
                     key={index}
-                    className={`m-2 p-2 rounded-full cursor-pointer ${selectedInterests.includes(interest)
+                    className={`m-2 p-2 rounded-full cursor-pointer ${
+                      selectedInterests.includes(interest)
                         ? "bg-[#FB3463] text-white"
-                        : "bg-gray-200"}`}
+                        : "bg-gray-200"
+                    }`}
                     onClick={() => handleInterestClick(interest)}
                   >
                     {interest}
@@ -457,7 +461,9 @@ const EditInfo = () => {
               </div>
               <div className="mt-4 flex justify-end">
                 <button
-                  onClick={() => setIsModalOpen(false)}
+                  onClick={() => {
+                    setIsModalOpen(false);
+                  }}
                   className="px-4 py-2 bg-gray-500 text-white rounded-lg"
                 >
                   닫기
