@@ -4,8 +4,8 @@ import Image from 'next/image';
 import { useUserStore } from '@/store/useUserStore';
 import { formatDate } from '@/constants/dateFotmat';
 import { FetchCommentsResponse, createComment, fetchComments } from '@/services/ootd.ts/ootdComments';
-import HeartIcon from '../../../public/icon_heart.svg'; 
-import CommentIcon from '../../../public/icon_comment.svg'; 
+import HeartIcon from '../../../public/icon_heart.svg';
+import CommentIcon from '../../../public/icon_comment.svg';
 import { Comment } from '@/types/ootd';
 
 interface CommentSectionProps {
@@ -25,7 +25,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
     () => fetchComments(postId)
   );
 
-  const comments: Comment[] = commentData?.result ? Object.values(commentData.result) : [];
+  const comments: Comment[] = commentData ? Object.values(commentData.result) : [];
 
   const mutation = useMutation(
     (content: string) => createComment(postId, content),
@@ -57,7 +57,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
         </button>
       </div>
       <div className="flex items-center mt-4">
-        {userInfo.profileImageUrl && (
+        {userInfo?.profileImageUrl && (
           <Image src={userInfo.profileImageUrl} alt="사용자" width={32} height={32} className="rounded-full" />
         )}
         <input
@@ -84,11 +84,11 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
             comments.map((comment: Comment) => (
               <div key={comment.id} className="mb-4">
                 <div className="flex items-center">
-                  {comment.profileImageUrl && (
-                    <Image src={comment.profileImageUrl} alt="사용자 프로필" width={32} height={32} className="rounded-full" />
+                  {comment.member?.profileUrl && (
+                    <Image src={comment.member.profileUrl} alt="사용자 프로필" width={32} height={32} className="rounded-full" />
                   )}
                   <div className="ml-4">
-                    <div className="font-bold">{comment.memberId}</div>
+                    <div className="font-bold">{comment.member?.nickName}</div>
                     <div className="text-gray-600">{formatDate(comment.createDateTime)}</div>
                     <div>{comment.content}</div>
                   </div>

@@ -144,14 +144,31 @@ export interface PostRequest {
     };
   };
   
+  // export interface Comment {
+  //   id: number;
+  //   parentId: number;
+  //   memberId: string;
+  //   profileImageUrl: string;
+  //   content: string;
+  //   status: string;
+  //   depth: number;
+  //   createDateTime: string;
+  //   children: Comment[];
+  // };
+
   export interface Comment {
     id: number;
     parentId: number;
-    memberId: string;
-    profileImageUrl: string;
     content: string;
     status: string;
     depth: number;
     createDateTime: string;
+    member: {
+      memberId: string;
+      nickName: string;
+      profileUrl: string;
+    };
     children: Comment[];
-  };
+  }
+  
+  
