@@ -61,3 +61,26 @@ export interface RoleResponse {
     role: string;
   };
 }
+
+export interface UpdateMemberInfoRequest {
+  blogImage?: {
+    accessUri?: string;
+    authenticateId?: string;
+    imgUrl?: string;
+  };
+  profileImage?: {
+    accessUri?: string;
+    authenticateId?: string;
+    imgUrl?: string;
+  };
+  nickName?: string;
+  blogName?: string;
+  blogIntroduce?: string;
+  koreanInterestedTypes?: string[];
+  likeAlert?: boolean;
+  commentAlert?: boolean;
+  ticketScope?: string;
+  ootdScope?: "public" | "private" | "protected";
+  badgeScope?: string;
+  followScope?: string;
+}

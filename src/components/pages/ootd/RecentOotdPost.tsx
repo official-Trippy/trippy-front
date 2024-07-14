@@ -86,15 +86,15 @@ const RecentOotdPost: React.FC = () => {
       </div>
       <div style={gridContainerStyle}>
         {ootdList.map((item) => (
-          <div key={item.ootd.id} className='flex flex-col w-full' onClick={() => handleOotdItemClick(item.ootd.id)}>
+          <div key={item.post.id} className='flex flex-col w-full' onClick={() => handleOotdItemClick(item.post.id)}>
             {item.post.images.length > 0 && (
               <img className='flex rounded-[0.8rem]' src={item.post.images[0].accessUri} alt='OOTD' />
             )}
             <div className='px-[1.6rem] py-[2rem]'>
               <div className='flex'>
                 <div className='flex w-full h-full text-[1.4rem] font-normal items-center'>
-                  <Image src={item.post.images[0].accessUri} width={24} height={24} alt='image' />
-                  <span className=' text-[#6B6B6B]'>{item.post.nickName}</span>
+                  <Image src={item.member.profileUrl} width={24} height={24} alt='image' />
+                  <span className=' text-[#6B6B6B]'>{item.member.nickName}</span>
                   <span className='flex ml-auto'>{formatDate(item.post.createDateTime)}</span>
                 </div>
               </div>

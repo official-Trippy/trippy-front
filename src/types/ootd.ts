@@ -68,8 +68,12 @@ export interface PostRequest {
     message: string;
     result: {
       map(arg0: (item: any) => import("react").JSX.Element): import("react").ReactNode;
-      totalCount: number;
-      ootdList: {
+      member: {
+        memberId: string;
+        nickName: string;
+        profileUrl: string;
+        blogName: string;
+      };
         ootd: {
           id: number;
           area: string;
@@ -98,7 +102,6 @@ export interface PostRequest {
         };
         isSuccess: boolean;
       }[];
-    };
   }
 
   export interface OotdDetailGetResponse {
@@ -106,6 +109,12 @@ export interface PostRequest {
     code: string;
     message: string;
     result: {
+      member: {
+        memberId: string;
+        nickName: string;
+        profileUrl: string;
+        blogName: string;
+      };
       ootd: {
         id: number;
         area: string;
@@ -133,5 +142,33 @@ export interface PostRequest {
         commentCount: number;
       };
     };
+  };
+  
+  // export interface Comment {
+  //   id: number;
+  //   parentId: number;
+  //   memberId: string;
+  //   profileImageUrl: string;
+  //   content: string;
+  //   status: string;
+  //   depth: number;
+  //   createDateTime: string;
+  //   children: Comment[];
+  // };
+
+  export interface Comment {
+    id: number;
+    parentId: number;
+    content: string;
+    status: string;
+    depth: number;
+    createDateTime: string;
+    member: {
+      memberId: string;
+      nickName: string;
+      profileUrl: string;
+    };
+    children: Comment[];
   }
+  
   

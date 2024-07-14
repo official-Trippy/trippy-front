@@ -51,7 +51,7 @@ export const fetchOotdPosts = async (page?: number, size?: number): Promise<Ootd
 export const fetchOotdPostDetail = async (id: number): Promise<OotdDetailGetResponse> => {
   try {
     const response = await axios.get<OotdDetailGetResponse>(
-      `${backendUrl}/api/ootd/${id}`
+      `${backendUrl}/api/ootd/info/${id}`
     );
     console.log(response.data);
     return response.data; 
