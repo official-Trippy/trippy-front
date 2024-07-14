@@ -33,12 +33,50 @@ export async function doFollow(memberId: string) {
     );
     const setUserInfo = useUserStore.getState().setUserInfo;
 
-    const updatedFollowInfo = response.data;
+    const updatedFollowInfo = response.data.result;
 
-    setUserInfo(updatedFollowInfo);
+    const userInfo = useUserStore.getState().userInfo;
+
+    // Ensure userInfo and following are not null
+    if (userInfo) {
+      setUserInfo({
+        ...userInfo,
+        following: [...(userInfo.following || []), updatedFollowInfo],
+      });
+    } else {
+      // Handle case where userInfo is null
+      setUserInfo({
+        following: [updatedFollowInfo],
+      });
+    }
 
     return response.data;
   } catch (error) {
     throw new Error(`Error during doFollow: ${error}`);
+  }
+}
+
+export async function unfollow(targetMemberId: string) {
+  try {
+    const response = await axios.delete(
+      `${backendUrl}/api/member/follow?type=unfollow&targetMemberId=${targetMemberId}`
+    );
+
+    const setUserInfo = useUserStore.getState().setUserInfo;
+    const userInfo = useUserStore.getState().userInfo;
+
+    // Ensure userInfo and following are not null
+    if (userInfo) {
+      setUserInfo({
+        ...userInfo,
+        following: userInfo.following.filter(
+          (following) => following.memberId !== targetMemberId
+        ),
+      });
+    }
+
+    return response.data;
+  } catch (error) {
+    throw new Error(`Error during unfollow: ${error}`);
   }
 }
