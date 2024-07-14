@@ -23,3 +23,14 @@ export interface FetchCommentsResponse {
     console.log(response.data);
     return response.data;
   };
+
+  export const createReply = async (postId: number, content: string, parentId: number) => {
+    const response = await axios.post(`${backendUrl}/api/comment`, {
+      postId,
+      content,
+      status: 'PUBLIC',
+      parentId
+    });
+    return response.data;
+  };
+  

@@ -49,7 +49,7 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
   };
 
   return (
-    <div className="container mx-auto p-4">
+    <><div className="container mx-auto p-4">
       <div className="w-full max-w-3xl mx-auto">
         <div className="py-4 flex items-center justify-between">
           <div className="flex items-center">
@@ -58,8 +58,7 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
               width={48}
               height={48}
               src={ootdItem.member.profileUrl}
-              alt="User Profile"
-            />
+              alt="User Profile" />
             <div className="ml-4">
               <span className="block font-bold text-xl ml-[2px]">{ootdItem.member.nickName}</span>
               <div className="flex items-center gap-2">
@@ -67,8 +66,7 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
                   width={16}
                   height={16}
                   src={LocationIcon}
-                  alt="location"
-                />
+                  alt="location" />
                 <span className="block text-gray-600">{ootdItem.post.location} | {ootdItem.ootd.weatherStatus}, {ootdItem.ootd.weatherTemp}°C</span>
               </div>
             </div>
@@ -103,13 +101,17 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
             {formatDate(ootdItem.post.createDateTime)}
           </div>
         </div>
+      </div>
+    </div>
+      <div className='w-full'>
+      <div className='w-full mx-auto'>
         <CommentSection
           postId={id}
           initialLikeCount={ootdItem.post.likeCount}
-          initialCommentCount={ootdItem.post.commentCount}
-        />
+          initialCommentCount={ootdItem.post.commentCount} />
       </div>
-    </div>
+      </div>
+      </>
   );
 };
 
