@@ -14,6 +14,13 @@ import car1 from '@/dummy/car1.svg'
 import Image from 'next/image'
 import searchicon from '@/dummy/search.svg'
 import uploadImages from "@/dummy/uploadfile.svg"
+import date from "@/dummy/date.svg"
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import postBoard from '@/services/board/post/postBoard'
+import { uploadImage } from '@/services/blog'
+import { UploadedImage } from '@/types/ootd'
+import { useRouter } from 'next/navigation'
 
 
 function PostWrite() {
@@ -32,7 +39,50 @@ function PostWrite() {
         { imgsrc: bicycle1 },
         { imgsrc: car1 },
     ]);
-    const [imgIdx, setImgIdx] = useState(0);
+    const [passengerCount, setPassengerCount] = useState(0);
+    const [startDate, setStartDate] = useState<Date | null>(null);
+    const [endDate, setEndDate] = useState<Date | null>(null);
+    const [dateOpen, setDateOpen] = useState(false);
+    const [title, setTitle] = useState('');
+    const [body, setBody] = useState('');
+    const [images, setImages] = useState<UploadedImage[]>([]);
+    const [isImages, setIsImages] = useState<UploadedImage[]>([]);
+    const router = useRouter();
+
+    const formatDate = (date: Date | null) => {
+        if (!date) return '';
+        return date.toLocaleDateString('ko-KR', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+        });
+    };
+
+    function formatDates(date: any) {
+        const year = date?.getFullYear();
+        const month = String(date?.getMonth() + 1).padStart(2, '0');
+        const day = String(date?.getDate()).padStart(2, '0');
+
+        return `${year}-${month}-${day}`;
+    }
+
+    const formatDateRange = () => {
+        if (!startDate || !endDate) return '';
+        return `${formatDate(startDate)} ~ ${formatDate(endDate)}`;
+    };
+
+
+
+
+    const handleIncrease = () => {
+        setPassengerCount(passengerCount + 1);
+    };
+
+    const handleDecrease = () => {
+        if (passengerCount > 1) {
+            setPassengerCount(passengerCount - 1);
+        }
+    };
 
 
     const handleButtonClick = (color: any) => {
@@ -41,10 +91,7 @@ function PostWrite() {
 
 
     const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
-        if (e.target.files && e.target.files.length > 0) {
-            const file = e.target.files[0];
-            setThumbnailPreview(URL.createObjectURL(file));
-        }
+
     };
 
     const selectTransport = (imgSrc: any) => {
@@ -72,7 +119,58 @@ function PostWrite() {
         });
     };
 
-    console.log(isImageIdx)
+    const handleImageUpload = async (event: ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+        if (event.target.files && event.target.files.length > 0) {
+            const file = event.target.files[0];
+            setThumbnailPreview(URL.createObjectURL(file));
+        }
+        if (!file) return;
+
+        try {
+            const uploadedImage = await uploadImage(file);
+            console.log(uploadedImage.result);
+            setImages([...images, uploadedImage.result]);
+            console.log(images);
+            setIsImages([...images, uploadedImage.result]);
+        } catch (error) {
+            console.error('Error uploading image:', error);
+        }
+    };
+
+    const displayImages = images.map(image => image.accessUri);
+
+    console.log(displayImages)
+    const addPost = async () => {
+        const postRequest = {
+            title: title,
+            body: body,
+            postType: 'POST',
+            location: '24.12342,12.12344',
+            images: images,
+            tags: ['서울여행', '효도여행']
+        }
+        const ticketRequest = {
+            departure: '부산',
+            destination: '서울',
+            image: images[0],
+            memberNum: Number(passengerCount),
+            startDate: formatDates(startDate),
+            endDate: formatDates(endDate),
+            ticketColor: 'Red',
+            transport: 'Airplane'
+        }
+        try {
+            console.log(postRequest, ticketRequest)
+            await postBoard(postRequest, ticketRequest);
+            router.push('/');
+        } catch (e) {
+
+        }
+    }
+
+    console.log(images)
+
     // URL 객체 해제
     useEffect(() => {
         return () => {
@@ -81,7 +179,7 @@ function PostWrite() {
             }
         };
     }, [thumbnailPreview]);
-
+    console.log(formatDates(startDate), formatDates(endDate))
     return (
         <div>
             <Header />
@@ -111,9 +209,9 @@ function PostWrite() {
                         onClick={() => handleButtonClick('#FB3463')}
                         className='w-[2.4rem] h-[2.4rem] bg-[#FB3463] rounded-full ml-[1rem]'
                     ></button>
-                    <button className='ml-auto flex bg-[#FB3463] text-white text-[1.6rem] font-semibold rounded-[1rem] px-[2.5rem] py-[0.5rem]'>올리기</button>
+                    <button className='ml-auto flex bg-[#FB3463] text-white text-[1.6rem] font-semibold rounded-[1rem] px-[2.5rem] py-[0.5rem]' onClick={addPost}>올리기</button>
                 </div>
-                <div className='w-[95%] h-[32rem] border border-[#D9D9D9] rounded-[1rem] flex mx-auto mt-[2rem]'>
+                <div className='w-full h-[32rem] border border-[#D9D9D9] rounded-[1rem] flex mx-auto mt-[2rem]'>
                     <div className={`w-[15.4rem] h-full bg-[${bgColor}] rounded-l-[1rem]`}></div>
                     <div className='w-full mt-[5rem] relative'>
                         <div className='flex justify-center'>
@@ -162,10 +260,41 @@ function PostWrite() {
                             <span className='w-[25rem]'>DATE</span>
                             <span className='w-[8rem]'>GROUP</span>
                         </div>
-                        <div className={`flex ml-[7rem] text-[1.4rem] font-extrabold text-[#6B6B6B]`}>
-                            <span className='w-[16rem]'>USERID</span>
-                            <span className='w-[25rem]'>2024. 07. 01~2024. 07. 03</span>
-                            <span className='w-[8rem]'>4</span>
+                        <div className={`flex ml-[7rem] text-[1.4rem] font-extrabold text-[#6B6B6B] relative`}>
+                            <span className='w-[16rem] flex'>USERID</span>
+                            {dateOpen ? (
+                                <div className='w-[25rem]'>
+                                    <DatePicker
+                                        selected={startDate || undefined}
+                                        onChange={(dates) => {
+                                            const [start, end] = dates;
+                                            setStartDate(start);
+                                            setEndDate(end);
+                                            if (start && end) {
+                                                setDateOpen(false);
+                                            }
+                                        }}
+                                        startDate={startDate || undefined}
+                                        endDate={endDate || undefined}
+                                        selectsRange
+                                        inline
+                                        dateFormat="yyyy. MM. dd"
+                                    />
+                                </div>
+                            ) : (
+                                <div className='w-[25rem] flex items-center' onClick={() => setDateOpen(true)}>
+                                    <Image src={date} alt='' />
+                                    {startDate && endDate && (
+                                        <span>{formatDateRange()}</span>
+                                    )}
+                                </div>
+                            )}
+
+                            <div className='w-[8rem] flex text-[1.6rem]'>
+                                <button className='text-[#FB3463] flex text-[2rem]' onClick={handleDecrease}>-</button>
+                                <span className='mx-[1rem] mt-[0.5rem]'>{passengerCount}</span>
+                                <button className='text-[#FB3463] flex text-[2rem]' onClick={handleIncrease}>+</button>
+                            </div>
                         </div>
                     </div>
                     <div className={`w-[60rem] h-full bg-[${bgColor}] rounded-r-[1rem] flex ml-auto`}>
@@ -186,7 +315,7 @@ function PostWrite() {
                             )}
 
                         </label>
-                        <input className='hidden' id='input-file' type='file' accept='image/*' onChange={handleFileChange} />
+                        <input className='hidden' id='input-file' type='file' accept='image/*' onChange={handleImageUpload} />
                     </div>
                 </div>
                 <>
@@ -194,25 +323,24 @@ function PostWrite() {
                         <form
                             className="h-screen w-full"
                         >
-                            <div className="mx-2 my-4 p-2 md:mx-8 lg:mx-8">
-                                <div className="relative">
-                                    {/* <label htmlFor="name" className="text-[2.6rem] leading-7 text-gray-600">
-                                        제목{' '}
-                                        <span className=" text-[2rem] text-red-500">
-                                            {errors.title?.message}
-                                        </span>
-                                    </label> */}
+                            <div className="shadow-lg w-full h-screen">
+                                <div className='h-[13rem] border-b border-[#CFCFCF] flex'>
                                     <input
-                                        // {...register('title', {
-                                        //   required: '필수 입력 사항입니다.',
-                                        // })}
                                         type="text"
                                         id="title"
                                         name="title"
+                                        value={title}
+                                        onChange={(e) => setTitle(e.target.value)}
                                         placeholder="제목"
-                                        className="w-full rounded border border-gray-300 bg-gray-100 bg-opacity-50 py-1 px-3 text-[2rem] leading-8 text-gray-700 outline-none transition-colors duration-200 ease-in-out placeholder:text-[2rem] focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-200"
+                                        className="w-full outline-none text-[3.6rem] font-medium flex items-end px-[6rem]"
                                     />
                                 </div>
+                                <textarea
+                                    className='w-full h-screen outline-none text-[2rem] px-[6rem] py-[2.5rem]'
+                                    placeholder='여러분의 경험을 자유롭게 적어주세요.'
+                                    value={body}
+                                    onChange={(e) => setBody(e.target.value)}
+                                ></textarea>
                             </div>
 
                         </form>
