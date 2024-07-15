@@ -13,6 +13,9 @@ import Cookies from "js-cookie";
 
 const Header = () => {
   const [modalVisible, setModalVisible] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+
 
   const { userInfo, loading, fetchUserInfo } = useUserStore();
   const router = useRouter();
@@ -27,6 +30,10 @@ const Header = () => {
 
   const handleModalToggle = () => {
     setModalVisible(!modalVisible);
+  };
+
+  const handleDropdownToggle = () => {
+    setIsDropdownOpen(!isDropdownOpen);
   };
 
   return (
@@ -56,15 +63,31 @@ const Header = () => {
         {!loading && (
           <>
             {userInfo ? (
-              <div className="flex">
-                <Link href="/write">
-                  <button
-                    className="-[8.6rem] h-[3.5rem] bg-btn-color text-white px-7 py-2 rounded-lg mr-8"
-                    style={{ fontSize: "1.6rem" }}
+              <div className="flex relative">
+                <button
+                  className="-[8.6rem] h-[3.5rem] bg-btn-color text-white px-7 py-2 rounded-lg mr-8"
+                  style={{ fontSize: "1.6rem" }}
+                  onClick={handleDropdownToggle}
+                >
+                  글쓰기
+                </button>
+                {isDropdownOpen && (
+                  <div
+                    className="absolute top-[3.6rem] bg-btn-color shadow-lg rounded-lg animate-dropdown"
+                    style={{ opacity: 0, transform: 'translateY(-10px)' }}
                   >
-                    글쓰기
-                  </button>
-                </Link>
+                    <Link href="/post">
+                      <div className="text-white text-[1.2rem] text-center px-[2.4rem] py-3 hover:bg-gray-200 rounded-lg border-b border-white">
+                        게시글
+                      </div>
+                    </Link>
+                    <Link href="/write">
+                      <div className="text-white text-[1.2rem] text-center px-[2.5rem] py-3 hover:bg-gray-200 rounded-lg">
+                        OOTD
+                      </div>
+                    </Link>
+                  </div>
+                )}
                 <div className="mr-8 w-[24px] my-auto">
                   <Image src={AlertImg} alt="alert" />
                 </div>
