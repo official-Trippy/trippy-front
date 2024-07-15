@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Header from "@/components/shared/header/Header";
 import UserInformation from "@/components/profile/UserInformation";
 import { useQuery } from "react-query";
@@ -25,13 +25,15 @@ const MyPage = () => {
   const [activeTab, setActiveTab] = useState(TABS.ALL);
   const accessToken = Cookies.get("accessToken");
 
-  const { data, error, isLoading } = useQuery({
-    queryKey: ["member", accessToken],
-    queryFn: () => MemberInfo(accessToken),
+  const { data: userData, error, isLoading, refetch } = useQuery(["member", accessToken], () => MemberInfo(accessToken), {
     onError: (error) => {
       console.error(error);
     },
   });
+
+  useEffect(() => {
+    refetch(); 
+  }, [accessToken, refetch]);
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -40,8 +42,6 @@ const MyPage = () => {
   if (error) {
     return <div>Error</div>;
   }
-
-  const userData = data && data.result;
 
   return (
     <>

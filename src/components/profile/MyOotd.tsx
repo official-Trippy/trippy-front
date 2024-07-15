@@ -1,6 +1,7 @@
 import React from "react";
 import { useQuery } from "react-query";
 import { fetchOotdPostCount, fetchOotdPosts } from "@/services/ootd.ts/ootdGet";
+import Cookies from "js-cookie";
 import { UserInfoType } from "@/types/auth";
 import { OotdGetResponse } from "@/types/ootd";
 import { formatDate } from "@/constants/dateFotmat";
@@ -14,15 +15,18 @@ interface MyOotdProps {
 const MyOotd: React.FC<MyOotdProps> = ({ userInfo }) => {
   const [page, setPage] = React.useState(0);
 
+  const accessToken = Cookies.get('accessToken');
+
   const { data: totalCount, isLoading: isCountLoading, isError: isCountError } = useQuery<number>(
     'ootdPostCount',
-    fetchOotdPostCount
+    fetchOotdPostCount,
+    { enabled: !!accessToken }  
   );
-
+  
   const { data, isLoading, isError } = useQuery<OotdGetResponse>(
     ['ootdPosts', page],
     () => fetchOotdPosts(page, PAGE_SIZE),
-    { enabled: totalCount !== undefined }
+    { enabled: !!totalCount } 
   );
 
   const totalPages = totalCount ? Math.ceil(totalCount / PAGE_SIZE) : 0;
