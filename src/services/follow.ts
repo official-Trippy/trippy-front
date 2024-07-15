@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useUserStore } from "@/store/useUserStore";
+import { useFollowingStore } from "@/store/useFollowingStore";
 
 const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
@@ -32,23 +33,13 @@ export async function doFollow(memberId: string) {
       `${backendUrl}/api/member/follow?memberId=${memberId}`
     );
     const setUserInfo = useUserStore.getState().setUserInfo;
-
     const updatedFollowInfo = response.data.result;
 
-    const userInfo = useUserStore.getState().userInfo;
-
-    // Ensure userInfo and following are not null
-    if (userInfo) {
-      setUserInfo({
-        ...userInfo,
-        following: [...(userInfo.following || []), updatedFollowInfo],
-      });
-    } else {
-      // Handle case where userInfo is null
-      setUserInfo({
-        following: [updatedFollowInfo],
-      });
-    }
+    const followingStore = useFollowingStore.getState();
+    followingStore.setFollowing([
+      ...followingStore.following,
+      updatedFollowInfo,
+    ]);
 
     return response.data;
   } catch (error) {
@@ -62,18 +53,12 @@ export async function unfollow(targetMemberId: string) {
       `${backendUrl}/api/member/follow?type=unfollow&targetMemberId=${targetMemberId}`
     );
 
-    const setUserInfo = useUserStore.getState().setUserInfo;
-    const userInfo = useUserStore.getState().userInfo;
-
-    // Ensure userInfo and following are not null
-    if (userInfo) {
-      setUserInfo({
-        ...userInfo,
-        following: userInfo.following.filter(
-          (following) => following.memberId !== targetMemberId
-        ),
-      });
-    }
+    const followingStore = useFollowingStore.getState();
+    followingStore.setFollowing(
+      followingStore.following.filter(
+        (following) => following.memberId !== targetMemberId
+      )
+    );
 
     return response.data;
   } catch (error) {

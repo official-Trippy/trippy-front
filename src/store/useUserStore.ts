@@ -24,6 +24,9 @@ export const useUserStore = create<UserState>((set) => ({
       set({ loading: false });
     }
   },
+
   setUserInfo: (newInfo) =>
-    set((state) => ({ userInfo: { ...state.userInfo, ...newInfo } })),
+    set((state) => ({
+      userInfo: { ...state.userInfo, ...newInfo },
+    })),
 }));
