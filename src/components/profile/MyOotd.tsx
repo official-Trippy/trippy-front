@@ -36,7 +36,7 @@ const MyOotd: React.FC<MyOotdProps> = ({ userInfo }) => {
   };
 
   if (isCountLoading || isLoading) {
-    return <div>Loading...</div>;
+    return null;
   }
 
   if (isCountError || isError || !data) {
