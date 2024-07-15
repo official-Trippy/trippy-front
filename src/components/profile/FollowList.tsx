@@ -23,7 +23,7 @@ const FollowList: React.FC<{
   console.log(followInfo);
 
   if (isLoading)
-    return <div className="text-2xl font-bold my-12">Loading...</div>;
+    return null;
   if (error)
     return <div className="text-2xl font-bold my-12">Error loading data</div>;
 
