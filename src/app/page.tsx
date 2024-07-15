@@ -10,6 +10,8 @@ import Header from "@/components/shared/header/Header";
 import getBoard from "@/services/board/get/getBoard";
 import { useState } from "react";
 import Link from "next/link";
+import nonheartImg from "@/dummy/heartbin.svg"
+import moment from "@/dummy/moment.svg"
 
 export default function Home() {
   const accessToken = Cookies.get("accessToken");
@@ -37,17 +39,17 @@ export default function Home() {
     <div>
       <Header />
       <Recommend memberData={memberData} isLoading={isLoading}>
-        <div className="flex">
+        <div className="flex mt-[4rem]">
           {boardData?.result.slice(0, 4).map((posts: any, index: number) => {
             return (
-              <div className="w-[33rem] h-[40rem] shadow-xl rounded-[1rem] mx-[2rem]" key={index}>
+              <div className="w-[33rem] h-[40rem] shadow-xl rounded-[1rem] mr-[5rem]" key={index}>
                 <div className="flex flex-col">
-                  <img className="rounded-[1rem]" src="https://picsum.photos/300/200" alt="" />
+                  <Image className="w-[33rem] h-[26rem] rounded-[1rem]" src={posts.ticket.image.accessUri} alt="" width={300} height={260} />
                   <div className="p-[1rem] flex">
                     <Image src={Profile} width={40} height={40} alt="" />
                     <div className="flex flex-col justify-center pl-[1rem] text-[1.4rem]">
-                      <span className="font-bold">{posts.post.nickName}</span>
-                      <span className="font-medium">{posts.post.createDate}</span>
+                      <span className="font-bold">{posts.member.nickName}</span>
+                      <span className="font-medium">{posts.post.createDateTime}</span>
                     </div>
                   </div>
                   <div className="px-[1rem]">
@@ -83,8 +85,9 @@ export default function Home() {
               const createdAt = posts.post.createDateTime;
               const formattedDate = formatDate(createdAt);
 
+              console.log(posts)
               return (
-                <Link href={`/board/${BoardId}`} className="w-[45rem] h-[20rem] shadowall rounded-[1rem] mt-[5rem] px-[1.6rem] py-[2rem] hover:-translate-y-4 duration-300 mx-[2rem] cursor-pointer" key={index}>
+                <Link href={`/board/${BoardId}`} className="w-[46rem] h-[20rem] shadowall rounded-[1rem] mt-[5rem] px-[1.6rem] py-[2rem] hover:-translate-y-4 duration-300 mx-[2rem] cursor-pointer" key={index}>
                   <div className="flex">
                     <div className="flex flex-col w-[150%]">
                       <h1 className="text-[2rem] font-medium text-ellipsis overflow-hidden theboki">{posts.post.title}</h1>
@@ -101,20 +104,20 @@ export default function Home() {
                       </div>
                     </div>
                     <div className="flex flex-col w-full">
-                      <Image className="ml-auto flex rounded-[0.8rem]" src={posts.post.images[0]} alt="" />
+                      <Image className="ml-auto flex rounded-[0.8rem]" src={posts.ticket.image.accessUri} alt="" width={120} height={120} />
                     </div>
                   </div>
                   <div className="flex mt-[2rem]">
                     <div className="flex h-full text-[1.4rem] font-normal space-x-4 items-center mt-auto">
                       <Image src={Profile} width={24} height={24} alt="" />
-                      <span className="">{posts.post.nickName}</span>
+                      <span className="">{posts.member.nickName}</span>
                       <span className="">{formattedDate}</span>
                     </div>
-                    <div className="ml-auto flex items-center">
-                      <span>하트</span>
-                      <span>{posts.post.likeCount}</span>
-                      <span>댓글</span>
-                      <span>0</span>
+                    <div className="ml-auto flex items-center text-[#9D9D9D]">
+                      <Image src={nonheartImg} alt='' width={24} height={24} />
+                      <span className="text-[1rem] font-normal">{posts.post.likeCount}</span>
+                      <Image className='ml-[1rem]' src={moment} alt='' width={24} height={24} />
+                      <span className="text-[1rem] font-normal">{posts.post.commentCount}</span>
                     </div>
                   </div>
                 </Link>
