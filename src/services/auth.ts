@@ -1,3 +1,4 @@
+import { UpdateMemberInfoRequest } from "@/types/auth";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { headers } from "next/headers";
@@ -163,6 +164,14 @@ export async function changePassword(code: string, email: string, newPassword: s
   }
 }
 
+export async function updateMemberInfo(data: UpdateMemberInfoRequest) {
+  try {
+    const response = await axios.patch(`${backendUrl}/api/member`, data);
+    return response.data;
+  } catch (error) {
+    throw new Error(`Error updating member info: ${error}`);
+  }
+}
 // Axios 설정: 헤더에 accessToken 추가
 axios.interceptors.request.use(
   async (config) => {

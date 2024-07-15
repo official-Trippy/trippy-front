@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useRouter } from  'next/navigation';
 import ImageUploader from './ImageUploader';
 import PostInput from './PostInput';
 import LocationInput from './LocationInput';
@@ -11,6 +12,7 @@ import { createPost } from '@/services/ootd.ts/ootdPost';
 import { PostRequest, OotdRequest } from '@/types/ootd';
 import { LOCATIONS, LocationKey } from '@/constants/locations';
 import { UploadedImage } from '@/types/ootd';
+import Swal from 'sweetalert2';
 
 const PostOotd: React.FC = () => {
   const [images, setImages] = useState<UploadedImage[]>([]);
@@ -21,6 +23,7 @@ const PostOotd: React.FC = () => {
   const [longitude, setLongitude] = useState<number>(0);
   const [date, setDate] = useState<string>('');
   const [weather, setWeather] = useState<any>(null);
+  const router = useRouter();
 
   const weatherMutation = useMutation(
     (variables: { latitude: number; longitude: number; date: string }) =>
@@ -37,24 +40,48 @@ const PostOotd: React.FC = () => {
       createPost(variables.postRequest, variables.ootdRequest),
     {
       onSuccess: (data) => {
-        console.log('Post created:', data);
+        Swal.fire({
+          icon: 'success',
+          title: 'OOTD 게시글을 올렸습니다.',
+          confirmButtonText: '확인',
+        }).then((result) => {
+          if (result.isConfirmed) {
+            router.push('/ootd');
+          }
+        });
+      },
+      onError: (error) => {
+        console.error('Error creating post:', error);
+        Swal.fire({
+          icon: 'error',
+          title: '게시글 올리기 오류',
+          text: '게시글을 올리는 중 오류가 발생했습니다.',
+        });
       },
     }
   );
 
   useEffect(() => {
-    if (latitude !== 0 && longitude !== 0 && date !== '') {
+    if (latitude !== 0 && longitude !== 0 && date.length === 8) {
       weatherMutation.mutate({ latitude, longitude, date });
     }
   }, [latitude, longitude, date]);
 
   const handleFetchWeather = () => {
     if (location === '') {
-      alert('위치를 선택해주세요.');
+      Swal.fire({
+        icon: 'error',
+        title: '위치 선택 오류',
+        text: '위치를 선택해주세요.',
+      });
       return;
     }
-    if (date === '') {
-      alert('날짜를 입력해주세요.');
+    if (date.length !== 8) {
+      Swal.fire({
+        icon: 'error',
+        title: '날짜 형식 오류',
+        text: '날짜를 YYYYMMDD 형식으로 입력해주세요.',
+      });
       return;
     }
 
@@ -71,6 +98,33 @@ const PostOotd: React.FC = () => {
   };
 
   const handleCreatePost = () => {
+    if (images.length === 0) {
+      Swal.fire({
+        icon: 'error',
+        title: '이미지 오류',
+        text: '이미지를 업로드해주세요.',
+      });
+      return;
+    }
+
+    if (post.trim() === '') {
+      Swal.fire({
+        icon: 'error',
+        title: '문구 작성 오류',
+        text: 'OOTD 문구를 작성해주세요.',
+      });
+      return;
+    }
+
+    if (tags.length < 3) {
+      Swal.fire({
+        icon: 'error',
+        title: '태그 오류',
+        text: '태그를 3개 이상 등록해주세요.',
+      });
+      return;
+    }
+
     const formattedDate = formatDateString(date);
 
     const postRequest: PostRequest = {
@@ -115,12 +169,12 @@ const PostOotd: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <ImageUploader onImagesChange={setImages} />
         <div className="space-y-4">
-          <PostInput onPostChange={setPost} onTagsChange={setTags} />
+          <PostInput onPostChange={setPost} onTagsChange={setTags} tags={tags} />
           <LocationInput onLocationChange={handleLocationChange} />
           <DateInput onDateChange={handleDateChange} />
           {weather ? (
             <div className="w-full bg-neutral-100 rounded justify-center items-center inline-flex py-4 text-neutral-500 text-xl">
-              <div>지역: {weather.area}, 평균 온도: {weather.avgTemp}°C</div>
+              <div>{weather.avgTemp}°C, {weather.status}</div>
             </div>
           ) : (
             <button
@@ -130,14 +184,14 @@ const PostOotd: React.FC = () => {
               날씨 불러오기
             </button>
           )}
-          <div className='w-full'>
-          <button
-            onClick={handleCreatePost}
-            className="w-[100px] ml-auto p-2 bg-rose-500 rounded-lg justify-center items-center inline-flex px-4 py-2 text-white text-xl"
-          >
-            올리기
-          </button>
-        </div>
+          <div className="w-full flex justify-end">
+            <button
+                onClick={handleCreatePost}
+                className=" p-2 bg-rose-500 rounded-lg justify-center items-center inline-flex px-4 py-2 text-white text-xl"
+            >
+                올리기
+            </button>
+            </div>
         </div>
       </div>
     </div>

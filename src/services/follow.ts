@@ -32,7 +32,7 @@ export async function doFollow(memberId: string) {
     const response = await axios.post(
       `${backendUrl}/api/member/follow?memberId=${memberId}`
     );
-    const setUserInfo = useUserStore.getState().setUserInfo;
+    const updateUserInfo = useUserStore.getState().updateUserInfo;
     const updatedFollowInfo = response.data.result;
 
     const followingStore = useFollowingStore.getState();

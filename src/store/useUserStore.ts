@@ -5,7 +5,8 @@ interface UserState {
   userInfo: any;
   loading: boolean;
   fetchUserInfo: () => Promise<void>;
-  setUserInfo: (newInfo: any) => void;
+
+  updateUserInfo: (newUserInfo: any) => void;
 }
 
 export const useUserStore = create<UserState>((set) => ({
@@ -16,6 +17,7 @@ export const useUserStore = create<UserState>((set) => ({
     set({ loading: true });
     try {
       const data = await getMyInfo();
+      console.log(data);
       set({ userInfo: data });
     } catch (error) {
       console.error("Error fetching user info:", error);
@@ -25,8 +27,11 @@ export const useUserStore = create<UserState>((set) => ({
     }
   },
 
-  setUserInfo: (newInfo) =>
+  updateUserInfo: (newUserInfo) =>
     set((state) => ({
-      userInfo: { ...state.userInfo, ...newInfo },
+      userInfo: {
+        ...state.userInfo,
+        ...newUserInfo,
+      },
     })),
 }));

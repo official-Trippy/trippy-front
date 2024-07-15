@@ -4,6 +4,8 @@ import { UserModalProps } from "@/types/auth";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import NaverLogo from "../../../public/NaverLogo.png";
+import KakaoLogo from "../../../public/KakaoLogo.svg";
+import GoogleLogo from "../../../public/GoogleLogo.svg";
 
 const UserModal: React.FC<
   UserModalProps & {
@@ -82,7 +84,7 @@ const UserModal: React.FC<
               className="text-neutral-500 text-2xl font-normal font-Pretendard cursor-pointer"
               onClick={handleMyPage}
             >
-              마이페이지
+              설정
             </span>
             <span
               className="text-rose-500 text-2xl font-normal font-Pretendard cursor-pointer ml-[10px]"

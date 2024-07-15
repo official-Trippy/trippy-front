@@ -9,7 +9,7 @@ const FollowButton: React.FC<{ targetMemberId: string }> = ({
   const queryClient = useQueryClient();
   const userInfo = useUserStore((state) => state.userInfo);
   const isFollowing = userInfo?.following.some(
-    (following) => following.memberId === targetMemberId
+    (following: any) => following.memberId === targetMemberId
   );
 
   const followMutation = useMutation(() => doFollow(targetMemberId), {
