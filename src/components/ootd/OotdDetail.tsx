@@ -72,7 +72,11 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
             </div>
           </div>
           <div className="flex items-center space-x-2">
-            <button className="bg-red-500 text-white px-4 py-2 rounded-full">팔로우</button>
+          {userInfo.memberId === ootdItem.member.memberId ? null : (
+            <button className="bg-red-500 text-white px-4 py-2 rounded-full">
+              팔로우
+            </button>
+          )}
             <i className="far fa-bookmark text-xl"></i>
             <i className="fas fa-ellipsis-h text-xl"></i>
           </div>
