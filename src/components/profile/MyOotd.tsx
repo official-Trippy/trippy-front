@@ -40,7 +40,7 @@ const MyOotd: React.FC<MyOotdProps> = ({ userInfo }) => {
   }
 
   if (isCountError || isError || !data) {
-    return <div>Error fetching data</div>;
+    return null;
   }
 
   const ootdList = data.result;
