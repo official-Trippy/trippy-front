@@ -50,13 +50,14 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
         error,
         isLoading,
     } = useQuery({
-        queryKey: ["member", accessToken],
+        queryKey: ["member"],
         queryFn: () => MemberInfo(accessToken),
         onError: (error) => {
             // 에러 처리 로직
             console.error(error);
         },
     });
+
 
     console.log(postData)
 
@@ -109,7 +110,7 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
 
         }
     }
-    console.log(postLikeData)
+    console.log(memberDatas)
     return (
         <div>
             <Header />
@@ -203,8 +204,8 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
                     <div className='w-full h-[9.3rem] shadowall pl-[1.7rem] pt-[1.4rem] flex'>
                         <div className='w-full'>
                             <div className='flex items-center'>
-                                <Image className='flex items-center' src={postData?.result.member.profileUrl} alt='' width={28} height={28} />
-                                <span className='ml-[1.4rem] text-[1.8rem] font-semibold flex items-center'>{postData?.result.member.nickName}</span>
+                                <Image className='flex items-center' src={memberDatas?.result.profileImageUrl} alt='' width={28} height={28} />
+                                <span className='ml-[1.4rem] text-[1.8rem] font-semibold flex items-center'>{memberDatas?.result.nickName}</span>
                             </div>
                             <input className='w-full outline-none ml-[4.5rem] text-[1.4rem] font-normal' type='text' value={comment} onChange={(e) => setComment(e.target.value)} placeholder='블로그가 훈훈해지는 댓글 부탁드립니다.' />
                         </div>
