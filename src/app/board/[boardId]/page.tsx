@@ -11,22 +11,26 @@ import Header from '@/components/shared/header/Header';
 import { useQuery } from 'react-query';
 import { getPost } from '@/services/board/get/getBoard';
 import heartImg from "@/dummy/heart.svg"
-import nonheartImg from "@/dummy/heartbin.svg"
 import bottomimg from "@/dummy/sebu.svg"
+import nonheartImg from "@/dummy/heartbin.svg"
 import moment from "@/dummy/moment.svg"
-import postBoardBookMark from '@/services/board/post/postBoardBookmark';
 import { MemberInfo } from '@/services/auth';
 import Cookies from 'js-cookie';
 import postComments from '@/services/board/post/postComment';
 import getBoardComment from '@/services/board/get/getBoardComment';
+import { useUserStore } from '@/store/useUserStore';
+import postBoardLike from '@/services/board/post/postBoardLike';
+import getBoardLike from '@/services/board/get/getBoardLike';
+import deleteLike from '@/services/board/delete/deleteLike';
 
 export default function BoardPage({ params }: { params: { boardId: number } }) {
     const accessToken = Cookies.get("accessToken");
     const router = useRouter();
     const searchParams = useSearchParams();
     const [comment, setComment] = useState('');
+    const { userInfo, loading, fetchUserInfo } = useUserStore();
 
-    const { data: postData } = useQuery({
+    const { data: postData, refetch: postRefetch } = useQuery({
         queryKey: ['postData'],
         queryFn: () => getPost(Number(params.boardId))
     })
@@ -34,6 +38,11 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
     const { data: postCommentData, refetch: commentRefetch } = useQuery({
         queryKey: ['postCommentData'],
         queryFn: () => getBoardComment(Number(params.boardId))
+    })
+
+    const { data: postLikeData, refetch: LikeRefetch } = useQuery({
+        queryKey: ['postLikeData'],
+        queryFn: () => getBoardLike(Number(params.boardId))
     })
 
     const {
@@ -64,14 +73,21 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
     const createdAt = postData?.result.post.createDateTime;
     const formattedDate = formatDate(createdAt);
 
-    const bookMarkHandler = async () => {
-        const memberData = {
-            memberId: memberDatas?.result.email,
-            postId: Number(params.boardId),
-        }
+    const LikeHandler = async () => {
         try {
-            console.log(memberData)
-            await postBoardBookMark(memberData);
+            await postBoardLike(Number(params.boardId));
+            LikeRefetch();
+            postRefetch();
+        } catch (e) {
+
+        }
+    }
+
+    const LikeDeleteHandler = async () => {
+        try {
+            await deleteLike(Number(params.boardId));
+            LikeRefetch();
+            postRefetch();
         } catch (e) {
 
         }
@@ -81,18 +97,19 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
         const commentData = {
             postId: Number(params.boardId),
             content: comment,
-            status: "PUBLIC"
+            status: "PROTECTED"
         }
         try {
             console.log(commentData)
             await postComments(commentData);
             setComment('');
             commentRefetch();
+            postRefetch();
         } catch (e) {
 
         }
     }
-    console.log(postCommentData)
+    console.log(postLikeData)
     return (
         <div>
             <Header />
@@ -171,24 +188,30 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
                 </div>
                 {/* 댓글기능 */}
                 <div className='w-full h-[7.5rem] mt-[8rem] flex items-center'>
-                    {/* <Image src={heartImg} alt='' width={24} height={24} onClick={bookMarkHandler} /> */}
-                    <Image src={nonheartImg} alt='' width={24} height={24} onClick={bookMarkHandler} />
+                    {postLikeData?.result ? (
+                        <Image className='cursor-pointer' src={heartImg} alt='' width={24} height={24} onClick={LikeDeleteHandler} />
+                    ) : (
+                        <Image className='cursor-pointer' src={nonheartImg} alt='' width={24} height={24} onClick={LikeHandler} />
+                    )}
                     <span className='text-[1.6rem] font-normal text-[#6B6B6B]'>{postData?.result.post.likeCount}</span>
                     <Image src={bottomimg} alt='' width={24} height={24} />
                     <Image className='ml-[2rem]' src={moment} alt='' width={24} height={24} />
                     <span className='text-[1.6rem] font-normal text-[#6B6B6B]'>{postData?.result.post.commentCount}</span>
                     <Image src={bottomimg} alt='' width={24} height={24} />
                 </div>
-                <div className='w-full h-[9.3rem] shadowall pl-[1.7rem] pt-[1.4rem] flex'>
-                    <div className='w-full'>
-                        <div className='flex items-center'>
-                            <Image className='flex items-center' src={postData?.result.member.profileUrl} alt='' width={28} height={28} />
-                            <span className='ml-[1.4rem] text-[1.8rem] font-semibold flex items-center'>{postData?.result.member.nickName}</span>
+                {userInfo && (
+                    <div className='w-full h-[9.3rem] shadowall pl-[1.7rem] pt-[1.4rem] flex'>
+                        <div className='w-full'>
+                            <div className='flex items-center'>
+                                <Image className='flex items-center' src={postData?.result.member.profileUrl} alt='' width={28} height={28} />
+                                <span className='ml-[1.4rem] text-[1.8rem] font-semibold flex items-center'>{postData?.result.member.nickName}</span>
+                            </div>
+                            <input className='w-full outline-none ml-[4.5rem] text-[1.4rem] font-normal' type='text' value={comment} onChange={(e) => setComment(e.target.value)} placeholder='블로그가 훈훈해지는 댓글 부탁드립니다.' />
                         </div>
-                        <input className='w-full outline-none ml-[4.5rem] text-[1.4rem] font-normal' type='text' value={comment} onChange={(e) => setComment(e.target.value)} placeholder='블로그가 훈훈해지는 댓글 부탁드립니다.' />
+                        <button className='bg-[#F5F5F5] rounded-[0.8rem] text-[1.6rem] font-semibold w-[8.6rem] h-[3.5rem] flex ml-auto mr-[1.4rem] items-center justify-center' onClick={commentHandler}>입력</button>
                     </div>
-                    <button className='bg-[#F5F5F5] rounded-[0.8rem] text-[1.6rem] font-semibold w-[8.6rem] h-[3.5rem] flex ml-auto mr-[1.4rem] items-center justify-center' onClick={commentHandler}>입력</button>
-                </div>
+                )}
+
                 <div className='w-full h-full shadowall pl-[1.7rem] py-[1.4rem] my-[3.5rem] flex flex-col'>
                     {postCommentData?.result && Object.entries(postCommentData.result).map(([key, coData]: [string, any], index: number) => {
                         const createDateTime = new Date(coData.createDateTime);
