@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation } from 'react-query';
 import Image from 'next/image';
 import { useUserStore } from '@/store/useUserStore';
 import { formatDate } from '@/constants/dateFotmat';
 import { FetchCommentsResponse, createComment, createReply, fetchComments } from '@/services/ootd.ts/ootdComments';
-import { likePost } from '@/services/ootd.ts/ootdComments';
+import { checkIfLiked, likePost, unlikePost } from '@/services/ootd.ts/ootdComments';
 import HeartIcon from '../../../public/icon_heart.svg';
 import CommentIcon from '../../../public/icon_comment.svg';
 import { Comment } from '@/types/ootd';
@@ -19,9 +19,10 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
   const userInfo = useUserStore((state) => state.userInfo);
   const [newComment, setNewComment] = useState('');
   const [replyComment, setReplyComment] = useState('');
-  const [likeCount, setLikeCount] = useState(initialLikeCount); // 상태를 업데이트할 수 있도록 수정
+  const [likeCount, setLikeCount] = useState(initialLikeCount);
   const [commentCount, setCommentCount] = useState(initialCommentCount);
   const [replyTo, setReplyTo] = useState<number | null>(null);
+  const [isLiked, setIsLiked] = useState<boolean>(false);
 
   const { data: commentData, refetch, isLoading } = useQuery<FetchCommentsResponse>(
     ['comments', postId],
@@ -30,7 +31,17 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
 
   const comments: Comment[] = commentData ? Object.values(commentData.result) : [];
 
-  const mutation = useMutation(
+  useEffect(() => {
+    const fetchLikeStatus = async () => {
+      const result = await checkIfLiked(postId);
+      if (result.isSuccess) {
+        setIsLiked(result.result);
+      }
+    };
+    fetchLikeStatus();
+  }, [postId]);
+
+  const commentMutation = useMutation(
     (content: string) => createComment(postId, content),
     {
       onSuccess: () => {
@@ -58,7 +69,20 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
     {
       onSuccess: (data) => {
         if (data.isSuccess) {
-          setLikeCount(data.result.likeCount);
+          setLikeCount((prevCount) => prevCount + 1);
+          setIsLiked(true);
+        }
+      },
+    }
+  );
+
+  const unlikeMutation = useMutation(
+    () => unlikePost(postId),
+    {
+      onSuccess: (data) => {
+        if (data.isSuccess) {
+          setLikeCount((prevCount) => Math.max(prevCount - 1, 0)); 
+          setIsLiked(false);
         }
       },
     }
@@ -66,7 +90,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
 
   const handleCommentSubmit = () => {
     if (newComment.trim()) {
-      mutation.mutate(newComment);
+      commentMutation.mutate(newComment);
     }
   };
 
@@ -82,7 +106,11 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
   };
 
   const handleLikeClick = () => {
-    likeMutation.mutate();
+    if (isLiked) {
+      unlikeMutation.mutate(); // 좋아요가 이미 되어있으면 취소
+    } else {
+      likeMutation.mutate(); // 좋아요가 되어있지 않으면 추가
+    }
   };
 
   const renderComments = (comments: Comment[], depth = 0) => {
