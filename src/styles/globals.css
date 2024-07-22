@@ -384,3 +384,18 @@ body {
 .rounded-full {
   border-radius: 50%;
 }
+
+.slide-down {
+  max-height: 500px;
+  /* 원하는 최대 높이 */
+  opacity: 1;
+  transition: max-height 0.5s ease, opacity 0.5s ease;
+}
+
+.hide {
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  /* 내용이 넘치지 않도록 숨김 */
+  transition: max-height 0.5s ease, opacity 0.5s ease;
+}
