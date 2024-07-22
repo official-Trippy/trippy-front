@@ -10,7 +10,7 @@ import { fetchAllOotdPostCount, fetchAllOotdPosts } from '@/services/ootd.ts/oot
 import { MemberInfo } from '@/services/auth';
 import { formatDate } from '@/constants/dateFotmat';
 
-const PAGE_SIZE = 10;
+const PAGE_SIZE = 8;
 
 const RecentOotdPost: React.FC = () => {
   const accessToken = Cookies.get('accessToken');
