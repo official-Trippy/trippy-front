@@ -58,7 +58,7 @@ const RecentOotdPost: React.FC = () => {
 
   const gridContainerStyle = {
     display: 'grid',
-    gridTemplateColumns: 'repeat(5, 1fr)',
+    gridTemplateColumns: 'repeat(4, 1fr)',
     gap: '3rem',
     marginTop: '5rem',
   };
@@ -98,11 +98,11 @@ const RecentOotdPost: React.FC = () => {
               />
             </div>
             )}
-            <div className='px-[1.6rem] py-[2rem]'>
+            <div className='py-[2rem]'>
               <div className='flex'>
                 <div className='flex w-full h-full text-[1.4rem] font-normal items-center'>
-                  <Image src={item.member.profileUrl} width={24} height={24} alt='image' />
-                  <span className=' text-[#6B6B6B]'>{item.member.nickName}</span>
+                  <Image className='rounded-full' src={item.member.profileUrl} width={24} height={24} alt='image' />
+                  <span className='text-[#6B6B6B] ml-[5px]'>{item.member.nickName}</span>
                   <span className='flex ml-auto'>{formatDate(item.post.createDateTime)}</span>
                 </div>
               </div>
