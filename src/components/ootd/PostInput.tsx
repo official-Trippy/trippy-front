@@ -35,7 +35,7 @@ const PostInput: React.FC<PostInputProps> = ({ onPostChange, onTagsChange, tags 
       event.preventDefault();
       const inputTag = tagInput.trim();
       if (inputTag !== '') {
-        const formattedTag = `#${inputTag}`;
+        const formattedTag = `${inputTag}`;
         if (!tags.includes(formattedTag)) {
           const newTags = [...tags, formattedTag];
           onTagsChange(newTags);
@@ -51,17 +51,17 @@ const PostInput: React.FC<PostInputProps> = ({ onPostChange, onTagsChange, tags 
   };
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-4">
       <textarea
         ref={textareaRef}
-        className="w-full h-[500px] text-2xl border p-2 rounded resize-none"
+        className="w-full h-64 text-lg border p-2 rounded resize-none"
         onChange={handlePostChange}
       />
-      <div className="relative w-full text-2xl border p-2 rounded">
+      <div className="relative w-full border p-2 rounded">
         <input
           type="text"
           placeholder="태그를 3개 이상 입력해주세요."
-          className="w-full h-[50px] border-none outline-none text-2xl"
+          className="w-full h-12 border-none outline-none text-lg"
           value={tagInput}
           onCompositionStart={handleCompositionEvent}
           onCompositionEnd={handleCompositionEvent}
@@ -70,12 +70,12 @@ const PostInput: React.FC<PostInputProps> = ({ onPostChange, onTagsChange, tags 
         />
         <div className="mt-2 flex flex-wrap gap-2">
           {tags.map((tag, index) => (
-            <span key={index} className="h-[30px] text-neutral-400 px-3 py-1 bg-neutral-100 rounded-2xl justify-center items-center gap-2.5 inline-flex">
+            <span key={index} className="h-8 text-neutral-400 px-3 py-1 bg-neutral-100 rounded-full flex items-center">
               {tag}
               <button
                 type="button"
                 onClick={() => handleTagDelete(tag)}
-                className="ml-2 text-black mb-[2px]"
+                className="ml-2 text-black"
               >
                 x
               </button>

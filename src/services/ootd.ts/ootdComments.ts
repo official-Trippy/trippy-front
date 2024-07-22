@@ -34,3 +34,17 @@ export interface FetchCommentsResponse {
     return response.data;
   };
   
+  export const checkIfLiked = async (postId: number) => {
+    const response = await axios.get(`${backendUrl}/api/like/isLiked/${postId}`);
+    return response.data;
+  };
+  
+  export const likePost = async (postId: number) => {
+    const response = await axios.post(`${backendUrl}/api/like/${postId}`);
+    return response.data;
+  };
+  
+  export const unlikePost = async (postId: number) => {
+    const response = await axios.delete(`${backendUrl}/api/like/${postId}`);
+    return response.data;
+  };
