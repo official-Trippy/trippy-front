@@ -37,7 +37,7 @@ const FollowList: React.FC<{
           {type === "follower" ? (
             <div>팔로우 {followInfo.followerCnt}</div>
           ) : (
-            <div>팔로우 {followInfo.followingCnt}</div>
+            <div>팔로잉 {followInfo.followingCnt}</div>
           )}
         </h3>
       </div>
