@@ -17,7 +17,7 @@ const RecentOotdPost: React.FC = () => {
   const [page, setPage] = useState(0);
   const router = useRouter();
 
-  const { data: memberData, error: memberError, isLoading: memberLoading } = useQuery({
+  const { data: memberData, isLoading: memberLoading } = useQuery({
     queryKey: ['member', accessToken],
     queryFn: () => MemberInfo(accessToken),
     onError: (error) => {
@@ -56,13 +56,6 @@ const RecentOotdPost: React.FC = () => {
 
   const ootdList = data.result;
 
-  const gridContainerStyle = {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(4, 1fr)',
-    gap: '3rem',
-    marginTop: '5rem',
-  };
-
   return (
     <div className='w-[80%] mx-auto py-[5rem]'>
       <div>
@@ -84,44 +77,42 @@ const RecentOotdPost: React.FC = () => {
           <option>인기순</option>
         </select>
       </div>
-      <div style={gridContainerStyle}>
+      <div className='grid-container'>
         {ootdList.map((item) => (
-          <div key={item.post.id} className='flex flex-col w-full' onClick={() => handleOotdItemClick(item.post.id)}>
+          <div key={item.post.id} className='grid-item' onClick={() => handleOotdItemClick(item.post.id)}>
             {item.post.images.length > 0 && (
               <div className='ootd-image-container'>
-              <Image 
-                className='ootd-image' 
-                src={item.post.images[0].accessUri} 
-                alt='OOTD' 
-                width={200} 
-                height={200} 
-              />
-            </div>
+                <Image 
+                  className='ootd-image' 
+                  src={item.post.images[0].accessUri} 
+                  alt='OOTD' 
+                  width={200} 
+                  height={200} 
+                />
+              </div>
             )}
             <div className='py-[2rem]'>
-              <div className='flex'>
-                <div className='flex w-full h-full text-[1.4rem] font-normal items-center'>
+              <div className='flex flex-row justify-between items-center'>
+                <div className='flex items-center'>
                   <Image className='rounded-full' src={item.member.profileUrl} width={24} height={24} alt='image' />
                   <span className='text-[#6B6B6B] ml-[5px]'>{item.member.nickName}</span>
-                  <span className='flex ml-auto'>{formatDate(item.post.createDateTime)}</span>
                 </div>
+                <span>{formatDate(item.post.createDateTime)}</span>
               </div>
               <div className='flex flex-col mt-[1.6rem]'>
-                <div className='flex flex-col w-[150%]'>
-                  <h1 className='text-[1.2rem] font-medium text-[#6B6B6B]'>{item.post.title}</h1>
-                </div>
-                <div className='flex mt-[2rem]'>
+                <h1 className='text-[1.2rem] font-medium text-[#6B6B6B]'>{item.post.title}</h1>
+                <div className='flex flex-wrap mt-[2rem] gap-2'>
                   {item.post.tags.map((tag: string, index: number) => (
-                    <span key={index} className='w-fit px-[0.8rem] py-[0.4rem] bg-[#F5F5F5] text-[1.3rem] text-[#9d9d9d] items-center rounded-[1.6rem]'>
+                    <span key={index} className='px-[0.8rem] py-[0.4rem] bg-[#F5F5F5] text-[1.3rem] text-[#9d9d9d] rounded-[1.6rem]'>
                       {tag}
                     </span>
                   ))}
-                  <div className='ml-auto flex items-center'>
-                    <span>하트</span>
-                    <span>{item.post.likeCount}</span>
-                    <span>댓글</span>
-                    <span>{item.post.commentCount}</span>
-                  </div>
+                </div>
+                <div className='flex items-center mt-2'>
+                  <span className='mr-2'>하트</span>
+                  <span className='mr-4'>{item.post.likeCount}</span>
+                  <span className='mr-2'>댓글</span>
+                  <span>{item.post.commentCount}</span>
                 </div>
               </div>
             </div>
