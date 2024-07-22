@@ -22,6 +22,8 @@ import { useUserStore } from '@/store/useUserStore';
 import postBoardLike from '@/services/board/post/postBoardLike';
 import getBoardLike from '@/services/board/get/getBoardLike';
 import deleteLike from '@/services/board/delete/deleteLike';
+import upup from "@/dummy/upup.svg"
+import commentPink from "@/dummy/comentpink.svg"
 
 export default function BoardPage({ params }: { params: { boardId: number } }) {
     const accessToken = Cookies.get("accessToken");
@@ -31,7 +33,7 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
     const [replyComment, setReplyComment] = useState('');
     const { userInfo, loading, fetchUserInfo } = useUserStore();
     const [replyId, setReplyId] = useState(0);
-
+    const [isReplyOpen, setIsReplyOpen] = useState(false);
 
 
     const { data: postData, refetch: postRefetch } = useQuery({
@@ -228,87 +230,102 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
                     )}
                     <span className='text-[1.6rem] font-normal text-[#6B6B6B]'>{postData?.result.post.likeCount}</span>
                     <Image src={bottomimg} alt='' width={24} height={24} />
-                    <Image className='ml-[2rem]' src={moment} alt='' width={24} height={24} />
-                    <span className='text-[1.6rem] font-normal text-[#6B6B6B]'>{postData?.result.post.commentCount}</span>
-                    <Image src={bottomimg} alt='' width={24} height={24} />
+                    {isReplyOpen ? (
+                        <Image className='ml-[2rem]' src={commentPink} alt='' width={24} height={24} />
+                    ) : (
+                        <Image className='ml-[2rem]' src={moment} alt='' width={24} height={24} />
+                    )}
+                    <span className={`text-[1.6rem] font-normal ${isReplyOpen ? "text-[#FB3463]" : "text-[#6B6B6B]"} `}>{postData?.result.post.commentCount}</span>
+                    {isReplyOpen ? (
+                        <Image className='cursor-pointer' src={upup} alt='' width={24} height={24} onClick={() => setIsReplyOpen(false)} />
+                    ) : (
+                        <Image className='cursor-pointer' src={bottomimg} alt='' width={24} height={24} onClick={() => setIsReplyOpen(true)} />
+                    )}
+
                 </div>
-                {userInfo && (
-                    <div className='w-full h-[9.3rem] shadowall pl-[1.7rem] pt-[1.4rem] flex'>
-                        <div className='w-full'>
-                            <div className='flex items-center'>
-                                <Image className='flex items-center' src={memberDatas?.result.profileImageUrl} alt='' width={28} height={28} />
-                                <span className='ml-[1.4rem] text-[1.8rem] font-semibold flex items-center'>{memberDatas?.result.nickName}</span>
-                            </div>
-                            <input className='w-full outline-none ml-[4.5rem] text-[1.4rem] font-normal' type='text' value={comment} onChange={(e) => setComment(e.target.value)} placeholder='블로그가 훈훈해지는 댓글 부탁드립니다.' />
-                        </div>
-                        <button className='bg-[#F5F5F5] rounded-[0.8rem] text-[1.6rem] font-semibold w-[8.6rem] h-[3.5rem] flex ml-auto mr-[1.4rem] items-center justify-center' onClick={commentHandler}>입력</button>
-                    </div>
-                )}
-
-                <div className='w-full h-full shadowall pl-[1.7rem] py-[1.4rem] my-[3.5rem] flex flex-col'>
-                    {postCommentData?.result && Object.entries(postCommentData.result).map(([key, coData]: [string, any], index: number) => {
-                        const createDateTime = new Date(coData.createDateTime);
-                        const formattedDateTime = `${createDateTime.getFullYear()}.${String(createDateTime.getMonth() + 1).padStart(2, '0')}.${String(createDateTime.getDate()).padStart(2, '0')} ${String(createDateTime.getHours()).padStart(2, '0')}:${String(createDateTime.getMinutes()).padStart(2, '0')}`;
-
-                        console.log(coData)
-                        return (
-                            <div className='mb-[2.5rem]' key={key}>
-                                <div className={`${replyOpen[index] ? "bg-[#F5F5F5]" : "bg-white"} py-[2rem] mr-[2rem]`}>
-                                    <div className='flex items-center'>
-                                        <Image className='flex items-center' src={coData.member.profileUrl} alt='' width={28} height={28} />
-                                        <span className='ml-[1.4rem] text-[1.8rem] font-semibold flex items-center'>{coData.member.nickName}</span>
+                <div className='mb-[10rem]'>
+                    {isReplyOpen && (
+                        <div>
+                            {userInfo && (
+                                <div className='w-full h-[9.3rem] shadowall pl-[1.7rem] pt-[1.4rem] flex'>
+                                    <div className='w-full'>
+                                        <div className='flex items-center'>
+                                            <Image className='flex items-center' src={memberDatas?.result.profileImageUrl} alt='' width={28} height={28} />
+                                            <span className='ml-[1.4rem] text-[1.8rem] font-semibold flex items-center'>{memberDatas?.result.nickName}</span>
+                                        </div>
+                                        <input className='w-full outline-none ml-[4.5rem] text-[1.4rem] font-normal' type='text' value={comment} onChange={(e) => setComment(e.target.value)} placeholder='블로그가 훈훈해지는 댓글 부탁드립니다.' />
                                     </div>
-                                    <span className='text-[1.4rem] font-normal ml-[4.4rem] text-[#292929]'>{coData.content}</span>
-                                    <div className='flex ml-[4.5rem] text-[1.2rem] text-[#9D9D9D] items-center'>
-                                        <span>{formattedDateTime}</span>
-                                        <hr className='mx-[1rem] h-[1rem] w-[0.1rem] bg-[#9D9D9D]' />
-                                        {replyOpen[index] ? (
-                                            <span className='cursor-pointer' onClick={() => toggleReply(index)}>답글취소</span>
-                                        ) : (
-                                            <span className='cursor-pointer' onClick={() => { toggleReply(index); setReplyId(coData.id) }}>답글달기</span>
-                                        )}
-
-                                    </div>
+                                    <button className='bg-[#F5F5F5] rounded-[0.8rem] text-[1.6rem] font-semibold w-[8.6rem] h-[3.5rem] flex ml-auto mr-[1.4rem] items-center justify-center' onClick={commentHandler}>입력</button>
                                 </div>
-                                {coData?.children.map((childData: any) => {
+                            )}
+
+                            <div className={`w-full h-full shadowall pl-[1.7rem] py-[1.4rem] my-[3.5rem] flex flex-col ${isReplyOpen ? 'slide-down' : 'hide'}`}>
+                                {postCommentData?.result && Object.entries(postCommentData.result).map(([key, coData]: [string, any], index: number) => {
+                                    const createDateTime = new Date(coData.createDateTime);
+                                    const formattedDateTime = `${createDateTime.getFullYear()}.${String(createDateTime.getMonth() + 1).padStart(2, '0')}.${String(createDateTime.getDate()).padStart(2, '0')} ${String(createDateTime.getHours()).padStart(2, '0')}:${String(createDateTime.getMinutes()).padStart(2, '0')}`;
+
+                                    console.log(coData)
                                     return (
-                                        <div className={`${replyOpen[index] ? "bg-[#F5F5F5]" : "bg-white"} w-[90%] py-[2rem] mx-[5rem]`}>
-                                            <div className='flex items-center'>
-                                                <Image className='flex items-center' src={childData.member.profileUrl} alt='' width={28} height={28} />
-                                                <span className='ml-[1.4rem] text-[1.8rem] font-semibold flex items-center'>{childData.member.nickName}</span>
+                                        <div className='mb-[2.5rem]' key={key}>
+                                            <div className={`${replyOpen[index] ? "bg-[#F5F5F5]" : "bg-white"} py-[2rem] mr-[2rem]`}>
+                                                <div className='flex items-center'>
+                                                    <Image className='flex items-center' src={coData.member.profileUrl} alt='' width={28} height={28} />
+                                                    <span className='ml-[1.4rem] text-[1.8rem] font-semibold flex items-center'>{coData.member.nickName}</span>
+                                                </div>
+                                                <span className='text-[1.4rem] font-normal ml-[4.4rem] text-[#292929]'>{coData.content}</span>
+                                                <div className='flex ml-[4.5rem] text-[1.2rem] text-[#9D9D9D] items-center'>
+                                                    <span>{formattedDateTime}</span>
+                                                    <hr className='mx-[1rem] h-[1rem] w-[0.1rem] bg-[#9D9D9D]' />
+                                                    {replyOpen[index] ? (
+                                                        <span className='cursor-pointer' onClick={() => toggleReply(index)}>답글취소</span>
+                                                    ) : (
+                                                        <span className='cursor-pointer' onClick={() => { toggleReply(index); setReplyId(coData.id) }}>답글달기</span>
+                                                    )}
+
+                                                </div>
                                             </div>
-                                            <span className='text-[1.4rem] font-normal ml-[4.4rem] text-[#292929]'>{childData.content}</span>
-                                            <div className='flex ml-[4.5rem] text-[1.2rem] text-[#9D9D9D] items-center'>
-                                                <span>{formattedDateTime}</span>
-                                                <hr className='mx-[1rem] h-[1rem] w-[0.1rem] bg-[#9D9D9D]' />
-                                                {replyOpen[index] ? (
-                                                    <span className='cursor-pointer' onClick={() => toggleReply(index)}>답글취소</span>
-                                                ) : (
-                                                    <span className='cursor-pointer' onClick={() => { toggleReply(index); setReplyId(coData.id) }}>답글달기</span>
-                                                )}
-                                            </div>
+                                            {coData?.children.map((childData: any) => {
+                                                return (
+                                                    <div className={`${replyOpen[index] ? "bg-[#F5F5F5]" : "bg-white"} w-[90%] py-[2rem] mx-[5rem]`}>
+                                                        <div className='flex items-center'>
+                                                            <Image className='flex items-center' src={childData.member.profileUrl} alt='' width={28} height={28} />
+                                                            <span className='ml-[1.4rem] text-[1.8rem] font-semibold flex items-center'>{childData.member.nickName}</span>
+                                                        </div>
+                                                        <span className='text-[1.4rem] font-normal ml-[4.4rem] text-[#292929]'>{childData.content}</span>
+                                                        <div className='flex ml-[4.5rem] text-[1.2rem] text-[#9D9D9D] items-center'>
+                                                            <span>{formattedDateTime}</span>
+                                                            <hr className='mx-[1rem] h-[1rem] w-[0.1rem] bg-[#9D9D9D]' />
+                                                            {replyOpen[index] ? (
+                                                                <span className='cursor-pointer' onClick={() => toggleReply(index)}>답글취소</span>
+                                                            ) : (
+                                                                <span className='cursor-pointer' onClick={() => { toggleReply(index); setReplyId(coData.id) }}>답글달기</span>
+                                                            )}
+                                                        </div>
+                                                    </div>
+                                                )
+                                            })}
+
+                                            {replyOpen[index] && userInfo && (
+                                                <div className='w-[95%] h-[9.3rem] shadowall mt-[2rem] pl-[1.7rem] pt-[1.4rem] flex mx-auto border border-[#CFCFCF] rounded-[0.8rem]'>
+                                                    <div className='w-full'>
+                                                        <div className='flex items-center'>
+                                                            <Image className='flex items-center' src={memberDatas?.result.profileImageUrl} alt='' width={28} height={28} />
+                                                            <span className='ml-[1.4rem] text-[1.8rem] font-semibold flex items-center'>{memberDatas?.result.nickName}</span>
+                                                        </div>
+                                                        <input className='w-full outline-none ml-[4.5rem] text-[1.4rem] font-normal' type='text' value={replyComment} onChange={(e) => setReplyComment(e.target.value)} placeholder='블로그가 훈훈해지는 댓글 부탁드립니다.' />
+                                                    </div>
+                                                    <button className='bg-[#F5F5F5] rounded-[0.8rem] text-[1.6rem] font-semibold w-[8.6rem] h-[3.5rem] flex ml-auto mr-[1.4rem] items-center justify-center' onClick={commentReplyHandler}>입력</button>
+                                                </div>
+                                            )}
                                         </div>
                                     )
                                 })}
-
-                                {replyOpen[index] && userInfo && (
-                                    <div className='w-[95%] h-[9.3rem] shadowall mt-[2rem] pl-[1.7rem] pt-[1.4rem] flex mx-auto border border-[#CFCFCF] rounded-[0.8rem]'>
-                                        <div className='w-full'>
-                                            <div className='flex items-center'>
-                                                <Image className='flex items-center' src={memberDatas?.result.profileImageUrl} alt='' width={28} height={28} />
-                                                <span className='ml-[1.4rem] text-[1.8rem] font-semibold flex items-center'>{memberDatas?.result.nickName}</span>
-                                            </div>
-                                            <input className='w-full outline-none ml-[4.5rem] text-[1.4rem] font-normal' type='text' value={replyComment} onChange={(e) => setReplyComment(e.target.value)} placeholder='블로그가 훈훈해지는 댓글 부탁드립니다.' />
-                                        </div>
-                                        <button className='bg-[#F5F5F5] rounded-[0.8rem] text-[1.6rem] font-semibold w-[8.6rem] h-[3.5rem] flex ml-auto mr-[1.4rem] items-center justify-center' onClick={commentReplyHandler}>입력</button>
-                                    </div>
-                                )}
                             </div>
-                        )
-                    })}
+                        </div>
+
+                    )}
                 </div>
             </div>
-
         </div>
     )
 }
