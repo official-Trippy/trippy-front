@@ -100,7 +100,7 @@ const RecentOotdPost: React.FC = () => {
                 <span>{formatDate(item.post.createDateTime)}</span>
               </div>
               <div className='flex flex-col mt-[1.6rem]'>
-                <h1 className='text-[1.2rem] font-medium text-[#6B6B6B]'>{item.post.title}</h1>
+                <h1 className='text-[1.2rem] font-medium text-[#6B6B6B]'>{item.post.body}</h1>
                 <div className='flex flex-wrap mt-[2rem] gap-2'>
                   {item.post.tags.map((tag: string, index: number) => (
                     <span key={index} className='px-[0.8rem] py-[0.4rem] bg-[#F5F5F5] text-[1.3rem] text-[#9d9d9d] rounded-[1.6rem]'>

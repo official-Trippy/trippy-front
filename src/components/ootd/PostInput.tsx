@@ -35,7 +35,7 @@ const PostInput: React.FC<PostInputProps> = ({ onPostChange, onTagsChange, tags 
       event.preventDefault();
       const inputTag = tagInput.trim();
       if (inputTag !== '') {
-        const formattedTag = `#${inputTag}`;
+        const formattedTag = `${inputTag}`;
         if (!tags.includes(formattedTag)) {
           const newTags = [...tags, formattedTag];
           onTagsChange(newTags);
