@@ -6,6 +6,7 @@ import { formatDate } from '@/constants/dateFotmat';
 import { FetchCommentsResponse, createComment, createReply, fetchComments } from '@/services/ootd.ts/ootdComments';
 import { checkIfLiked, likePost, unlikePost } from '@/services/ootd.ts/ootdComments';
 import HeartIcon from '../../../public/icon_heart.svg';
+import EmptyHeartIcon from '../../../public/EmptyHeartIcon.svg';
 import CommentIcon from '../../../public/icon_comment.svg';
 import { Comment } from '@/types/ootd';
 
@@ -107,9 +108,9 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
 
   const handleLikeClick = () => {
     if (isLiked) {
-      unlikeMutation.mutate(); // 좋아요가 이미 되어있으면 취소
+      unlikeMutation.mutate();
     } else {
-      likeMutation.mutate(); // 좋아요가 되어있지 않으면 추가
+      likeMutation.mutate(); 
     }
   };
 
@@ -172,7 +173,12 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
     <div className="max-w-6xl w-full mx-auto">
       <div className="flex items-center space-x-4">
         <button className="flex items-center" onClick={handleLikeClick}>
-          <Image src={HeartIcon} alt="좋아요" width={24} height={24} />
+          <Image
+            src={isLiked ? HeartIcon : EmptyHeartIcon} 
+            alt={isLiked ? "좋아요" : "좋아요 취소"}
+            width={24}
+            height={24}
+          />
           <span className="ml-2">{likeCount}</span>
         </button>
         <button className="flex items-center">
