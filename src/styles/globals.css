@@ -361,16 +361,6 @@ body {
   overflow: hidden;
 }
 
-.ootd-image-container {
-  width: 100%;
-  height: auto;
-}
-
-.ootd-image {
-  width: 100%;
-  height: auto;
-}
-
 .flex {
   display: flex;
 }
@@ -391,9 +381,7 @@ body {
   gap: 0.5rem;
 }
 
-
 .rounded-full {
   border-radius: 50%;
 }
-
 
