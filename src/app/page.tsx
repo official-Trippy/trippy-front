@@ -41,6 +41,8 @@ export default function Home() {
       <Recommend memberData={memberData} isLoading={isLoading}>
         <div className="flex mt-[4rem]">
           {boardData?.result.slice(0, 4).map((posts: any, index: number) => {
+            const createDateTime = new Date(posts.post.createDateTime);
+            const formattedDateTime = `${createDateTime.getFullYear()}.${String(createDateTime.getMonth() + 1).padStart(2, '0')}.${String(createDateTime.getDate()).padStart(2, '0')} ${String(createDateTime.getHours()).padStart(2, '0')}:${String(createDateTime.getMinutes()).padStart(2, '0')}`;
             return (
               <div className="w-[33rem] h-[40rem] shadow-xl rounded-[1rem] mr-[5rem]" key={index}>
                 <div className="flex flex-col">
@@ -49,7 +51,7 @@ export default function Home() {
                     <Image src={Profile} width={40} height={40} alt="" />
                     <div className="flex flex-col justify-center pl-[1rem] text-[1.4rem]">
                       <span className="font-bold">{posts.member.nickName}</span>
-                      <span className="font-medium">{posts.post.createDateTime}</span>
+                      <span className="font-medium">{formattedDateTime}</span>
                     </div>
                   </div>
                   <div className="px-[1rem]">
