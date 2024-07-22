@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { Comment } from '@/types/ootd';
+import { LikeResponse } from '@/types/ootd';
 
 const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
@@ -34,3 +35,12 @@ export interface FetchCommentsResponse {
     return response.data;
   };
   
+  export const likePost = async (postId: number): Promise<LikeResponse> => {
+    try {
+      const response = await axios.post(`${backendUrl}/api/like/${postId}`);
+      return response.data;
+    } catch (error) {
+      console.error('Error liking the post:', error);
+      throw error; 
+    }
+  };
