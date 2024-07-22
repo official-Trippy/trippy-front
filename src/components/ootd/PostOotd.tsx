@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { useRouter } from  'next/navigation';
+import { useRouter } from 'next/navigation';
 import ImageUploader from './ImageUploader';
 import PostInput from './PostInput';
 import LocationInput from './LocationInput';
@@ -165,33 +165,33 @@ const PostOotd: React.FC = () => {
   };
 
   return (
-    <div className="w-[80%] mx-auto">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div className="w-full max-w-screen-lg mx-auto px-4 py-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <ImageUploader onImagesChange={setImages} />
-        <div className="space-y-4">
+        <div className="space-y-6">
           <PostInput onPostChange={setPost} onTagsChange={setTags} tags={tags} />
           <LocationInput onLocationChange={handleLocationChange} />
           <DateInput onDateChange={handleDateChange} />
           {weather ? (
-            <div className="w-full bg-neutral-100 rounded justify-center items-center inline-flex py-4 text-neutral-500 text-xl">
+            <div className="w-full bg-neutral-100 rounded-lg flex justify-center items-center py-4 text-neutral-500 text-lg">
               <div>{weather.avgTemp}°C, {weather.status}</div>
             </div>
           ) : (
             <button
               onClick={handleFetchWeather}
-              className="w-full bg-neutral-100 rounded-lg justify-center items-center inline-flex py-4 text-neutral-500 text-xl"
+              className="w-full bg-neutral-100 rounded-lg flex justify-center items-center py-4 text-neutral-500 text-lg"
             >
               날씨 불러오기
             </button>
           )}
           <div className="w-full flex justify-end">
             <button
-                onClick={handleCreatePost}
-                className=" p-2 bg-rose-500 rounded-lg justify-center items-center inline-flex px-4 py-2 text-white text-xl"
+              onClick={handleCreatePost}
+              className="bg-rose-500 rounded-lg flex justify-center items-center px-6 py-3 text-white text-lg"
             >
-                올리기
+              올리기
             </button>
-            </div>
+          </div>
         </div>
       </div>
     </div>

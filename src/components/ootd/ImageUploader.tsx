@@ -1,4 +1,4 @@
-import React, { useState, ChangeEvent } from 'react';
+import React, { ChangeEvent, useState } from 'react';
 import Carousel from 'react-bootstrap/Carousel';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import OotdDefault from '../../../public/OotdDefault.png';
@@ -18,9 +18,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onImagesChange }) => {
 
     try {
       const uploadedImage = await uploadImage(file);
-      console.log(uploadedImage.result);
       setImages([...images, uploadedImage.result]);
-      console.log(images);
       onImagesChange([...images, uploadedImage.result]);
     } catch (error) {
       console.error('Error uploading image:', error);
@@ -30,60 +28,37 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onImagesChange }) => {
   const displayImages = images.map(image => image.accessUri);
 
   return (
-    <div>
-      <input 
-        type="file" 
-        onChange={handleImageUpload} 
-        style={{ display: 'none' }} 
+    <div className="relative mx-auto">
+      <input
+        type="file"
+        onChange={handleImageUpload}
+        style={{ display: 'none' }}
         id="image-upload-input"
       />
-      <div 
-        onClick={() => document.getElementById('image-upload-input')?.click()} 
-        style={{ 
-          position: 'relative', 
-          width: '600px', 
-          height: '600px', 
-          cursor: 'pointer', 
-          overflow: 'hidden',
-          background: displayImages.length > 0 ? 'none' : `url(${OotdDefault.src}) no-repeat center center / cover` 
-        }} 
+      <div
+        onClick={() => document.getElementById('image-upload-input')?.click()}
+        className="relative cursor-pointer overflow-hidden bg-cover bg-center"
+        style={{
+          backgroundImage: displayImages.length > 0 ? 'none' : `url(${OotdDefault.src})`,
+          width: '400px',
+          height: '400px',
+        }}
       >
         {displayImages.length === 1 && (
-          <img 
-            src={displayImages[0]} 
-            alt="Uploaded Image" 
-            style={{ 
-              position: 'absolute', 
-              top: 0, 
-              left: 0, 
-              width: '600px', 
-              height: '600px', 
-              objectFit: 'cover' 
-            }} 
+          <img
+            src={displayImages[0]}
+            alt="Uploaded Image"
+            className="absolute inset-0 w-full h-full object-cover"
           />
         )}
         {displayImages.length > 1 && (
-          <Carousel 
-            style={{ 
-              position: 'absolute', 
-              top: 0, 
-              left: 0, 
-              width: '100%', 
-              height: '100%' 
-            }}
-          >
+          <Carousel className="absolute inset-0">
             {displayImages.map((image, index) => (
               <Carousel.Item key={index}>
-                <img 
-                  src={image} 
-                  alt={`Slide ${index}`} 
-                  style={{ 
-                    width: '100%', 
-                    height: '100%', 
-                    objectFit: 'contain', 
-                    display: 'block', 
-                    margin: 'auto' 
-                  }} 
+                <img
+                  src={image}
+                  alt={`Slide ${index}`}
+                  className="d-block w-100 h-100 object-cover"
                 />
               </Carousel.Item>
             ))}
