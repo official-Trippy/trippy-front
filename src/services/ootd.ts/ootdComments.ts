@@ -1,6 +1,5 @@
 import axios from 'axios';
 import { Comment } from '@/types/ootd';
-import { LikeResponse } from '@/types/ootd';
 
 const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
