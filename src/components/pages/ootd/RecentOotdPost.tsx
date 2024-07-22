@@ -88,7 +88,15 @@ const RecentOotdPost: React.FC = () => {
         {ootdList.map((item) => (
           <div key={item.post.id} className='flex flex-col w-full' onClick={() => handleOotdItemClick(item.post.id)}>
             {item.post.images.length > 0 && (
-              <img className='flex rounded-[0.8rem]' src={item.post.images[0].accessUri} alt='OOTD' />
+              <div className='ootd-image-container'>
+              <Image 
+                className='ootd-image' 
+                src={item.post.images[0].accessUri} 
+                alt='OOTD' 
+                width={200} 
+                height={200} 
+              />
+            </div>
             )}
             <div className='px-[1.6rem] py-[2rem]'>
               <div className='flex'>
