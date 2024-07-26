@@ -17,6 +17,7 @@
     "bootstrap": "^5.3.3",
     "carousel": "^0.0.3",
     "cors": "^2.8.5",
+    "date-fns": "^3.6.0",
     "framer-motion": "^11.2.0",
     "http-proxy": "^1.18.1",
     "js-cookie": "^3.0.5",

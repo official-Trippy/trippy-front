@@ -43,7 +43,7 @@ const DateInput: React.FC<DateInputProps> = ({ onDateChange }) => {
   };
 
   return (
-    <div className="w-full h-14 rounded border border-stone-300 justify-start items-start gap-5 inline-flex">
+    <div className="w-full h-[4rem] rounded border border-[#cfcfcf] flex items-center p-2 text-neutral-500 text-lg">
       <input
         type="text"
         placeholder="날짜 입력 (YYYYMMDD)"
