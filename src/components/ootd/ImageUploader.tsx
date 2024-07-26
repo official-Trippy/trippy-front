@@ -18,11 +18,18 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onImagesChange }) => {
 
     try {
       const uploadedImage = await uploadImage(file);
-      setImages([...images, uploadedImage.result]);
-      onImagesChange([...images, uploadedImage.result]);
+      const newImages = [...images, uploadedImage.result];
+      setImages(newImages);
+      onImagesChange(newImages);
     } catch (error) {
       console.error('Error uploading image:', error);
     }
+  };
+
+  const handleDeleteImage = (index: number) => {
+    const newImages = images.filter((_, i) => i !== index);
+    setImages(newImages);
+    onImagesChange(newImages);
   };
 
   const displayImages = images.map(image => image.accessUri);
@@ -36,7 +43,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onImagesChange }) => {
         id="image-upload-input"
       />
       <div
-        onClick={() => document.getElementById('image-upload-input')?.click()}
+        onClick={() => displayImages.length === 0 && document.getElementById('image-upload-input')?.click()}
         className="relative cursor-pointer overflow-hidden bg-cover bg-center"
         style={{
           backgroundImage: displayImages.length > 0 ? 'none' : `url(${OotdDefault.src})`,
@@ -63,6 +70,31 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onImagesChange }) => {
               </Carousel.Item>
             ))}
           </Carousel>
+        )}
+      </div>
+      <div className="flex mt-4">
+        {images.map((image, index) => (
+          <div key={index} className="relative mr-2">
+            <img
+              src={image.accessUri}
+              alt={`Uploaded Image ${index}`}
+              className="w-24 h-24 object-cover"
+            />
+            <button
+              onClick={() => handleDeleteImage(index)}
+              className="absolute top-0 right-0 bg-red-500 text-white rounded-full p-1"
+            >
+              X
+            </button>
+          </div>
+        ))}
+        {images.length > 0 && images.length < 5 && (
+          <div
+            onClick={() => document.getElementById('image-upload-input')?.click()}
+            className="w-24 h-24 flex justify-center items-center border border-dashed border-gray-400 cursor-pointer"
+          >
+            +
+          </div>
         )}
       </div>
     </div>
