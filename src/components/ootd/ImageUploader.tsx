@@ -1,9 +1,12 @@
 import React, { ChangeEvent, useState } from 'react';
 import Carousel from 'react-bootstrap/Carousel';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import OotdDefault from '../../../public/OotdDefault.png';
+import OotdDefault from '../../../public/ootdDefaultImg.svg';
+import OotdAddImage from '../../../public/ootdImageAdd.svg';
+import OOtdDeleteImage from '../../../public/ootdImageDelete.svg';
 import { uploadImage } from '@/services/blog';
 import { UploadedImage } from '@/types/ootd';
+import Image from 'next/image';
 
 interface ImageUploaderProps {
   onImagesChange: (images: UploadedImage[]) => void;
@@ -52,49 +55,64 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onImagesChange }) => {
         }}
       >
         {displayImages.length === 1 && (
-          <img
+          <Image
             src={displayImages[0]}
             alt="Uploaded Image"
-            className="absolute inset-0 w-full h-full object-cover"
+            className="absolute inset-0 w-full h-full object-cover rounded-lg"
+            width={400}
+            height={400}
           />
         )}
         {displayImages.length > 1 && (
           <Carousel className="absolute inset-0">
             {displayImages.map((image, index) => (
               <Carousel.Item key={index}>
-                <img
+                <Image
                   src={image}
                   alt={`Slide ${index}`}
-                  className="d-block w-100 h-100 object-cover"
+                  className="d-block w-100 h-100 object-cover rounded-lg"
+                  width={400}
+                  height={400}
                 />
               </Carousel.Item>
             ))}
           </Carousel>
         )}
       </div>
-      <div className="flex mt-4">
+      <div className={`flex w-[400px] mt-4 p-[10px] ${
+          displayImages.length === 0 ? '' : 'rounded-lg border border-[#cfcfcf]'
+        }`}>
         {images.map((image, index) => (
-          <div key={index} className="relative mr-2">
-            <img
+          <div
+            key={index}
+            className={`relative ${index === images.length - 1 ? '' : 'mr-[5px]'}`}
+          >
+            <Image
               src={image.accessUri}
               alt={`Uploaded Image ${index}`}
-              className="w-24 h-24 object-cover"
+              className="object-cover rounded-lg"
+              width={72}
+              height={72}
             />
-            <button
+            <Image
+              src={OOtdDeleteImage.src}
+              alt='Delete Image'
               onClick={() => handleDeleteImage(index)}
-              className="absolute top-0 right-0 bg-red-500 text-white rounded-full p-1"
-            >
-              X
-            </button>
+              className="absolute top-0 right-0 rounded-full w-[20px] h-[20px] cursor-pointer"
+              width={10}
+              height={10}
+            />
           </div>
         ))}
         {images.length > 0 && images.length < 5 && (
-          <div
+          <Image
+            src={OotdAddImage.src}
+            alt='Add Image'
             onClick={() => document.getElementById('image-upload-input')?.click()}
-            className="w-24 h-24 flex justify-center items-center border border-dashed border-gray-400 cursor-pointer"
-          >
-            +
-          </div>
+            className="w-[72px] h-[72px] ml-[5px] flex justify-center items-center cursor-pointer"
+            width={100}
+            height={100}
+          />
         )}
       </div>
     </div>
