@@ -12,6 +12,7 @@ import { createPost } from '@/services/ootd.ts/ootdPost';
 import { PostRequest, OotdRequest } from '@/types/ootd';
 import { UploadedImage } from '@/types/ootd';
 import Swal from 'sweetalert2';
+import { getWeatherStatusInKorean } from '@/constants/weatherTransition';
 
 const PostOotd: React.FC = () => {
   const [images, setImages] = useState<UploadedImage[]>([]);
@@ -180,8 +181,8 @@ const PostOotd: React.FC = () => {
           <DateInput onDateChange={handleDateChange} />
           {weather ? (
             <div className="w-full bg-neutral-100 rounded-lg flex justify-center items-center py-4 text-neutral-500 text-lg">
-              <div>{weather.avgTemp}°C, {weather.status}</div>
-            </div>
+              <div>{weather.avgTemp}°C, {getWeatherStatusInKorean(weather.status)}</div>
+          </div>
           ) : (
             <button
               onClick={handleFetchWeather}
