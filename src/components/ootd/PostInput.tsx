@@ -68,14 +68,14 @@ const PostInput: React.FC<PostInputProps> = ({ onPostChange, onTagsChange, tags 
           onChange={handleTagInputChange}
           onKeyDown={handleTagInputKeyDown}
         />
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-2 items-center">
           {tags.map((tag, index) => (
-            <span key={index} className="h-8 text-neutral-400 px-3 py-1 bg-neutral-100 rounded-full flex items-center">
+            <span key={index} className="h-8 text-neutral-400 pl-3 pr-2 py-1 bg-neutral-100 rounded-xl flex items-center">
               {tag}
               <button
                 type="button"
                 onClick={() => handleTagDelete(tag)}
-                className="ml-2 text-black"
+                className="ml-2 text-black mb-[1.5px]"
               >
                 x
               </button>
