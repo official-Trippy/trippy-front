@@ -10,7 +10,6 @@ import { useMutation } from 'react-query';
 import { fetchWeather } from '@/services/ootd.ts/weather';
 import { createPost } from '@/services/ootd.ts/ootdPost';
 import { PostRequest, OotdRequest } from '@/types/ootd';
-import { LOCATIONS, LocationKey } from '@/constants/locations';
 import { UploadedImage } from '@/types/ootd';
 import Swal from 'sweetalert2';
 
@@ -163,7 +162,7 @@ const PostOotd: React.FC = () => {
         <ImageUploader onImagesChange={setImages} />
         <div className="space-y-6">
           <PostInput onPostChange={setPost} onTagsChange={setTags} tags={tags} />
-          <LocationInput onLocationChange={handleLocationChange} />
+          <LocationInput onLocationChange={handleLocationChange} selectedLocationName={location} />
           <DateInput onDateChange={handleDateChange} />
           {weather ? (
             <div className="w-full bg-neutral-100 rounded-lg flex justify-center items-center py-4 text-neutral-500 text-lg">

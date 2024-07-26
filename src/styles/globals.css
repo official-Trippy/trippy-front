@@ -385,3 +385,15 @@ body {
   border-radius: 50%;
 }
 
+.custom-modal {
+  max-width: 90% !important; 
+  width: 90% !important;
+  max-height: 90% !important; 
+  height: 90% !important;
+}
+
+.custom-modal-overlay {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
