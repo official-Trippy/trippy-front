@@ -53,6 +53,7 @@ const PostOotd: React.FC = () => {
           title: '날씨 정보를 불러올 수 없습니다.',
           text: '날씨와 온도를 직접 선택해주세요.',
           confirmButtonText: '확인',
+          allowOutsideClick: false, // 바깥 클릭으로 모달 닫히지 않도록 설정
           preConfirm: async () => {
             const { value: selected } = await Swal.fire({
               title: '날씨와 온도를 선택하세요',
@@ -69,6 +70,7 @@ const PostOotd: React.FC = () => {
               confirmButtonText: '확인',
               cancelButtonText: '취소',
               showCancelButton: true,
+              allowOutsideClick: false, 
               preConfirm: () => {
                 const weatherSelect = document.getElementById('weather-select') as HTMLSelectElement;
                 const temperatureSelect = document.getElementById('temperature-select') as HTMLSelectElement;
@@ -78,7 +80,7 @@ const PostOotd: React.FC = () => {
                 };
               },
             });
-
+  
             if (selected) {
               setWeather({
                 status: selected.weather,
