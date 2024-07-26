@@ -1,55 +1,43 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Swal from 'sweetalert2';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import { format, isValid, startOfToday } from 'date-fns';
 
 interface DateInputProps {
   onDateChange: (date: string) => void;
 }
 
 const DateInput: React.FC<DateInputProps> = ({ onDateChange }) => {
-  const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value;
-    const formattedDate = value.replace(/\D/g, '');
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
 
-    if (formattedDate.length > 8) {
-      Swal.fire({
-        icon: 'error',
-        title: '날짜 형식 오류',
-        text: '날짜는 YYYYMMDD 형식으로 입력해주세요.',
-      });
-      return;
-    }
-
-    if (formattedDate.length === 8) {
-      const year = parseInt(formattedDate.slice(0, 4), 10);
-      const month = parseInt(formattedDate.slice(4, 6), 10) - 1;
-      const day = parseInt(formattedDate.slice(6, 8), 10);
-      const dateObj = new Date(year, month, day);
-
-      if (
-        dateObj.getFullYear() !== year ||
-        dateObj.getMonth() !== month ||
-        dateObj.getDate() !== day
-      ) {
+  const handleDateChange = (date: Date | null) => {
+    if (date) {
+      const formattedDate = format(date, 'yyyyMMdd');
+      
+      if (isValid(date)) {
+        setSelectedDate(date);
+        onDateChange(formattedDate);
+      } else {
         Swal.fire({
           icon: 'error',
           title: '날짜 입력 오류',
-          text: '존재하지 않는 날짜입니다. 올바른 날짜를 입력해주세요.',
+          text: '존재하지 않는 날짜입니다. 올바른 날짜를 선택해주세요.',
         });
-        return;
       }
     }
-
-    onDateChange(formattedDate);
   };
 
   return (
-    <div className="w-full h-[4rem] rounded border border-[#cfcfcf] flex items-center p-2 text-neutral-500 text-lg">
-      <input
-        type="text"
-        placeholder="날짜 입력 (YYYYMMDD)"
-        className="w-full h-full p-2"
+    <div className="w-full h-[4rem] rounded border border-[#cfcfcf] flex items-center text-neutral-500 text-lg">
+      <DatePicker
+        selected={selectedDate}
         onChange={handleDateChange}
-        maxLength={8}
+        dateFormat="yyyyMMdd"
+        placeholderText="날짜 선택"
+        className="w-full h-full py-0 px-2 border-none text-neutral-500"
+        maxDate={startOfToday()}
+        popperClassName="custom-datepicker-popover"
       />
     </div>
   );

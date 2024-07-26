@@ -54,7 +54,7 @@ const LocationInput: React.FC<LocationInputProps> = ({ onLocationChange, selecte
         onClick={() => setModalIsOpen(true)}
         className="w-full h-[4rem] rounded border border-[#cfcfcf] flex items-center p-2 text-neutral-500 text-lg"
       >
-        <span className="flex-1 text-left">{selectedLocationName || '지역선택'}</span>
+        <div className="flex-1 text-left text-neutral-500">{selectedLocationName || '지역 선택'}</div>
         <img src={SearchIcon.src} alt="Search Icon" className="w-6 h-6 ml-2" />
       </button>
       <Modal
