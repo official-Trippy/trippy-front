@@ -171,4 +171,14 @@ export interface PostRequest {
     children: Comment[];
   }
   
-  
+  export interface LikeResponse {
+    isSuccess: boolean;
+    code: string;
+    message: string;
+    result: {
+      likeId: number;
+      postId: number;
+      memberId: string;
+      likeCount: number;
+    };
+  }
