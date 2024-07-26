@@ -63,24 +63,16 @@ export interface RoleResponse {
 }
 
 export interface UpdateMemberInfoRequest {
-  blogImage?: {
-    accessUri?: string;
-    authenticateId?: string;
-    imgUrl?: string;
-  };
-  profileImage?: {
-    accessUri?: string;
-    authenticateId?: string;
-    imgUrl?: string;
-  };
-  nickName?: string;
-  blogName?: string;
-  blogIntroduce?: string;
-  koreanInterestedTypes?: string[];
-  likeAlert?: boolean;
-  commentAlert?: boolean;
-  ticketScope?: string;
-  ootdScope?: "public" | "private" | "protected";
-  badgeScope?: string;
-  followScope?: string;
+  nickName: string;
+  blogName: string;
+  blogIntroduce: string;
+  koreanInterestedTypes: string[];
+  profileImage: { accessUri: string; authenticateId: string; imgUrl: string; } | undefined;
+  blogImage: { accessUri: string; authenticateId: string; imgUrl: string; } | undefined;
+  likeAlert: boolean;
+  commentAlert: boolean;
+  ticketScope: "public" | "private" | "protected";
+  ootdScope: "public" | "private" | "protected";
+  badgeScope: "public" | "private" | "protected";
+  followScope: "public" | "private" | "protected";
 }
