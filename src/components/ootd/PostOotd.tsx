@@ -160,9 +160,10 @@ const PostOotd: React.FC = () => {
     <div className="w-full max-w-screen-lg mx-auto px-4 py-8">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <ImageUploader onImagesChange={setImages} />
-        <div className="space-y-6">
+        <div className="">
           <PostInput onPostChange={setPost} onTagsChange={setTags} tags={tags} />
-          <LocationInput onLocationChange={handleLocationChange} selectedLocationName={location} />
+          <div className="space-y-4">
+          <LocationInput onLocationChange={handleLocationChange} selectedLocationName={location}/>
           <DateInput onDateChange={handleDateChange} />
           {weather ? (
             <div className="w-full bg-neutral-100 rounded-lg flex justify-center items-center py-4 text-neutral-500 text-lg">
@@ -183,6 +184,7 @@ const PostOotd: React.FC = () => {
             >
               올리기
             </button>
+          </div>
           </div>
         </div>
       </div>

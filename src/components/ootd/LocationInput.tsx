@@ -49,7 +49,7 @@ const LocationInput: React.FC<LocationInputProps> = ({ onLocationChange, selecte
   };
 
   return (
-    <div>
+    <div className='mt-[80px]'>
       <button
         onClick={() => setModalIsOpen(true)}
         className="w-full h-[4rem] rounded border border-[#cfcfcf] flex items-center px-4 py-2 text-neutral-500 text-lg"
