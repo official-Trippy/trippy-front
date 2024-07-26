@@ -1,6 +1,7 @@
 import React, { useCallback, useState } from 'react';
 import { Modal } from 'react-bootstrap';
 import { GoogleMap, Marker, useLoadScript, Libraries } from '@react-google-maps/api';
+import SearchIcon from '../../../public/icon_search.svg'; 
 
 interface LocationInputProps {
   onLocationChange: (location: { lat: number; lng: number; address: string }) => void;
@@ -17,9 +18,10 @@ const LocationInput: React.FC<LocationInputProps> = ({ onLocationChange, selecte
 
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [selectedLocation, setSelectedLocation] = useState<{ lat: number; lng: number }>({
-    lat: 37.5665, // Default latitude
-    lng: 126.9780, // Default longitude
+    lat: 37.5665, 
+    lng: 126.9780, 
   });
+  const [currentAddress, setCurrentAddress] = useState<string>('');
 
   const onMapClick = useCallback((event: google.maps.MapMouseEvent) => {
     if (event.latLng) {
@@ -27,37 +29,33 @@ const LocationInput: React.FC<LocationInputProps> = ({ onLocationChange, selecte
       const lng = event.latLng.lng();
       setSelectedLocation({ lat, lng });
 
-      // Address lookup, but do not update parent location on map click
       const geocoder = new window.google.maps.Geocoder();
       geocoder.geocode({ location: { lat, lng } }, (results, status) => {
         if (status === 'OK' && results?.[0]) {
-          // Only update the location on confirm
+          console.log(results[0]);
+          setCurrentAddress(results[0].formatted_address);
         }
       });
     }
   }, []);
 
   const handleConfirm = () => {
-    const geocoder = new window.google.maps.Geocoder();
-    geocoder.geocode({ location: selectedLocation }, (results, status) => {
-      if (status === 'OK' && results?.[0]) {
-        onLocationChange({
-          lat: selectedLocation.lat,
-          lng: selectedLocation.lng,
-          address: results[0].formatted_address,
-        });
-        setModalIsOpen(false);
-      }
+    onLocationChange({
+      lat: selectedLocation.lat,
+      lng: selectedLocation.lng,
+      address: currentAddress,
     });
+    setModalIsOpen(false);
   };
 
   return (
     <div>
       <button
         onClick={() => setModalIsOpen(true)}
-        className="w-full bg-neutral-100 rounded-lg flex justify-center items-center py-4 text-neutral-500 text-lg"
+        className="w-full h-[4rem] rounded border border-[#cfcfcf] flex items-center p-2 text-neutral-500 text-lg"
       >
-        {selectedLocationName || '지역선택'}
+        <span className="flex-1 text-left">{selectedLocationName || '지역선택'}</span>
+        <img src={SearchIcon.src} alt="Search Icon" className="w-6 h-6 ml-2" />
       </button>
       <Modal
         show={modalIsOpen}

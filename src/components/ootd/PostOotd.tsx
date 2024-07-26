@@ -75,7 +75,7 @@ const PostOotd: React.FC = () => {
       });
       return;
     }
-
+    console.log(location)
     setLatitude(latitude);
     setLongitude(longitude);
   };
