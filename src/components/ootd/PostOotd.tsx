@@ -158,6 +158,19 @@ const PostOotd: React.FC = () => {
 
   return (
     <div className="w-full max-w-screen-lg mx-auto px-4 py-8">
+       <div className="w-full flex justify-end mb-[20px]">
+            <button
+              className="bg-neutral-100 rounded-lg flex justify-center items-center px-10 py-2 text-black text-lg mr-[10px]"
+            >
+              임시저장
+            </button>
+            <button
+              onClick={handleCreatePost}
+              className="bg-[#fa3463] rounded-lg flex justify-center items-center px-10 py-2 text-white text-lg"
+            >
+              올리기
+            </button>
+          </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <ImageUploader onImagesChange={setImages} />
         <div className="">
@@ -177,14 +190,6 @@ const PostOotd: React.FC = () => {
               날씨 불러오기
             </button>
           )}
-          <div className="w-full flex justify-end">
-            <button
-              onClick={handleCreatePost}
-              className="bg-rose-500 rounded-lg flex justify-center items-center px-6 py-3 text-white text-lg"
-            >
-              올리기
-            </button>
-          </div>
           </div>
         </div>
       </div>
