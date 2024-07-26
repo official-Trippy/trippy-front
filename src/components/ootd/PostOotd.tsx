@@ -18,7 +18,7 @@ const PostOotd: React.FC = () => {
   const [images, setImages] = useState<UploadedImage[]>([]);
   const [post, setPost] = useState<string>('');
   const [tags, setTags] = useState<string[]>([]);
-  const [location, setLocation] = useState<LocationKey | ''>('');
+  const [location, setLocation] = useState<string>('');
   const [latitude, setLatitude] = useState<number>(0);
   const [longitude, setLongitude] = useState<number>(0);
   const [date, setDate] = useState<string>('');
@@ -68,26 +68,17 @@ const PostOotd: React.FC = () => {
   }, [latitude, longitude, date]);
 
   const handleFetchWeather = () => {
-    if (location === '') {
+    if (!location || date.length !== 8) {
       Swal.fire({
         icon: 'error',
-        title: '위치 선택 오류',
-        text: '위치를 선택해주세요.',
-      });
-      return;
-    }
-    if (date.length !== 8) {
-      Swal.fire({
-        icon: 'error',
-        title: '날짜 형식 오류',
-        text: '날짜를 YYYYMMDD 형식으로 입력해주세요.',
+        title: '입력 오류',
+        text: '위치와 날짜를 모두 입력해주세요.',
       });
       return;
     }
 
-    const selectedLocation = LOCATIONS[location];
-    setLatitude(selectedLocation.latitude);
-    setLongitude(selectedLocation.longitude);
+    setLatitude(latitude);
+    setLongitude(longitude);
   };
 
   const formatDateString = (dateString: string) => {
@@ -154,8 +145,10 @@ const PostOotd: React.FC = () => {
     postMutation.mutate({ postRequest, ootdRequest });
   };
 
-  const handleLocationChange = (location: LocationKey | '') => {
-    setLocation(location);
+  const handleLocationChange = (locationData: { lat: number; lng: number; address: string }) => {
+    setLocation(locationData.address);
+    setLatitude(locationData.lat);
+    setLongitude(locationData.lng);
     setWeather(null);
   };
 
