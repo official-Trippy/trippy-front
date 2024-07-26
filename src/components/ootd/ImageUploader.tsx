@@ -14,10 +14,13 @@ interface ImageUploaderProps {
 
 const ImageUploader: React.FC<ImageUploaderProps> = ({ onImagesChange }) => {
   const [images, setImages] = useState<UploadedImage[]>([]);
+  const [isUploading, setIsUploading] = useState(false);
 
   const handleImageUpload = async (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
+
+    setIsUploading(true);
 
     try {
       const uploadedImage = await uploadImage(file);
@@ -26,6 +29,8 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onImagesChange }) => {
       onImagesChange(newImages);
     } catch (error) {
       console.error('Error uploading image:', error);
+    } finally {
+      setIsUploading(false);
     }
   };
 
@@ -54,6 +59,17 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onImagesChange }) => {
           height: '400px',
         }}
       >
+        {!isUploading && displayImages.length === 0 && (
+          <div className="flex items-center justify-center w-full h-full">
+            <Image
+              src={OotdDefault.src}
+              alt="Default Image"
+              className="object-cover"
+              width={400}
+              height={400}
+            />
+          </div>
+        )}
         {displayImages.length === 1 && (
           <Image
             src={displayImages[0]}
