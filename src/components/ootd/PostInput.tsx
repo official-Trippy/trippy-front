@@ -13,7 +13,7 @@ const PostInput: React.FC<PostInputProps> = ({ onPostChange, onTagsChange, tags 
 
   useEffect(() => {
     if (textareaRef.current) {
-      textareaRef.current.placeholder = "특별한 OOTD를 소개하는 문구를 작성해보세요.\n다양한 #태그도 사용할 수 있어요.";
+      textareaRef.current.placeholder = "특별한 OOTD를 소개하는 문구를 작성해보세요.";
     }
   }, []);
 
@@ -54,10 +54,10 @@ const PostInput: React.FC<PostInputProps> = ({ onPostChange, onTagsChange, tags 
     <div className="space-y-4">
       <textarea
         ref={textareaRef}
-        className="w-full h-64 text-lg border p-2 rounded resize-none"
+        className="w-full h-64 text-lg border py-4 px-4 rounded resize-none"
         onChange={handlePostChange}
       />
-      <div className="relative w-full border p-2 rounded">
+      <div className="relative w-full border py-4 px-4 rounded">
         <input
           type="text"
           placeholder="태그를 3개 이상 입력해주세요."
@@ -68,7 +68,7 @@ const PostInput: React.FC<PostInputProps> = ({ onPostChange, onTagsChange, tags 
           onChange={handleTagInputChange}
           onKeyDown={handleTagInputKeyDown}
         />
-        <div className="mt-2 flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-2">
           {tags.map((tag, index) => (
             <span key={index} className="h-8 text-neutral-400 px-3 py-1 bg-neutral-100 rounded-full flex items-center">
               {tag}

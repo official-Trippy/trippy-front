@@ -37,7 +37,7 @@ const DateInput: React.FC<DateInputProps> = ({ onDateChange }) => {
         onChange={handleDateChange}
         dateFormat="yyyyMMdd"
         placeholderText="날짜 선택"
-        className="datepicker-input h-full py-0 px-2 border-none text-neutral-500"
+        className="datepicker-input h-full py-0 px-4 border-none text-neutral-500"
         maxDate={startOfToday()}
         popperClassName="custom-datepicker-popover"
       />
