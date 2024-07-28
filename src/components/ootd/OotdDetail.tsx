@@ -14,7 +14,7 @@ import LocationIcon from '../../../public/icon_pin.png';
 import CommentSection from './CommentSection';
 import LeftArrowIcon from '../../../public/left-arrow.svg'; 
 import RightArrowIcon from '../../../public/right-arrow.svg'; 
-
+import { getWeatherStatusInKorean } from '@/constants/weatherTransition';
 
 interface OotdDetailProps {
   id: number;
@@ -103,7 +103,9 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
                     height={16}
                     src={LocationIcon}
                     alt="location" />
-                  <span className="block text-gray-600">{ootdItem.post.location} | {ootdItem.ootd.weatherStatus}, {ootdItem.ootd.weatherTemp}°C</span>
+                  <span className="block text-gray-600">
+                    {ootdItem.post.location} | {getWeatherStatusInKorean(ootdItem.ootd.weatherStatus)}, {ootdItem.ootd.weatherTemp}°C
+                  </span>
                 </div>
               </div>
             </div>
