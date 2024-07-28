@@ -140,7 +140,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
             )}
             <div className="text-zinc-800 text-sm font-normal font-['Pretendard'] ml-[5px]">{comment.member?.nickName}</div>
           </div>
-          <div className="ml-14 items-center">
+          <div className="ml-[3.7rem] items-center">
           <div>
               {comment.content}
             </div>
