@@ -77,7 +77,6 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
       fetchLikeList();
     }
   }, [showLikes, postId]);
-  
 
   const commentMutation = useMutation(
     (content: string) => createComment(postId, content),
@@ -155,10 +154,12 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
 
   const handleToggleComments = () => {
     setShowComments(!showComments);
+    if (!showComments) setShowLikes(false);  
   };
 
   const handleToggleLikes = () => {
     setShowLikes(!showLikes);
+    if (!showLikes) setShowComments(false);  
   };
 
   const renderComments = (comments: Comment[], depth = 0, isChild = false) => {
