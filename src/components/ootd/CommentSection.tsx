@@ -108,15 +108,14 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
 
   const handleReplySubmit = () => {
     if (replyComment.trim() && replyTo !== null) {
-      const formattedReply = replyComment;
+      const formattedReply = `@${replyToNickname} ${replyComment}`;
       replyMutation.mutate({ content: formattedReply, parentId: replyTo });
     }
   };
-
+  
   const handleReplyClick = (commentId: number, nickName: string) => {
     setReplyTo(commentId);
     setReplyToNickname(nickName);
-    setReplyComment(`@${nickName} `);
   };
 
   const handleLikeClick = () => {
@@ -142,7 +141,9 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
             <div className="text-zinc-800 text-sm font-normal font-['Pretendard'] ml-[5px]">{comment.member?.nickName}</div>
           </div>
           <div className="ml-14 items-center">
-            <div>{comment.content}</div>
+          <div>
+              {comment.content}
+            </div>
             <div className='flex flex-row my-2'>
               <div className="text-gray-600">{formatDate(comment.createDateTime)}</div>
               <div>&nbsp;&nbsp;|&nbsp;&nbsp;</div>
