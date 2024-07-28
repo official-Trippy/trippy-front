@@ -2,14 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation } from 'react-query';
 import Image from 'next/image';
 import { useUserStore } from '@/store/useUserStore';
-import { formatDate, formatTime } from '@/constants/dateFotmat';
+import { formatTime } from '@/constants/dateFotmat';
 import { FetchCommentsResponse, createComment, createReply, fetchComments } from '@/services/ootd.ts/ootdComments';
-import { checkIfLiked, likePost, unlikePost } from '@/services/ootd.ts/ootdComments';
+import { checkIfLiked, likePost, unlikePost, likePostList } from '@/services/ootd.ts/ootdComments';
 import HeartIcon from '../../../public/icon_heart.svg';
-import EmptyHeartIcon from '../../../public/EmptyHeartIcon.svg';
-import CommentIcon from '../../../public/icon_comment.svg';
-import CommentIcon1 from '../../../public/icon_comment1.svg';
-import DownIcon from '../../../public/icon_down.svg';
+import EmptyHeartIcon from '../../../public/empty_heart_default.svg';
+import EmptyHeartIcon2 from '../../../public/empty_heart_open.svg';
+import CommentIcon from '../../../public/empty_comment_open.svg';
+import CommentIcon1 from '../../../public/empty_comment_default.svg';
+import DownIcon from '../../../public/arrow_down.svg';
 import UpIcon from '../../../public/icon_up.svg';
 import { Comment } from '@/types/ootd';
 
@@ -29,6 +30,9 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
   const [replyToNickname, setReplyToNickname] = useState<string | null>(null);
   const [isLiked, setIsLiked] = useState<boolean>(false);
   const [showComments, setShowComments] = useState<boolean>(false);
+  const [showLikes, setShowLikes] = useState<boolean>(false);
+  const [likeList, setLikeList] = useState<any[]>([]);
+  const [isLoadingLikes, setIsLoadingLikes] = useState<boolean>(false);
 
   const { data: commentData, refetch, isLoading } = useQuery<FetchCommentsResponse>(
     ['comments', postId],
@@ -51,6 +55,29 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
     };
     fetchLikeStatus();
   }, [postId, userInfo]);
+
+  useEffect(() => {
+    const fetchLikeList = async () => {
+      setIsLoadingLikes(true);
+      try {
+        const result = await likePostList(postId);
+        if (result.isSuccess && Array.isArray(result.result.likeList)) {
+          setLikeList(result.result.likeList);
+        } else {
+          setLikeList([]); 
+        }
+      } catch (error) {
+        console.error('Error fetching like list:', error);
+        setLikeList([]); 
+      }
+      setIsLoadingLikes(false);
+    };
+  
+    if (showLikes) {
+      fetchLikeList();
+    }
+  }, [showLikes, postId]);
+  
 
   const commentMutation = useMutation(
     (content: string) => createComment(postId, content),
@@ -112,7 +139,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
       replyMutation.mutate({ content: formattedReply, parentId: replyTo });
     }
   };
-  
+
   const handleReplyClick = (commentId: number, nickName: string) => {
     setReplyTo(commentId);
     setReplyToNickname(nickName);
@@ -130,6 +157,10 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
     setShowComments(!showComments);
   };
 
+  const handleToggleLikes = () => {
+    setShowLikes(!showLikes);
+  };
+
   const renderComments = (comments: Comment[], depth = 0, isChild = false) => {
     return comments.map((comment) => (
       <div key={comment.id} className={`${isChild ? '' : ''}`}>
@@ -141,7 +172,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
             <div className="text-zinc-800 text-sm font-normal font-['Pretendard'] ml-[5px]">{comment.member?.nickName}</div>
           </div>
           <div className="ml-[3.7rem] items-center">
-          <div>
+            <div>
               {comment.content}
             </div>
             <div className='flex flex-row my-2'>
@@ -188,6 +219,18 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
     ));
   };
 
+  const renderLikeList = (likes: any[]) => {
+    if (!Array.isArray(likes)) {
+      return null;
+    }
+    
+    return likes.map((like, index) => (
+      <div key={index} className="flex items-center py-2">
+        <div className="mx-2 text-gray-800">{like.memberId}</div>
+      </div>
+    ));
+  };
+  
   if (!userInfo) {
     return (
       <div className="max-w-6xl w-full mx-auto">
@@ -217,17 +260,24 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
     <div className="max-w-6xl w-full mx-auto">
       <div className="flex items-center pb-4">
         <button className="flex items-center" onClick={handleLikeClick}>
-          <Image
-            src={isLiked ? HeartIcon : EmptyHeartIcon}
-            alt={isLiked ? "좋아요" : "좋아요 취소"}
-            width={24}
-            height={24}
-          />
-          <span className="mx-2">{likeCount}</span>
+        <Image
+          src={
+            isLiked 
+              ? HeartIcon 
+              : (showLikes ? EmptyHeartIcon2 : EmptyHeartIcon)
+          }
+          alt={isLiked ? "좋아요" : "좋아요 취소"}
+          width={24}
+          height={24}
+        />
+          <span className={`mx-2 ${showLikes ? 'text-[#FB3463]' : ''}`}>{likeCount}</span>
         </button>
+        <button className="flex items-center" onClick={handleToggleLikes}>
+            <Image src={showLikes ? UpIcon : DownIcon} alt="펼치기/접기" width={24} height={24} />
+          </button>
         <div className='flex items-center ml-[10px]'>
           <Image src={showComments ? CommentIcon : CommentIcon1} alt="댓글" width={24} height={24} />
-          <span className={`ml-2 ${showComments ? 'text-[#FB3463]' : ''}`}>{commentCount}</span>
+          <span className={`mx-2 ${showComments ? 'text-[#FB3463]' : ''}`}>{commentCount}</span>
           <button className="flex items-center" onClick={handleToggleComments}>
             <Image src={showComments ? UpIcon : DownIcon} alt="펼치기/접기" width={24} height={24} />
           </button>
@@ -264,7 +314,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
           </div>
           <div className="my-4 comment-section p-4 bg-white rounded-lg shadow-md">
             {isLoading ? (
-              <div></div>
+              <div>로딩 중...</div>
             ) : (
               comments.length === 0 ? (
                 <div>댓글이 없습니다.</div>
@@ -274,6 +324,19 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
             )}
           </div>
         </>
+      )}
+      {showLikes && (
+        <div className="my-4 like-section p-4 bg-white rounded-lg shadow-md">
+          {isLoadingLikes ? (
+            <div>로딩 중...</div>
+          ) : (
+            likeList.length === 0 ? (
+              <div>좋아요가 없습니다.</div>
+            ) : (
+              renderLikeList(likeList)
+            )
+          )}
+        </div>
       )}
     </div>
   );
