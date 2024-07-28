@@ -127,10 +127,10 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
     setShowComments(!showComments);
   };
 
-  const renderComments = (comments: Comment[], depth = 0) => {
+  const renderComments = (comments: Comment[], depth = 0, isChild = false) => {
     return comments.map((comment) => (
-      <div key={comment.id} className={`mb-4 ${depth > 0 ? 'ml-8' : ''}`}>
-        <div className="">
+      <div key={comment.id} className={`${isChild ? '' : ''}`}>
+        <div>
           <div className='flex flex-row items-center'>
             {comment.member?.profileUrl && (
               <Image src={comment.member.profileUrl} alt="사용자 프로필" width={32} height={32} className="rounded-full" />
@@ -149,7 +149,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
           </div>
         </div>
         {replyTo === comment.id && (
-          <div className="w-[95%] flex flex-col p-4 mt-2 ml-8 bg-white rounded-lg shadow-md">
+          <div className="flex flex-col p-4 mt-2 bg-white rounded-lg shadow-md">
             <div className='flex flex-row items-center flex-1'>
               {userInfo?.profileImageUrl && (
                 <Image src={userInfo.profileImageUrl} alt="사용자" width={24} height={24} className="rounded-full" />
@@ -173,14 +173,15 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
             </div>
           </div>
         )}
-        {comment.children.length > 0 && (
-          <div className="my-4 ml-8 mr-6 p-4 bg-neutral-100 rounded-lg">
-            {renderComments(comment.children, depth + 1)}
-          </div>
-        )}
+         {comment.children.length > 0 && (
+        <div className={depth === 0 ? "my-4 p-4 bg-neutral-100 rounded-lg" : ""}>
+          {renderComments(comment.children, depth + 1)} {/* 자식 댓글 렌더링 */}
+        </div>
+      )}
       </div>
     ));
   };
+  
 
   if (!userInfo) {
     return (
@@ -229,7 +230,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
       </div>
       {showComments && (
         <>
-          <div className="comment-section w-full p-4 bg-white rounded-lg shadow-md flex items-center p-4">
+          <div className="comment-section w-full p-4 bg-white rounded-lg shadow-md flex items-center 4 p-4">
             <div className='w-[90%] flex flex-col'>
               <div className='w-full flex-1'>
                 <div className='flex flex-row items-center'>
