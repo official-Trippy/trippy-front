@@ -26,9 +26,10 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
   const [likeCount, setLikeCount] = useState(initialLikeCount);
   const [commentCount, setCommentCount] = useState(initialCommentCount);
   const [replyTo, setReplyTo] = useState<number | null>(null);
+  const [replyToNickname, setReplyToNickname] = useState<string | null>(null);
   const [isLiked, setIsLiked] = useState<boolean>(false);
   const [showComments, setShowComments] = useState<boolean>(false);
-  
+
   const { data: commentData, refetch, isLoading } = useQuery<FetchCommentsResponse>(
     ['comments', postId],
     () => fetchComments(postId),
@@ -70,6 +71,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
         setCommentCount((prev) => prev + 1);
         setReplyComment('');
         setReplyTo(null);
+        setReplyToNickname(null);
       },
     }
   );
@@ -91,7 +93,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
     {
       onSuccess: (data) => {
         if (data.isSuccess) {
-          setLikeCount((prevCount) => Math.max(prevCount - 1, 0)); 
+          setLikeCount((prevCount) => Math.max(prevCount - 1, 0));
           setIsLiked(false);
         }
       },
@@ -106,20 +108,22 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
 
   const handleReplySubmit = () => {
     if (replyComment.trim() && replyTo !== null) {
-      replyMutation.mutate({ content: replyComment, parentId: replyTo });
+      const formattedReply = replyComment;
+      replyMutation.mutate({ content: formattedReply, parentId: replyTo });
     }
   };
 
-  const handleReplyClick = (commentId: number) => {
+  const handleReplyClick = (commentId: number, nickName: string) => {
     setReplyTo(commentId);
-    setReplyComment('');
+    setReplyToNickname(nickName);
+    setReplyComment(`@${nickName} `);
   };
 
   const handleLikeClick = () => {
     if (isLiked) {
       unlikeMutation.mutate();
     } else {
-      likeMutation.mutate(); 
+      likeMutation.mutate();
     }
   };
 
@@ -142,7 +146,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
             <div className='flex flex-row my-2'>
               <div className="text-gray-600">{formatDate(comment.createDateTime)}</div>
               <div>&nbsp;&nbsp;|&nbsp;&nbsp;</div>
-              <button onClick={() => handleReplyClick(comment.id)} className="text-gray-500">
+              <button onClick={() => handleReplyClick(comment.id, comment.member?.nickName || '')} className="text-gray-500">
                 답글쓰기
               </button>
             </div>
@@ -162,7 +166,8 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
                 className="w-[80%] max-w-[570px] mt-2 p-2 rounded-l flex-1"
                 value={replyComment}
                 onChange={(e) => setReplyComment(e.target.value)}
-                placeholder="답글을 입력해주세요..."
+                placeholder={`@${replyToNickname || ''}에게 답글쓰기`}
+                style={{ color: replyComment.startsWith(`@${replyToNickname}`) ? '#ffb9ca' : 'inherit' }}
               />
               <button
                 onClick={handleReplySubmit}
@@ -173,15 +178,14 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
             </div>
           </div>
         )}
-         {comment.children.length > 0 && (
-        <div className={depth === 0 ? "my-4 p-4 bg-neutral-100 rounded-lg" : ""}>
-          {renderComments(comment.children, depth + 1)} {/* 자식 댓글 렌더링 */}
-        </div>
-      )}
+        {comment.children.length > 0 && (
+          <div className={depth === 0 ? "my-4 p-4 bg-neutral-100 rounded-lg" : ""}>
+            {renderComments(comment.children, depth + 1)}
+          </div>
+        )}
       </div>
     ));
   };
-  
 
   if (!userInfo) {
     return (
@@ -220,13 +224,13 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
           />
           <span className="mx-2">{likeCount}</span>
         </button>
-          <div className='flex items-center ml-[10px]'>
+        <div className='flex items-center ml-[10px]'>
           <Image src={showComments ? CommentIcon : CommentIcon1} alt="댓글" width={24} height={24} />
           <span className={`ml-2 ${showComments ? 'text-[#FB3463]' : ''}`}>{commentCount}</span>
           <button className="flex items-center" onClick={handleToggleComments}>
-          <Image src={showComments ? UpIcon : DownIcon} alt="펼치기/접기" width={24} height={24} />
+            <Image src={showComments ? UpIcon : DownIcon} alt="펼치기/접기" width={24} height={24} />
           </button>
-          </div>
+        </div>
       </div>
       {showComments && (
         <>

@@ -467,3 +467,8 @@ body {
 .react-datepicker__input-container input {
   padding-right: 2.5rem;
 }
+
+
+.pink-text {
+  color: #ffb9ca;
+}
