@@ -48,3 +48,9 @@ export interface FetchCommentsResponse {
     const response = await axios.delete(`${backendUrl}/api/like/${postId}`);
     return response.data;
   };
+
+  export const likePostList = async (postId: number) => {
+    const response = await axios.get(`${backendUrl}/api/like/${postId}`);
+    return response.data;
+  };
+  

@@ -43,12 +43,17 @@ const UserInformation: React.FC<{ setActiveTab: (tab: string) => void }> = ({
     <div className="w-full flex flex-col relative">
       <div className="w-[80%]">
         <div className="absolute top-[-150px] w-[200px] h-[300px] bg-white px-8 py-4 rounded-lg shadow-lg flex flex-col items-center">
-          <div className="relative w-40 h-40 rounded-full overflow-hidden my-4">
+          <div className="relative rounded-full overflow-hidden my-4">
             <Image
               src={userData.profileImageUrl}
               alt="Profile"
-              layout="fill"
-              objectFit="cover"
+              width={100}
+              height={150}
+              style={{
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+              }}
             />
           </div>
           <h1 className="text-4xl font-bold mt-[10px]">{userData.nickName}</h1>

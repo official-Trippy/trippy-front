@@ -53,7 +53,8 @@ const PostOotd: React.FC = () => {
           title: '날씨 정보를 불러올 수 없습니다.',
           text: '날씨와 온도를 직접 선택해주세요.',
           confirmButtonText: '확인',
-          allowOutsideClick: false, // 바깥 클릭으로 모달 닫히지 않도록 설정
+          confirmButtonColor: '#FB3463',
+          allowOutsideClick: false,
           preConfirm: async () => {
             const { value: selected } = await Swal.fire({
               title: '날씨와 온도를 선택하세요',
@@ -68,6 +69,7 @@ const PostOotd: React.FC = () => {
                 </select>
               `,
               confirmButtonText: '확인',
+              confirmButtonColor: '#FB3463',
               cancelButtonText: '취소',
               showCancelButton: true,
               allowOutsideClick: false, 
@@ -102,6 +104,7 @@ const PostOotd: React.FC = () => {
           icon: 'success',
           title: 'OOTD 게시글을 올렸습니다.',
           confirmButtonText: '확인',
+          confirmButtonColor: '#FB3463',
         }).then((result) => {
           if (result.isConfirmed) {
             router.push('/ootd');

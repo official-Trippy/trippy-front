@@ -9,6 +9,8 @@ import { OotdGetResponse } from '@/types/ootd';
 import { fetchAllOotdPostCount, fetchAllOotdPosts } from '@/services/ootd.ts/ootdGet';
 import { MemberInfo } from '@/services/auth';
 import { formatDate } from '@/constants/dateFotmat';
+import EmptyHeartIcon from '../../../../public/empty_heart_default.svg'
+import CommentIcon1 from '../../../../public/empty_comment_default.svg';
 
 const PAGE_SIZE = 8;
 
@@ -109,8 +111,20 @@ const RecentOotdPost: React.FC = () => {
                   ))}
                 </div>
                 <div className="flex items-center mt-2">
-                  <span className="mr-2">❤️ {item.post.likeCount}</span>
-                  <span>💬 {item.post.commentCount}</span>
+                <Image
+                  src={EmptyHeartIcon}
+                  alt="좋아요"
+                  width={20}
+                  height={18}
+                />
+                <span className="mx-2"> {item.post.likeCount}</span>
+                <Image
+                  src={CommentIcon1}
+                  alt="좋아요"
+                  width={19}
+                  height={18}
+                />
+                  <span className="mx-2"> {item.post.commentCount}</span>
                 </div>
               </div>
             </div>

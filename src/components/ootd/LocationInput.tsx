@@ -2,6 +2,8 @@ import React, { useCallback, useState } from 'react';
 import { Modal } from 'react-bootstrap';
 import { GoogleMap, Marker, useLoadScript, Libraries } from '@react-google-maps/api';
 import SearchIcon from '../../../public/icon_search.svg'; 
+import 'bootstrap/dist/css/bootstrap.min.css'; 
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
 interface LocationInputProps {
   onLocationChange: (location: { lat: number; lng: number; address: string }) => void;
@@ -32,7 +34,6 @@ const LocationInput: React.FC<LocationInputProps> = ({ onLocationChange, selecte
       const geocoder = new window.google.maps.Geocoder();
       geocoder.geocode({ location: { lat, lng } }, (results, status) => {
         if (status === 'OK' && results?.[0]) {
-          console.log(results[0]);
           setCurrentAddress(results[0].formatted_address);
         }
       });
@@ -63,6 +64,7 @@ const LocationInput: React.FC<LocationInputProps> = ({ onLocationChange, selecte
         size="xl"
         aria-labelledby="contained-modal-title-vcenter"
         centered
+        dialogClassName="modal-dialog-centered" 
       >
         <Modal.Header closeButton>
           <Modal.Title id="contained-modal-title-vcenter">
@@ -71,28 +73,32 @@ const LocationInput: React.FC<LocationInputProps> = ({ onLocationChange, selecte
         </Modal.Header>
         <Modal.Body>
           <div className="w-full h-[50rem]">
-            <GoogleMap
-              mapContainerStyle={{ width: '100%', height: '100%' }}
-              center={selectedLocation}
-              zoom={10}
-              onClick={onMapClick}
-            >
-              <Marker position={selectedLocation} draggable={true} onDragEnd={onMapClick} />
-            </GoogleMap>
+            {isLoaded ? (
+              <GoogleMap
+                mapContainerStyle={{ width: '100%', height: '100%' }}
+                center={selectedLocation}
+                zoom={10}
+                onClick={onMapClick}
+              >
+                <Marker position={selectedLocation} draggable={true} onDragEnd={onMapClick} />
+              </GoogleMap>
+            ) : (
+              <div>Loading...</div>
+            )}
           </div>
         </Modal.Body>
         <Modal.Footer>
-          <button
-            onClick={() => setModalIsOpen(false)}
-            className="mt-2 bg-rose-500 rounded-lg flex justify-center items-center px-6 py-3 text-white text-lg"
-          >
-            취소
-          </button>
-          <button
+        <button
             onClick={handleConfirm}
             className="mt-2 bg-rose-500 rounded-lg flex justify-center items-center px-6 py-3 text-white text-lg"
           >
             확인
+          </button>
+          <button
+            onClick={() => setModalIsOpen(false)}
+            className="mt-2 bg-[#6e7881] rounded-lg flex justify-center items-center px-6 py-3 text-white text-lg"
+          >
+            취소
           </button>
         </Modal.Footer>
       </Modal>

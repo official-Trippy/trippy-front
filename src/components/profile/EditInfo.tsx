@@ -209,6 +209,8 @@ const EditInfo = () => {
       badgeScope,
       followScope,
     };
+
+    console.log('Updated Data:', data); 
   
     updateUserInfoMutation.mutate(data);
     updateUserInfo(data);
