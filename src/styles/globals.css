@@ -472,3 +472,22 @@ body {
 .pink-text {
   color: #ffb9ca;
 }
+
+.slick-prev:before,
+.slick-next:before {
+  display: none;
+}
+
+.custom-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+  cursor: pointer;
+}
+
+.custom-arrow img {
+  height: auto; 
+  max-width: 40px;
+  max-height: 40px; 
+}
