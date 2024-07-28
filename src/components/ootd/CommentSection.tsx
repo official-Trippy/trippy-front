@@ -8,6 +8,9 @@ import { checkIfLiked, likePost, unlikePost } from '@/services/ootd.ts/ootdComme
 import HeartIcon from '../../../public/icon_heart.svg';
 import EmptyHeartIcon from '../../../public/EmptyHeartIcon.svg';
 import CommentIcon from '../../../public/icon_comment.svg';
+import CommentIcon1 from '../../../public/icon_comment1.svg';
+import DownIcon from '../../../public/icon_down.svg';
+import UpIcon from '../../../public/icon_up.svg';
 import { Comment } from '@/types/ootd';
 
 interface CommentSectionProps {
@@ -24,12 +27,13 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
   const [commentCount, setCommentCount] = useState(initialCommentCount);
   const [replyTo, setReplyTo] = useState<number | null>(null);
   const [isLiked, setIsLiked] = useState<boolean>(false);
-
+  const [showComments, setShowComments] = useState<boolean>(false);
+  
   const { data: commentData, refetch, isLoading } = useQuery<FetchCommentsResponse>(
     ['comments', postId],
     () => fetchComments(postId),
     {
-      enabled: !!userInfo, // userInfo가 있을 때만 실행
+      enabled: !!userInfo,
     }
   );
 
@@ -119,6 +123,10 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
     }
   };
 
+  const handleToggleComments = () => {
+    setShowComments(!showComments);
+  };
+
   const renderComments = (comments: Comment[], depth = 0) => {
     return comments.map((comment) => (
       <div key={comment.id} className={`mb-4 ${depth > 0 ? 'ml-8' : ''}`}>
@@ -177,21 +185,21 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
   if (!userInfo) {
     return (
       <div className="max-w-6xl w-full mx-auto">
-        <div className="flex items-center space-x-4">
-        <button className="flex items-center" onClick={handleLikeClick}>
-          <Image
-            src={isLiked ? HeartIcon : EmptyHeartIcon} 
-            alt={isLiked ? "좋아요" : "좋아요 취소"}
-            width={24}
-            height={24}
-          />
-          <span className="ml-2">{likeCount}</span>
-        </button>
-        <button className="flex items-center">
-          <Image src={CommentIcon} alt="댓글" width={24} height={24} />
-          <span className="ml-2">{commentCount}</span>
-        </button>
-      </div>
+        <div className="flex items-center pb-4">
+          <button className="flex items-center" onClick={handleLikeClick}>
+            <Image
+              src={isLiked ? HeartIcon : EmptyHeartIcon}
+              alt={isLiked ? "좋아요" : "좋아요 취소"}
+              width={24}
+              height={24}
+            />
+            <span className="mx-2">{likeCount}</span>
+          </button>
+          <button className="flex items-center">
+            <Image src={CommentIcon1} alt="댓글" width={24} height={24} />
+            <Image src={DownIcon} alt="펼치기" width={24} height={24} />
+          </button>
+        </div>
         <div className="my-4 comment-section p-4 bg-white rounded-lg shadow-md text-center">
           회원 로그인을 해주세요.
         </div>
@@ -201,59 +209,66 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
 
   return (
     <div className="max-w-6xl w-full mx-auto">
-      <div className="flex items-center space-x-4">
+      <div className="flex items-center pb-4">
         <button className="flex items-center" onClick={handleLikeClick}>
           <Image
-            src={isLiked ? HeartIcon : EmptyHeartIcon} 
+            src={isLiked ? HeartIcon : EmptyHeartIcon}
             alt={isLiked ? "좋아요" : "좋아요 취소"}
             width={24}
             height={24}
           />
-          <span className="ml-2">{likeCount}</span>
+          <span className="mx-2">{likeCount}</span>
         </button>
-        <button className="flex items-center">
-          <Image src={CommentIcon} alt="댓글" width={24} height={24} />
-          <span className="ml-2">{commentCount}</span>
-        </button>
+          <div className='flex items-center ml-[10px]'>
+          <Image src={showComments ? CommentIcon : CommentIcon1} alt="댓글" width={24} height={24} />
+          <span className={`ml-2 ${showComments ? 'text-[#FB3463]' : ''}`}>{commentCount}</span>
+          <button className="flex items-center" onClick={handleToggleComments}>
+          <Image src={showComments ? UpIcon : DownIcon} alt="펼치기/접기" width={24} height={24} />
+          </button>
+          </div>
       </div>
-      <div className="comment-section w-full p-4 bg-white rounded-lg shadow-md flex items-center mt-4 p-4">
-        <div className='w-[90%] flex flex-col'>
-          <div className='w-full flex-1'>
-            <div className='flex flex-row items-center'>
-              {userInfo?.profileImageUrl && (
-                <Image src={userInfo.profileImageUrl} alt="사용자" width={24} height={24} className="rounded-full" />
-              )}
-              <div className="font-bold ml-[5px]">{userInfo?.nickName}</div>
+      {showComments && (
+        <>
+          <div className="comment-section w-full p-4 bg-white rounded-lg shadow-md flex items-center p-4">
+            <div className='w-[90%] flex flex-col'>
+              <div className='w-full flex-1'>
+                <div className='flex flex-row items-center'>
+                  {userInfo?.profileImageUrl && (
+                    <Image src={userInfo.profileImageUrl} alt="사용자" width={24} height={24} className="rounded-full" />
+                  )}
+                  <div className="font-bold ml-[5px]">{userInfo?.nickName}</div>
+                </div>
+              </div>
+              <div className="w-[100%] flex-1 ml-1">
+                <input
+                  type="text"
+                  className="mt-2 p-2 rounded w-full"
+                  value={newComment}
+                  onChange={(e) => setNewComment(e.target.value)}
+                  placeholder="블로그가 훈훈해지는 댓글 부탁드립니다."
+                />
+              </div>
             </div>
+            <button
+              onClick={handleCommentSubmit}
+              className="ml-auto mt-auto mb-[2px] px-8 py-1 bg-neutral-100 rounded-lg justify-center items-center inline-flex text-center text-zinc-800 text-base font-semibold font-['Pretendard']"
+            >
+              입력
+            </button>
           </div>
-          <div className="w-[100%] flex-1 ml-1">
-            <input
-              type="text"
-              className="mt-2 p-2 rounded w-full"
-              value={newComment}
-              onChange={(e) => setNewComment(e.target.value)}
-              placeholder="블로그가 훈훈해지는 댓글 부탁드립니다."
-            />
+          <div className="my-4 comment-section p-4 bg-white rounded-lg shadow-md">
+            {isLoading ? (
+              <div>로딩 중...</div>
+            ) : (
+              comments.length === 0 ? (
+                <div>댓글이 없습니다.</div>
+              ) : (
+                renderComments(comments)
+              )
+            )}
           </div>
-        </div>
-        <button
-          onClick={handleCommentSubmit}
-          className="ml-auto mt-auto mb-[2px] px-8 py-1 bg-neutral-100 rounded-lg justify-center items-center inline-flex text-center text-zinc-800 text-base font-semibold font-['Pretendard']"
-        >
-          입력
-        </button>
-      </div>
-      <div className="my-4 comment-section p-4 bg-white rounded-lg shadow-md">
-        {isLoading ? (
-          <div>로딩 중...</div>
-        ) : (
-          comments.length === 0 ? (
-            <div>댓글이 없습니다.</div>
-          ) : (
-            renderComments(comments)
-          )
-        )}
-      </div>
+        </>
+      )}
     </div>
   );
 };
