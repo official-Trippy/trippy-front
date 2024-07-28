@@ -83,25 +83,30 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onImagesChange }) => {
           </div>
         )}
         {displayImages.length === 1 && (
-          <Image
-            src={displayImages[0]}
-            alt="Uploaded Image"
-            className="absolute inset-0 w-full h-full object-cover rounded-lg"
-            width={400}
-            height={400}
-          />
+          <div className="absolute inset-0 w-full h-full">
+            <Image
+              src={displayImages[0]}
+              alt="Uploaded Image"
+              className="w-full h-full object-cover rounded-lg"
+              width={400}
+              height={400}
+            />
+          </div>
         )}
         {displayImages.length > 1 && (
-          <Carousel className="absolute inset-0">
+          <Carousel className="absolute inset-0 w-full h-full">
             {displayImages.map((image, index) => (
-              <Carousel.Item key={index}>
-                <Image
-                  src={image}
-                  alt={`Slide ${index}`}
-                  className="d-block w-100 h-100 object-cover rounded-lg"
-                  width={400}
-                  height={400}
-                />
+              <Carousel.Item key={index} className="w-full h-full">
+                <div className="relative w-full h-full">
+                  <Image
+                    src={image}
+                    alt={`Slide ${index}`}
+                    className="d-block w-full h-full object-cover rounded-lg"
+                    width={400}
+                    height={400}
+                    style={{ objectFit: 'cover', width: '400px', height: '400px' }}
+                  />
+                </div>
               </Carousel.Item>
             ))}
           </Carousel>
@@ -125,6 +130,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onImagesChange }) => {
                       ref={provided.innerRef}
                       {...provided.draggableProps}
                       {...provided.dragHandleProps}
+                      style={{ width: '72px', height: '72px' }}
                     >
                       <Image
                         src={image.accessUri}
@@ -132,15 +138,20 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onImagesChange }) => {
                         className="object-cover rounded-lg"
                         width={72}
                         height={72}
+                        style={{ objectFit: 'cover', width: '72px', height: '72px' }}
                       />
-                      <Image
-                        src={OOtdDeleteImage.src}
-                        alt="Delete Image"
+                      <div
                         onClick={() => handleDeleteImage(index)}
-                        className="absolute top-0 right-0 rounded-full w-[20px] h-[20px] cursor-pointer"
-                        width={10}
-                        height={10}
-                      />
+                        className="absolute top-0 right-0 rounded-full cursor-pointer"
+                      >
+                        <Image
+                          src={OOtdDeleteImage.src}
+                          alt="Delete Image"
+                          width={10}
+                          height={10}
+                          style={{ objectFit: 'cover',width: '20px', height: '20px'}}
+                        />
+                      </div>
                     </div>
                   )}
                 </Draggable>
@@ -155,6 +166,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onImagesChange }) => {
                     alt="Add Image"
                     width={72}
                     height={72}
+                    style={{ objectFit: 'cover' }}
                   />
                 </div>
               )}
