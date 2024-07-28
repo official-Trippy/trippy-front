@@ -27,20 +27,25 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
 
   const { data: commentData, refetch, isLoading } = useQuery<FetchCommentsResponse>(
     ['comments', postId],
-    () => fetchComments(postId)
+    () => fetchComments(postId),
+    {
+      enabled: !!userInfo, // userInfo가 있을 때만 실행
+    }
   );
 
   const comments: Comment[] = commentData ? Object.values(commentData.result) : [];
 
   useEffect(() => {
     const fetchLikeStatus = async () => {
-      const result = await checkIfLiked(postId);
-      if (result.isSuccess) {
-        setIsLiked(result.result);
+      if (userInfo) {
+        const result = await checkIfLiked(postId);
+        if (result.isSuccess) {
+          setIsLiked(result.result);
+        }
       }
     };
     fetchLikeStatus();
-  }, [postId]);
+  }, [postId, userInfo]);
 
   const commentMutation = useMutation(
     (content: string) => createComment(postId, content),
@@ -168,6 +173,31 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
       </div>
     ));
   };
+
+  if (!userInfo) {
+    return (
+      <div className="max-w-6xl w-full mx-auto">
+        <div className="flex items-center space-x-4">
+        <button className="flex items-center" onClick={handleLikeClick}>
+          <Image
+            src={isLiked ? HeartIcon : EmptyHeartIcon} 
+            alt={isLiked ? "좋아요" : "좋아요 취소"}
+            width={24}
+            height={24}
+          />
+          <span className="ml-2">{likeCount}</span>
+        </button>
+        <button className="flex items-center">
+          <Image src={CommentIcon} alt="댓글" width={24} height={24} />
+          <span className="ml-2">{commentCount}</span>
+        </button>
+      </div>
+        <div className="my-4 comment-section p-4 bg-white rounded-lg shadow-md text-center">
+          회원 로그인을 해주세요.
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-6xl w-full mx-auto">

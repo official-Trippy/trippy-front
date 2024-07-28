@@ -50,7 +50,7 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
 
   return (
     <><div className="container mx-auto p-4">
-      <div className="w-full max-w-3xl mx-auto">
+      <div className="w-full max-w-6xl mx-auto">
         <div className="py-4 flex items-center justify-between">
           <div className="flex items-center">
             <Image
