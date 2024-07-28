@@ -13,6 +13,7 @@ import CommentIcon1 from '../../../public/empty_comment_default.svg';
 import DownIcon from '../../../public/arrow_down.svg';
 import UpIcon from '../../../public/icon_up.svg';
 import { Comment } from '@/types/ootd';
+import { useRouter } from "next/navigation";
 
 interface CommentSectionProps {
   postId: number;
@@ -33,6 +34,8 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
   const [showLikes, setShowLikes] = useState<boolean>(false);
   const [likeList, setLikeList] = useState<any[]>([]);
   const [isLoadingLikes, setIsLoadingLikes] = useState<boolean>(false);
+
+  const router = useRouter();
 
   const { data: commentData, refetch, isLoading } = useQuery<FetchCommentsResponse>(
     ['comments', postId],
@@ -163,6 +166,10 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
     if (!showLikes) setShowComments(false);  
   };
 
+  const handleLogin = () => {
+    router.push('/login');
+  };
+
   const renderComments = (comments: Comment[], depth = 0, isChild = false) => {
     return comments.map((comment) => (
       <div key={comment.id} className={`${isChild ? '' : ''}`}>
@@ -267,7 +274,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
           트리피 회원이면 좋아요를 달 수 있어요
         </div>
         <div className="w-[220px] py-4 bg-[#fa3463] rounded-lg justify-center items-center inline-flex">
-          <button className="text-center text-white text-2xl font-semibold font-['Pretendard'] items-center justify-center">로그인 하러가기</button>
+          <button className="text-center text-white text-2xl font-semibold font-['Pretendard'] items-center justify-center" onClick={handleLogin}>로그인 하러가기</button>
         </div>
         </div>
       )}
@@ -277,7 +284,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
           트리피 회원이면 댓글을 달 수 있어요
         </div>
         <div className="w-[220px] py-4 bg-[#fa3463] rounded-lg justify-center items-center inline-flex">
-          <button className="text-center text-white text-2xl font-semibold font-['Pretendard'] items-center justify-center">로그인 하러가기</button>
+          <button className="text-center text-white text-2xl font-semibold font-['Pretendard'] items-center justify-center" onClick={handleLogin}>로그인 하러가기</button>
         </div>
         </div>
       )}
