@@ -1,6 +1,7 @@
 import React, { ChangeEvent, useState } from 'react';
-import Carousel from 'react-bootstrap/Carousel';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import Slider from 'react-slick';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
 import OotdDefault from '../../../public/ootdDefaultImg.svg';
 import OotdAddImage from '../../../public/ootdImageAdd.svg';
 import OOtdDeleteImage from '../../../public/ootdImageDelete.svg';
@@ -8,6 +9,8 @@ import { uploadImage } from '@/services/blog';
 import { UploadedImage } from '@/types/ootd';
 import Image from 'next/image';
 import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
+import LeftArrowIcon from '../../../public/left-arrow.svg'; 
+import RightArrowIcon from '../../../public/right-arrow.svg'; 
 
 interface ImageUploaderProps {
   onImagesChange: (images: UploadedImage[]) => void;
@@ -54,8 +57,50 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onImagesChange }) => {
 
   const displayImages = images.map(image => image.accessUri);
 
+  const SampleNextArrow = (props: any) => {
+    const { className, style, onClick, currentSlide, slideCount } = props;
+    return (
+      currentSlide !== slideCount - 1 && (
+        <div
+          className={`${className} custom-arrow`}
+          style={{ ...style, display: 'block', right: '-10px' }}
+          onClick={onClick}
+        >
+          <Image src={RightArrowIcon} alt="Next"  width={100} height={100} />
+        </div>
+      )
+    );
+  };
+
+  const SamplePrevArrow = (props: any) => {
+    const { className, style, onClick, currentSlide } = props;
+    return (
+      currentSlide !== 0 && (
+        <div
+          className={`${className} custom-arrow`}
+          style={{ ...style, display: 'block', left: '-10px', zIndex: 1 }}
+          onClick={onClick}
+        >
+          <Image src={LeftArrowIcon} alt="Previous"  width={100} height={100}/>
+        </div>
+      )
+    );
+  };
+
+  const settings = {
+    dots: true,
+    infinite: displayImages.length > 1,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    arrows: displayImages.length > 1,
+    nextArrow: <SampleNextArrow />,
+    prevArrow: <SamplePrevArrow />,
+  };
+
   return (
-    <div className="relative mx-auto">
+    <div className='w-[420px]'>
+    <div className="relative mx-auto ml-[10px]">
       <input
         type="file"
         onChange={handleImageUpload}
@@ -94,9 +139,9 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onImagesChange }) => {
           </div>
         )}
         {displayImages.length > 1 && (
-          <Carousel className="absolute inset-0 w-full h-full">
+          <Slider {...settings}>
             {displayImages.map((image, index) => (
-              <Carousel.Item key={index} className="w-full h-full">
+              <div key={index}>
                 <div className="relative w-full h-full">
                   <Image
                     src={image}
@@ -107,9 +152,9 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onImagesChange }) => {
                     style={{ objectFit: 'cover', width: '400px', height: '400px' }}
                   />
                 </div>
-              </Carousel.Item>
+              </div>
             ))}
-          </Carousel>
+          </Slider>
         )}
       </div>
       <DragDropContext onDragEnd={onDragEnd}>
@@ -147,9 +192,9 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onImagesChange }) => {
                         <Image
                           src={OOtdDeleteImage.src}
                           alt="Delete Image"
-                          width={10}
-                          height={10}
-                          style={{ objectFit: 'cover',width: '20px', height: '20px'}}
+                          width={20}
+                          height={20}
+                          style={{ objectFit: 'cover', width: '20px', height: '20px' }}
                         />
                       </div>
                     </div>
@@ -175,6 +220,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onImagesChange }) => {
           )}
         </Droppable>
       </DragDropContext>
+    </div>
     </div>
   );
 };
