@@ -61,6 +61,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
       setIsLoadingLikes(true);
       try {
         const result = await likePostList(postId);
+        console.log(result);
         if (result.isSuccess && Array.isArray(result.result.likeList)) {
           setLikeList(result.result.likeList);
         } else {
@@ -236,23 +237,50 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
     return (
       <div className="max-w-6xl w-full mx-auto">
         <div className="flex items-center pb-4">
-          <button className="flex items-center" onClick={handleLikeClick}>
-            <Image
-              src={isLiked ? HeartIcon : EmptyHeartIcon}
-              alt={isLiked ? "좋아요" : "좋아요 취소"}
-              width={24}
-              height={24}
-            />
-            <span className="mx-2">{likeCount}</span>
+        <button className="flex items-center" onClick={handleLikeClick}>
+        <Image
+          src={
+            isLiked 
+              ? HeartIcon 
+              : (showLikes ? EmptyHeartIcon2 : EmptyHeartIcon)
+          }
+          alt={isLiked ? "좋아요" : "좋아요 취소"}
+          width={24}
+          height={24}
+        />
+          <span className={`mx-2 ${showLikes ? 'text-[#FB3463]' : ''}`}>{likeCount}</span>
+        </button>
+        <button className="flex items-center" onClick={handleToggleLikes}>
+            <Image src={showLikes ? UpIcon : DownIcon} alt="펼치기/접기" width={24} height={24} />
           </button>
-          <button className="flex items-center">
-            <Image src={CommentIcon1} alt="댓글" width={24} height={24} />
-            <Image src={DownIcon} alt="펼치기" width={24} height={24} />
+        <div className='flex items-center ml-[10px]'>
+          <Image src={showComments ? CommentIcon : CommentIcon1} alt="댓글" width={24} height={24} />
+          <span className={`mx-2 ${showComments ? 'text-[#FB3463]' : ''}`}>{commentCount}</span>
+          <button className="flex items-center" onClick={handleToggleComments}>
+            <Image src={showComments ? UpIcon : DownIcon} alt="펼치기/접기" width={24} height={24} />
           </button>
         </div>
-        <div className="my-4 comment-section p-4 bg-white rounded-lg shadow-md text-center">
-          회원 로그인을 해주세요.
+      </div>
+      {showLikes && (
+        <div className='flex flex-col space-y-4 w-full h-[200px] my-4 n p-4 bg-neutral-100 rounded-lg shadow-md items-center text-black justify-center'>
+        <div className="text-2xl font-medium">
+          트리피 회원이면 좋아요를 달 수 있어요
         </div>
+        <div className="w-[220px] py-4 bg-[#fa3463] rounded-lg justify-center items-center inline-flex">
+          <button className="text-center text-white text-2xl font-semibold font-['Pretendard'] items-center justify-center">로그인 하러가기</button>
+        </div>
+        </div>
+      )}
+        {showComments && (
+        <div className='flex flex-col space-y-4 w-full h-[200px] my-4 n p-4 bg-neutral-100 rounded-lg shadow-md items-center text-black justify-center'>
+        <div className="text-2xl font-medium">
+          트리피 회원이면 댓글을 달 수 있어요
+        </div>
+        <div className="w-[220px] py-4 bg-[#fa3463] rounded-lg justify-center items-center inline-flex">
+          <button className="text-center text-white text-2xl font-semibold font-['Pretendard'] items-center justify-center">로그인 하러가기</button>
+        </div>
+        </div>
+      )}
       </div>
     );
   }
