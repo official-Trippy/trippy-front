@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation } from 'react-query';
 import Image from 'next/image';
 import { useUserStore } from '@/store/useUserStore';
-import { formatDate } from '@/constants/dateFotmat';
+import { formatDate, formatTime } from '@/constants/dateFotmat';
 import { FetchCommentsResponse, createComment, createReply, fetchComments } from '@/services/ootd.ts/ootdComments';
 import { checkIfLiked, likePost, unlikePost } from '@/services/ootd.ts/ootdComments';
 import HeartIcon from '../../../public/icon_heart.svg';
@@ -145,7 +145,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
               {comment.content}
             </div>
             <div className='flex flex-row my-2'>
-              <div className="text-gray-600">{formatDate(comment.createDateTime)}</div>
+              <div className="text-gray-600">{formatTime(comment.createDateTime)}</div>
               <div>&nbsp;&nbsp;|&nbsp;&nbsp;</div>
               <button onClick={() => handleReplyClick(comment.id, comment.member?.nickName || '')} className="text-gray-500">
                 답글쓰기
