@@ -145,7 +145,7 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
           </div>
         </div>
       </div>
-      <div className='w-full'>
+      <div className='w-full mb-[100px]'>
         <div className='w-full mx-auto'>
           <CommentSection
             postId={id}
