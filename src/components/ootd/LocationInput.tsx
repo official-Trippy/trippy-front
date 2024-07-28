@@ -88,17 +88,17 @@ const LocationInput: React.FC<LocationInputProps> = ({ onLocationChange, selecte
           </div>
         </Modal.Body>
         <Modal.Footer>
-          <button
-            onClick={() => setModalIsOpen(false)}
-            className="mt-2 bg-rose-500 rounded-lg flex justify-center items-center px-6 py-3 text-white text-lg"
-          >
-            취소
-          </button>
-          <button
+        <button
             onClick={handleConfirm}
             className="mt-2 bg-rose-500 rounded-lg flex justify-center items-center px-6 py-3 text-white text-lg"
           >
             확인
+          </button>
+          <button
+            onClick={() => setModalIsOpen(false)}
+            className="mt-2 bg-[#6e7881] rounded-lg flex justify-center items-center px-6 py-3 text-white text-lg"
+          >
+            취소
           </button>
         </Modal.Footer>
       </Modal>
