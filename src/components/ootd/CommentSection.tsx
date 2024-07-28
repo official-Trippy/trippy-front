@@ -240,7 +240,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
               <div className='w-full flex-1'>
                 <div className='flex flex-row items-center'>
                   {userInfo?.profileImageUrl && (
-                    <Image src={userInfo.profileImageUrl} alt="사용자" width={24} height={24} className="rounded-full" />
+                    <Image src={userInfo.profileImageUrl} alt="사용자" width={32} height={32} className="rounded-full" />
                   )}
                   <div className="font-bold ml-[5px]">{userInfo?.nickName}</div>
                 </div>
