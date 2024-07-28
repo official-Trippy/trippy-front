@@ -180,7 +180,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
           </div>
         )}
         {comment.children.length > 0 && (
-          <div className={depth === 0 ? "my-4 p-4 bg-neutral-100 rounded-lg" : ""}>
+          <div className={depth === 0 ? "my-4 ml-12 mr-4 p-4 bg-neutral-100 rounded-lg" : ""}>
             {renderComments(comment.children, depth + 1)}
           </div>
         )}
@@ -264,7 +264,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
           </div>
           <div className="my-4 comment-section p-4 bg-white rounded-lg shadow-md">
             {isLoading ? (
-              <div>로딩 중...</div>
+              <div></div>
             ) : (
               comments.length === 0 ? (
                 <div>댓글이 없습니다.</div>
