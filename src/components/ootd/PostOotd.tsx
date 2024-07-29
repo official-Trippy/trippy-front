@@ -1,5 +1,4 @@
 'use client';
-
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import ImageUploader from './ImageUploader';
@@ -48,49 +47,53 @@ const PostOotd: React.FC = () => {
       },
       onError: async (error) => {
         console.error('Error fetching weather:', error);
-        Swal.fire({
-          icon: 'error',
-          title: '날씨 정보를 불러올 수 없습니다.',
-          text: '날씨와 온도를 직접 선택해주세요.',
-          confirmButtonText: '확인',
-          confirmButtonColor: '#FB3463',
-          allowOutsideClick: false,
-          preConfirm: async () => {
-            const { value: selected } = await Swal.fire({
-              title: '날씨와 온도를 선택하세요',
-              html: `
-                <label for="weather-select">날씨 상태:</label>
-                <select id="weather-select" class="swal2-input">
-                  ${weatherOptions.map(option => `<option value="${option.value}">${option.label}</option>`).join('')}
-                </select>
-                <label for="temperature-select" style="margin-top: 1em;">온도:</label>
-                <select id="temperature-select" class="swal2-input">
-                  ${temperatureOptions.map(option => `<option value="${option.value}">${option.label}</option>`).join('')}
-                </select>
-              `,
-              confirmButtonText: '확인',
-              confirmButtonColor: '#FB3463',
-              cancelButtonText: '취소',
-              showCancelButton: true,
-              allowOutsideClick: false, 
-              preConfirm: () => {
-                const weatherSelect = document.getElementById('weather-select') as HTMLSelectElement;
-                const temperatureSelect = document.getElementById('temperature-select') as HTMLSelectElement;
-                return {
-                  weather: weatherSelect.value,
-                  temperature: temperatureSelect.value,
-                };
-              },
-            });
-  
-            if (selected) {
-              setWeather({
-                status: selected.weather,
-                avgTemp: selected.temperature === 'unknown' ? '정보 없음' : selected.temperature,
+
+        // 브라우저에서만 실행되도록 하기 위해 useEffect로 감쌈
+        if (typeof window !== 'undefined') {
+          Swal.fire({
+            icon: 'error',
+            title: '날씨 정보를 불러올 수 없습니다.',
+            text: '날씨와 온도를 직접 선택해주세요.',
+            confirmButtonText: '확인',
+            confirmButtonColor: '#FB3463',
+            allowOutsideClick: false,
+            preConfirm: async () => {
+              const { value: selected } = await Swal.fire({
+                title: '날씨와 온도를 선택하세요',
+                html: `
+                  <label for="weather-select">날씨 상태:</label>
+                  <select id="weather-select" class="swal2-input">
+                    ${weatherOptions.map(option => `<option value="${option.value}">${option.label}</option>`).join('')}
+                  </select>
+                  <label for="temperature-select" style="margin-top: 1em;">온도:</label>
+                  <select id="temperature-select" class="swal2-input">
+                    ${temperatureOptions.map(option => `<option value="${option.value}">${option.label}</option>`).join('')}
+                  </select>
+                `,
+                confirmButtonText: '확인',
+                confirmButtonColor: '#FB3463',
+                cancelButtonText: '취소',
+                showCancelButton: true,
+                allowOutsideClick: false,
+                preConfirm: () => {
+                  const weatherSelect = document.getElementById('weather-select') as HTMLSelectElement;
+                  const temperatureSelect = document.getElementById('temperature-select') as HTMLSelectElement;
+                  return {
+                    weather: weatherSelect.value,
+                    temperature: temperatureSelect.value,
+                  };
+                },
               });
-            }
-          },
-        });
+    
+              if (selected) {
+                setWeather({
+                  status: selected.weather,
+                  avgTemp: selected.temperature === 'unknown' ? '정보 없음' : selected.temperature,
+                });
+              }
+            },
+          });
+        }
       },
     }
   );
@@ -235,7 +238,7 @@ const PostOotd: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <ImageUploader onImagesChange={setImages} />
         <div className="">
-        <PostInput onPostChange={setPost} onTagsChange={setTags} tags={tags} />
+          <PostInput onPostChange={setPost} onTagsChange={setTags} tags={tags} />
           <div className="space-y-4">
             <LocationInput onLocationChange={handleLocationChange} selectedLocationName={location} />
             <DateInput onDateChange={handleDateChange} />
@@ -259,4 +262,3 @@ const PostOotd: React.FC = () => {
 };
 
 export default PostOotd;
-
