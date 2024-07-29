@@ -77,16 +77,19 @@ export const fetchOotdPostDetail = async (id: number): Promise<OotdDetailGetResp
     }
 };
 
-export const fetchUserOotdPosts = async (userId: string, page: number, size: number) => {
-  const response = await axios.get(`/api/ootd/by-member`, {
+export const fetchUserOotdPosts = async (memberId: string, page: number, size: number) => {
+  const response = await axios.get(`${backendUrl}/api/ootd/by-member`, {
     params: {
-      memberId: userId,
-      page,
-      size,
+      memberId
     },
   });
   return response.data;
 };
+
+export const fetchUserProfile = (memberId: string) => {
+  return axios.get(`${backendUrl}/api/member/profile?memberId=${memberId}`).then((res) => res.data);
+};
+
 
 axios.interceptors.request.use(
   async (config) => {
