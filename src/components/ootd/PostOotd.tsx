@@ -47,7 +47,8 @@ const PostOotd: React.FC = () => {
       },
       onError: async (error) => {
         console.error('Error fetching weather:', error);
-        // 브라우저에서만 실행되도록 하기 위해 useEffect로 감쌈
+
+        // 클라이언트에서만 실행되도록 useEffect 사용
         if (typeof window !== 'undefined') {
           Swal.fire({
             icon: 'error',
@@ -57,39 +58,46 @@ const PostOotd: React.FC = () => {
             confirmButtonColor: '#FB3463',
             allowOutsideClick: false,
             preConfirm: async () => {
-              const { value: selected } = await Swal.fire({
-                title: '날씨와 온도를 선택하세요',
-                html: `
-                  <label for="weather-select">날씨 상태:</label>
-                  <select id="weather-select" class="swal2-input">
-                    ${weatherOptions.map(option => `<option value="${option.value}">${option.label}</option>`).join('')}
-                  </select>
-                  <label for="temperature-select" style="margin-top: 1em;">온도:</label>
-                  <select id="temperature-select" class="swal2-input">
-                    ${temperatureOptions.map(option => `<option value="${option.value}">${option.label}</option>`).join('')}
-                  </select>
-                `,
-                confirmButtonText: '확인',
-                confirmButtonColor: '#FB3463',
-                cancelButtonText: '취소',
-                showCancelButton: true,
-                allowOutsideClick: false,
-                preConfirm: () => {
-                  const weatherSelect = document.getElementById('weather-select') as HTMLSelectElement;
-                  const temperatureSelect = document.getElementById('temperature-select') as HTMLSelectElement;
-                  return {
-                    weather: weatherSelect.value,
-                    temperature: temperatureSelect.value,
-                  };
-                },
-              });
-
-              if (selected) {
-                setWeather({
-                  status: selected.weather,
-                  avgTemp: selected.temperature === 'unknown' ? '정보 없음' : selected.temperature,
+              // 요소에 접근하려면 useEffect 안에서 지정합니다
+              return new Promise<void>((resolve) => {
+                Swal.fire({
+                  title: '날씨와 온도를 선택하세요',
+                  html: `
+                    <label for="weather-select">날씨 상태:</label>
+                    <select id="weather-select" class="swal2-input">
+                      ${weatherOptions.map(option => `<option value="${option.value}">${option.label}</option>`).join('')}
+                    </select>
+                    <label for="temperature-select" style="margin-top: 1em;">온도:</label>
+                    <select id="temperature-select" class="swal2-input">
+                      ${temperatureOptions.map(option => `<option value="${option.value}">${option.label}</option>`).join('')}
+                    </select>
+                  `,
+                  confirmButtonText: '확인',
+                  confirmButtonColor: '#FB3463',
+                  cancelButtonText: '취소',
+                  showCancelButton: true,
+                  allowOutsideClick: false,
+                  preConfirm: () => {
+                    const weatherSelect = document.getElementById('weather-select') as HTMLSelectElement;
+                    const temperatureSelect = document.getElementById('temperature-select') as HTMLSelectElement;
+                    return {
+                      weather: weatherSelect.value,
+                      temperature: temperatureSelect.value,
+                    };
+                  },
+                }).then((result) => {
+                  if (result.isConfirmed) {
+                    const selected = result.value;
+                    if (selected) {
+                      setWeather({
+                        status: selected.weather,
+                        avgTemp: selected.temperature === 'unknown' ? '정보 없음' : selected.temperature,
+                      });
+                    }
+                    resolve();
+                  }
                 });
-              }
+              });
             },
           });
         }
