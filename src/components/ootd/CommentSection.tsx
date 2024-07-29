@@ -21,7 +21,6 @@ interface CommentSectionProps {
   initialLikeCount: number;
   initialCommentCount: number;
 }
-
 const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCount, initialCommentCount }) => {
   const userInfo = useUserStore((state) => state.userInfo);
   const [newComment, setNewComment] = useState('');
@@ -72,19 +71,18 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
       setIsLoadingLikes(true);
       try {
         const result = await likePostList(postId);
-        console.log(result);
         if (result.isSuccess && Array.isArray(result.result.likeList)) {
           setLikeList(result.result.likeList);
         } else {
-          setLikeList([]); 
+          setLikeList([]);
         }
       } catch (error) {
         console.error('Error fetching like list:', error);
-        setLikeList([]); 
+        setLikeList([]);
       }
       setIsLoadingLikes(false);
     };
-  
+
     if (showLikes) {
       fetchLikeList();
     }
@@ -121,6 +119,11 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
         if (data.isSuccess) {
           setLikeCount((prevCount) => prevCount + 1);
           setIsLiked(true);
+          setLikeList((prevList) => [...prevList, {
+            profileUrl: userInfo?.profileImageUrl,
+            nickName: userInfo?.nickName,
+            blogName: userInfo?.blogName
+          }]);
         }
       },
     }
@@ -133,6 +136,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
         if (data.isSuccess) {
           setLikeCount((prevCount) => Math.max(prevCount - 1, 0));
           setIsLiked(false);
+          setLikeList((prevList) => prevList.filter(like => like.nickName !== userInfo?.nickName));
         }
       },
     }
@@ -166,12 +170,12 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
 
   const handleToggleComments = () => {
     setShowComments(!showComments);
-    if (!showComments) setShowLikes(false);  
+    if (!showComments) setShowLikes(false);
   };
 
   const handleToggleLikes = () => {
     setShowLikes(!showLikes);
-    if (!showLikes) setShowComments(false);  
+    if (!showLikes) setShowComments(false);
   };
 
   const handleLogin = () => {
@@ -240,103 +244,100 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
     if (!Array.isArray(likes)) {
       return null;
     }
-  
+
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
     const paginatedLikes = likes.slice(startIndex, endIndex);
-  
+
     const totalPages = Math.ceil(likes.length / itemsPerPage);
     const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
-  
+
     return (
       <div className='w-full bg-white rounded-lg shadow-md py-4'>
-      <div className="grid grid-cols-3 gap-4">
-        {paginatedLikes.map((like, index) => (
-          <div key={index} className='my-4 like-section p-4'>
-            <div className="flex items-center justify-center py-2">
-              <div className="w-12 h-12 relative mr-4">
-                <Image 
-                  src={like.profileUrl} 
-                  alt="프로필 이미지" 
-                  layout="fill" 
-                  objectFit="cover" 
-                  className='rounded-full'
-                />
-              </div>
-              <div className="">
-                <div className="text-gray-800">{like.nickName}</div>
-                <div className="text-gray-800">{like.blogName}</div>
+        <div className="grid grid-cols-3 gap-4">
+          {paginatedLikes.map((like, index) => (
+            <div key={index} className='my-4 like-section p-4'>
+              <div className="flex items-center justify-center py-2">
+                <div className="w-12 h-12 relative mr-4">
+                  <Image
+                    src={like.profileUrl}
+                    alt="프로필 이미지"
+                    layout="fill"
+                    objectFit="cover"
+                    className='rounded-full'
+                  />
+                </div>
+                <div className="">
+                  <div className="text-gray-800">{like.nickName}</div>
+                  <div className="text-gray-800">{like.blogName}</div>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
+        <div className="flex justify-center">
+          {pages.map((pageNumber) => (
+            <button
+              key={pageNumber}
+              onClick={() => handlePageChange(pageNumber)}
+              className={`px-4 py-2 mx-1 rounded ${currentPage === pageNumber ? 'text-[#fa3463] font-semibold' : 'text-[#cfcfcf] font-normal'}`}
+            >
+              {pageNumber}
+            </button>
+          ))}
+        </div>
       </div>
-  <div className="flex justify-center">
-    {pages.map((pageNumber) => (
-      <button
-        key={pageNumber}
-        onClick={() => handlePageChange(pageNumber)}
-        className={`px-4 py-2 mx-1 rounded ${currentPage === pageNumber ? 'text-[#fa3463] font-semibold' : 'text-[#cfcfcf] font-normal'}`}
-      >
-        {pageNumber}
-      </button>
-    ))}
-  </div>
-</div>
-
     );
   };
-  
-  
-  
+
   if (!userInfo) {
     return (
       <div className="max-w-6xl w-full mx-auto">
         <div className="flex items-center pb-4">
-        <button className="flex items-center" onClick={handleLikeClick}>
-        <Image
-          src={
-            isLiked 
-              ? HeartIcon 
-              : (showLikes ? EmptyHeartIcon2 : EmptyHeartIcon)
-          }
-          alt={isLiked ? "좋아요" : "좋아요 취소"}
-          width={24}
-          height={24}
-        />
-          <span className={`mx-2 ${showLikes ? 'text-[#FB3463]' : ''}`}>{likeCount}</span>
-        </button>
-        <button className="flex items-center" onClick={handleToggleLikes}>
+          <button className="flex items-center" onClick={handleLikeClick}>
+            <Image
+              src={
+                isLiked
+                  ? HeartIcon
+                  : (showLikes ? EmptyHeartIcon2 : EmptyHeartIcon)
+              }
+              alt={isLiked ? "좋아요" : "좋아요 취소"}
+              width={24}
+              height={24}
+            />
+            <span className={`mx-2 ${showLikes ? 'text-[#FB3463]' : ''}`}>{likeCount}</span>
+          </button>
+          <button className="flex items-center" onClick={handleToggleLikes}>
             <Image src={showLikes ? UpIcon : DownIcon} alt="펼치기/접기" width={24} height={24} />
           </button>
-        <div className='flex items-center ml-[10px]'>
-          <Image src={showComments ? CommentIcon : CommentIcon1} alt="댓글" width={24} height={24} />
-          <span className={`mx-2 ${showComments ? 'text-[#FB3463]' : ''}`}>{commentCount}</span>
-          <button className="flex items-center" onClick={handleToggleComments}>
-            <Image src={showComments ? UpIcon : DownIcon} alt="펼치기/접기" width={24} height={24} />
-          </button>
+          <div className='flex items-center ml-[10px]'>
+            <Image src={showComments ? CommentIcon : CommentIcon1} alt="댓글" width={24} height={24} />
+            <span className={`mx-2 ${showComments ? 'text-[#FB3463]' : ''}`}>{commentCount}</span>
+            <button className="flex items-center" onClick={handleToggleComments}>
+              <Image src={showComments ? UpIcon : DownIcon} alt="펼치기/접기" width={24} height={24} />
+            </button>
+          </div>
         </div>
-      </div>
-      {showLikes && (
-        <div className='flex flex-col space-y-4 w-full h-[200px] mb-4 n p-4 bg-neutral-100 rounded-lg shadow-md items-center text-black justify-center'>
-        <div className="text-2xl font-medium">
-          트리피 회원이면 좋아요를 달 수 있어요
-        </div>
-        <div className="w-[220px] py-4 bg-[#fa3463] rounded-lg justify-center items-center inline-flex">
-          <button className="text-center text-white text-2xl font-semibold font-['Pretendard'] items-center justify-center" onClick={handleLogin}>로그인 하러가기</button>
-        </div>
-        </div>
-      )}
+        {showLikes && (
+          <div className='flex flex-col space-y-4 w-full h-[200px] mb-4 n p-4 bg-neutral-100 rounded-lg shadow-md items-center text-black justify-center'>
+            <div className="text-2xl font-medium">
+              트리피 회원이면 좋아요를 달 수 있어요
+            </div>
+            <div className="w-[220px] py-4 bg-[#fa3463] rounded-lg justify-center items-center inline-flex">
+              <button className="text-center text-white text-2xl font-semibold font-['Pretendard'] items-center justify-center" onClick={handleLogin}>로그인 하러가기</button>
+            </div>
+          </div>
+        )}
         {showComments && (
-        <div className='flex flex-col space-y-4 w-full h-[200px] my-4 n p-4 bg-neutral-100 rounded-lg shadow-md items-center text-black justify-center'>
-        <div className="text-2xl font-medium">
-          트리피 회원이면 댓글을 달 수 있어요
-        </div>
-        <div className="w-[220px] py-4 bg-[#fa3463] rounded-lg justify-center items-center inline-flex">
-          <button className="text-center text-white text-2xl font-semibold font-['Pretendard'] items-center justify-center" onClick={handleLogin}>로그인 하러가기</button>
-        </div>
-        </div>
-      )}
+          <div className='flex flex-col space-y-4 w-full h-[200px] my-4 n p-4 bg-neutral-100 rounded-lg shadow-md items-center text-black justify-center'>
+            <div className="text-2xl font-medium">
+              트리피 회원이면 댓글을 달 수 있어요
+            </div>
+            <div className="w-[220px] py-4 bg-[#fa3463] rounded-lg justify-center items-center inline-flex">
+              <button className="text-center text-white text-2xl font-semibold font-['Pretendard'] items-center justify-center" onClick={handleLogin}>로그인 하러가기</button>
+            </div>
+          </div>
+        )}
       </div>
     );
   }
@@ -345,21 +346,21 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
     <div className="max-w-6xl w-full mx-auto">
       <div className="flex items-center pb-4">
         <button className="flex items-center" onClick={handleLikeClick}>
-        <Image
-          src={
-            isLiked 
-              ? HeartIcon 
-              : (showLikes ? EmptyHeartIcon2 : EmptyHeartIcon)
-          }
-          alt={isLiked ? "좋아요" : "좋아요 취소"}
-          width={24}
-          height={24}
-        />
+          <Image
+            src={
+              isLiked
+                ? HeartIcon
+                : (showLikes ? EmptyHeartIcon2 : EmptyHeartIcon)
+            }
+            alt={isLiked ? "좋아요" : "좋아요 취소"}
+            width={24}
+            height={24}
+          />
           <span className={`mx-2 ${showLikes ? 'text-[#FB3463]' : ''}`}>{likeCount}</span>
         </button>
         <button className="flex items-center" onClick={handleToggleLikes}>
-            <Image src={showLikes ? UpIcon : DownIcon} alt="펼치기/접기" width={24} height={24} />
-          </button>
+          <Image src={showLikes ? UpIcon : DownIcon} alt="펼치기/접기" width={24} height={24} />
+        </button>
         <div className='flex items-center ml-[10px]'>
           <Image src={showComments ? CommentIcon : CommentIcon1} alt="댓글" width={24} height={24} />
           <span className={`mx-2 ${showComments ? 'text-[#FB3463]' : ''}`}>{commentCount}</span>
