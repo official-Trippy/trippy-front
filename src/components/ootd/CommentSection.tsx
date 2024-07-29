@@ -399,7 +399,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
               입력
             </button>
           </div>
-          <div className="">
+          <div className="comment-section w-full p-4 bg-white rounded-lg shadow-md items-center 4 p-4 mt-16">
             {isLoading ? (
               <div></div>
             ) : (
