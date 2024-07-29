@@ -173,7 +173,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
   const renderComments = (comments: Comment[], depth = 0, isChild = false) => {
     return comments.map((comment) => (
       <div key={comment.id} className={`${isChild ? '' : ''}`}>
-        <div>
+        <div className='my-4 comment-section p-4 bg-white rounded-lg shadow-md'>
           <div className='flex flex-row items-center'>
             {comment.member?.profileUrl && (
               <Image src={comment.member.profileUrl} alt="사용자 프로필" width={32} height={32} className="rounded-full" />
@@ -234,8 +234,10 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
     }
     
     return likes.map((like, index) => (
+      <div className='my-4 like-section p-4 bg-white rounded-lg shadow-md'>
       <div key={index} className="flex items-center py-2">
         <div className="mx-2 text-gray-800">{like.memberId}</div>
+      </div>
       </div>
     ));
   };
@@ -348,12 +350,12 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
               입력
             </button>
           </div>
-          <div className="my-4 comment-section p-4 bg-white rounded-lg shadow-md">
+          <div className="">
             {isLoading ? (
-              <div>로딩 중...</div>
+              <div></div>
             ) : (
               comments.length === 0 ? (
-                <div>댓글이 없습니다.</div>
+                <div></div>
               ) : (
                 renderComments(comments)
               )
@@ -362,12 +364,12 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
         </>
       )}
       {showLikes && (
-        <div className="my-4 like-section p-4 bg-white rounded-lg shadow-md">
+        <div className="">
           {isLoadingLikes ? (
-            <div>로딩 중...</div>
+            <div></div>
           ) : (
             likeList.length === 0 ? (
-              <div>좋아요가 없습니다.</div>
+              <div></div>
             ) : (
               renderLikeList(likeList)
             )
