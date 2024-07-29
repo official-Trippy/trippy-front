@@ -187,12 +187,22 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
     return comments.map((comment) => (
       <div key={comment.id} className={`${isChild ? '' : ''}`}>
         <div className='comment-section p-4 rounded-lg'>
-          <div className='flex flex-row items-center'>
-            {comment.member?.profileUrl && (
-              <Image src={comment.member.profileUrl} alt="사용자 프로필" width={32} height={32} className="rounded-full" />
-            )}
-            <div className="text-zinc-800 text-sm font-normal font-['Pretendard'] ml-[5px]">{comment.member?.nickName}</div>
-          </div>
+        <div className='flex flex-row items-center'>
+          {comment.member?.profileUrl && (
+            <div className="relative w-[32px] h-[32px]">
+              <Image 
+                src={comment.member.profileUrl} 
+                alt="사용자 프로필" 
+                layout="fill" 
+                objectFit="cover" 
+                className="rounded-full" 
+              />
+            </div>
+          )}
+  <div className="text-zinc-800 text-sm font-normal font-['Pretendard'] ml-[5px]">
+    {comment.member?.nickName}
+  </div>
+</div>
           <div className="ml-[3.7rem] items-center">
             <div>
               {comment.content}
