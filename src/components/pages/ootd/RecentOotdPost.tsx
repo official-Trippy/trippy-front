@@ -81,7 +81,7 @@ const RecentOotdPost: React.FC = () => {
       </div>
       <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-8">
       {ootdList.map((item) => (
-        <div key={item.post.id} className="flex flex-col overflow-hidden" onClick={() => handleOotdItemClick(item.post.id)}>
+        <div key={item.post.id} className="flex flex-col overflow-hidden cursor-pointer" onClick={() => handleOotdItemClick(item.post.id)}>
           {item.post.images.length > 0 && (
             <div className="relative w-full h-0 pt-[100%] overflow-hidden">
               <Image 
