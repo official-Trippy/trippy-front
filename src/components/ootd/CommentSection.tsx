@@ -185,7 +185,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
   const renderComments = (comments: Comment[], depth = 0, isChild = false) => {
     return comments.map((comment) => (
       <div key={comment.id} className={`${isChild ? '' : ''}`}>
-        <div className='my-4 comment-section p-4 bg-white rounded-lg shadow-md'>
+        <div className='comment-section p-4 rounded-lg'>
           <div className='flex flex-row items-center'>
             {comment.member?.profileUrl && (
               <Image src={comment.member.profileUrl} alt="사용자 프로필" width={32} height={32} className="rounded-full" />
@@ -232,13 +232,14 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
           </div>
         )}
         {comment.children.length > 0 && (
-          <div className={depth === 0 ? "my-4 ml-12 mr-4 p-4 bg-neutral-100 rounded-lg" : ""}>
+          <div className={depth === 0 ? "my-4 ml-12 mr-4 bg-neutral-100 rounded-lg" : ""}>
             {renderComments(comment.children, depth + 1)}
           </div>
         )}
       </div>
     ));
   };
+
 
   const renderLikeList = (likes: any[]) => {
     if (!Array.isArray(likes)) {
