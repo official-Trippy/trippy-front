@@ -15,6 +15,7 @@ import UpIcon from '../../../public/icon_up.svg';
 import { Comment } from '@/types/ootd';
 import { useRouter } from "next/navigation";
 
+
 interface CommentSectionProps {
   postId: number;
   initialLikeCount: number;
@@ -34,6 +35,13 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
   const [showLikes, setShowLikes] = useState<boolean>(false);
   const [likeList, setLikeList] = useState<any[]>([]);
   const [isLoadingLikes, setIsLoadingLikes] = useState<boolean>(false);
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 18;
+
+  const handlePageChange = (pageNumber: number) => {
+    setCurrentPage(pageNumber);
+  };
 
   const router = useRouter();
 
@@ -232,15 +240,54 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
     if (!Array.isArray(likes)) {
       return null;
     }
-    
-    return likes.map((like, index) => (
-      <div className='my-4 like-section p-4 bg-white rounded-lg shadow-md'>
-      <div key={index} className="flex items-center py-2">
-        <div className="mx-2 text-gray-800">{like.memberId}</div>
+  
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    const paginatedLikes = likes.slice(startIndex, endIndex);
+  
+    const totalPages = Math.ceil(likes.length / itemsPerPage);
+    const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
+  
+    return (
+      <div className='w-full bg-white rounded-lg shadow-md py-4'>
+      <div className="grid grid-cols-3 gap-4">
+        {paginatedLikes.map((like, index) => (
+          <div key={index} className='my-4 like-section p-4'>
+            <div className="flex items-center justify-center py-2">
+              <div className="w-12 h-12 relative mr-4">
+                <Image 
+                  src={like.profileUrl} 
+                  alt="프로필 이미지" 
+                  layout="fill" 
+                  objectFit="cover" 
+                  className='rounded-full'
+                />
+              </div>
+              <div className="">
+                <div className="text-gray-800">{like.nickName}</div>
+                <div className="text-gray-800">{like.blogName}</div>
+              </div>
+            </div>
+          </div>
+        ))}
       </div>
-      </div>
-    ));
+  <div className="flex justify-center">
+    {pages.map((pageNumber) => (
+      <button
+        key={pageNumber}
+        onClick={() => handlePageChange(pageNumber)}
+        className={`px-4 py-2 mx-1 rounded ${currentPage === pageNumber ? 'text-[#fa3463] font-semibold' : 'text-[#cfcfcf] font-normal'}`}
+      >
+        {pageNumber}
+      </button>
+    ))}
+  </div>
+</div>
+
+    );
   };
+  
+  
   
   if (!userInfo) {
     return (
