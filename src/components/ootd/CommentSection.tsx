@@ -205,11 +205,16 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
             </div>
           </div>
         </div>
+        {comment.children.length > 0 && (
+          <div className={depth === 0 ? "my-4 ml-12 mr-4 bg-neutral-100 rounded-lg" : ""}>
+            {renderComments(comment.children, depth + 1)}
+          </div>
+        )}
         {replyTo === comment.id && (
           <div className="flex flex-col p-4 mt-2 bg-white rounded-lg shadow-md">
             <div className='flex flex-row items-center flex-1'>
               {userInfo?.profileImageUrl && (
-                <Image src={userInfo.profileImageUrl} alt="사용자" width={24} height={24} className="rounded-full" />
+                <Image src={userInfo.profileImageUrl} alt="사용자" width={32} height={32} className="rounded-full" />
               )}
               <div className="font-bold ml-[5px]">{userInfo?.nickName}</div>
             </div>
@@ -229,11 +234,6 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
                 입력
               </button>
             </div>
-          </div>
-        )}
-        {comment.children.length > 0 && (
-          <div className={depth === 0 ? "my-4 ml-12 mr-4 bg-neutral-100 rounded-lg" : ""}>
-            {renderComments(comment.children, depth + 1)}
           </div>
         )}
       </div>
@@ -372,7 +372,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
       </div>
       {showComments && (
         <>
-          <div className="comment-section w-full p-4 bg-white rounded-lg shadow-md flex items-center 4 p-4">
+          <div className="comment-section w-full p-4 bg-white rounded-lg shadow-md flex items-center 4 mt-16">
             <div className='w-[90%] flex flex-col'>
               <div className='w-full flex-1'>
                 <div className='flex flex-row items-center'>
