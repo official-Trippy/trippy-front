@@ -77,6 +77,17 @@ export const fetchOotdPostDetail = async (id: number): Promise<OotdDetailGetResp
     }
 };
 
+export const fetchUserOotdPosts = async (userId: string, page: number, size: number) => {
+  const response = await axios.get(`/api/ootd/by-member`, {
+    params: {
+      memberId: userId,
+      page,
+      size,
+    },
+  });
+  return response.data;
+};
+
 axios.interceptors.request.use(
   async (config) => {
     const accessToken = Cookies.get('accessToken');
