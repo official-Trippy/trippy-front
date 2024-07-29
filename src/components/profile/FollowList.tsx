@@ -41,7 +41,7 @@ const FollowList: React.FC<{
         </h3>
         <div>
           {!userData || userData.length === 0 ? (
-            <div className="text-center my-12">
+            <div className="text-left my-12 text-3xl">
               {type === "follower"
                 ? "아직 팔로워가 없습니다. 가장 먼저 팔로우 해주세요!"
                 : "아직 팔로잉이 없습니다. 친해지고 싶은 이웃을 팔로우 해보세요!"}
