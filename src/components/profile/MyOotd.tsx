@@ -47,7 +47,6 @@ const MyOotd: React.FC<MyOotdProps> = ({ userInfo }) => {
 
   return (
     <div className="h-full">
-      <h3 className="text-2xl font-bold my-12">나의 OOTD</h3>
       <div className="grid grid-cols-3 gap-12">
         {ootdList.map((item) => (
           <div key={item.ootd.id} className="flex-1">

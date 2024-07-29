@@ -13,6 +13,7 @@ import MyBookmark from "@/components/profile/MyBookmark";
 import FollowList from "@/components/profile/FollowList";
 import Image from "next/image";
 import backgroundImg from "../../../public/DefaultBackground.svg";
+import { fetchOotdPostCount } from "@/services/ootd.ts/ootdGet";
 
 const TABS = {
   ALL: "ALL",
@@ -25,7 +26,7 @@ const TABS = {
 };
 
 const MyPage = () => {
-  const [activeTab, setActiveTab] = useState(TABS.ALL);
+  const [activeTab, setActiveTab] = useState(TABS.TICKET);
   const accessToken = Cookies.get("accessToken");
 
   const { data, error, isLoading, refetch } = useQuery({
@@ -36,10 +37,15 @@ const MyPage = () => {
     },
   });
 
-
   useEffect(() => {
     refetch(); 
   }, [accessToken, refetch]);
+
+  const { data: totalOotdCount } = useQuery<number>(
+    'ootdPostCount',
+    fetchOotdPostCount,
+    { enabled: !!accessToken }  
+  );
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -77,34 +83,32 @@ const MyPage = () => {
           <div className="flex justify-between mb-4 ml-4 text-2xl">
             <div className="flex space-x-4">
               <button
-                className={`pr-8 py-2 ${activeTab === TABS.ALL ? "text-rose-500 font-bold" : "bg-white"}`}
-                onClick={() => setActiveTab(TABS.ALL)}
-              >
-                모두 보기
-              </button>
-              <button
-                className={`pr-8 py-2 ${activeTab === TABS.TICKET ? "text-rose-500 font-bold" : "bg-white"}`}
+                className={`px-8 py-2 rounded-[999px] justify-center items-center ${activeTab === TABS.TICKET ? "bg-[#ffe3ea] border-2 border-[#fa3463]" : "border border-[#cfcfcf]"}`}
                 onClick={() => setActiveTab(TABS.TICKET)}
               >
-                티켓
+                <span className={activeTab === TABS.TICKET ? "text-[#fa3463]" : ""}>티켓</span>
+                <span className="text-[#fa3463] ml-1">{totalOotdCount}</span>
               </button>
               <button
-                className={`pr-8 py-2 ${activeTab === TABS.OOTD ? "text-rose-500 font-bold" : "bg-white"}`}
+                className={`px-8 py-2 rounded-[999px] justify-center items-center ${activeTab === TABS.OOTD ? "bg-[#ffe3ea] border-2 border-[#fa3463]" : "border border-[#cfcfcf]"}`}
                 onClick={() => setActiveTab(TABS.OOTD)}
               >
-                OOTD
+                <span className={activeTab === TABS.OOTD ? "text-[#fa3463]" : ""}>OOTD</span>
+                <span className="text-[#fa3463] ml-1">{totalOotdCount}</span>
               </button>
               <button
-                className={`pr-8 py-2 ${activeTab === TABS.BADGE ? "text-rose-500 font-bold" : "bg-white"}`}
+                className={`px-8 py-2 rounded-[999px] justify-center items-center ${activeTab === TABS.BADGE ? "bg-[#ffe3ea] border-2 border-[#fa3463]" : "border border-[#cfcfcf]"}`}
                 onClick={() => setActiveTab(TABS.BADGE)}
               >
-                뱃지
+                <span className={activeTab === TABS.BADGE ? "text-[#fa3463]" : ""}>뱃지</span>
+                <span className="text-[#fa3463] ml-1">{totalOotdCount}</span>
               </button>
               <button
-                className={`pr-8 py-2 ${activeTab === TABS.BOOKMARK ? "text-rose-500 font-bold" : "bg-white"}`}
+                className={`px-8 py-2 rounded-[999px] justify-center items-center ${activeTab === TABS.BOOKMARK ? "bg-[#ffe3ea] border-2 border-[#fa3463]" : "border border-[#cfcfcf]"}`}
                 onClick={() => setActiveTab(TABS.BOOKMARK)}
               >
-                북마크
+                <span className={activeTab === TABS.BOOKMARK ? "text-[#fa3463]" : ""}>북마크</span>
+                <span className="text-[#fa3463] ml-1">{totalOotdCount}</span>
               </button>
             </div>
             <div className="flex space-x-4">
