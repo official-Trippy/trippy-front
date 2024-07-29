@@ -143,7 +143,7 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
           <div className="flex pt-4">
             <div className="flex flex-wrap gap-2">
               {ootdItem.post.tags.map((tag: string, index: number) => (
-                <span key={index} className="px-4 py-2 bg-neutral-100 rounded-2xl justify-center items-center gap-2.5 inline-flex text-neutral-400 text-[13px] font-normal font-['Pretendard']">
+                <span key={index} className="px-4 py-1 bg-neutral-100 rounded-3xl text-xl justify-center items-center gap-2.5 inline-flex text-[#9d9d9d]">
                   {tag}
                 </span>
               ))}
