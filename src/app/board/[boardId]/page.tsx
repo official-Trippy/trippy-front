@@ -25,6 +25,7 @@ import postComments from "@/services/board/post/postComment";
 import getBoardComment from "@/services/board/get/getBoardComment";
 import { useFollowingStore } from "@/store/useFollowingStore";
 import { doFollow, unfollow } from "@/services/follow";
+import FollowButton from "@/components/followControl/followButton";
 
 export default function BoardPage({ params }: { params: { boardId: number } }) {
   const accessToken = Cookies.get("accessToken");
@@ -55,26 +56,40 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
     },
   });
 
+  //   const postUserData = postData && postData.result;
+
+  console.log(postData?.result.member.memberId);
+  console.log(memberDatas);
+  const postMemberId = postData?.result.member.memberId;
+  const userMemberId = memberDatas?.result.memberId;
+
   const { following, fetchFollowing } = useFollowingStore();
-  console.log(following);
 
   useEffect(() => {
-    if (accessToken && postData) {
-      fetchFollowing(accessToken);
+    if (postData) {
+      fetchFollowing(userMemberId);
     }
-  }, [accessToken, postData]);
+  }, [postData]);
+  console.log(following);
 
-  const isFollowing = following.some(
-    (follow) => follow.memberId === postData?.result.member.id
-  );
+  const isFollowing =
+    Array.isArray(following.followings) &&
+    following.followings.some(
+      (follow) => follow.memberId === postData?.result.member.memberId
+    );
+
+  console.log("Post Member ID:", postMemberId);
+  console.log("Is Following:", following);
+  console.log(isFollowing);
 
   const followHandler = async (memberId: string | undefined) => {
     if (!memberId) return; // memberId가 undefined인 경우 함수를 종료
     if (!isFollowing) {
       try {
-        await doFollow(memberId);
+        const response = await doFollow(memberId);
+        console.log("Follow response:", response);
         if (accessToken) {
-          fetchFollowing(accessToken); // 상태 업데이트
+          fetchFollowing(postMemberId);
         }
       } catch (error) {
         console.error("Error following member:", error);
@@ -83,15 +98,13 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
       try {
         await unfollow(memberId);
         if (accessToken) {
-          fetchFollowing(accessToken); // 상태 업데이트
+          fetchFollowing(postMemberId);
         }
       } catch (error) {
         console.error("Error unfollowing member:", error);
       }
     }
   };
-
-  console.log(postData);
 
   function formatDate(dateString: any) {
     const date = new Date(dateString);
@@ -227,12 +240,16 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
               </span>
             </div>
             <div className="ml-auto flex items-center">
-              <button
+              {/* <button
                 className={`bg-[${isFollowing ? "#55FBAF" : "#FB3463"}] text-white text-[1.6rem] p-[0.8rem] rounded-[1rem]`}
-                onClick={() => followHandler(postData?.result.member.id)}
+                onClick={() => followHandler(postMemberId)}
               >
-                {isFollowing ? "팔로잉" : "팔로우"}
-              </button>
+                {isFollowing ? "팔로잉✅" : "팔로우"}
+              </button> */}
+              <FollowButton
+                postMemberId={postMemberId}
+                userMemberId={userMemberId}
+              />
               <div className="ml-[4rem] flex">
                 <Image src={plused} alt="" />
                 <span className="text-[#9D9D9D] text-[1.6rem]">136</span>

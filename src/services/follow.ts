@@ -28,40 +28,54 @@ export async function showFollowings(memberId: string) {
 }
 
 export async function doFollow(memberId: string) {
+  const followingStore = useFollowingStore.getState();
+  if (followingStore.loading) return;
+
+  followingStore.setLoading(true);
+
   try {
     const response = await axios.post(
       `${backendUrl}/api/member/follow?memberId=${memberId}`
     );
-    const updateUserInfo = useUserStore.getState().updateUserInfo;
     const updatedFollowInfo = response.data.result;
 
-    const followingStore = useFollowingStore.getState();
-    followingStore.setFollowing([
-      ...followingStore.following,
-      updatedFollowInfo,
-    ]);
-
+    const newFollowing = {
+      followingCnt: followingStore.following.followingCnt + 1,
+      followings: [...followingStore.following.followings, updatedFollowInfo],
+    };
+    followingStore.setFollowing(newFollowing);
     return response.data;
   } catch (error) {
     throw new Error(`Error during doFollow: ${error}`);
+  } finally {
+    followingStore.setLoading(false);
   }
 }
 
 export async function unfollow(targetMemberId: string) {
+  const followingStore = useFollowingStore.getState();
+  if (followingStore.loading) return;
+
+  followingStore.setLoading(true);
+
   try {
     const response = await axios.delete(
       `${backendUrl}/api/member/follow?type=unfollow&targetMemberId=${targetMemberId}`
     );
 
-    const followingStore = useFollowingStore.getState();
-    followingStore.setFollowing(
-      followingStore.following.filter(
-        (following) => following.memberId !== targetMemberId
-      )
+    const newFollowings = followingStore.following.followings.filter(
+      (following) => following.memberId !== targetMemberId
     );
+    const newFollowing = {
+      followingCnt: newFollowings.length,
+      followings: newFollowings,
+    };
+    followingStore.setFollowing(newFollowing);
 
     return response.data;
   } catch (error) {
     throw new Error(`Error during unfollow: ${error}`);
+  } finally {
+    followingStore.setLoading(false);
   }
 }
