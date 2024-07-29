@@ -1,5 +1,7 @@
-import PostOotd from "@/components/ootd/PostOotd";
 import Header from "@/components/shared/header/Header";
+import dynamic from 'next/dynamic';
+
+const PostOotd = dynamic(() => import('@/components/ootd/PostOotd'), { ssr: false });
 
 const WritePage = () => {
 
