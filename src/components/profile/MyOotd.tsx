@@ -7,6 +7,7 @@ import { OotdGetResponse } from "@/types/ootd";
 import EmptyHeartIcon from '../../../public/empty_heart_default.svg';
 import CommentIcon1 from '../../../public/empty_comment_default.svg';
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 const PAGE_SIZE = 9; 
 
@@ -37,6 +38,12 @@ const MyOotd: React.FC<MyOotdProps> = ({ userInfo }) => {
     setPage(pageIndex);
   };
 
+  const router = useRouter();
+
+  const handleOotdItemClick = (id: number) => {
+    router.push(`/ootd/${id}`);
+  };
+
   if (isCountLoading || isLoading) {
     return null;
   }
@@ -51,7 +58,7 @@ const MyOotd: React.FC<MyOotdProps> = ({ userInfo }) => {
     <div className="h-full">
       <div className="grid grid-cols-3 gap-12">
         {ootdList.map((item) => (
-          <div key={item.ootd.id} className="flex-1">
+          <div key={item.ootd.id} className="flex-1" onClick={() => handleOotdItemClick(item.post.id)}>
             {item.post.images.length > 0 && (
               <img src={item.post.images[0].accessUri} alt="OOTD" className="w-full h-auto rounded-lg" />
             )}
