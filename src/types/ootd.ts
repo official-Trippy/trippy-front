@@ -182,3 +182,14 @@ export interface PostRequest {
       likeCount: number;
     };
   }
+
+  export interface UserProfileResponse {
+    isSuccess: boolean;
+    code: string;
+    message: string;
+    result: {
+      profileImageUrl: string;
+      blogName: string;
+      blogIntroduce: string;
+    };
+  }

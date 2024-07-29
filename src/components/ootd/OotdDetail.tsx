@@ -15,6 +15,7 @@ import CommentSection from './CommentSection';
 import LeftArrowIcon from '../../../public/left-arrow.svg'; 
 import RightArrowIcon from '../../../public/right-arrow.svg'; 
 import { getWeatherStatusInKorean } from '@/constants/weatherTransition';
+import { useRouter } from 'next/navigation'; 
 
 interface OotdDetailProps {
   id: number;
@@ -27,6 +28,13 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
   );
 
   const userInfo = useUserStore((state) => state.userInfo);
+
+  const router = useRouter();
+
+  const handleProfileClick = () => {
+    console.log('click')
+    router.push(`/user/${ootdItem.member.memberId}`); 
+  };
 
   if (isLoading) {
     return null;
@@ -94,6 +102,7 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
                 width={48}
                 height={48}
                 src={ootdItem.member.profileUrl}
+                onClick={handleProfileClick} 
                 alt="User Profile" />
               <div className="ml-4">
                 <span className="block font-bold text-xl ml-[2px]">{ootdItem.member.nickName}</span>
@@ -134,7 +143,7 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
           <div className="flex pt-4">
             <div className="flex flex-wrap gap-2">
               {ootdItem.post.tags.map((tag: string, index: number) => (
-                <span key={index} className="px-4 py-2 bg-neutral-100 rounded-2xl justify-center items-center gap-2.5 inline-flex text-neutral-400 text-[13px] font-normal font-['Pretendard']">
+                <span key={index} className="px-4 py-1 bg-neutral-100 rounded-3xl text-xl justify-center items-center gap-2.5 inline-flex text-[#9d9d9d]">
                   {tag}
                 </span>
               ))}
