@@ -21,6 +21,7 @@ interface CommentSectionProps {
   initialLikeCount: number;
   initialCommentCount: number;
 }
+
 const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCount, initialCommentCount }) => {
   const userInfo = useUserStore((state) => state.userInfo);
   const [newComment, setNewComment] = useState('');
