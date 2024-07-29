@@ -47,7 +47,6 @@ const PostOotd: React.FC = () => {
       },
       onError: async (error) => {
         console.error('Error fetching weather:', error);
-
         // 브라우저에서만 실행되도록 하기 위해 useEffect로 감쌈
         if (typeof window !== 'undefined') {
           Swal.fire({
@@ -84,7 +83,7 @@ const PostOotd: React.FC = () => {
                   };
                 },
               });
-    
+
               if (selected) {
                 setWeather({
                   status: selected.weather,
@@ -133,11 +132,13 @@ const PostOotd: React.FC = () => {
 
   const handleFetchWeather = () => {
     if (!location || date.length !== 8) {
-      Swal.fire({
-        icon: 'error',
-        title: '입력 오류',
-        text: '위치와 날짜를 모두 입력해주세요.',
-      });
+      if (typeof window !== 'undefined') {
+        Swal.fire({
+          icon: 'error',
+          title: '입력 오류',
+          text: '위치와 날짜를 모두 입력해주세요.',
+        });
+      }
       return;
     }
     setLatitude(latitude);
@@ -153,29 +154,35 @@ const PostOotd: React.FC = () => {
 
   const handleCreatePost = () => {
     if (images.length === 0) {
-      Swal.fire({
-        icon: 'error',
-        title: '이미지 오류',
-        text: '이미지를 업로드해주세요.',
-      });
+      if (typeof window !== 'undefined') {
+        Swal.fire({
+          icon: 'error',
+          title: '이미지 오류',
+          text: '이미지를 업로드해주세요.',
+        });
+      }
       return;
     }
 
     if (post.trim() === '') {
-      Swal.fire({
-        icon: 'error',
-        title: '문구 작성 오류',
-        text: 'OOTD 문구를 작성해주세요.',
-      });
+      if (typeof window !== 'undefined') {
+        Swal.fire({
+          icon: 'error',
+          title: '문구 작성 오류',
+          text: 'OOTD 문구를 작성해주세요.',
+        });
+      }
       return;
     }
 
     if (tags.length < 3) {
-      Swal.fire({
-        icon: 'error',
-        title: '태그 오류',
-        text: '태그를 3개 이상 등록해주세요.',
-      });
+      if (typeof window !== 'undefined') {
+        Swal.fire({
+          icon: 'error',
+          title: '태그 오류',
+          text: '태그를 3개 이상 등록해주세요.',
+        });
+      }
       return;
     }
 
