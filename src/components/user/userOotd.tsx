@@ -1,5 +1,3 @@
-'use client';
-
 import React from 'react';
 import { useQuery } from 'react-query';
 import { fetchUserOotdPosts } from '@/services/ootd.ts/ootdGet';
@@ -15,8 +13,8 @@ const UserOotd: React.FC<UserOotdProps> = ({ memberId }) => {
     ['userOotdPosts', memberId],
     () => fetchUserOotdPosts(memberId, 0, 9),
     {
-      staleTime: Infinity, 
-      cacheTime: Infinity, 
+      staleTime: Infinity,
+      cacheTime: Infinity,
     }
   );
 
@@ -26,11 +24,8 @@ const UserOotd: React.FC<UserOotdProps> = ({ memberId }) => {
 
   const ootdList = data.result;
 
-  console.log(ootdList);
-
   return (
     <div>
-      <h2 className="text-xl font-bold">User OOTD Posts</h2>
       <div className="grid grid-cols-3 gap-4">
         {ootdList.map((item) => (
           <div key={item.post.id} className="border p-4 rounded-lg">
@@ -49,7 +44,6 @@ const UserOotd: React.FC<UserOotdProps> = ({ memberId }) => {
           </div>
         ))}
       </div>
-      {/* Pagination buttons here */}
     </div>
   );
 };

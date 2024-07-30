@@ -33,7 +33,12 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
 
   const handleProfileClick = () => {
     console.log('click')
-    router.push(`/user/${ootdItem.member.memberId}`); 
+    if (ootdItem.member.memberId == userInfo.memberId) {
+      router.push('/mypage')
+    }
+    else {
+      router.push(`/user/${ootdItem.member.memberId}`);
+    } 
   };
 
   if (isLoading) {

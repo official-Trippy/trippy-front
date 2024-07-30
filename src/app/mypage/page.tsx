@@ -57,7 +57,7 @@ const MyPage = () => {
 
   const userData = data && data.result;
   console.log("userData : ", userData);
-  const member = userData.memberId;
+  const member = userData?.memberId;
 
   return (
     <>
