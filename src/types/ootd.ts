@@ -171,4 +171,29 @@ export interface PostRequest {
     children: Comment[];
   }
   
-  
+  export interface LikeResponse {
+    isSuccess: boolean;
+    code: string;
+    message: string;
+    result: {
+      likeId: number;
+      postId: number;
+      memberId: string;
+      likeCount: number;
+    };
+  }
+
+  export interface UserProfileResponse {
+    isSuccess: boolean;
+    code: string;
+    message: string;
+    result: {
+      nickName: string;
+      profileImageUrl: string;
+      blogName: string;
+      blogIntroduce: string;
+      followerCnt: number;
+      followingCnt: number;
+      email: string;
+    };
+  }

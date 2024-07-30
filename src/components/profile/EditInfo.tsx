@@ -5,7 +5,7 @@ import useUserInfo from "@/hooks/useUserInfo";
 import { checkBlogNameDuplicate, checkNickNameDuplicate, uploadImage } from "@/services/blog";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import DefaultProfileImg from "../../../public/DefaultProfile.svg";
 import { useUserStore } from "@/store/useUserStore";
 import { blogInterests } from "@/constants/blogPreference";
@@ -38,7 +38,7 @@ const EditInfo = () => {
   const [blogIntroduceError, setBlogIntroduceError] = useState<string>('');
   const [imageUploaded, setImageUploaded] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedInterests, setSelectedInterests] = useState<string[]>(userInfo?.interestedTypes || []);
+  const [selectedInterests, setSelectedInterests] = useState<string[]>(userInfo?.koreanInterestedTypes || []);
 
   const [likeAlert, setLikeAlert] = useState(true);
   const [commentAlert, setCommentAlert] = useState(true);
@@ -179,8 +179,11 @@ const EditInfo = () => {
       }
     });
   };
-  
-  
+
+  useEffect(() => {
+    console.log('Selected Interests:', selectedInterests);
+  }, [selectedInterests]);
+
   const updateUserInfoMutation = useMutation(updateMemberInfo, {
     onSuccess: () => {
       queryClient.invalidateQueries('userInfo');
@@ -195,8 +198,8 @@ const EditInfo = () => {
     const data: UpdateMemberInfoRequest = {
       nickName: nickName || userInfo.nickName, 
       blogName: blogName || userInfo.blogName, 
-      blogIntroduce,
-      koreanInterestedTypes: selectedInterests,
+      blogIntroduce: blogIntroduce || userInfo.blogIntroduce,
+      koreanInterestedTypes: selectedInterests || userInfo.koreanInterestedTypes,
       profileImage: profileImage || userInfo.profileImage || undefined,
       blogImage: blogImage || userInfo.blogImage || undefined,
       likeAlert,
@@ -206,11 +209,12 @@ const EditInfo = () => {
       badgeScope,
       followScope,
     };
+
+    console.log('Updated Data:', data); 
   
     updateUserInfoMutation.mutate(data);
     updateUserInfo(data);
   };
-  
   
   return (
     <><div className="relative w-full h-[300px]">

@@ -328,3 +328,166 @@ body {
 .animate-dropdown {
   animation: dropdown 0.3s ease-in-out forwards;
 }
+
+.ootd-image-container {
+  position: relative;
+  width: 100%;
+  padding-top: 100%;
+  overflow: hidden;
+}
+
+.ootd-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-top: 5rem;
+}
+
+.grid-item {
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.flex {
+  display: flex;
+}
+
+.flex-row {
+  flex-direction: row;
+}
+
+.flex-col {
+  flex-direction: column;
+}
+
+.flex-wrap {
+  flex-wrap: wrap;
+}
+
+.gap-2 {
+  gap: 0.5rem;
+}
+
+.rounded-full {
+  border-radius: 50%;
+}
+
+.slide-down {
+  max-height: 500px;
+  /* 원하는 최대 높이 */
+  opacity: 1;
+  transition: max-height 0.5s ease, opacity 0.5s ease;
+}
+
+.hide {
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  /* 내용이 넘치지 않도록 숨김 */
+  transition: max-height 0.5s ease, opacity 0.5s ease;
+}
+.custom-modal {
+  max-width: 90% !important; 
+  width: 90% !important;
+  max-height: 90% !important; 
+  height: 90% !important;
+}
+
+.custom-modal-overlay {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+.custom-datepicker-popover {
+  .react-datepicker__triangle {
+    display: none; 
+  }
+
+  .react-datepicker__header {
+    font-size: 0.875rem; 
+  }
+
+  .react-datepicker__day,
+  .react-datepicker__day-name {
+    width: 2.5rem; 
+    height: 2.5rem; 
+    line-height: 2.5rem; 
+  }
+
+  .react-datepicker__calendar {
+    width: 100%;
+    height: auto; 
+  }
+}
+
+.react-datepicker-wrapper, .react-datepicker__input-container {
+  width: 100%;
+  height: 100%;
+}
+
+.datepicker-container {
+  position: relative; 
+  width: 100%; 
+}
+
+.datepicker-input {
+  width: 100%;
+  padding-right: 2.5rem;
+}
+
+.datepicker-icon {
+  position: absolute;
+  right: 1.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 1.5rem;
+  height: 1.5rem;
+  pointer-events: none;
+}
+
+.react-datepicker__input-container {
+  width: 100%;
+}
+
+.react-datepicker__input-container input {
+  padding-right: 2.5rem;
+}
+
+
+.pink-text {
+  color: #ffb9ca;
+}
+
+.slick-prev:before,
+.slick-next:before {
+  display: none;
+}
+
+.custom-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+  cursor: pointer;
+}
+
+.custom-arrow img {
+  height: auto; 
+  max-width: 40px;
+  max-height: 40px; 
+}

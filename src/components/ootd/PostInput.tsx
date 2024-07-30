@@ -13,7 +13,7 @@ const PostInput: React.FC<PostInputProps> = ({ onPostChange, onTagsChange, tags 
 
   useEffect(() => {
     if (textareaRef.current) {
-      textareaRef.current.placeholder = "특별한 OOTD를 소개하는 문구를 작성해보세요.\n다양한 #태그도 사용할 수 있어요.";
+      textareaRef.current.placeholder = "특별한 OOTD를 소개하는 문구를 작성해보세요.";
     }
   }, []);
 
@@ -35,7 +35,7 @@ const PostInput: React.FC<PostInputProps> = ({ onPostChange, onTagsChange, tags 
       event.preventDefault();
       const inputTag = tagInput.trim();
       if (inputTag !== '') {
-        const formattedTag = `#${inputTag}`;
+        const formattedTag = `${inputTag}`;
         if (!tags.includes(formattedTag)) {
           const newTags = [...tags, formattedTag];
           onTagsChange(newTags);
@@ -51,31 +51,31 @@ const PostInput: React.FC<PostInputProps> = ({ onPostChange, onTagsChange, tags 
   };
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-4">
       <textarea
         ref={textareaRef}
-        className="w-full h-[500px] text-2xl border p-2 rounded resize-none"
+        className="w-full h-64 text-lg border py-4 px-4 rounded resize-none"
         onChange={handlePostChange}
       />
-      <div className="relative w-full text-2xl border p-2 rounded">
+      <div className="relative w-full border py-4 px-4 rounded">
         <input
           type="text"
           placeholder="태그를 3개 이상 입력해주세요."
-          className="w-full h-[50px] border-none outline-none text-2xl"
+          className="w-full h-12 border-none outline-none text-lg"
           value={tagInput}
           onCompositionStart={handleCompositionEvent}
           onCompositionEnd={handleCompositionEvent}
           onChange={handleTagInputChange}
           onKeyDown={handleTagInputKeyDown}
         />
-        <div className="mt-2 flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-2 items-center">
           {tags.map((tag, index) => (
-            <span key={index} className="h-[30px] text-neutral-400 px-3 py-1 bg-neutral-100 rounded-2xl justify-center items-center gap-2.5 inline-flex">
+            <span key={index} className="h-8 text-white pl-3 pr-2 py-1 bg-[#fa3463] rounded-2xl flex items-center">
               {tag}
               <button
                 type="button"
                 onClick={() => handleTagDelete(tag)}
-                className="ml-2 text-black mb-[2px]"
+                className="ml-2 text-white mb-[1.5px]"
               >
                 x
               </button>

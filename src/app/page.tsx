@@ -41,15 +41,17 @@ export default function Home() {
       <Recommend memberData={memberData} isLoading={isLoading}>
         <div className="flex mt-[4rem]">
           {boardData?.result.slice(0, 4).map((posts: any, index: number) => {
+            const createDateTime = new Date(posts.post.createDateTime);
+            const formattedDateTime = `${createDateTime.getFullYear()}.${String(createDateTime.getMonth() + 1).padStart(2, '0')}.${String(createDateTime.getDate()).padStart(2, '0')} ${String(createDateTime.getHours()).padStart(2, '0')}:${String(createDateTime.getMinutes()).padStart(2, '0')}`;
             return (
               <div className="w-[33rem] h-[40rem] shadow-xl rounded-[1rem] mr-[5rem]" key={index}>
                 <div className="flex flex-col">
                   <Image className="w-[33rem] h-[26rem] rounded-[1rem]" src={posts.ticket.image.accessUri} alt="" width={300} height={260} />
                   <div className="p-[1rem] flex">
-                    <Image src={Profile} width={40} height={40} alt="" />
+                    <Image src={posts.member.profileUrl} width={40} height={40} alt="" />
                     <div className="flex flex-col justify-center pl-[1rem] text-[1.4rem]">
                       <span className="font-bold">{posts.member.nickName}</span>
-                      <span className="font-medium">{posts.post.createDateTime}</span>
+                      <span className="font-medium">{formattedDateTime}</span>
                     </div>
                   </div>
                   <div className="px-[1rem]">
@@ -96,7 +98,7 @@ export default function Home() {
                         {posts?.post.tags.map((tagData: string, index: number) => (
                           <span
                             key={index}
-                            className="w-fit px-[0.8rem] py-[0.4rem] mt-[1.2rem] mr-[0.5rem] bg-[#F5F5F5] text-[1.3rem] text-[#9d9d9d] rounded-[1.6rem]"
+                            className="w-fit px-[0.8rem] py-[0.4rem] mt-[1.2rem] mr-[0.5rem] bg-[#F5F5F5] text-[1.3rem] text-[#9d9d9d] rounded-[1.6rem] text-ellipsis overflow-hidden theboki"
                           >
                             {tagData}
                           </span>
@@ -104,12 +106,12 @@ export default function Home() {
                       </div>
                     </div>
                     <div className="flex flex-col w-full">
-                      <Image className="ml-auto flex rounded-[0.8rem]" src={posts.ticket.image.accessUri} alt="" width={120} height={120} />
+                      <Image className="w-[12rem] h-[12rem] ml-auto flex rounded-[0.8rem]" src={posts.ticket.image.accessUri} alt="" width={120} height={120} />
                     </div>
                   </div>
                   <div className="flex mt-[2rem]">
                     <div className="flex h-full text-[1.4rem] font-normal space-x-4 items-center mt-auto">
-                      <Image src={Profile} width={24} height={24} alt="" />
+                      <Image src={posts.member.profileUrl} width={24} height={24} alt="" />
                       <span className="">{posts.member.nickName}</span>
                       <span className="">{formattedDate}</span>
                     </div>

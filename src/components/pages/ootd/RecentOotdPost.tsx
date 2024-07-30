@@ -9,15 +9,17 @@ import { OotdGetResponse } from '@/types/ootd';
 import { fetchAllOotdPostCount, fetchAllOotdPosts } from '@/services/ootd.ts/ootdGet';
 import { MemberInfo } from '@/services/auth';
 import { formatDate } from '@/constants/dateFotmat';
+import EmptyHeartIcon from '../../../../public/empty_heart_default.svg'
+import CommentIcon1 from '../../../../public/empty_comment_default.svg';
 
-const PAGE_SIZE = 10;
+const PAGE_SIZE = 8;
 
 const RecentOotdPost: React.FC = () => {
   const accessToken = Cookies.get('accessToken');
   const [page, setPage] = useState(0);
   const router = useRouter();
 
-  const { data: memberData, error: memberError, isLoading: memberLoading } = useQuery({
+  const { data: memberData, isLoading: memberLoading } = useQuery({
     queryKey: ['member', accessToken],
     queryFn: () => MemberInfo(accessToken),
     onError: (error) => {
@@ -56,13 +58,6 @@ const RecentOotdPost: React.FC = () => {
 
   const ootdList = data.result;
 
-  const gridContainerStyle = {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(5, 1fr)',
-    gap: '3rem',
-    marginTop: '5rem',
-  };
-
   return (
     <div className='w-[80%] mx-auto py-[5rem]'>
       <div>
@@ -84,36 +79,51 @@ const RecentOotdPost: React.FC = () => {
           <option>인기순</option>
         </select>
       </div>
-      <div style={gridContainerStyle}>
-        {ootdList.map((item) => (
-          <div key={item.post.id} className='flex flex-col w-full' onClick={() => handleOotdItemClick(item.post.id)}>
-            {item.post.images.length > 0 && (
-              <img className='flex rounded-[0.8rem]' src={item.post.images[0].accessUri} alt='OOTD' />
-            )}
-            <div className='px-[1.6rem] py-[2rem]'>
-              <div className='flex'>
-                <div className='flex w-full h-full text-[1.4rem] font-normal items-center'>
-                  <Image src={item.member.profileUrl} width={24} height={24} alt='image' />
-                  <span className=' text-[#6B6B6B]'>{item.member.nickName}</span>
-                  <span className='flex ml-auto'>{formatDate(item.post.createDateTime)}</span>
+      <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+      {ootdList.map((item) => (
+        <div key={item.post.id} className="flex flex-col overflow-hidden cursor-pointer" onClick={() => handleOotdItemClick(item.post.id)}>
+          {item.post.images.length > 0 && (
+            <div className="relative w-full h-0 pt-[100%] overflow-hidden">
+              <Image 
+                className="absolute top-0 left-0 w-full h-full object-cover rounded-xl" 
+                src={item.post.images[0].accessUri} 
+                alt="OOTD" 
+                width={200} 
+                height={200} 
+              />
+            </div>
+          )}
+            <div className="py-8">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center">
+                  <Image className="rounded-full" src={item.member.profileUrl} width={24} height={24} alt="Profile" />
+                  <span className="text-[#6B6B6B] ml-[5px]">{item.member.nickName}</span>
+                </div>
+                <div className="flex items-center mt-2">
+                <Image
+                  src={EmptyHeartIcon}
+                  alt="좋아요"
+                  width={20}
+                  height={18}
+                />
+                <span className="mx-2 text-[#cfcfcf]"> {item.post.likeCount}</span>
+                <Image
+                  src={CommentIcon1}
+                  alt="좋아요"
+                  width={18}
+                  height={18}
+                />
+                  <span className="mx-2 text-[#cfcfcf]"> {item.post.commentCount}</span>
                 </div>
               </div>
-              <div className='flex flex-col mt-[1.6rem]'>
-                <div className='flex flex-col w-[150%]'>
-                  <h1 className='text-[1.2rem] font-medium text-[#6B6B6B]'>{item.post.title}</h1>
-                </div>
-                <div className='flex mt-[2rem]'>
-                  {item.post.tags.map((tag: string, index: number) => (
-                    <span key={index} className='w-fit px-[0.8rem] py-[0.4rem] bg-[#F5F5F5] text-[1.3rem] text-[#9d9d9d] items-center rounded-[1.6rem]'>
+              <div className="mt-4">
+                <h2 className="text-[1.2rem] font-medium text-[#6B6B6B]">{item.post.body}</h2>
+                <div className="flex flex-wrap mt-4 gap-2">
+                  {item.post.tags.map((tag, index) => (
+                    <span key={index} className="px-4 py-1 bg-neutral-100 rounded-3xl text-xl justify-center items-center gap-2.5 inline-flex text-[#9d9d9d]">
                       {tag}
                     </span>
                   ))}
-                  <div className='ml-auto flex items-center'>
-                    <span>하트</span>
-                    <span>{item.post.likeCount}</span>
-                    <span>댓글</span>
-                    <span>{item.post.commentCount}</span>
-                  </div>
                 </div>
               </div>
             </div>
@@ -125,8 +135,8 @@ const RecentOotdPost: React.FC = () => {
           {[...Array(totalPages)].map((_, index) => (
             <button
               key={index}
-              className={`mx-2 py-1 px-3 border border-gray-300 rounded-md ${
-                page === index ? 'bg-gray-200' : ''
+              className={`mx-2 py-16 px-3  ${
+                page === index ? 'text-[#fa3463] font-semibold' : 'text-[#cfcfcf] font-normal'
               }`}
               onClick={() => handlePageClick(index)}
             >

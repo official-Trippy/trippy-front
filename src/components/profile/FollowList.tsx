@@ -22,7 +22,7 @@ const FollowList: React.FC<{
   const followInfo = useUserStore((state) => state.userInfo);
 
   if (isLoading)
-    return <div className="text-2xl font-bold my-12">Loading...</div>;
+    return null;
   if (error)
     return <div className="text-2xl font-bold my-12">Error loading data</div>;
 
