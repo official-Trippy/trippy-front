@@ -5,6 +5,7 @@ import { useQuery } from 'react-query';
 import Header from '@/components/shared/header/Header';
 import UserProfile from '@/components/user/UserProfile';
 import UserOotd from '@/components/user/UserOotd';
+
 import UserTicket from '@/components/user/UserTicket';
 import UserBadge from '@/components/user/UserBadge';
 import UserBookmark from '@/components/user/UserBookmark'
