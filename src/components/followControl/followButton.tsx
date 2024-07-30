@@ -2,7 +2,6 @@ import React, { useEffect, useState, useCallback } from "react";
 import Swal from "sweetalert2";
 import { doFollow, unfollow } from "@/services/follow";
 import { useFollowingStore } from "@/store/useFollowingStore";
-import { useUserStore } from "@/store/useUserStore";
 
 interface FollowButtonProps {
   postMemberId: string;
@@ -17,7 +16,6 @@ const FollowButton: React.FC<FollowButtonProps> = ({
     useFollowingStore();
   const [localIsFollowing, setLocalIsFollowing] = useState<boolean>(false);
 
-  // 팔로우 상태를 확인합니다.
   useEffect(() => {
     if (following.followings.length > 0) {
       setLocalIsFollowing(
@@ -54,7 +52,7 @@ const FollowButton: React.FC<FollowButtonProps> = ({
       if (result.isConfirmed) {
         try {
           await unfollow(postMemberId);
-          updateFollowingState();
+          await updateFollowingState();
           setLocalIsFollowing(false);
         } catch (error) {
           console.error("Error during unfollow:", error);
@@ -63,7 +61,7 @@ const FollowButton: React.FC<FollowButtonProps> = ({
     } else {
       try {
         await doFollow(postMemberId);
-        updateFollowingState();
+        await updateFollowingState();
         setLocalIsFollowing(true);
       } catch (error) {
         console.error("Error during follow:", error);

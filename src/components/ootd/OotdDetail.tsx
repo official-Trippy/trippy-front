@@ -24,7 +24,7 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
   );
 
   const userInfo = useUserStore((state) => state.userInfo);
-  console.log(userInfo.memberId);
+  // console.log(userInfo.memberId);
   const userMemberId = userInfo.memberId;
 
   if (isLoading) {

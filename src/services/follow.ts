@@ -60,20 +60,30 @@ export async function unfollow(targetMemberId: string) {
 
   try {
     const response = await axios.delete(
-      `${backendUrl}/api/member/follow?type=unfollow&targetMemberId=${targetMemberId}`
+      `${backendUrl}/api/member/follow?type=following&targetMemberId=${targetMemberId}`
     );
+    console.log("Unfollow response:", response.data);
 
-    const newFollowings = followingStore.following.followings.filter(
-      (following) => following.memberId !== targetMemberId
-    );
-    const newFollowing = {
-      followingCnt: newFollowings.length,
-      followings: newFollowings,
-    };
-    followingStore.setFollowing(newFollowing);
+    if (response.data.isSuccess) {
+      const newFollowings = followingStore.following.followings.filter(
+        (following) => following.memberId !== targetMemberId
+      );
+      const newFollowing = {
+        followingCnt: newFollowings.length,
+        followings: newFollowings,
+      };
+      followingStore.setFollowing(newFollowing);
+      console.log(
+        "Unfollow successful, updated following state:",
+        newFollowing
+      );
+    } else {
+      console.error("Unfollow API call failed:", response.data.message);
+    }
 
     return response.data;
   } catch (error) {
+    console.error("Error during unfollow:", error);
     throw new Error(`Error during unfollow: ${error}`);
   } finally {
     followingStore.setLoading(false);
