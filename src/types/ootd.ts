@@ -188,8 +188,11 @@ export interface PostRequest {
     code: string;
     message: string;
     result: {
+      nickName: string;
       profileImageUrl: string;
       blogName: string;
       blogIntroduce: string;
+      followerCnt: number;
+      followingCnt: number;
     };
   }
