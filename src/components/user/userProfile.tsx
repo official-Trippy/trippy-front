@@ -65,7 +65,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ memberId, setActiveTab }) => 
               className="text-sm text-gray-600 cursor-pointer"
               onClick={() => setActiveTab(TABS.FOLLOWING)}
             >
-              팔로윙 {followingCnt}
+              팔로잉 {followingCnt}
             </span>
           </div>
           <button
