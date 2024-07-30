@@ -194,5 +194,6 @@ export interface PostRequest {
       blogIntroduce: string;
       followerCnt: number;
       followingCnt: number;
+      email: string;
     };
   }

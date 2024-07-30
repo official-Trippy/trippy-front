@@ -29,7 +29,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ memberId, setActiveTab }) => 
   if (error) return <div>Error loading data</div>;
   if (!data) return null;
 
-  const { nickName, profileImageUrl, blogName, blogIntroduce, followerCnt, followingCnt } = data.result;
+  const { nickName, profileImageUrl, blogIntroduce, followerCnt, followingCnt, email } = data.result;
 
   return (
     <div className="w-full flex flex-col relative">
@@ -50,6 +50,9 @@ const UserProfile: React.FC<UserProfileProps> = ({ memberId, setActiveTab }) => 
             />
           </div>
           <h1 className="text-4xl font-bold mt-[10px]">{nickName}</h1>
+          <span className="text-xl text-gray-600 mt-[5px]">
+            {email}
+          </span>
           <div className="mt-[10px] flex px-4">
             <span
               className="text-sm text-gray-600 cursor-pointer"
