@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from 'react';
 import { useQuery } from 'react-query';
-import Cookies from 'js-cookie';
 import Header from '@/components/shared/header/Header';
 import UserProfile from '@/components/user/UserProfile';
 import UserOotd from '@/components/user/UserOotd';
@@ -25,7 +24,6 @@ const TABS = {
 const UserPage = ({ params }: { params: { id: string } }) => {
   const { id } = params;
   const [activeTab, setActiveTab] = useState(TABS.TICKET);
-  const accessToken = Cookies.get('accessToken');
 
   const { data, error, isLoading, refetch } = useQuery({
     queryKey: ['userProfile', id],
