@@ -76,7 +76,7 @@ const FollowButton: React.FC<FollowButtonProps> = ({
         onClick={followHandler}
         disabled={loading}
       >
-        {localIsFollowing ? "팔로잉✅" : "팔로우"}
+        {localIsFollowing ? "팔로잉" : "팔로우"}
       </button>
     </div>
   );
