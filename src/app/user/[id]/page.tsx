@@ -3,8 +3,8 @@
 import React, { useState, useEffect } from 'react';
 import { useQuery } from 'react-query';
 import Header from '@/components/shared/header/Header';
-import UserProfile from '@/components/user/UserProfile';
-import UserOotd from '@/components/user/UserOotd';
+// import UserProfile from '@/components/user/UserProfile;
+// import UserOotd from '@/components/user/UserOotd';
 
 import UserTicket from '@/components/user/UserTicket';
 import UserBadge from '@/components/user/UserBadge';
@@ -68,7 +68,7 @@ const UserPage = ({ params }: { params: { id: string } }) => {
       </div>
       <div className="w-[80%] mx-auto flex p-4">
         <div className="w-[250px] mb-4">
-          <UserProfile memberId={id} setActiveTab={setActiveTab} />
+          {/* <UserProfile memberId={id} setActiveTab={setActiveTab} /> */}
         </div>
         <div className="w-[100%] ml-[50px]">
           <div className="flex justify-between mb-4 ml-4 text-2xl">
@@ -129,7 +129,7 @@ const UserPage = ({ params }: { params: { id: string } }) => {
 
           <div className="w-full ml-4">
             {activeTab === TABS.TICKET && <UserTicket />}
-            {activeTab === TABS.OOTD && <UserOotd memberId={id} />}
+            {/* {activeTab === TABS.OOTD && <UserOotd memberId={id} />} */}
             {activeTab === TABS.BADGE && <UserBadge />}
             {activeTab === TABS.BOOKMARK && <UserBookmark />}
           </div>
