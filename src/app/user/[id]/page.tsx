@@ -14,8 +14,8 @@ import backgroundImg from '../../../../public/DefaultBackground.svg';
 import { fetchUserProfile } from '@/services/ootd.ts/ootdGet';
 
 const TABS = {
-  OOTD: 'OOTD',
   TICKET: 'TICKET',
+  OOTD: 'OOTD',
   BADGE: 'BADGE',
   BOOKMARK: 'BOOKMARK',
   FOLLOWER: 'FOLLOWER',
@@ -24,7 +24,7 @@ const TABS = {
 
 const UserPage = ({ params }: { params: { id: string } }) => {
   const { id } = params;
-  const [activeTab, setActiveTab] = useState(TABS.OOTD);
+  const [activeTab, setActiveTab] = useState(TABS.TICKET);
   const accessToken = Cookies.get('accessToken');
 
   const { data, error, isLoading, refetch } = useQuery({
