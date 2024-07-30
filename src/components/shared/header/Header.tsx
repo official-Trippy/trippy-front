@@ -9,6 +9,8 @@ import Profile from "../../../../public/Profile.png";
 import UserModal from "@/components/userInfo/userModal";
 import { useUserStore } from "@/store/useUserStore";
 import { useRouter } from "next/navigation";
+import postwriteImg from "@/dummy/postwrite.svg"
+import postwriteImg2 from "@/dummy/postwrite2.svg"
 import Cookies from "js-cookie";
 
 const Header = () => {
@@ -65,7 +67,7 @@ const Header = () => {
             {userInfo ? (
               <div className="flex relative">
                 <button
-                  className="-[8.6rem] h-[3.5rem] bg-btn-color text-white px-7 py-2 rounded-lg mr-8"
+                  className="w-[8.6rem] h-[3.5rem] bg-btn-color text-white px-7 py-2 rounded-lg mr-8"
                   style={{ fontSize: "1.6rem" }}
                   onClick={handleDropdownToggle}
                 >
@@ -73,17 +75,33 @@ const Header = () => {
                 </button>
                 {isDropdownOpen && (
                   <div
-                    className="absolute top-[3.6rem] bg-btn-color shadow-lg rounded-lg animate-dropdown"
+                    className="absolute w-[36rem] -ml-[13rem] top-[3.6rem] rounded-[0.8rem] shadowalltop rounded-lg animate-dropdown"
                     style={{ opacity: 0, transform: 'translateY(-10px)' }}
                   >
                     <Link href="/post">
-                      <div className="text-white text-[1.2rem] text-center px-[2.4rem] py-3 hover:bg-gray-200 rounded-lg border-b border-white">
-                        게시글
+                      <div className="px-[1.3rem] pt-[1.2rem] rounded-lg border-b border-white">
+                        <div className="hover:bg-gray-200 px-[1.3rem] py-[1.2rem]">
+                          <div className="flex items-start">
+                            <Image className="mr-[1.7rem] mt-[0.5rem]" src={postwriteImg} width={24} height={24} alt="" />
+                            <div>
+                              <h1 className="text-[2rem] font-medium text-black">블로그 티켓 글쓰기</h1>
+                              <span className="text-[1.3rem] font-medium text-[#9D9D9D]">여행에서 겪었던 이야기를 기록해 보세요.</span>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </Link>
                     <Link href="/write">
-                      <div className="text-white text-[1.2rem] text-center px-[2.5rem] py-3 hover:bg-gray-200 rounded-lg">
-                        OOTD
+                      <div className="px-[1.3rem] pb-[1.2rem] rounded-lg border-b border-white">
+                        <div className="hover:bg-gray-200 px-[1.3rem] py-[1.2rem]">
+                          <div className="flex items-start">
+                            <Image className="mr-[1.7rem] mt-[0.5rem]" src={postwriteImg} width={24} height={24} alt="" />
+                            <div>
+                              <h1 className="text-[2rem] font-medium text-black">OOTD 글쓰기</h1>
+                              <span className="text-[1.3rem] font-medium text-[#9D9D9D]">여행 중 나의 특별한 OOTD를 공유해보세요.</span>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </Link>
                   </div>
