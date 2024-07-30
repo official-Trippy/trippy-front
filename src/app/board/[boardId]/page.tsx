@@ -417,7 +417,7 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
               )}
 
               <div
-                className={`w-full h-full shadowall pl-[1.7rem] py-[1.4rem] my-[3.5rem] flex flex-col ${isReplyOpen ? "slide-down" : "hide"}`}
+                className={`w-full h-full shadowall pl-[4.7rem] py-[1.4rem] my-[3.5rem] flex flex-col`}
               >
                 {postCommentData?.result &&
                   Object.entries(postCommentData.result).map(
@@ -429,7 +429,7 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
                       return (
                         <div className="mb-[2.5rem]" key={key}>
                           <div
-                            className={`${replyOpen[index] ? "bg-[#F5F5F5]" : "bg-white"} py-[2rem] mr-[2rem]`}
+                            className={`py-[2rem] mr-[2rem]`}
                           >
                             <div className="flex items-center">
                               <Image
@@ -472,7 +472,7 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
                           {coData?.children.map((childData: any) => {
                             return (
                               <div
-                                className={`${replyOpen[index] ? "bg-[#F5F5F5]" : "bg-white"} w-[90%] py-[2rem] mx-[5rem]`}
+                                className={`bg-[#F5F5F5] w-[90%] py-[2rem] px-[1.6rem] mx-[5rem] rounded-[0.8rem] mb-[0.5rem]`}
                               >
                                 <div className="flex items-center">
                                   <Image
