@@ -42,7 +42,7 @@ export default function GoogleLogin() {
         console.log(roleRes.data);
         console.log("User role received:", role);
         if (role === "MEMBER") {
-          router.push("/home");
+          router.push("/");
         } else if (role === "GUEST") {
           router.push("/blogRegister");
         }

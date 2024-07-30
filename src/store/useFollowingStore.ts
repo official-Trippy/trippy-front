@@ -4,16 +4,21 @@ import axios from "axios";
 const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 interface FollowingState {
-  following: Array<{ memberId: string; nickName: string }>;
+  following: {
+    followingCnt: number;
+    followings: Array<{ memberId: string; nickName: string }>;
+  };
   loading: boolean;
   fetchFollowing: (memberId: string) => Promise<void>;
-  setFollowing: (
-    newFollowing: Array<{ memberId: string; nickName: string }>
-  ) => void;
+  setFollowing: (newFollowing: {
+    followingCnt: number;
+    followings: Array<{ memberId: string; nickName: string }>;
+  }) => void;
+  setLoading: (loading: boolean) => void;
 }
 
 export const useFollowingStore = create<FollowingState>((set) => ({
-  following: [],
+  following: { followingCnt: 0, followings: [] },
   loading: false,
 
   fetchFollowing: async (memberId: string) => {
@@ -30,4 +35,5 @@ export const useFollowingStore = create<FollowingState>((set) => ({
   },
 
   setFollowing: (newFollowing) => set({ following: newFollowing }),
+  setLoading: (loading) => set({ loading }),
 }));

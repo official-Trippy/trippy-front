@@ -1,6 +1,6 @@
-import React from 'react';
-import OotdDetail from '@/components/ootd/OotdDetail';
-import Header from '@/components/shared/header/Header';
+import React from "react";
+import OotdDetail from "@/components/ootd/OotdDetail";
+import Header from "@/components/shared/header/Header";
 
 interface OotdDetailPageProps {
   params: { id: string };
@@ -11,7 +11,7 @@ const OotdDetailPage: React.FC<OotdDetailPageProps> = ({ params }) => {
 
   return (
     <div>
-      <Header/>
+      <Header />
       <OotdDetail id={Number(id)} />
     </div>
   );
