@@ -479,41 +479,42 @@ const EditInfo = () => {
           </div>
         </div>
         {isModalOpen && (
-          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-            <div className="bg-white p-8 rounded-lg w-[80%] max-w-[600px]">
-              <h2 className="text-2xl font-bold mb-4">관심 분야 선택</h2>
-              <div className="flex flex-wrap">
-                {blogInterests.map((interest: string, index: number) => (
-                  <div
-                    key={index}
-                    className={`m-2 p-2 rounded-full cursor-pointer ${
-                      tempSelectedInterests.includes(interest)
-                        ? "bg-[#FB3463] text-white"
-                        : "bg-gray-200"
-                    }`}
-                    onClick={() => handleTempInterestClick(interest)}
-                  >
-                    {interest}
-                  </div>
-                ))}
-              </div>
-              <div className="mt-4 flex justify-end">
-                <button
-                  onClick={handleCloseModal}
-                  className="px-4 py-2 bg-gray-500 text-white rounded-lg mr-4"
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-8 rounded-lg w-[80%] max-w-[400px]">
+            <h2 className="text-2xl font-bold mb-2 text-[#292929]">관심 분야 설정</h2>
+            <p className="text-sm text-[#6b6b6b] mb-4">관심분야를 2개 이상 설정해주세요</p>
+            <div className="grid grid-cols-5 gap-2 justify-center">
+              {blogInterests.map((interest, index) => (
+                <div
+                  key={index}
+                  className={`px-2 py-4 rounded-xl cursor-pointer text-center ${
+                    tempSelectedInterests.includes(interest)
+                      ? "bg-[#FB3463] text-white"
+                      : "bg-neutral-100 text-[#9d9d9d]"
+                  }`}
+                  onClick={() => handleTempInterestClick(interest)}
                 >
-                  취소
-                </button>
-                <button
-                  onClick={handleConfirm}
-                  className="px-4 py-2 bg-blue-500 text-white rounded-lg"
-                >
-                  확인
-                </button>
-              </div>
+                  {interest}
+                </div>
+              ))}
+            </div>
+            <div className="mt-8 flex ml-auto justify-end">
+              <button
+                onClick={handleCloseModal}
+                className="w-[68px] px-4 py-2 bg-neutral-100 text-[#292929] rounded-lg mr-2"
+              >
+                취소
+              </button>
+              <button
+                onClick={handleConfirm}
+                className="w-[68px] px-4 py-2 bg-[#FB3463] text-white rounded-lg"
+              >
+                확인
+              </button>
             </div>
           </div>
-        )}
+        </div>
+      )}
       </div></>
   );
 };
