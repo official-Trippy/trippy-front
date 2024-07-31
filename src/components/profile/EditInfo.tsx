@@ -13,6 +13,7 @@ import { updateMemberInfo } from "@/services/auth";
 import { UpdateMemberInfoRequest } from "@/types/auth";
 import backgroundImg from "../../../public/DefaultBackground.svg";
 import { useMutation, useQueryClient } from "react-query";
+import RightIcon from '../../../public/icon_right.svg';
 
 const EditInfo = () => {
   const { userInfo, updateUserInfo } = useUserStore(); 
@@ -46,6 +47,8 @@ const EditInfo = () => {
   const [ootdScope, setOotdScope] = useState<"public" | "private" | "protected">(userInfo?.ootdScope || "public");
   const [badgeScope, setBadgeScope] = useState<"public" | "private" | "protected">(userInfo?.badgeScope || "public");
   const [followScope, setFollowScope] = useState<"public" | "private" | "protected">(userInfo?.followScope || "public");
+  const [tempSelectedInterests, setTempSelectedInterests] = useState<string[]>([]);
+
 
   const router = useRouter();
 
@@ -194,6 +197,33 @@ const EditInfo = () => {
     }
   });
 
+  const handleOpenModal = () => {
+    setTempSelectedInterests([...selectedInterests]);
+    setIsModalOpen(true);
+  };
+
+  const handleConfirm = () => {
+    setSelectedInterests([...tempSelectedInterests]);
+    setIsModalOpen(false);
+  };
+
+  const handleCloseModal = () => {
+    setTempSelectedInterests(userInfo.koreanInterestedTypes);
+    setIsModalOpen(false);
+  };
+  
+  const handleTempInterestClick = (interest: string) => {
+    setTempSelectedInterests((prevSelected) => {
+      if (prevSelected.includes(interest)) {
+        return prevSelected.filter((item) => item !== interest);
+      } else if (prevSelected.length < 5) {
+        return [...prevSelected, interest];
+      } else {
+        return prevSelected;
+      }
+    });
+  };
+
   const handleSubmit = () => {
     const data: UpdateMemberInfoRequest = {
       nickName: nickName || userInfo.nickName, 
@@ -326,26 +356,30 @@ const EditInfo = () => {
               </div>
 
               <div className="mt-[6rem]">
+                <div className="flex">
                 <label htmlFor="interests" className="sign-up-info block">
                   관심 분야
                 </label>
+                <div className='flex ml-auto' onClick={() => handleOpenModal()}>
+                  <div
+                      className="pr-1 py-2 rounded-full text-[#9d9d9d] cursor-pointer"
+                    >
+                    설정하기
+                  </div>
+                  <Image src={RightIcon} alt="setting" width={8} height={14} />
+                  </div>
+                </div>
                 <div className="mt-[2.5rem] flex flex-wrap">
                   {selectedInterests.map((interest, index) => (
                     <div
                       key={index}
-                      className="flex items-center px-4 py-2 mr-2 mb-2 rounded-full bg-[#FB3463] text-white cursor-pointer"
+                      className="flex items-center px-4 py-3 mr-2 mb-2 rounded-[999px] bg-[#FB3463] text-white cursor-pointer"
                       onClick={() => handleInterestClick(interest)}
                     >
                       {interest}
-                      <span className="ml-2">x</span>
+                      {/* <span className="ml-2">x</span> */}
                     </div>
                   ))}
-                  <button
-                    onClick={() => setIsModalOpen(true)}
-                    className="px-4 py-2 rounded-full border border-[#FB3463] text-[#FB3463] cursor-pointer"
-                  >
-                    + 관심 분야 추가
-                  </button>
                 </div>
               </div>
 
@@ -453,11 +487,11 @@ const EditInfo = () => {
                   <div
                     key={index}
                     className={`m-2 p-2 rounded-full cursor-pointer ${
-                      selectedInterests.includes(interest)
+                      tempSelectedInterests.includes(interest)
                         ? "bg-[#FB3463] text-white"
                         : "bg-gray-200"
                     }`}
-                    onClick={() => handleInterestClick(interest)}
+                    onClick={() => handleTempInterestClick(interest)}
                   >
                     {interest}
                   </div>
@@ -465,12 +499,16 @@ const EditInfo = () => {
               </div>
               <div className="mt-4 flex justify-end">
                 <button
-                  onClick={() => {
-                    setIsModalOpen(false);
-                  }}
-                  className="px-4 py-2 bg-gray-500 text-white rounded-lg"
+                  onClick={handleCloseModal}
+                  className="px-4 py-2 bg-gray-500 text-white rounded-lg mr-4"
                 >
-                  닫기
+                  취소
+                </button>
+                <button
+                  onClick={handleConfirm}
+                  className="px-4 py-2 bg-blue-500 text-white rounded-lg"
+                >
+                  확인
                 </button>
               </div>
             </div>
