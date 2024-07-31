@@ -382,84 +382,122 @@ const EditInfo = () => {
                   ))}
                 </div>
               </div>
+              {/* e.target.value as "public" | "private" | "protected" */}
 
-              <div className="mt-[6rem]">
-                <label className="sign-up-info block">알림 설정</label>
-                <div className="flex items-center mt-[1rem]">
-                  <input
-                    type="checkbox"
-                    id="likeAlert"
-                    checked={likeAlert}
-                    onChange={(e) => setLikeAlert(e.target.checked)}
-                    className="mr-2" />
-                  <label htmlFor="likeAlert">좋아요 알림</label>
-                </div>
-                <div className="flex items-center mt-[1rem]">
-                  <input
-                    type="checkbox"
-                    id="commentAlert"
-                    checked={commentAlert}
-                    onChange={(e) => setCommentAlert(e.target.checked)}
-                    className="mr-2" />
-                  <label htmlFor="commentAlert">댓글 알림</label>
-                </div>
-              </div>
+              <div className="p-4">
+      <div className="mt-24">
+        <label className="block text-2xl font-bold mb-6">알림 설정</label>
+        <div className="flex items-center mb-4">
+          <label htmlFor="likeAlert" className="mr-4 text-lg">좋아요</label>
+          <label className="relative inline-flex items-center cursor-pointer">
+            <input
+              type="checkbox"
+              id="likeAlert"
+              checked={likeAlert}
+              onChange={(e) => setLikeAlert(e.target.checked)}
+              className="sr-only peer"
+            />
+            <div className="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-pink-600"></div>
+          </label>
+        </div>
+        <div className="flex items-center">
+          <label htmlFor="commentAlert" className="mr-4 text-lg">댓글</label>
+          <label className="relative inline-flex items-center cursor-pointer">
+            <input
+              type="checkbox"
+              id="commentAlert"
+              checked={commentAlert}
+              onChange={(e) => setCommentAlert(e.target.checked)}
+              className="sr-only peer"
+            />
+            <div className="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-pink-600"></div>
+          </label>
+        </div>
+      </div>
 
-              <div className="mt-[6rem]">
-                <label className="sign-up-info block">티켓 공개 범위</label>
-                <select
-                  value={ticketScope}
-                  onChange={(e) => setTicketScope(e.target.value as "public" | "private" | "protected")}
-                  className="w-full px-4 py-2 mt-[2.5rem] mb-2 h-[6rem] rounded-xl border border-gray-300 focus:border-[#FB3463] focus:outline-none"
-                  style={{ background: "var(--4, #F5F5F5)", fontSize: "1.5rem" }}
-                >
-                  <option value="public">공개</option>
-                  <option value="private">비공개</option>
-                  <option value="protected">팔로워 공개</option>
-                </select>
-              </div>
+      <div className="mt-24">
+        <label className="block text-2xl font-bold mb-6">공개범위 설정</label>
+        <div className="flex mb-8">
+          <label className="block mb-2 mr-16 text-lg font-semibold">티켓</label>
+          <select
+            value={ticketScope}
+            onChange={(e) => setTicketScope(e.target.value as "public" | "private" | "protected")}
+            className="w-40 rounded-lg border border-gray-300 focus:border-pink-600 focus:outline-none bg-gray-100 text-lg"
+            style={{
+              border: "1px solid #FF6B81",
+              borderRadius: "8px",
+              fontSize: "1.25rem",
+              height: "3rem",
+              padding: "0.5rem 1rem"
+            }}
+          >
+            <option value="public">전체 공개</option>
+            <option value="protected">팔로워만</option>
+            <option value="private">비공개</option>
+          </select>
+        </div>
 
-              <div className="mt-[6rem]">
-                <label className="sign-up-info block">OOTD 공개 범위</label>
-                <select
-                  value={ootdScope}
-                  onChange={(e) => setOotdScope(e.target.value as "public" | "private" | "protected")}
-                  className="w-full px-4 py-2 mt-[2.5rem] mb-2 h-[6rem] rounded-xl border border-gray-300 focus:border-[#FB3463] focus:outline-none"
-                  style={{ background: "var(--4, #F5F5F5)", fontSize: "1.5rem" }}
-                >
-                  <option value="public">공개</option>
-                  <option value="private">비공개</option>
-                  <option value="protected">팔로워 공개</option>
-                </select>
-              </div>
+        <div className="mb-8">
+          <label className="block mb-2 text-lg font-semibold">OOTD</label>
+          <select
+            value={ootdScope}
+            onChange={(e) => setOotdScope(e.target.value as "public" | "private" | "protected")}
+            className="w-full px-4 py-2 h-12 rounded-lg border border-gray-300 focus:border-pink-600 focus:outline-none bg-gray-100 text-lg"
+            style={{
+              border: "1px solid #FF6B81",
+              borderRadius: "8px",
+              fontSize: "1.25rem",
+              height: "3rem",
+              padding: "0.5rem 1rem"
+            }}
+          >
+            <option value="public">전체 공개</option>
+            <option value="protected">팔로워만</option>
+            <option value="private">비공개</option>
+          </select>
+        </div>
 
-              <div className="mt-[6rem]">
-                <label className="sign-up-info block">뱃지 공개 범위</label>
-                <select
-                  value={badgeScope}
-                  onChange={(e) => setBadgeScope(e.target.value as "public" | "private" | "protected")}
-                  className="w-full px-4 py-2 mt-[2.5rem] mb-2 h-[6rem] rounded-xl border border-gray-300 focus:border-[#FB3463] focus:outline-none"
-                  style={{ background: "var(--4, #F5F5F5)", fontSize: "1.5rem" }}
-                >
-                  <option value="public">공개</option>
-                  <option value="private">비공개</option>
-                  <option value="protected">팔로워 공개</option>
-                </select>
-              </div>
+        <div className="mb-8">
+          <label className="block mb-2 text-lg font-semibold">뱃지</label>
+          <select
+            value={badgeScope}
+            onChange={(e) => setBadgeScope(e.target.value as "public" | "private" | "protected")}
+            className="w-full px-4 py-2 h-12 rounded-lg border border-gray-300 focus:border-pink-600 focus:outline-none bg-gray-100 text-lg"
+            style={{
+              border: "1px solid #FF6B81",
+              borderRadius: "8px",
+              fontSize: "1.25rem",
+              height: "3rem",
+              padding: "0.5rem 1rem"
+            }}
+          >
+            <option value="public">전체 공개</option>
+            <option value="protected">팔로워만</option>
+            <option value="private">비공개</option>
+          </select>
+        </div>
 
-              <div className="mt-[6rem]">
-                <label className="sign-up-info block">팔로우 공개 범위</label>
-                <select
-                  value={followScope}
-                  onChange={(e) => setFollowScope(e.target.value as "public" | "private" | "protected")}
-                  className="w-full px-4 py-2 mt-[2.5rem] mb-2 h-[6rem] rounded-xl border border-gray-300 focus:border-[#FB3463] focus:outline-none"
-                  style={{ background: "var(--4, #F5F5F5)", fontSize: "1.5rem" }}
-                >
-                  <option value="public">공개</option>
-                  <option value="private">비공개</option>
-                  <option value="protected">팔로워 공개</option>
-                </select>
-              </div>
+        <div className="mb-8">
+          <label className="block mb-2 text-lg font-semibold">팔로워 / 팔로잉</label>
+          <select
+            value={followScope}
+            onChange={(e) => setFollowScope(e.target.value as "public" | "private" | "protected")}
+            className="w-full px-4 py-2 h-12 rounded-lg border border-gray-300 focus:border-pink-600 focus:outline-none bg-gray-100 text-lg"
+            style={{
+              border: "1px solid #FF6B81",
+              borderRadius: "8px",
+              fontSize: "1.25rem",
+              height: "3rem",
+              padding: "0.5rem 1rem"
+            }}
+          >
+            <option value="public">전체 공개</option>
+            <option value="protected">팔로워만</option>
+            <option value="private">비공개</option>
+          </select>
+        </div>
+      </div>
+    </div>
             </div>
 
             <div className="text-center">
