@@ -16,6 +16,7 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 import RightIcon from '../../../public/icon_right.svg';
 import UpIcon from '../../../public/arrow_up.svg';
 import DownIcon from '../../../public/arrow_down.svg';
+import Swal from "sweetalert2";
 
 const EditInfo = () => {
   const { userInfo, updateUserInfo } = useUserStore(); 
@@ -218,10 +219,36 @@ const EditInfo = () => {
   const updateUserInfoMutation = useMutation(updateMemberInfo, {
     onSuccess: () => {
       queryClient.invalidateQueries('userInfo');
-      alert("회원 정보가 성공적으로 업데이트되었습니다.");
+      Swal.fire({
+        icon: 'success',
+        title: `회원 정보를 성공적으로<br/>업데이트하였습니다!`,
+        confirmButtonText: '확인',
+        confirmButtonColor: '#FB3463', 
+        customClass: {
+          popup: 'swal-custom-popup',
+          icon: 'swal-custom-icon'
+        }
+      }).then((result) => {
+        if (result.isConfirmed) {
+          router.push('/mypage');
+        }
+      });
     },
     onError: () => {
-      alert("회원 정보 업데이트에 실패했습니다. 다시 시도해주세요.");
+      Swal.fire({
+        icon: 'error',
+        title: '회원 정보 업데이트에 실패했습니다. 다시 시도해주세요.',
+        confirmButtonText: '확인',
+        confirmButtonColor: '#FB3463', 
+        customClass: {
+          popup: 'swal-custom-popup',
+          icon: 'swal-custom-icon'
+        }
+      }).then((result) => {
+        if (result.isConfirmed) {
+          router.push('/editProfile')
+        }
+      });
     }
   });
 
