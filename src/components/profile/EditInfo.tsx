@@ -226,7 +226,10 @@ const EditInfo = () => {
     });
   };
 
-  const [isOpen, setIsOpen] = useState(false);
+  const [isTicketOpen, setIsTicketOpen] = useState(false);
+  const [isOotdOpen, setIsOotdOpen] = useState(false);
+  const [isBadgeOpen, setIsBadgeOpen] = useState(false);
+  const [isFollowOpen, setIsFollwOpen] = useState(false);
 
   const options = [
     { value: "public", label: "전체 공개" },
@@ -234,12 +237,26 @@ const EditInfo = () => {
     { value: "private", label: "비공개" },
   ];
 
-  const handleSelect = (value: any) => {
+  const handleTicketSelect = (value: any) => {
     setTicketScope(value);
-    setIsOpen(false);
+    setIsTicketOpen(false);
   };
 
-  
+  const handleOotdSelect = (value: any) => {
+    setOotdScope(value);
+    setIsOotdOpen(false);
+  };
+
+  const handleBadgeSelect = (value: any) => {
+    setBadgeScope(value);
+    setIsBadgeOpen(false);
+  };
+
+  const handleFollowSelect = (value: any) => {
+    setFollowScope(value);
+    setIsFollwOpen(false);
+  };
+
 
   const handleSubmit = () => {
     const data: UpdateMemberInfoRequest = {
@@ -434,30 +451,29 @@ const EditInfo = () => {
               <div className="mt-24">
                 <label className="block sign-up-info font-bold mb-6">공개범위 설정</label>
                 <div className="flex mb-8">
-                <label className="block mb-2 mr-16 text-lg font-semibold">티켓</label>
+                <label className="block my-auto w-[150px] text-lg font-semibold">티켓</label>
                 <div className="relative">
                   <div
-                    className="w-40 rounded-lg focus:border-pink-600 focus:outline-none bg-gray-100 text-lg cursor-pointer"
+                    className="w-40 rounded-lg focus:border-pink-600 shadow-lg text-[#6b6b6b] text-base focus:outline-none cursor-pointer"
                     style={{
                       borderRadius: "8px",
-                      fontSize: "1.25rem",
                       height: "3rem",
                       padding: "0.5rem 1rem",
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "space-between"
                     }}
-                    onClick={() => setIsOpen(!isOpen)}
+                    onClick={() => setIsTicketOpen(!isTicketOpen)}
                   >
                     {options.find((option) => option.value === ticketScope)?.label}
-                    {isOpen && (
+                    {isTicketOpen && (
                       <Image src={UpIcon} alt="upIcon" width={16} height={28} />
                     )}
-                    {!isOpen && (
+                    {!isTicketOpen && (
                       <Image src={DownIcon} alt="downIcon" width={16} height={28} />
                     )}
                   </div>
-                  {isOpen && (
+                  {isTicketOpen && (
                     <div
                       className="absolute mt-1 w-full rounded-lg shadow-lg bg-white"
                       style={{ zIndex: 10 }}
@@ -465,8 +481,8 @@ const EditInfo = () => {
                       {options.map((option) => (
                         <div
                           key={option.value}
-                          className="px-4 py-2 cursor-pointer hover:bg-gray-100"
-                          onClick={() => handleSelect(option.value)}
+                          className="px-4 py-3 cursor-pointer hover:bg-neutral-100 text-[#6b6b6b]"
+                          onClick={() => handleTicketSelect(option.value)}
                         >
                           {option.label}
                         </div>
@@ -476,63 +492,130 @@ const EditInfo = () => {
                 </div>
               </div>
 
-                <div className="mb-8">
-                  <label className="block mb-2 text-lg font-semibold">OOTD</label>
-                  <select
-                    value={ootdScope}
-                    onChange={(e) => setOotdScope(e.target.value as "public" | "private" | "protected")}
-                    className="w-full px-4 py-2 h-12 rounded-lg border border-gray-300 focus:border-pink-600 focus:outline-none bg-gray-100 text-lg"
+                <div className="flex mb-8">
+                  <label className="block my-auto w-[150px] text-lg font-semibold">OOTD</label>
+                  <div className="relative">
+                  <div
+                    className="w-40 rounded-lg focus:border-pink-600 shadow-lg text-[#6b6b6b] text-base focus:outline-none cursor-pointer"
                     style={{
                       borderRadius: "8px",
-                      fontSize: "1.25rem",
                       height: "3rem",
-                      padding: "0.5rem 1rem"
+                      padding: "0.5rem 1rem",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between"
                     }}
+                    onClick={() => setIsOotdOpen(!isOotdOpen)}
                   >
-                    <option value="public">전체 공개</option>
-                    <option value="protected">팔로워만</option>
-                    <option value="private">비공개</option>
-                  </select>
+                    {options.find((option) => option.value === ootdScope)?.label}
+                    {isOotdOpen && (
+                      <Image src={UpIcon} alt="upIcon" width={16} height={28} />
+                    )}
+                    {!isOotdOpen && (
+                      <Image src={DownIcon} alt="downIcon" width={16} height={28} />
+                    )}
+                  </div>
+                  {isOotdOpen && (
+                    <div
+                      className="absolute mt-1 w-full rounded-lg shadow-lg bg-white"
+                      style={{ zIndex: 10 }}
+                    >
+                      {options.map((option) => (
+                        <div
+                          key={option.value}
+                          className="px-4 py-3 cursor-pointer hover:bg-neutral-100 text-[#6b6b6b]"
+                          onClick={() => handleOotdSelect(option.value)}
+                        >
+                          {option.label}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
                 </div>
 
-                <div className="mb-8">
-                  <label className="block mb-2 text-lg font-semibold">뱃지</label>
-                  <select
-                    value={badgeScope}
-                    onChange={(e) => setBadgeScope(e.target.value as "public" | "private" | "protected")}
-                    className="w-full px-4 py-2 h-12 rounded-lg border border-gray-300 focus:border-pink-600 focus:outline-none bg-gray-100 text-lg"
+                <div className="flex mb-8">
+                  <label className="block my-auto w-[150px] text-lg font-semibold">뱃지</label>
+                  <div className="relative">
+                  <div
+                    className="w-40 rounded-lg focus:border-pink-600 shadow-lg text-[#6b6b6b] text-base focus:outline-none cursor-pointer"
                     style={{
-                      border: "1px solid #FF6B81",
                       borderRadius: "8px",
-                      fontSize: "1.25rem",
                       height: "3rem",
-                      padding: "0.5rem 1rem"
+                      padding: "0.5rem 1rem",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between"
                     }}
+                    onClick={() => setIsBadgeOpen(!isBadgeOpen)}
                   >
-                    <option value="public">전체 공개</option>
-                    <option value="protected">팔로워만</option>
-                    <option value="private">비공개</option>
-                  </select>
+                    {options.find((option) => option.value === ticketScope)?.label}
+                    {isBadgeOpen && (
+                      <Image src={UpIcon} alt="upIcon" width={16} height={28} />
+                    )}
+                    {!isBadgeOpen && (
+                      <Image src={DownIcon} alt="downIcon" width={16} height={28} />
+                    )}
+                  </div>
+                  {isBadgeOpen && (
+                    <div
+                      className="absolute mt-1 w-full rounded-lg shadow-lg bg-white"
+                      style={{ zIndex: 10 }}
+                    >
+                      {options.map((option) => (
+                        <div
+                          key={option.value}
+                          className="px-4 py-3 cursor-pointer hover:bg-neutral-100 text-[#6b6b6b]"
+                          onClick={() => handleBadgeSelect(option.value)}
+                        >
+                          {option.label}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
                 </div>
 
-              <div className="mb-8">
-                <label className="block mb-2 text-lg font-semibold">팔로워 / 팔로잉</label>
-                <select
-                  value={followScope}
-                  onChange={(e) => setFollowScope(e.target.value as "public" | "private" | "protected")}
-                  className="w-full px-4 py-2 h-12 rounded-lg border border-gray-300 focus:border-pink-600 focus:outline-none bg-gray-100 text-lg"
-                  style={{
-                    border: "1px solid #FF6B81",
-                    borderRadius: "8px",
-                    fontSize: "1.25rem",
-                    height: "3rem",
-                    padding: "0.5rem 1rem"
-                  }}
-                >
-                  <option value="public">전체 공개</option>
-                  <option value="protected">팔로워만</option>
-                  <option value="private">비공개</option>
-                </select>
+              <div className="flex mb-8">
+                <label className="block my-auto w-[150px] text-lg font-semibold">팔로워 / 팔로잉</label>
+                <div className="relative">
+                  <div
+                    className="w-40 rounded-lg focus:border-pink-600 shadow-lg text-[#6b6b6b] text-base focus:outline-none cursor-pointer"
+                    style={{
+                      borderRadius: "8px",
+                      height: "3rem",
+                      padding: "0.5rem 1rem",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between"
+                    }}
+                    onClick={() => setIsFollwOpen(!isFollowOpen)}
+                  >
+                    {options.find((option) => option.value === ticketScope)?.label}
+                    {isFollowOpen && (
+                      <Image src={UpIcon} alt="upIcon" width={16} height={28} />
+                    )}
+                    {!isFollowOpen && (
+                      <Image src={DownIcon} alt="downIcon" width={16} height={28} />
+                    )}
+                  </div>
+                  {isFollowOpen && (
+                    <div
+                      className="absolute mt-1 w-full rounded-lg shadow-lg bg-white"
+                      style={{ zIndex: 10 }}
+                    >
+                      {options.map((option) => (
+                        <div
+                          key={option.value}
+                          className="px-4 py-3 cursor-pointer hover:bg-neutral-100 text-[#6b6b6b]"
+                          onClick={() => handleFollowSelect(option.value)}
+                        >
+                          {option.label}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
             </div>
