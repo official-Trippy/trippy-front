@@ -8,8 +8,7 @@ import { useRouter } from 'next/navigation';
 import { OotdGetResponse } from '@/types/ootd';
 import { fetchAllOotdPostCount, fetchAllOotdPosts } from '@/services/ootd.ts/ootdGet';
 import { MemberInfo } from '@/services/auth';
-import { formatDate } from '@/constants/dateFotmat';
-import EmptyHeartIcon from '../../../../public/empty_heart_default.svg'
+import EmptyHeartIcon from '../../../../public/empty_heart_default.svg';
 import CommentIcon1 from '../../../../public/empty_comment_default.svg';
 
 const PAGE_SIZE = 8;
@@ -17,6 +16,7 @@ const PAGE_SIZE = 8;
 const RecentOotdPost: React.FC = () => {
   const accessToken = Cookies.get('accessToken');
   const [page, setPage] = useState(0);
+  const [orderType, setOrderType] = useState('LATEST'); 
   const router = useRouter();
 
   const { data: memberData, isLoading: memberLoading } = useQuery({
@@ -33,8 +33,8 @@ const RecentOotdPost: React.FC = () => {
   );
 
   const { data, isLoading, isError } = useQuery<OotdGetResponse>(
-    ['ootdPosts', page],
-    () => fetchAllOotdPosts(page, PAGE_SIZE),
+    ['ootdPosts', page, orderType], 
+    () => fetchAllOotdPosts(page, PAGE_SIZE, orderType), 
     { enabled: totalCount !== undefined }
   );
 
@@ -46,6 +46,11 @@ const RecentOotdPost: React.FC = () => {
 
   const handleOotdItemClick = (id: number) => {
     router.push(`/ootd/${id}`);
+  };
+
+  const handleOrderTypeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setOrderType(event.target.value);
+    setPage(0); 
   };
 
   if (isCountLoading || isLoading) {
@@ -70,13 +75,16 @@ const RecentOotdPost: React.FC = () => {
         )}
       </div>
       <div className='flex text-[1.6rem] pt-[5rem] px-[1rem]'>
-        <span className='pr-[1rem]'>팔로잉</span>
-        <span className='px-[1rem]'>전체글</span>
-        <select className='flex w-[8rem] h-[3rem] ml-auto font-medium selectshadow'>
-          <option>기본</option>
-          <option>최신순</option>
-          <option>날짜순</option>
-          <option>인기순</option>
+        <span className='pr-[1rem]'>전체글</span>
+        <span className='px-[1rem]'>팔로잉</span>
+        <select
+          className='flex w-[8rem] h-[3rem] ml-auto font-medium selectshadow'
+          value={orderType}
+          onChange={handleOrderTypeChange}
+        >
+          <option value="LATEST">최신순</option>
+          <option value="LIKE">인기순</option>
+          <option value="VIEW">조회순</option>
         </select>
       </div>
       <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-8">
