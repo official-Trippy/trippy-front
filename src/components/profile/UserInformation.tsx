@@ -73,21 +73,16 @@ const UserInformation: React.FC<{ setActiveTab: (tab: string) => void }> = ({
               className="text-sm text-gray-600 cursor-pointer"
               onClick={() => setActiveTab(TABS.FOLLOWING)}
             >
-              팔로윙 {userData.followingCnt}
+              팔로잉 {userData.followingCnt}
             </span>
           </div>
           <button
-            className="mt-[20px] pl-[20px] pr-[20px] py-2 bg-neutral-100 rounded-lg justify-center items-center inline-flex"
+            className="mt-[20px] pl-[20px] pr-[20px] py-2 bg-neutral-100 rounded-lg justify-center items-center inline-flex mb-[5px]"
             onClick={handleEditProfile}
           >
             내 정보 수정
           </button>
-          <button
-            className="mt-[20px] pl-[20px] pr-[20px] py-2 bg-neutral-100 rounded-lg justify-center items-center inline-flex"
-            onClick={() => doFollow(userData.memberId)}
-          >
-            팔로우
-          </button>
+
           <span className="mt-[10px] text-sm text-gray-600">
             {userData.blogIntroduce}
           </span>
