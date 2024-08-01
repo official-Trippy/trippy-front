@@ -9,10 +9,10 @@ import { useEffect, useState } from "react";
 import DefaultProfileImg from "../../../public/DefaultProfile.svg";
 import { useUserStore } from "@/store/useUserStore";
 import { blogInterests } from "@/constants/blogPreference";
-import { updateMemberInfo } from "@/services/auth";
+import { getMyInfo, updateMemberInfo } from "@/services/auth";
 import { UpdateMemberInfoRequest } from "@/types/auth";
 import backgroundImg from "../../../public/DefaultBackground.svg";
-import { useMutation, useQueryClient } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import RightIcon from '../../../public/icon_right.svg';
 import UpIcon from '../../../public/arrow_up.svg';
 import DownIcon from '../../../public/arrow_down.svg';
@@ -43,13 +43,30 @@ const EditInfo = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedInterests, setSelectedInterests] = useState<string[]>(userInfo?.koreanInterestedTypes || []);
 
-  const [likeAlert, setLikeAlert] = useState(true);
-  const [commentAlert, setCommentAlert] = useState(true);
+  const [likeAlert, setLikeAlert] = useState(userInfo?.likeAlert || true);
+  const [commentAlert, setCommentAlert] = useState(userInfo?.commentAlert || true);
   const [ticketScope, setTicketScope] = useState<"public" | "private" | "protected">(userInfo?.ticketScope || "public");
   const [ootdScope, setOotdScope] = useState<"public" | "private" | "protected">(userInfo?.ootdScope || "public");
   const [badgeScope, setBadgeScope] = useState<"public" | "private" | "protected">(userInfo?.badgeScope || "public");
   const [followScope, setFollowScope] = useState<"public" | "private" | "protected">(userInfo?.followScope || "public");
   const [tempSelectedInterests, setTempSelectedInterests] = useState<string[]>([]);
+
+  useEffect(() => {
+    if (userInfo) {
+      setProfileImage(userInfo.profileImage || null);
+      setBlogImage(userInfo.blogImage || null);
+      setNickName(userInfo.nickName || '');
+      setBlogName(userInfo.blogName || '');
+      setBlogIntroduce(userInfo.blogIntroduce || '');
+      setSelectedInterests(userInfo.koreanInterestedTypes || []);
+      setLikeAlert(userInfo.likeAlert || true);
+      setCommentAlert(userInfo.commentAlert || true);
+      setTicketScope(userInfo.ticketScope || "public");
+      setOotdScope(userInfo.ootdScope || "public");
+      setBadgeScope(userInfo.badgeScope || "public");
+      setFollowScope(userInfo.followScope || "public");
+    }
+  }, [userInfo]);
 
 
   const router = useRouter();
@@ -188,6 +205,13 @@ const EditInfo = () => {
   useEffect(() => {
     console.log('Selected Interests:', selectedInterests);
   }, [selectedInterests]);
+
+  useEffect(() => {
+    if (userInfo) {
+      setLikeAlert(userInfo.likeAlert);
+      setCommentAlert(userInfo.commentAlert);
+    }
+  }, [userInfo]);
 
   const updateUserInfoMutation = useMutation(updateMemberInfo, {
     onSuccess: () => {
@@ -549,7 +573,7 @@ const EditInfo = () => {
                     }}
                     onClick={() => setIsBadgeOpen(!isBadgeOpen)}
                   >
-                    {options.find((option) => option.value === ticketScope)?.label}
+                    {options.find((option) => option.value === badgeScope)?.label}
                     {isBadgeOpen && (
                       <Image src={UpIcon} alt="upIcon" width={16} height={28} />
                     )}
@@ -591,7 +615,7 @@ const EditInfo = () => {
                     }}
                     onClick={() => setIsFollwOpen(!isFollowOpen)}
                   >
-                    {options.find((option) => option.value === ticketScope)?.label}
+                    {options.find((option) => option.value === followScope)?.label}
                     {isFollowOpen && (
                       <Image src={UpIcon} alt="upIcon" width={16} height={28} />
                     )}
