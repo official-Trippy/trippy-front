@@ -60,7 +60,15 @@ const MyOotd: React.FC<MyOotdProps> = ({ userInfo }) => {
         {ootdList.map((item) => (
           <div key={item.ootd.id} className="flex-1 cursor-pointer" onClick={() => handleOotdItemClick(item.post.id)}>
             {item.post.images.length > 0 && (
-              <img src={item.post.images[0].accessUri} alt="OOTD" className="w-full h-auto rounded-lg" />
+              <div className="relative w-full pb-[100%]"> {/* 컨테이너를 정사각형으로 설정 */}
+                <Image
+                  src={item.post.images[0].accessUri}
+                  alt="OOTD"
+                  className="absolute inset-0 w-full h-full object-cover rounded-lg"
+                  width={200} // Width and height are for aspect ratio purposes
+                  height={200}
+                />
+              </div>
             )}
             <div className="flex items-center my-4">
               <img
@@ -72,19 +80,19 @@ const MyOotd: React.FC<MyOotdProps> = ({ userInfo }) => {
                 <div className="text-[#6b6b6b] text-xl font-normal font-['Pretendard']">{item.member.nickName}</div>
               </div>
               <Image
-                  src={EmptyHeartIcon}
-                  alt="좋아요"
-                  width={20}
-                  height={18}
-                />
-                <span className="mx-2 text-[#cfcfcf]"> {item.post.likeCount}</span>
-                <Image
-                  src={CommentIcon1}
-                  alt="좋아요"
-                  width={18}
-                  height={18}
-                />
-                  <span className="mx-2 text-[#cfcfcf]"> {item.post.commentCount}</span>
+                src={EmptyHeartIcon}
+                alt="좋아요"
+                width={20}
+                height={18}
+              />
+              <span className="mx-2 text-[#cfcfcf]"> {item.post.likeCount}</span>
+              <Image
+                src={CommentIcon1}
+                alt="댓글"
+                width={18}
+                height={18}
+              />
+              <span className="mx-2 text-[#cfcfcf]"> {item.post.commentCount}</span>
             </div>
             <div className="text-[#6b6b6b] text-xl font-normal font-['Pretendard']">{item.post.body}</div>
             <div className="flex gap-2 mt-2">
@@ -110,6 +118,7 @@ const MyOotd: React.FC<MyOotdProps> = ({ userInfo }) => {
       </div>
     </div>
   );
+  
 };
 
 export default MyOotd;
