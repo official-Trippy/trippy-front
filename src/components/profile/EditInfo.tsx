@@ -51,6 +51,8 @@ const EditInfo = () => {
   const [followScope, setFollowScope] = useState<"public" | "private" | "protected">(userInfo?.followScope || "public");
   const [tempSelectedInterests, setTempSelectedInterests] = useState<string[]>([]);
 
+  const [warningMessage, setWarningMessage] = useState('');
+
   useEffect(() => {
     if (userInfo) {
       setProfileImage(userInfo.profileImage || null);
@@ -229,8 +231,13 @@ const EditInfo = () => {
   };
 
   const handleConfirm = () => {
-    setSelectedInterests([...tempSelectedInterests]);
-    setIsModalOpen(false);
+    if (tempSelectedInterests.length < 2) {
+      setWarningMessage('관심분야를 2개 이상 선택해주세요!');
+    } else {
+      setSelectedInterests(tempSelectedInterests);
+      setIsModalOpen(false);
+      setWarningMessage(''); 
+    }
   };
 
   const handleCloseModal = () => {
@@ -680,6 +687,9 @@ const EditInfo = () => {
                 </div>
               ))}
             </div>
+            {warningMessage && (
+              <p className="text-red-500 text-sm mt-4">{warningMessage}</p>
+            )}
             <div className="mt-8 flex ml-auto justify-end">
               <button
                 onClick={handleCloseModal}
@@ -695,8 +705,8 @@ const EditInfo = () => {
               </button>
             </div>
           </div>
-        </div>
-      )}
+          </div>
+        )}
       </div></>
   );
 };
