@@ -62,20 +62,21 @@ export const fetchOotdPostDetail = async (id: number): Promise<OotdDetailGetResp
 };
 
 
-  export const fetchAllOotdPosts = async (page?: number, size?: number): Promise<OotdGetResponse> => {
-    try {
-        const params: { page?: number; size?: number } = {};
-        if (page !== undefined) params.page = page;
-        if (size !== undefined) params.size = size;
+export const fetchAllOotdPosts = async (page?: number, size?: number, orderType: string = 'LATEST'): Promise<OotdGetResponse> => {
+  try {
+      const params: { page?: number; size?: number; orderType?: string } = { orderType };
+      if (page !== undefined) params.page = page;
+      if (size !== undefined) params.size = size;
 
-        const response = await axios.get<OotdGetResponse>(`${backendUrl}/api/ootd/all`, { params });
-        console.log(response.data);
-        return response.data;
-    } catch (error) {
-        console.error(`OOTD 데이터를 가져오는 중 오류가 발생했습니다: ${error}`);
-        throw error;
-    }
-};
+      const response = await axios.get<OotdGetResponse>(`${backendUrl}/api/ootd/all`, { params });
+      console.log(response.data);
+      return response.data;
+  } catch (error) {
+      console.error(`OOTD 데이터를 가져오는 중 오류가 발생했습니다: ${error}`);
+      throw error;
+  }
+}
+
 
 export const fetchUserOotdPosts = async (memberId: string, page: number, size: number) => {
   const response = await axios.get(`${backendUrl}/api/ootd/by-member`, {
