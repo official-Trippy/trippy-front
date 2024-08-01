@@ -30,7 +30,7 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
 
   const userInfo = useUserStore((state) => state.userInfo);
 
-  const userMemberId = userInfo.memberId;
+  const userMemberId = userInfo?.memberId;
 
   const router = useRouter();
 

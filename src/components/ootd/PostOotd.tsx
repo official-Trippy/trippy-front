@@ -114,7 +114,11 @@ const PostOotd: React.FC = () => {
           icon: 'success',
           title: 'OOTD 게시글을 올렸습니다.',
           confirmButtonText: '확인',
-          confirmButtonColor: '#FB3463',
+          confirmButtonColor: '#FB3463', 
+          customClass: {
+            popup: 'swal-custom-popup',
+            icon: 'swal-custom-icon'
+          }
         }).then((result) => {
           if (result.isConfirmed) {
             router.push('/ootd');
@@ -167,6 +171,12 @@ const PostOotd: React.FC = () => {
           icon: 'error',
           title: '이미지 오류',
           text: '이미지를 업로드해주세요.',
+          confirmButtonText: '확인',
+          confirmButtonColor: '#FB3463', 
+          customClass: {
+            popup: 'swal-custom-popup',
+            icon: 'swal-custom-icon'
+          }
         });
       }
       return;
@@ -178,6 +188,12 @@ const PostOotd: React.FC = () => {
           icon: 'error',
           title: '문구 작성 오류',
           text: 'OOTD 문구를 작성해주세요.',
+          confirmButtonText: '확인',
+          confirmButtonColor: '#FB3463', 
+          customClass: {
+            popup: 'swal-custom-popup',
+            icon: 'swal-custom-icon'
+          }
         });
       }
       return;
@@ -189,6 +205,12 @@ const PostOotd: React.FC = () => {
           icon: 'error',
           title: '태그 오류',
           text: '태그를 3개 이상 등록해주세요.',
+          confirmButtonText: '확인',
+          confirmButtonColor: '#FB3463', 
+          customClass: {
+            popup: 'swal-custom-popup',
+            icon: 'swal-custom-icon'
+          }
         });
       }
       return;

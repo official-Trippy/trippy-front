@@ -331,7 +331,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
           </div>
         </div>
         {showLikes && (
-          <div className='flex flex-col space-y-4 w-full h-[200px] mb-4 n p-4 bg-neutral-100 rounded-lg shadow-md items-center text-black justify-center'>
+          <div className='flex flex-col space-y-4 w-full h-[200px] my-4 p-4 bg-neutral-100 rounded-lg shadow-md items-center text-black justify-center'>
             <div className="text-2xl font-medium">
               트리피 회원이면 좋아요를 달 수 있어요
             </div>
@@ -341,7 +341,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
           </div>
         )}
         {showComments && (
-          <div className='flex flex-col space-y-4 w-full h-[200px] my-4 n p-4 bg-neutral-100 rounded-lg shadow-md items-center text-black justify-center'>
+          <div className='flex flex-col space-y-4 w-full h-[200px] my-4 p-4 bg-neutral-100 rounded-lg shadow-md items-center text-black justify-center'>
             <div className="text-2xl font-medium">
               트리피 회원이면 댓글을 달 수 있어요
             </div>

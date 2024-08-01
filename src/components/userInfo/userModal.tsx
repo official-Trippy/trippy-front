@@ -95,8 +95,8 @@ const UserModal: React.FC<
           </div>
         </div>
       </div>
-      <hr className="border-t-2 border-CFCFCF" />
-      <div className="px-[2rem] pt-[2rem]">
+      <hr className="border-CFCFCF mb-[1px]" />
+      <div className="pt-[2rem] px-[2rem]">
         <div className="flex-col justify-center items-start gap-1 inline-flex w-full">
           <div className="text-zinc-800 text-4xl font-bold font-Pretendard">
             {userInfo.blogName}

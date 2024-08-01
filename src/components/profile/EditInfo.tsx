@@ -9,10 +9,14 @@ import { useEffect, useState } from "react";
 import DefaultProfileImg from "../../../public/DefaultProfile.svg";
 import { useUserStore } from "@/store/useUserStore";
 import { blogInterests } from "@/constants/blogPreference";
-import { updateMemberInfo } from "@/services/auth";
+import { getMyInfo, updateMemberInfo } from "@/services/auth";
 import { UpdateMemberInfoRequest } from "@/types/auth";
 import backgroundImg from "../../../public/DefaultBackground.svg";
-import { useMutation, useQueryClient } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import RightIcon from '../../../public/icon_right.svg';
+import UpIcon from '../../../public/arrow_up.svg';
+import DownIcon from '../../../public/arrow_down.svg';
+import Swal from "sweetalert2";
 
 const EditInfo = () => {
   const { userInfo, updateUserInfo } = useUserStore(); 
@@ -40,12 +44,33 @@ const EditInfo = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedInterests, setSelectedInterests] = useState<string[]>(userInfo?.koreanInterestedTypes || []);
 
-  const [likeAlert, setLikeAlert] = useState(true);
-  const [commentAlert, setCommentAlert] = useState(true);
+  const [likeAlert, setLikeAlert] = useState(userInfo?.likeAlert || true);
+  const [commentAlert, setCommentAlert] = useState(userInfo?.commentAlert || true);
   const [ticketScope, setTicketScope] = useState<"public" | "private" | "protected">(userInfo?.ticketScope || "public");
   const [ootdScope, setOotdScope] = useState<"public" | "private" | "protected">(userInfo?.ootdScope || "public");
   const [badgeScope, setBadgeScope] = useState<"public" | "private" | "protected">(userInfo?.badgeScope || "public");
   const [followScope, setFollowScope] = useState<"public" | "private" | "protected">(userInfo?.followScope || "public");
+  const [tempSelectedInterests, setTempSelectedInterests] = useState<string[]>([]);
+
+  const [warningMessage, setWarningMessage] = useState('');
+
+  useEffect(() => {
+    if (userInfo) {
+      setProfileImage(userInfo.profileImage || null);
+      setBlogImage(userInfo.blogImage || null);
+      setNickName(userInfo.nickName || '');
+      setBlogName(userInfo.blogName || '');
+      setBlogIntroduce(userInfo.blogIntroduce || '');
+      setSelectedInterests(userInfo.koreanInterestedTypes || []);
+      setLikeAlert(userInfo.likeAlert || true);
+      setCommentAlert(userInfo.commentAlert || true);
+      setTicketScope(userInfo.ticketScope || "public");
+      setOotdScope(userInfo.ootdScope || "public");
+      setBadgeScope(userInfo.badgeScope || "public");
+      setFollowScope(userInfo.followScope || "public");
+    }
+  }, [userInfo]);
+
 
   const router = useRouter();
 
@@ -184,15 +209,112 @@ const EditInfo = () => {
     console.log('Selected Interests:', selectedInterests);
   }, [selectedInterests]);
 
+  useEffect(() => {
+    if (userInfo) {
+      setLikeAlert(userInfo.likeAlert);
+      setCommentAlert(userInfo.commentAlert);
+    }
+  }, [userInfo]);
+
   const updateUserInfoMutation = useMutation(updateMemberInfo, {
     onSuccess: () => {
       queryClient.invalidateQueries('userInfo');
-      alert("회원 정보가 성공적으로 업데이트되었습니다.");
+      Swal.fire({
+        icon: 'success',
+        title: `회원 정보를 성공적으로<br/>업데이트하였습니다!`,
+        confirmButtonText: '확인',
+        confirmButtonColor: '#FB3463', 
+        customClass: {
+          popup: 'swal-custom-popup',
+          icon: 'swal-custom-icon'
+        }
+      }).then((result) => {
+        if (result.isConfirmed) {
+          router.push('/mypage');
+        }
+      });
     },
     onError: () => {
-      alert("회원 정보 업데이트에 실패했습니다. 다시 시도해주세요.");
+      Swal.fire({
+        icon: 'error',
+        title: '회원 정보 업데이트에 실패했습니다. 다시 시도해주세요.',
+        confirmButtonText: '확인',
+        confirmButtonColor: '#FB3463', 
+        customClass: {
+          popup: 'swal-custom-popup',
+          icon: 'swal-custom-icon'
+        }
+      }).then((result) => {
+        if (result.isConfirmed) {
+          router.push('/editProfile')
+        }
+      });
     }
   });
+
+  const handleOpenModal = () => {
+    setTempSelectedInterests([...selectedInterests]);
+    setIsModalOpen(true);
+  };
+
+  const handleConfirm = () => {
+    if (tempSelectedInterests.length < 2) {
+      setWarningMessage('관심분야를 2개 이상 선택해주세요!');
+    } else {
+      setSelectedInterests(tempSelectedInterests);
+      setIsModalOpen(false);
+      setWarningMessage(''); 
+    }
+  };
+
+  const handleCloseModal = () => {
+    setTempSelectedInterests(userInfo.koreanInterestedTypes);
+    setIsModalOpen(false);
+  };
+  
+  const handleTempInterestClick = (interest: string) => {
+    setTempSelectedInterests((prevSelected) => {
+      if (prevSelected.includes(interest)) {
+        return prevSelected.filter((item) => item !== interest);
+      } else if (prevSelected.length < 5) {
+        return [...prevSelected, interest];
+      } else {
+        return prevSelected;
+      }
+    });
+  };
+
+  const [isTicketOpen, setIsTicketOpen] = useState(false);
+  const [isOotdOpen, setIsOotdOpen] = useState(false);
+  const [isBadgeOpen, setIsBadgeOpen] = useState(false);
+  const [isFollowOpen, setIsFollwOpen] = useState(false);
+
+  const options = [
+    { value: "public", label: "전체 공개" },
+    { value: "protected", label: "팔로워만" },
+    { value: "private", label: "비공개" },
+  ];
+
+  const handleTicketSelect = (value: any) => {
+    setTicketScope(value);
+    setIsTicketOpen(false);
+  };
+
+  const handleOotdSelect = (value: any) => {
+    setOotdScope(value);
+    setIsOotdOpen(false);
+  };
+
+  const handleBadgeSelect = (value: any) => {
+    setBadgeScope(value);
+    setIsBadgeOpen(false);
+  };
+
+  const handleFollowSelect = (value: any) => {
+    setFollowScope(value);
+    setIsFollwOpen(false);
+  };
+
 
   const handleSubmit = () => {
     const data: UpdateMemberInfoRequest = {
@@ -326,106 +448,239 @@ const EditInfo = () => {
               </div>
 
               <div className="mt-[6rem]">
+                <div className="flex">
                 <label htmlFor="interests" className="sign-up-info block">
                   관심 분야
                 </label>
+                <div className='flex ml-auto' onClick={() => handleOpenModal()}>
+                  <div
+                      className="pr-1 py-2 rounded-full text-[#9d9d9d] cursor-pointer"
+                    >
+                    설정하기
+                  </div>
+                  <Image src={RightIcon} alt="setting" width={8} height={14} />
+                  </div>
+                </div>
                 <div className="mt-[2.5rem] flex flex-wrap">
                   {selectedInterests.map((interest, index) => (
                     <div
                       key={index}
-                      className="flex items-center px-4 py-2 mr-2 mb-2 rounded-full bg-[#FB3463] text-white cursor-pointer"
+                      className="flex items-center px-4 py-3 mr-2 mb-2 rounded-[999px] bg-[#FB3463] text-white cursor-pointer"
                       onClick={() => handleInterestClick(interest)}
                     >
                       {interest}
-                      <span className="ml-2">x</span>
                     </div>
                   ))}
-                  <button
-                    onClick={() => setIsModalOpen(true)}
-                    className="px-4 py-2 rounded-full border border-[#FB3463] text-[#FB3463] cursor-pointer"
+                </div>
+              </div>
+
+              <div className="mt-[6rem]">
+                <label className="sign-up-info block font-bold mb-6">알림 설정</label>
+                <div className="w-[70px] flex items-center mb-4">
+                  <label htmlFor="likeAlert" className="mr-4 text-lg">좋아요</label>
+                  <label className="relative inline-flex items-center cursor-pointer ml-auto">
+                    <input
+                      type="checkbox"
+                      id="likeAlert"
+                      checked={likeAlert}
+                      onChange={(e) => setLikeAlert(e.target.checked)}
+                      className="sr-only peer"
+                    />
+                    <div className="w-11 h-6 bg-gray-200 rounded-xl peer-checked:bg-custom-pink peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:border-gray-300 after:border after:rounded-xl after:h-5 after:w-5 after:transition-transform after:duration-300"></div>
+                  </label>
+                </div>
+                <div className="w-[70px] flex items-center">
+                  <label htmlFor="commentAlert" className="mr-4 text-lg">댓글</label>
+                  <label className="relative inline-flex items-center cursor-pointer ml-auto">
+                    <input
+                      type="checkbox"
+                      id="commentAlert"
+                      checked={commentAlert}
+                      onChange={(e) => setCommentAlert(e.target.checked)}
+                      className="sr-only peer"
+                    />
+                    <div className="w-11 h-6 bg-gray-200 rounded-xl peer-checked:bg-custom-pink peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:border-gray-300 after:border after:rounded-xl after:h-5 after:w-5 after:transition-transform after:duration-300"></div>
+                  </label>
+                </div>
+              </div>
+
+              <div className="mt-24">
+                <label className="block sign-up-info font-bold mb-6">공개범위 설정</label>
+                <div className="flex mb-8">
+                  <label className="block my-auto w-[150px] text-lg font-semibold">티켓</label>
+                  <div className="relative">
+                    <div
+                      className={`w-40 rounded-lg shadow-lg text-[#6b6b6b] text-base focus:outline-none cursor-pointer ${
+                        isTicketOpen ? 'border border-[#FB3463]' : ''
+                      }`} 
+                      style={{
+                        borderRadius: "8px",
+                        height: "3rem",
+                        padding: "0.5rem 1rem",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "space-between"
+                      }}
+                      onClick={() => setIsTicketOpen(!isTicketOpen)}
+                    >
+                      {options.find((option) => option.value === ticketScope)?.label}
+                      {isTicketOpen ? (
+                        <Image src={UpIcon} alt="upIcon" width={16} height={28} />
+                      ) : (
+                        <Image src={DownIcon} alt="downIcon" width={16} height={28} />
+                      )}
+                    </div>
+                    {isTicketOpen && (
+                      <div
+                        className="absolute mt-1 w-full rounded-lg shadow-lg bg-white"
+                        style={{ zIndex: 10 }}
+                      >
+                        {options.map((option) => (
+                          <div
+                            key={option.value}
+                            className="px-4 py-3 cursor-pointer hover:bg-neutral-100 text-[#6b6b6b]"
+                            onClick={() => handleTicketSelect(option.value)}
+                          >
+                            {option.label}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                <div className="flex mb-8">
+                  <label className="block my-auto w-[150px] text-lg font-semibold">OOTD</label>
+                  <div className="relative">
+                  <div
+                     className={`w-40 rounded-lg shadow-lg text-[#6b6b6b] text-base focus:outline-none cursor-pointer ${
+                      isOotdOpen ? 'border border-[#FB3463]' : ''
+                    }`} 
+                    style={{
+                      borderRadius: "8px",
+                      height: "3rem",
+                      padding: "0.5rem 1rem",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between"
+                    }}
+                    onClick={() => setIsOotdOpen(!isOotdOpen)}
                   >
-                    + 관심 분야 추가
-                  </button>
+                    {options.find((option) => option.value === ootdScope)?.label}
+                    {isOotdOpen && (
+                      <Image src={UpIcon} alt="upIcon" width={16} height={28} />
+                    )}
+                    {!isOotdOpen && (
+                      <Image src={DownIcon} alt="downIcon" width={16} height={28} />
+                    )}
+                  </div>
+                  {isOotdOpen && (
+                    <div
+                      className="absolute mt-1 w-full rounded-lg shadow-lg bg-white"
+                      style={{ zIndex: 10 }}
+                    >
+                      {options.map((option) => (
+                        <div
+                          key={option.value}
+                          className="px-4 py-3 cursor-pointer hover:bg-neutral-100 text-[#6b6b6b]"
+                          onClick={() => handleOotdSelect(option.value)}
+                        >
+                          {option.label}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+                </div>
+
+                <div className="flex mb-8">
+                  <label className="block my-auto w-[150px] text-lg font-semibold">뱃지</label>
+                  <div className="relative">
+                  <div
+                     className={`w-40 rounded-lg shadow-lg text-[#6b6b6b] text-base focus:outline-none cursor-pointer ${
+                      isBadgeOpen ? 'border border-[#FB3463]' : ''
+                    }`} 
+                    style={{
+                      borderRadius: "8px",
+                      height: "3rem",
+                      padding: "0.5rem 1rem",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between"
+                    }}
+                    onClick={() => setIsBadgeOpen(!isBadgeOpen)}
+                  >
+                    {options.find((option) => option.value === badgeScope)?.label}
+                    {isBadgeOpen && (
+                      <Image src={UpIcon} alt="upIcon" width={16} height={28} />
+                    )}
+                    {!isBadgeOpen && (
+                      <Image src={DownIcon} alt="downIcon" width={16} height={28} />
+                    )}
+                  </div>
+                  {isBadgeOpen && (
+                    <div
+                      className="absolute mt-1 w-full rounded-lg shadow-lg bg-white"
+                      style={{ zIndex: 10 }}
+                    >
+                      {options.map((option) => (
+                        <div
+                          key={option.value}
+                          className="px-4 py-3 cursor-pointer hover:bg-neutral-100 text-[#6b6b6b]"
+                          onClick={() => handleBadgeSelect(option.value)}
+                        >
+                          {option.label}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+                </div>
+
+              <div className="flex mb-8">
+                <label className="block my-auto w-[150px] text-lg font-semibold">팔로워 / 팔로잉</label>
+                <div className="relative">
+                  <div
+                     className={`w-40 rounded-lg shadow-lg text-[#6b6b6b] text-base focus:outline-none cursor-pointer ${
+                      isFollowOpen ? 'border border-[#FB3463]' : ''
+                    }`} 
+                    style={{
+                      borderRadius: "8px",
+                      height: "3rem",
+                      padding: "0.5rem 1rem",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between"
+                    }}
+                    onClick={() => setIsFollwOpen(!isFollowOpen)}
+                  >
+                    {options.find((option) => option.value === followScope)?.label}
+                    {isFollowOpen && (
+                      <Image src={UpIcon} alt="upIcon" width={16} height={28} />
+                    )}
+                    {!isFollowOpen && (
+                      <Image src={DownIcon} alt="downIcon" width={16} height={28} />
+                    )}
+                  </div>
+                  {isFollowOpen && (
+                    <div
+                      className="absolute mt-1 w-full rounded-lg shadow-lg bg-white"
+                      style={{ zIndex: 10 }}
+                    >
+                      {options.map((option) => (
+                        <div
+                          key={option.value}
+                          className="px-4 py-3 cursor-pointer hover:bg-neutral-100 text-[#6b6b6b]"
+                          onClick={() => handleFollowSelect(option.value)}
+                        >
+                          {option.label}
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </div>
-
-              <div className="mt-[6rem]">
-                <label className="sign-up-info block">알림 설정</label>
-                <div className="flex items-center mt-[1rem]">
-                  <input
-                    type="checkbox"
-                    id="likeAlert"
-                    checked={likeAlert}
-                    onChange={(e) => setLikeAlert(e.target.checked)}
-                    className="mr-2" />
-                  <label htmlFor="likeAlert">좋아요 알림</label>
-                </div>
-                <div className="flex items-center mt-[1rem]">
-                  <input
-                    type="checkbox"
-                    id="commentAlert"
-                    checked={commentAlert}
-                    onChange={(e) => setCommentAlert(e.target.checked)}
-                    className="mr-2" />
-                  <label htmlFor="commentAlert">댓글 알림</label>
-                </div>
-              </div>
-
-              <div className="mt-[6rem]">
-                <label className="sign-up-info block">티켓 공개 범위</label>
-                <select
-                  value={ticketScope}
-                  onChange={(e) => setTicketScope(e.target.value as "public" | "private" | "protected")}
-                  className="w-full px-4 py-2 mt-[2.5rem] mb-2 h-[6rem] rounded-xl border border-gray-300 focus:border-[#FB3463] focus:outline-none"
-                  style={{ background: "var(--4, #F5F5F5)", fontSize: "1.5rem" }}
-                >
-                  <option value="public">공개</option>
-                  <option value="private">비공개</option>
-                  <option value="protected">팔로워 공개</option>
-                </select>
-              </div>
-
-              <div className="mt-[6rem]">
-                <label className="sign-up-info block">OOTD 공개 범위</label>
-                <select
-                  value={ootdScope}
-                  onChange={(e) => setOotdScope(e.target.value as "public" | "private" | "protected")}
-                  className="w-full px-4 py-2 mt-[2.5rem] mb-2 h-[6rem] rounded-xl border border-gray-300 focus:border-[#FB3463] focus:outline-none"
-                  style={{ background: "var(--4, #F5F5F5)", fontSize: "1.5rem" }}
-                >
-                  <option value="public">공개</option>
-                  <option value="private">비공개</option>
-                  <option value="protected">팔로워 공개</option>
-                </select>
-              </div>
-
-              <div className="mt-[6rem]">
-                <label className="sign-up-info block">뱃지 공개 범위</label>
-                <select
-                  value={badgeScope}
-                  onChange={(e) => setBadgeScope(e.target.value as "public" | "private" | "protected")}
-                  className="w-full px-4 py-2 mt-[2.5rem] mb-2 h-[6rem] rounded-xl border border-gray-300 focus:border-[#FB3463] focus:outline-none"
-                  style={{ background: "var(--4, #F5F5F5)", fontSize: "1.5rem" }}
-                >
-                  <option value="public">공개</option>
-                  <option value="private">비공개</option>
-                  <option value="protected">팔로워 공개</option>
-                </select>
-              </div>
-
-              <div className="mt-[6rem]">
-                <label className="sign-up-info block">팔로우 공개 범위</label>
-                <select
-                  value={followScope}
-                  onChange={(e) => setFollowScope(e.target.value as "public" | "private" | "protected")}
-                  className="w-full px-4 py-2 mt-[2.5rem] mb-2 h-[6rem] rounded-xl border border-gray-300 focus:border-[#FB3463] focus:outline-none"
-                  style={{ background: "var(--4, #F5F5F5)", fontSize: "1.5rem" }}
-                >
-                  <option value="public">공개</option>
-                  <option value="private">비공개</option>
-                  <option value="protected">팔로워 공개</option>
-                </select>
-              </div>
+            </div>
             </div>
 
             <div className="text-center">
@@ -445,35 +700,43 @@ const EditInfo = () => {
           </div>
         </div>
         {isModalOpen && (
-          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-            <div className="bg-white p-8 rounded-lg w-[80%] max-w-[600px]">
-              <h2 className="text-2xl font-bold mb-4">관심 분야 선택</h2>
-              <div className="flex flex-wrap">
-                {blogInterests.map((interest: string, index: number) => (
-                  <div
-                    key={index}
-                    className={`m-2 p-2 rounded-full cursor-pointer ${
-                      selectedInterests.includes(interest)
-                        ? "bg-[#FB3463] text-white"
-                        : "bg-gray-200"
-                    }`}
-                    onClick={() => handleInterestClick(interest)}
-                  >
-                    {interest}
-                  </div>
-                ))}
-              </div>
-              <div className="mt-4 flex justify-end">
-                <button
-                  onClick={() => {
-                    setIsModalOpen(false);
-                  }}
-                  className="px-4 py-2 bg-gray-500 text-white rounded-lg"
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-8 rounded-lg w-[80%] max-w-[400px]">
+            <h2 className="text-2xl font-bold mb-2 text-[#292929]">관심 분야 설정</h2>
+            <p className="text-sm text-[#6b6b6b] mb-4">관심분야를 2개 이상 설정해주세요</p>
+            <div className="grid grid-cols-5 gap-2 justify-center">
+              {blogInterests.map((interest, index) => (
+                <div
+                  key={index}
+                  className={`px-2 py-4 rounded-xl cursor-pointer text-center ${
+                    tempSelectedInterests.includes(interest)
+                      ? "bg-[#FB3463] text-white"
+                      : "bg-neutral-100 text-[#9d9d9d]"
+                  }`}
+                  onClick={() => handleTempInterestClick(interest)}
                 >
-                  닫기
-                </button>
-              </div>
+                  {interest}
+                </div>
+              ))}
             </div>
+            {warningMessage && (
+              <p className="text-red-500 text-sm mt-4">{warningMessage}</p>
+            )}
+            <div className="mt-8 flex ml-auto justify-end">
+              <button
+                onClick={handleCloseModal}
+                className="w-[68px] px-4 py-2 bg-neutral-100 text-[#292929] rounded-lg mr-2"
+              >
+                취소
+              </button>
+              <button
+                onClick={handleConfirm}
+                className="w-[68px] px-4 py-2 bg-[#FB3463] text-white rounded-lg"
+              >
+                확인
+              </button>
+            </div>
+          </div>
           </div>
         )}
       </div></>
