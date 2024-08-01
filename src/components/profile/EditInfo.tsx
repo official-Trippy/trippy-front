@@ -469,12 +469,10 @@ const EditInfo = () => {
                       onClick={() => handleInterestClick(interest)}
                     >
                       {interest}
-                      {/* <span className="ml-2">x</span> */}
                     </div>
                   ))}
                 </div>
               </div>
-              {/* e.target.value as "public" | "private" | "protected" */}
 
               <div className="mt-[6rem]">
                 <label className="sign-up-info block font-bold mb-6">알림 설정</label>
@@ -509,52 +507,55 @@ const EditInfo = () => {
               <div className="mt-24">
                 <label className="block sign-up-info font-bold mb-6">공개범위 설정</label>
                 <div className="flex mb-8">
-                <label className="block my-auto w-[150px] text-lg font-semibold">티켓</label>
-                <div className="relative">
-                  <div
-                    className="w-40 rounded-lg focus:border-pink-600 shadow-lg text-[#6b6b6b] text-base focus:outline-none cursor-pointer"
-                    style={{
-                      borderRadius: "8px",
-                      height: "3rem",
-                      padding: "0.5rem 1rem",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "space-between"
-                    }}
-                    onClick={() => setIsTicketOpen(!isTicketOpen)}
-                  >
-                    {options.find((option) => option.value === ticketScope)?.label}
+                  <label className="block my-auto w-[150px] text-lg font-semibold">티켓</label>
+                  <div className="relative">
+                    <div
+                      className={`w-40 rounded-lg shadow-lg text-[#6b6b6b] text-base focus:outline-none cursor-pointer ${
+                        isTicketOpen ? 'border border-[#FB3463]' : ''
+                      }`} 
+                      style={{
+                        borderRadius: "8px",
+                        height: "3rem",
+                        padding: "0.5rem 1rem",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "space-between"
+                      }}
+                      onClick={() => setIsTicketOpen(!isTicketOpen)}
+                    >
+                      {options.find((option) => option.value === ticketScope)?.label}
+                      {isTicketOpen ? (
+                        <Image src={UpIcon} alt="upIcon" width={16} height={28} />
+                      ) : (
+                        <Image src={DownIcon} alt="downIcon" width={16} height={28} />
+                      )}
+                    </div>
                     {isTicketOpen && (
-                      <Image src={UpIcon} alt="upIcon" width={16} height={28} />
-                    )}
-                    {!isTicketOpen && (
-                      <Image src={DownIcon} alt="downIcon" width={16} height={28} />
+                      <div
+                        className="absolute mt-1 w-full rounded-lg shadow-lg bg-white"
+                        style={{ zIndex: 10 }}
+                      >
+                        {options.map((option) => (
+                          <div
+                            key={option.value}
+                            className="px-4 py-3 cursor-pointer hover:bg-neutral-100 text-[#6b6b6b]"
+                            onClick={() => handleTicketSelect(option.value)}
+                          >
+                            {option.label}
+                          </div>
+                        ))}
+                      </div>
                     )}
                   </div>
-                  {isTicketOpen && (
-                    <div
-                      className="absolute mt-1 w-full rounded-lg shadow-lg bg-white"
-                      style={{ zIndex: 10 }}
-                    >
-                      {options.map((option) => (
-                        <div
-                          key={option.value}
-                          className="px-4 py-3 cursor-pointer hover:bg-neutral-100 text-[#6b6b6b]"
-                          onClick={() => handleTicketSelect(option.value)}
-                        >
-                          {option.label}
-                        </div>
-                      ))}
-                    </div>
-                  )}
                 </div>
-              </div>
 
                 <div className="flex mb-8">
                   <label className="block my-auto w-[150px] text-lg font-semibold">OOTD</label>
                   <div className="relative">
                   <div
-                    className="w-40 rounded-lg focus:border-pink-600 shadow-lg text-[#6b6b6b] text-base focus:outline-none cursor-pointer"
+                     className={`w-40 rounded-lg shadow-lg text-[#6b6b6b] text-base focus:outline-none cursor-pointer ${
+                      isOotdOpen ? 'border border-[#FB3463]' : ''
+                    }`} 
                     style={{
                       borderRadius: "8px",
                       height: "3rem",
@@ -596,7 +597,9 @@ const EditInfo = () => {
                   <label className="block my-auto w-[150px] text-lg font-semibold">뱃지</label>
                   <div className="relative">
                   <div
-                    className="w-40 rounded-lg focus:border-pink-600 shadow-lg text-[#6b6b6b] text-base focus:outline-none cursor-pointer"
+                     className={`w-40 rounded-lg shadow-lg text-[#6b6b6b] text-base focus:outline-none cursor-pointer ${
+                      isBadgeOpen ? 'border border-[#FB3463]' : ''
+                    }`} 
                     style={{
                       borderRadius: "8px",
                       height: "3rem",
@@ -638,7 +641,9 @@ const EditInfo = () => {
                 <label className="block my-auto w-[150px] text-lg font-semibold">팔로워 / 팔로잉</label>
                 <div className="relative">
                   <div
-                    className="w-40 rounded-lg focus:border-pink-600 shadow-lg text-[#6b6b6b] text-base focus:outline-none cursor-pointer"
+                     className={`w-40 rounded-lg shadow-lg text-[#6b6b6b] text-base focus:outline-none cursor-pointer ${
+                      isFollowOpen ? 'border border-[#FB3463]' : ''
+                    }`} 
                     style={{
                       borderRadius: "8px",
                       height: "3rem",
