@@ -75,7 +75,7 @@ const Header = () => {
                 </button>
                 {isDropdownOpen && (
                   <div
-                    className="absolute w-[31rem] mt-[1rem] -ml-[10rem] top-[3.6rem] rounded-[0.8rem] bg-white shadowalltop rounded-lg animate-dropdown"
+                    className="absolute w-[31rem] mt-[1rem] -ml-[10rem] top-[3.6rem] rounded-[0.8rem] bg-white shadowalltop rounded-lg animate-dropdown z-20"
                     style={{ opacity: 0, transform: 'translateY(-10px)' }}
                   >
                     <Link href="/post">
