@@ -12,7 +12,7 @@ import Swal from 'sweetalert2';
 const LoginForm = () => {
   const [memberId, setMemberId] = useState("");
   const [password, setPassword] = useState("");
-  const [errorMessage, setErrorMessage] = useState(""); 
+  const [errorMessage, setErrorMessage] = useState("");
   const router = useRouter();
 
   useEffect(() => {
@@ -35,7 +35,7 @@ const LoginForm = () => {
       const { accessToken, refreshToken, role } = response.result;
       Cookies.set("accessToken", accessToken);
       Cookies.set("refreshToken", refreshToken);
-  
+
       if (role === "GUEST") {
         Swal.fire({
           icon: 'info',
@@ -52,7 +52,7 @@ const LoginForm = () => {
       console.error("Error during login:", error);
       setErrorMessage("이메일이 올바르지 않거나 비밀번호가 틀렸습니다");
     }
-  };  
+  };
 
   return (
     <div className="w-[80%] mx-auto mt-[15rem]">

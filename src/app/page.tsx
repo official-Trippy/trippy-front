@@ -11,6 +11,7 @@ import getBoard from "@/services/board/get/getBoard";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import nonheartImg from "@/dummy/heartbin.svg"
+import heartImg from "@/dummy/heart.svg";
 import moment from "@/dummy/moment.svg"
 
 export default function Home() {
@@ -146,7 +147,11 @@ export default function Home() {
                         <span className="">{formattedDate}</span>
                       </div>
                       <div className="ml-auto flex items-center text-[#9D9D9D]">
-                        <Image src={nonheartImg} alt='' width={24} height={24} />
+                        {posts.post.isLiked ? (
+                          <Image src={heartImg} alt='' width={24} height={24} />
+                        ) : (
+                          <Image src={nonheartImg} alt='' width={24} height={24} />
+                        )}
                         <span className="text-[1rem] font-normal">{posts.post.likeCount}</span>
                         <Image className='ml-[1rem]' src={moment} alt='' width={24} height={24} />
                         <span className="text-[1rem] font-normal">{posts.post.commentCount}</span>
