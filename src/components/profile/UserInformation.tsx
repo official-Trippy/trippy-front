@@ -34,15 +34,15 @@ const UserInformation: React.FC<{ setActiveTab: (tab: string) => void }> = ({
     router.push("/editProfile");
   };
 
-  if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>Error loading data</div>;
+  if (isLoading) return <div></div>;
+  if (error) return <div></div>;
 
   const userData = data.result;
 
   return (
     <div className="w-full flex flex-col relative">
       <div className="w-[80%]">
-        <div className="absolute top-[-150px] w-[200px] h-[300px] bg-white px-8 py-4 rounded-lg shadow-lg flex flex-col items-center">
+        <div className="absolute top-[-150px] w-[200px] h-auto bg-white px-8 py-4 rounded-lg shadow-lg flex flex-col items-center">
           <div className="relative my-4">
             <Image
               src={userData.profileImageUrl}
@@ -58,7 +58,13 @@ const UserInformation: React.FC<{ setActiveTab: (tab: string) => void }> = ({
             />
           </div>
           <h1 className="text-4xl font-bold mt-[10px]">{userData.nickName}</h1>
-          <span className="text-xl text-gray-600 mt-[5px]">
+          <span
+            style={{
+              overflowWrap: 'break-word',
+              wordBreak: 'break-word'
+            }}
+            className="text-xl text-gray-600 mt-[5px] text-center"
+          >
             {userData.email}
           </span>
           <div className="mt-[10px] flex px-4">
