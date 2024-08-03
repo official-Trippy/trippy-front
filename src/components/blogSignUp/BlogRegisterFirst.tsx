@@ -35,7 +35,7 @@ const BlogRegisterFirst = () => {
 
   const { setUserInfo } = useUserInfo();
   const router = useRouter();
-
+  
   const checkSwearWords = (value: string) => {
     const lowerValue = value.toLowerCase();
     return swear_words_arr.some((swearWord: string) =>

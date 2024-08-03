@@ -19,7 +19,7 @@ const BlogRegisterThird = () => {
         <div>{userInfo.nickName}님의 회원가입이 완료되었습니다.</div>
         <div>다양한 여행 이야기를 둘러보세요!</div>
       </div>
-      <Link href='/home'>
+      <Link href='/'>
         <button
           className="mx-auto bg-btn-color mt-[8rem] mb-[10rem] w-[22rem] h-[6rem] text-white py-2 rounded-2xl focus:outline-none text-center"
           style={{ fontSize: "1.6rem" }}

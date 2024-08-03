@@ -17,13 +17,13 @@ const Header = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-
-
   const { userInfo, loading, fetchUserInfo } = useUserStore();
   const router = useRouter();
 
   useEffect(() => {
     fetchUserInfo();
+    console.log(userInfo);
+    console.log(fetchUserInfo);
   }, [fetchUserInfo]);
 
   const onClickLogin = () => {
