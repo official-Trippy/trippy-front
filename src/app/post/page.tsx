@@ -40,6 +40,15 @@ const countries: { [key: string]: string } = {
     ITA: '이탈리아'
 };
 
+const colorTicket: { [key: string]: string } = {
+    1: "Aquamarine",
+    2: "Red",
+    3: "SkyBlue",
+    4: "Yellow",
+    5: "Purple",
+    6: "Pink"
+}
+
 function PostWrite() {
     const [bgColor, setBgColor] = useState('#55FBAF');
     const [thumbnailPreview, setThumbnailPreview] = useState<string | null>(null);
