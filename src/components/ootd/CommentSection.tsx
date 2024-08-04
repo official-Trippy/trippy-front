@@ -188,7 +188,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
 
   const renderComments = (comments: Comment[], depth = 0, isChild = false) => {
     return comments.map((comment) => (
-      <div key={comment.id} className={`${isChild ? '' : ''}`}>
+      <div key={comment.id} className={`${isChild ? 'p-4' : ''}`}>
         <div className='comment-section p-4 rounded-lg'>
         <div className='flex flex-row items-center'>
           {comment.member?.profileUrl && (
@@ -427,7 +427,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
               입력
             </button>
           </div>
-          <div className="comment-section w-full p-4 bg-white rounded-lg shadow-md items-center mt-16">
+          <div className="comment-section w-full bg-white rounded-lg shadow-md items-center mt-16">
             {isLoading ? (
               <div></div>
             ) : (
