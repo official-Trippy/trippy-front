@@ -202,7 +202,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
               />
             </div>
           )}
-            <div className="text-zinc-800 text-sm font-normal font-['Pretendard'] ml-[5px]">
+            <div className="text-[#292929] text-sm font-semibold font-['Pretendard'] ml-[5px]">
               {comment.member?.nickName}
             </div>
           </div>
@@ -228,9 +228,16 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
           <div className="flex flex-col p-4 mt-2 bg-white rounded-lg shadow-md">
             <div className='flex flex-row items-center flex-1'>
               {userInfo?.profileImageUrl && (
-                <Image src={userInfo.profileImageUrl} alt="사용자" width={32} height={32} className="rounded-full" />
+                <><div className="relative w-[32px] h-[32px]">
+                  <Image
+                    src={userInfo.profileImageUrl}
+                    alt="사용자 프로필"
+                    layout="fill"
+                    objectFit="cover"
+                    className="rounded-full" />
+                </div></>
               )}
-              <div className="font-bold ml-[5px]">{userInfo?.nickName}</div>
+              <div className="text-[#292929] font-semibold ml-[5px]">{userInfo?.nickName}</div>
             </div>
             <div className='flex-1 flex'>
               <input
@@ -391,9 +398,16 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
               <div className='w-full flex-1'>
                 <div className='flex flex-row items-center'>
                   {userInfo?.profileImageUrl &&  (
-                    <Image src={userInfo.profileImageUrl} alt="사용자" width={32} height={32} className="rounded-full" />
+                    <><div className="relative w-[32px] h-[32px]">
+                      <Image
+                        src={userInfo.profileImageUrl}
+                        alt="사용자"
+                        layout="fill"
+                        objectFit="cover"
+                        className="rounded-full" />
+                    </div></>
                   )}
-                  <div className="font-bold ml-[5px]">{userInfo?.nickName}</div>
+                  <div className="text-[#292929] font-semibold ml-[5px]">{userInfo?.nickName}</div>
                 </div>
               </div>
               <div className="w-[100%] flex-1 ml-1">
@@ -413,7 +427,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
               입력
             </button>
           </div>
-          <div className="comment-section w-full p-4 bg-white rounded-lg shadow-md items-center 4 p-4 mt-16">
+          <div className="comment-section w-full p-4 bg-white rounded-lg shadow-md items-center mt-16">
             {isLoading ? (
               <div></div>
             ) : (
