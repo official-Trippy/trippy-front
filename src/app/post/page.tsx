@@ -22,6 +22,7 @@ import { uploadImage } from '@/services/blog'
 import { UploadedImage } from '@/types/ootd'
 import { useRouter } from 'next/navigation'
 import Swal from 'sweetalert2'
+import { colorTicket } from '@/types/board'
 
 const countries: { [key: string]: string } = {
     KOR: '대한민국',
@@ -40,14 +41,8 @@ const countries: { [key: string]: string } = {
     ITA: '이탈리아'
 };
 
-const colorTicket: { [key: string]: string } = {
-    1: "Aquamarine",
-    2: "Red",
-    3: "SkyBlue",
-    4: "Yellow",
-    5: "Purple",
-    6: "Pink"
-}
+
+
 
 function PostWrite() {
     const [bgColor, setBgColor] = useState('#55FBAF');
@@ -82,6 +77,7 @@ function PostWrite() {
     const [selectedCountryCode2, setSelectedCountryCode2] = useState('');
     const [tags, setTags] = useState<string[]>([]);
     const [inputValue, setInputValue] = useState<string>('');
+    const [ticketColor, setTicketColor] = useState('')
 
     const handleInputChange1 = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
@@ -187,9 +183,13 @@ function PostWrite() {
     };
 
 
-    const handleButtonClick = (color: any) => {
+    const handleButtonClick = (color: string, index: number) => {
         setBgColor(color);
+        const selectedColor = Object.keys(colorTicket)[index]; // 인덱스를 사용하여 색상 가져오기
+        setTicketColor(selectedColor);
     };
+
+    console.log(ticketColor, bgColor)
 
 
     const selectTransport = (imgSrc: any) => {
@@ -255,7 +255,7 @@ function PostWrite() {
             memberNum: Number(passengerCount),
             startDate: formatDates(startDate),
             endDate: formatDates(endDate),
-            ticketColor: 'Red',
+            ticketColor: ticketColor,
             transport: 'Airplane'
         }
         try {
@@ -315,27 +315,27 @@ function PostWrite() {
             <div className='w-[80%] mx-auto'>
                 <div className='flex items-center mt-[5rem]'>
                     <button
-                        onClick={() => handleButtonClick('#55FBAF')}
+                        onClick={() => handleButtonClick('#55FBAF', 0)}
                         className='w-[2.4rem] h-[2.4rem] bg-[#55FBAF] rounded-full'
                     ></button>
                     <button
-                        onClick={() => handleButtonClick('#FF4F4F')}
+                        onClick={() => handleButtonClick('#FF4F4F', 1)}
                         className='w-[2.4rem] h-[2.4rem] bg-[#FF4F4F] rounded-full ml-[1rem]'
                     ></button>
                     <button
-                        onClick={() => handleButtonClick('#4FDBFF')}
+                        onClick={() => handleButtonClick('#4FDBFF', 2)}
                         className='w-[2.4rem] h-[2.4rem] bg-[#4FDBFF] rounded-full ml-[1rem]'
                     ></button>
                     <button
-                        onClick={() => handleButtonClick('#FFD350')}
+                        onClick={() => handleButtonClick('#FFD350', 3)}
                         className='w-[2.4rem] h-[2.4rem] bg-[#FFD350] rounded-full ml-[1rem]'
                     ></button>
                     <button
-                        onClick={() => handleButtonClick('#A84FFF')}
+                        onClick={() => handleButtonClick('#A84FFF', 4)}
                         className='w-[2.4rem] h-[2.4rem] bg-[#A84FFF] rounded-full ml-[1rem]'
                     ></button>
                     <button
-                        onClick={() => handleButtonClick('#FB3463')}
+                        onClick={() => handleButtonClick('#FB3463', 5)}
                         className='w-[2.4rem] h-[2.4rem] bg-[#FB3463] rounded-full ml-[1rem]'
                     ></button>
                     <button className='ml-auto flex bg-[#FB3463] text-white text-[1.6rem] font-semibold rounded-[1rem] px-[2.5rem] py-[0.5rem]' onClick={addPost}>올리기</button>
