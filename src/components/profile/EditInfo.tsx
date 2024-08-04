@@ -390,22 +390,23 @@ const EditInfo = () => {
             <div className="sign-up-info">프로필 사진</div>
             <div className="mt-[4rem] flex items-center">
               <div className="rounded-full overflow-hidden w-[16rem] h-[16rem]">
+              <div className="relative w-[160px] h-[160px]">
                 {profileImage ? (
                   <Image
                     src={profileImage.accessUri}
                     alt="Profile"
-                    width="0"
-                    height="0"
-                    sizes="100vw"
-                    className="w-full h-auto"
-                    style={{ width: 160, height: 160 }} />
-                ) : (
-                  <Image
+                    layout="fill"
+                    objectFit="cover"
+                    className="rounded-full" />
+                  ) : (
+                    <Image
                     src={userInfo?.profileImageUrl || DefaultProfileImg}
                     alt="Default Profile"
-                    width={160}
-                    height={160} />
-                )}
+                    layout="fill"
+                    objectFit="cover"
+                    className="rounded-full" />
+                  )}
+                </div>
               </div>
               <div className="ml-4 flex flex-col">
                 <input
