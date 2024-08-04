@@ -21,6 +21,7 @@ import postBoard from '@/services/board/post/postBoard'
 import { uploadImage } from '@/services/blog'
 import { UploadedImage } from '@/types/ootd'
 import { useRouter } from 'next/navigation'
+import Swal from 'sweetalert2'
 
 const countries: { [key: string]: string } = {
     KOR: '대한민국',
@@ -70,6 +71,8 @@ function PostWrite() {
     const [suggestions2, setSuggestions2] = useState<string[]>([]);
     const [selectedCountryCode, setSelectedCountryCode] = useState('');
     const [selectedCountryCode2, setSelectedCountryCode2] = useState('');
+    const [tags, setTags] = useState<string[]>([]);
+    const [inputValue, setInputValue] = useState<string>('');
 
     const handleInputChange1 = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
@@ -234,7 +237,7 @@ function PostWrite() {
             postType: 'POST',
             location: '24.12342,12.12344',
             images: images,
-            tags: ['서울여행', '효도여행']
+            tags: tags,
         }
         const ticketRequest = {
             departure: inputValue1,
@@ -249,7 +252,20 @@ function PostWrite() {
         try {
             console.log(postRequest, ticketRequest)
             await postBoard(postRequest, ticketRequest);
-            router.push('/');
+            Swal.fire({
+                icon: 'success',
+                title: 'TICKET 게시글을 올렸습니다.',
+                confirmButtonText: '확인',
+                confirmButtonColor: '#FB3463',
+                customClass: {
+                    popup: 'swal-custom-popup',
+                    icon: 'swal-custom-icon'
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    router.push('/');
+                }
+            });
         } catch (e) {
 
         }
@@ -266,6 +282,24 @@ function PostWrite() {
         };
     }, [thumbnailPreview]);
     console.log(formatDates(startDate), formatDates(endDate))
+
+
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setInputValue(e.target.value);
+    };
+
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === 'Enter' && inputValue.trim() !== '') {
+            // 중복 태그 체크
+            if (!tags.includes(inputValue.trim())) {
+                setTags([...tags, inputValue.trim()]);
+                setInputValue(''); // 입력 필드 초기화
+            }
+        }
+    };
+
+
+    console.log(tags)
     return (
         <div>
             <Header />
@@ -443,7 +477,7 @@ function PostWrite() {
                     </div>
                 </div>
                 <>
-                    <div className="h-screen w-full overflow-hidden">
+                    <div className="h-screen w-full overflow-hidden shadowall mt-[2rem] rounded-[0.8rem]">
                         <form
                             className="h-screen w-full"
                         >
@@ -468,6 +502,21 @@ function PostWrite() {
                             </div>
 
                         </form>
+                    </div>
+                    <div className='w-full h-[13rem] shadowall mt-[0.5rem] mb-[10rem]'>
+                        <input className='text-[1.6rem] font-medium w-[50rem] outline-none ml-[6rem] mt-[3.4rem]'
+                            type='text'
+                            placeholder='태그를 3개 이상 입력해주세요.'
+                            value={inputValue}
+                            onChange={handleInputChange}
+                            onKeyDown={handleKeyDown} />
+                        <div className='ml-[6rem] mt-[1rem]'>
+                            {tags.map((tag, index) => (
+                                <span key={index} className='inline-block bg-[#F5F5F5] text-[#9D9D9D] rounded-[1.6rem] text-[1.6rem] px-[0.8rem] py-[0.4rem] mr-2'>
+                                    {tag}
+                                </span>
+                            ))}
+                        </div>
                     </div>
                 </>
             </div>

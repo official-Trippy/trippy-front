@@ -14,6 +14,7 @@ import FollowList from "@/components/profile/FollowList";
 import Image from "next/image";
 import backgroundImg from "../../../public/DefaultBackground.svg";
 import { fetchOotdPostCount } from "@/services/ootd.ts/ootdGet";
+import { getTotalBoardCount } from "@/services/board/get/getBoard";
 
 const TABS = {
   ALL: "ALL",
@@ -38,15 +39,22 @@ const MyPage = () => {
   });
 
   useEffect(() => {
-    refetch(); 
+    refetch();
   }, [accessToken, refetch]);
 
   const { data: totalOotdCount } = useQuery<number>(
     'ootdPostCount',
     fetchOotdPostCount,
-    { enabled: !!accessToken }  
+    { enabled: !!accessToken }
   );
 
+  const { data: totalBoardCount } = useQuery({
+    queryKey: ['boardPostCount'],
+    queryFn: () => getTotalBoardCount(),
+    enabled: !!accessToken,
+  })
+
+  console.log(totalBoardCount)
   if (isLoading) {
     return <div>Loading...</div>;
   }
@@ -58,6 +66,8 @@ const MyPage = () => {
   const userData = data && data.result;
   console.log("userData : ", userData);
   const member = userData?.memberId;
+
+  console.log(totalBoardCount)
 
   return (
     <>
@@ -87,7 +97,7 @@ const MyPage = () => {
                 onClick={() => setActiveTab(TABS.TICKET)}
               >
                 <span className={activeTab === TABS.TICKET ? "text-[#fa3463]" : ""}>티켓</span>
-                <span className="text-[#fa3463] ml-1">{totalOotdCount}</span>
+                <span className="text-[#fa3463] ml-1">{totalBoardCount}</span>
               </button>
               <button
                 className={`px-8 py-2 rounded-[999px] justify-center items-center ${activeTab === TABS.OOTD ? "bg-[#ffe3ea] border-2 border-[#fa3463]" : "border border-[#cfcfcf]"}`}
@@ -131,13 +141,13 @@ const MyPage = () => {
           <div className="w-full ml-4">
             {activeTab === TABS.ALL && (
               <>
-                <MyTicket />
+                <MyTicket totalBoardCount={totalBoardCount} />
                 <MyOotd userInfo={userData} />
                 <MyBadge />
                 <MyBookmark />
               </>
             )}
-            {activeTab === TABS.TICKET && <MyTicket />}
+            {activeTab === TABS.TICKET && <MyTicket totalBoardCount={totalBoardCount} />}
             {activeTab === TABS.OOTD && <MyOotd userInfo={userData} />}
             {activeTab === TABS.BADGE && <MyBadge />}
             {activeTab === TABS.BOOKMARK && <MyBookmark />}
