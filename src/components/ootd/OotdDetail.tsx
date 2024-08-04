@@ -17,6 +17,7 @@ import RightArrowIcon from "../../../public/right-arrow.svg";
 import { getWeatherStatusInKorean } from "@/constants/weatherTransition";
 import { useRouter } from "next/navigation";
 import FollowButton from "../followControl/followButton";
+import Cookies from "js-cookie";
 
 interface OotdDetailProps {
   id: number;
@@ -28,6 +29,8 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
     () => fetchOotdPostDetail(id)
   );
 
+  const accessToken = Cookies.get('accessToken');
+
   const userInfo = useUserStore((state) => state.userInfo);
 
   const userMemberId = userInfo?.memberId;
@@ -35,9 +38,12 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
   const router = useRouter();
 
   const handleProfileClick = () => {
-    console.log("click");
-    if (ootdItem.member.memberId == userInfo.memberId) {
-      router.push("/mypage");
+    if (accessToken) {
+      if (ootdItem.member.memberId == userInfo.memberId) {
+        router.push("/mypage");
+      } else {
+        router.push(`/user/${ootdItem.member.memberId}`);
+      }
     } else {
       router.push(`/user/${ootdItem.member.memberId}`);
     }

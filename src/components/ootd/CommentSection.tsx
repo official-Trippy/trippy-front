@@ -14,6 +14,7 @@ import DownIcon from '../../../public/arrow_down.svg';
 import UpIcon from '../../../public/icon_up.svg';
 import { Comment } from '@/types/ootd';
 import { useRouter } from "next/navigation";
+import Cookies from "js-cookie";
 
 
 interface CommentSectionProps {
@@ -38,6 +39,8 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
 
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 18;
+
+  const accessToken = Cookies.get("accessToken");
 
   const handlePageChange = (pageNumber: number) => {
     setCurrentPage(pageNumber);
@@ -199,10 +202,10 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
               />
             </div>
           )}
-  <div className="text-zinc-800 text-sm font-normal font-['Pretendard'] ml-[5px]">
-    {comment.member?.nickName}
-  </div>
-</div>
+            <div className="text-zinc-800 text-sm font-normal font-['Pretendard'] ml-[5px]">
+              {comment.member?.nickName}
+            </div>
+          </div>
           <div className="ml-[3.7rem] items-center">
             <div>
               {comment.content}
@@ -302,7 +305,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
     );
   };
 
-  if (!userInfo) {
+  if (!accessToken) {
     return (
       <div className="max-w-6xl w-full mx-auto">
         <div className="flex items-center pb-4">
@@ -387,7 +390,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
             <div className='w-[90%] flex flex-col'>
               <div className='w-full flex-1'>
                 <div className='flex flex-row items-center'>
-                  {userInfo?.profileImageUrl && (
+                  {userInfo?.profileImageUrl &&  (
                     <Image src={userInfo.profileImageUrl} alt="사용자" width={32} height={32} className="rounded-full" />
                   )}
                   <div className="font-bold ml-[5px]">{userInfo?.nickName}</div>
