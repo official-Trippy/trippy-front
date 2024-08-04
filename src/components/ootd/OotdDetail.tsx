@@ -110,14 +110,16 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
         <div className="w-full max-w-6xl mx-auto">
           <div className="py-4 flex items-center justify-between">
             <div className="flex items-center">
-              <Image
-                className="rounded-full"
-                width={48}
-                height={48}
-                src={ootdItem.member.profileUrl}
-                onClick={handleProfileClick}
-                alt="User Profile"
-              />
+            <div className="relative w-[48px] h-[48px]">
+                <Image
+                  src={ootdItem.member.profileUrl}
+                  alt="사용자 프로필"
+                  layout="fill"
+                  objectFit="cover"
+                  className="rounded-full"
+                  onClick={handleProfileClick}
+                />
+              </div>
               <div className="ml-4">
                 <span className="block font-bold text-xl ml-[2px]">
                   {ootdItem.member.nickName}
