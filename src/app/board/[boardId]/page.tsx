@@ -137,6 +137,17 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
     const createdAt = postData?.result.post.createDateTime;
     const formattedDate = formatDate(createdAt);
 
+    const handleProfileClick = () => {
+        console.log("click");
+        if (memberDatas.result.memberId == userInfo.memberId) {
+            router.push("/mypage");
+        } else {
+            router.push(`/user/${memberDatas.result.memberId}`);
+        }
+    };
+
+    console.log(memberDatas, userInfo)
+
     const LikeHandler = async () => {
         try {
             await postBoardLike(Number(params.boardId));
@@ -278,6 +289,7 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
                             alt=""
                             width={60}
                             height={60}
+                            onClick={handleProfileClick}
                         />
                         <div className="flex flex-col text-[2rem] ml-[2rem]">
                             <span className="font-medium text-black">

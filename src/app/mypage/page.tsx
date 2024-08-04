@@ -51,9 +51,10 @@ const MyPage = () => {
   const { data: totalBoardCount } = useQuery({
     queryKey: ['boardPostCount'],
     queryFn: () => getTotalBoardCount(),
-    enabled: !!accessToken
+    enabled: !!accessToken,
   })
 
+  console.log(totalBoardCount)
   if (isLoading) {
     return <div>Loading...</div>;
   }
