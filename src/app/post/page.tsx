@@ -21,6 +21,7 @@ import postBoard from '@/services/board/post/postBoard'
 import { uploadImage } from '@/services/blog'
 import { UploadedImage } from '@/types/ootd'
 import { useRouter } from 'next/navigation'
+import Swal from 'sweetalert2'
 
 const countries: { [key: string]: string } = {
     KOR: '대한민국',
@@ -251,7 +252,20 @@ function PostWrite() {
         try {
             console.log(postRequest, ticketRequest)
             await postBoard(postRequest, ticketRequest);
-            router.push('/');
+            Swal.fire({
+                icon: 'success',
+                title: 'TICKET 게시글을 올렸습니다.',
+                confirmButtonText: '확인',
+                confirmButtonColor: '#FB3463',
+                customClass: {
+                    popup: 'swal-custom-popup',
+                    icon: 'swal-custom-icon'
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    router.push('/');
+                }
+            });
         } catch (e) {
 
         }
@@ -283,6 +297,8 @@ function PostWrite() {
             }
         }
     };
+
+
     console.log(tags)
     return (
         <div>

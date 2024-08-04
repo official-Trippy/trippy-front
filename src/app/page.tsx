@@ -9,13 +9,15 @@ import Cookies from "js-cookie";
 import Header from "@/components/shared/header/Header";
 import getBoard from "@/services/board/get/getBoard";
 import { useEffect, useState } from "react";
+import { useUserStore } from "@/store/useUserStore";
 
 
 export default function Home() {
   const accessToken = Cookies.get("accessToken");
   const [allPosts, setAllPosts] = useState(0);
   const [visibleCards, setVisibleCards] = useState(4);
-  const [isLikeNum, setIsLikeNum] = useState([])
+  const [isLikeNum, setIsLikeNum] = useState([]);
+  const { userInfo, loading, fetchUserInfo } = useUserStore();
 
   useEffect(() => {
     const handleResize = () => {
@@ -88,9 +90,7 @@ export default function Home() {
           </div>
         </div>
       </Recommend>
-
-      <RecentPost allPosts={allPosts} setAllPosts={setAllPosts} boardData={boardData} />
-
+      <RecentPost allPosts={allPosts} setAllPosts={setAllPosts} boardData={boardData} userInfo={userInfo} />
     </div>
   );
 }

@@ -61,3 +61,12 @@ export async function getUserBoard(size: number, page: number, orderType: string
         return null;
     }
 }
+
+export async function getFollowBoard(memberId: string) {
+    try {
+        const res = await axios.get(`${backendUrl}/api/member/following?memberId=${memberId}`);
+        return res.data;
+    } catch (e) {
+        return null;
+    }
+}
