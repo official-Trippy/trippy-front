@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Image from "next/image";
 import { useQuery } from "react-query";
 import { MemberInfo } from "@/services/auth";
@@ -37,7 +37,15 @@ const UserInformation: React.FC<{ setActiveTab: (tab: string) => void }> = ({
   if (isLoading) return <div></div>;
   if (error) return <div></div>;
 
-  const userData = data.result;
+  const userData = data?.result;
+
+  useEffect(() => {
+    if (!accessToken) {
+      router.refresh();
+      router.push('/');
+    }
+  }, [router]);
+
 
   return (
     <div className="w-full flex flex-col relative">
@@ -45,7 +53,7 @@ const UserInformation: React.FC<{ setActiveTab: (tab: string) => void }> = ({
         <div className="absolute top-[-150px] w-[200px] h-auto bg-white px-8 py-4 rounded-lg shadow-lg flex flex-col items-center">
           <div className="relative my-4">
             <Image
-              src={userData.profileImageUrl}
+              src={userData?.profileImageUrl}
               alt="Profile"
               width={80}
               height={80}
@@ -57,7 +65,7 @@ const UserInformation: React.FC<{ setActiveTab: (tab: string) => void }> = ({
               }}
             />
           </div>
-          <h1 className="text-4xl font-bold mt-[10px]">{userData.nickName}</h1>
+          <h1 className="text-4xl font-bold mt-[10px]">{userData?.nickName}</h1>
           <span
             style={{
               overflowWrap: 'break-word',
@@ -65,21 +73,21 @@ const UserInformation: React.FC<{ setActiveTab: (tab: string) => void }> = ({
             }}
             className="text-xl text-gray-600 mt-[5px] text-center"
           >
-            {userData.email}
+            {userData?.email}
           </span>
           <div className="mt-[10px] flex px-4">
             <span
               className="text-sm text-gray-600 cursor-pointer"
               onClick={() => setActiveTab(TABS.FOLLOWER)}
             >
-              팔로워 {userData.followerCnt}
+              팔로워 {userData?.followerCnt}
             </span>
             <span className="text-sm text-gray-600">&ensp;|&ensp;</span>
             <span
               className="text-sm text-gray-600 cursor-pointer"
               onClick={() => setActiveTab(TABS.FOLLOWING)}
             >
-              팔로윙 {userData.followingCnt}
+              팔로윙 {userData?.followingCnt}
             </span>
           </div>
           <button
@@ -90,12 +98,12 @@ const UserInformation: React.FC<{ setActiveTab: (tab: string) => void }> = ({
           </button>
           <button
             className="mt-[20px] pl-[20px] pr-[20px] py-2 bg-neutral-100 rounded-lg justify-center items-center inline-flex"
-            onClick={() => doFollow(userData.memberId)}
+            onClick={() => doFollow(userData?.memberId)}
           >
             팔로우
           </button>
           <span className="mt-[10px] text-sm text-gray-600">
-            {userData.blogIntroduce}
+            {userData?.blogIntroduce}
           </span>
         </div>
       </div>
