@@ -23,7 +23,7 @@ export async function getPost(postId: number) {
 export const getTotalBoardCount = async (): Promise<number> => {
     try {
         const response = await axios.get<{ result: number }>(
-            `${backendUrl}/api/post/count/all?type=POST`
+            `${backendUrl}/api/post/count/my?type=POST`
         );
         return response.data.result;
     } catch (error) {

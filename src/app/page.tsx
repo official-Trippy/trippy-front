@@ -61,6 +61,7 @@ export default function Home() {
   return (
     <div>
       <Header />
+      {/*추천 알고리즘 구현해야됨*/}
       <Recommend memberData={memberData} isLoading={isLoading}>
         <div className="flex mt-[4rem]">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 w-full">
