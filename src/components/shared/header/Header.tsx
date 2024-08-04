@@ -78,7 +78,7 @@ const Header = () => {
                 </button>
                 {isDropdownOpen && (
                   <div
-                    className="absolute w-[36rem] -ml-[13rem] top-[3.6rem] rounded-[0.8rem] shadowalltop rounded-lg animate-dropdown"
+                    className="absolute w-[31rem] mt-[1rem] -ml-[10rem] top-[3.6rem] rounded-[0.8rem] bg-white shadowalltop rounded-lg animate-dropdown z-20"
                     style={{ opacity: 0, transform: 'translateY(-10px)' }}
                   >
                     <Link href="/post">
@@ -87,8 +87,8 @@ const Header = () => {
                           <div className="flex items-start">
                             <Image className="mr-[1.7rem] mt-[0.5rem]" src={postwriteImg} width={24} height={24} alt="" />
                             <div>
-                              <h1 className="text-[2rem] font-medium text-black">블로그 티켓 글쓰기</h1>
-                              <span className="text-[1.3rem] font-medium text-[#9D9D9D]">여행에서 겪었던 이야기를 기록해 보세요.</span>
+                              <h1 className="text-[1.6rem] font-medium text-black">블로그 티켓 글쓰기</h1>
+                              <span className="text-[1.4rem] font-normal text-[#9D9D9D]">여행에서 겪었던 이야기를 기록해 보세요.</span>
                             </div>
                           </div>
                         </div>
@@ -100,8 +100,8 @@ const Header = () => {
                           <div className="flex items-start">
                             <Image className="mr-[1.7rem] mt-[0.5rem]" src={postwriteImg} width={24} height={24} alt="" />
                             <div>
-                              <h1 className="text-[2rem] font-medium text-black">OOTD 글쓰기</h1>
-                              <span className="text-[1.3rem] font-medium text-[#9D9D9D]">여행 중 나의 특별한 OOTD를 공유해보세요.</span>
+                              <h1 className="text-[1.6rem] font-medium text-black">OOTD 글쓰기</h1>
+                              <span className="text-[1.4rem] font-normal text-[#9D9D9D]">여행 중 나의 특별한 OOTD를 공유해보세요.</span>
                             </div>
                           </div>
                         </div>

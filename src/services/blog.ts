@@ -80,7 +80,7 @@ export const uploadImage = async (file: File) => {
     const response = await axios.post(`${backendUrl}/api/image`, formData, {
       headers: {
         "Content-Type": "multipart/form-data",
-      }, 
+      },
     });
 
     if (response.data.isSuccess) {
