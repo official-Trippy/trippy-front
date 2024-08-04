@@ -17,6 +17,7 @@ import RightIcon from '../../../public/icon_right.svg';
 import UpIcon from '../../../public/arrow_up.svg';
 import DownIcon from '../../../public/arrow_down.svg';
 import Swal from "sweetalert2";
+import { AxiosError } from "axios";
 
 const EditInfo = () => {
   const { userInfo, updateUserInfo } = useUserStore(); 
@@ -164,6 +165,7 @@ const EditInfo = () => {
     return regex.test(blogName);
   };
 
+
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0];
@@ -171,11 +173,52 @@ const EditInfo = () => {
         const response = await uploadImage(file);
         setProfileImage(response.result);
         setImageUploaded(true);
-      } catch (error) {
+      } catch (error: unknown) {
         console.error("Image upload failed:", error);
+  
+        if (error instanceof AxiosError) {
+          if (error.response && error.response.status === 413) {
+            Swal.fire({
+              icon: 'error',
+              title: '이미지 용량이 너무 큽니다.',
+              text: '5MB 이하의 이미지를 선택해주세요.',
+              confirmButtonText: '확인',
+              confirmButtonColor: '#FB3463',
+              customClass: {
+                popup: 'swal-custom-popup',
+                icon: 'swal-custom-icon'
+              }
+            });
+          } else {
+            Swal.fire({
+              icon: 'error',
+              title: '이미지 업로드 실패',
+              text: '이미지 업로드에 실패했습니다. 다시 시도해주세요.',
+              confirmButtonText: '확인',
+              confirmButtonColor: '#FB3463',
+              customClass: {
+                popup: 'swal-custom-popup',
+                icon: 'swal-custom-icon'
+              }
+            });
+          }
+        } else {
+          Swal.fire({
+            icon: 'error',
+            title: '알 수 없는 오류 발생',
+            text: '다시 시도해주세요.',
+            confirmButtonText: '확인',
+            confirmButtonColor: '#FB3463',
+            customClass: {
+              popup: 'swal-custom-popup',
+              icon: 'swal-custom-icon'
+            }
+          });
+        }
       }
     }
   };
+  
 
   const handleImageDelete = () => {
     setProfileImage(null);
@@ -347,22 +390,23 @@ const EditInfo = () => {
             <div className="sign-up-info">프로필 사진</div>
             <div className="mt-[4rem] flex items-center">
               <div className="rounded-full overflow-hidden w-[16rem] h-[16rem]">
+              <div className="relative w-[160px] h-[160px]">
                 {profileImage ? (
                   <Image
                     src={profileImage.accessUri}
                     alt="Profile"
-                    width="0"
-                    height="0"
-                    sizes="100vw"
-                    className="w-full h-auto"
-                    style={{ width: 160, height: 160 }} />
-                ) : (
-                  <Image
+                    layout="fill"
+                    objectFit="cover"
+                    className="rounded-full" />
+                  ) : (
+                    <Image
                     src={userInfo?.profileImageUrl || DefaultProfileImg}
                     alt="Default Profile"
-                    width={160}
-                    height={160} />
-                )}
+                    layout="fill"
+                    objectFit="cover"
+                    className="rounded-full" />
+                  )}
+                </div>
               </div>
               <div className="ml-4 flex flex-col">
                 <input

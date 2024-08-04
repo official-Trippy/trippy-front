@@ -104,7 +104,14 @@ const RecentOotdPost: React.FC = () => {
             <div className="py-8">
               <div className="flex items-center justify-between">
                 <div className="flex items-center">
-                  <Image className="rounded-full" src={item.member.profileUrl} width={24} height={24} alt="Profile" />
+                <div className="relative w-[24px] h-[24px]">
+                  <Image
+                    src={item.member.profileUrl}
+                    alt="Profile"
+                    layout="fill"
+                    objectFit="cover"
+                    className="rounded-full" />
+                </div>
                   <span className="text-[#6B6B6B] ml-[5px]">{item.member.nickName}</span>
                 </div>
                 <div className="flex items-center mt-2">

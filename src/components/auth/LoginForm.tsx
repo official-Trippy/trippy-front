@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import { FormEvent, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -22,6 +22,15 @@ const LoginForm = () => {
   const checkLoginStatus = async () => {
     const accessToken = Cookies.get("accessToken");
     const refreshToken = Cookies.get("refreshToken");
+    const role = Cookies.get("role");
+
+    if (role) {
+      Cookies.remove("accessToken");
+      Cookies.remove("refreshToken");
+      Cookies.remove('role');
+      router.push("/");
+      router.refresh();
+    }
     if (accessToken && refreshToken) {
       router.push("/");
     }
@@ -33,10 +42,12 @@ const LoginForm = () => {
       const response = await Login(memberId, password);
       console.log(response);
       const { accessToken, refreshToken, role } = response.result;
-      Cookies.set("accessToken", accessToken);
-      Cookies.set("refreshToken", refreshToken);
 
       if (role === "GUEST") {
+        Cookies.set("accessToken", accessToken);
+        Cookies.set("refreshToken", refreshToken);
+        Cookies.set("role", response.result.role);
+
         Swal.fire({
           icon: 'info',
           title: '기존에 회원가입을 \n완료하지 않았습니다.',
@@ -45,6 +56,8 @@ const LoginForm = () => {
           router.push("/blogRegister");
         });
       } else if (role === "MEMBER" || role === "ADMIN") {
+        Cookies.set("accessToken", accessToken);
+        Cookies.set("refreshToken", refreshToken);
         router.push("/");
       }
       router.refresh();

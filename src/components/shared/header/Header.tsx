@@ -12,18 +12,21 @@ import { useRouter } from "next/navigation";
 import postwriteImg from "@/dummy/postwrite.svg"
 import postwriteImg2 from "@/dummy/postwrite2.svg"
 import Cookies from "js-cookie";
+import { access } from "fs";
 
 const Header = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-
-
   const { userInfo, loading, fetchUserInfo } = useUserStore();
   const router = useRouter();
 
+  const accessToken = Cookies.get("accessToken");
+
+
   useEffect(() => {
     fetchUserInfo();
+    console.log(userInfo);
   }, [fetchUserInfo]);
 
   const onClickLogin = () => {
@@ -64,7 +67,7 @@ const Header = () => {
         <div className="mr-4">{/* 검색창 컴포넌트 */}</div>
         {!loading && (
           <>
-            {userInfo ? (
+            {userInfo && accessToken ? (
               <div className="flex relative">
                 <button
                   className="w-[8.6rem] h-[3.5rem] bg-btn-color text-white px-7 py-2 rounded-lg mr-8"
