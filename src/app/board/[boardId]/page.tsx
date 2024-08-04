@@ -203,6 +203,11 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
         setReplyOpen(updatedReplyOpen);
     };
 
+    if (!postData || !postCommentData) {
+        return <div>Loading...</div>; // 데이터가 로딩 중일 때
+    }
+
+
     console.log(postData);
     return (
         <div>
