@@ -31,6 +31,7 @@ import commentPink from "@/dummy/comentpink.svg";
 import { useFollowingStore } from "@/store/useFollowingStore";
 import { doFollow, unfollow } from "@/services/follow";
 import FollowButton from "@/components/followControl/followButton";
+import { colorTicket } from "@/types/board";
 
 export default function BoardPage({ params }: { params: { boardId: number } }) {
     const accessToken = Cookies.get("accessToken");
@@ -202,7 +203,7 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
         setReplyOpen(updatedReplyOpen);
     };
 
-    console.log(memberDatas);
+    console.log(postData);
     return (
         <div>
             <Header />
@@ -217,7 +218,7 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
                 </div>
                 <div className="w-full h-[32rem] border border-[#D9D9D9] rounded-[1rem] flex mt-[2rem]">
                     <div
-                        className={`w-[15.4rem] h-full bg-[#55FBAF] rounded-l-[1rem]`}
+                        className={`w-[15.4rem] h-full ${colorTicket[postData.result.ticket.ticketColor] ? `bg-[${colorTicket[postData.result.ticket.ticketColor]}]` : ''} rounded-l-[1rem]`}
                     ></div>
                     <div className="w-full mt-[5rem] relative">
                         <div className="flex justify-center">
@@ -263,7 +264,7 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
                         </div>
                     </div>
                     <div
-                        className={`w-[60rem] h-full bg-[#55FBAF] rounded-r-[1rem] ml-auto`}
+                        className={`w-[60rem] h-full ${colorTicket[postData.result.ticket.ticketColor] ? `bg-[${colorTicket[postData.result.ticket.ticketColor]}]` : ''}  rounded-r-[1rem] ml-auto`}
                     >
                         <div className="absolute">
                             <div className="relative bg-white w-[4rem] h-[4rem] rounded-full -mt-[2rem] -ml-[2rem]"></div>
