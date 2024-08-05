@@ -108,9 +108,9 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
     <>
       <div className="container mx-auto p-4">
         <div className="w-full max-w-6xl mx-auto">
-          <div className="py-4 flex items-center justify-between">
+          <div className="py-12 flex items-center justify-between">
             <div className="flex items-center">
-            <div className="relative w-[48px] h-[48px]">
+            <div className="relative w-[68px] h-[68px]">
                 <Image
                   src={ootdItem.member.profileUrl}
                   alt="사용자 프로필"
@@ -120,8 +120,8 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
                   onClick={handleProfileClick}
                 />
               </div>
-              <div className="ml-4">
-                <span className="block font-bold text-xl ml-[2px]">
+              <div className="h-[48px] ml-4">
+                <span className="block font-bold text-[24px] ml-[2px]">
                   {ootdItem.member.nickName}
                 </span>
                 <div className="flex items-center gap-2">
