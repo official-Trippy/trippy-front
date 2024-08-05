@@ -8,11 +8,10 @@ import AlertImg from "../../../../public/AlertImg.png";
 import Profile from "../../../../public/Profile.png";
 import UserModal from "@/components/userInfo/userModal";
 import { useUserStore } from "@/store/useUserStore";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import postwriteImg from "@/dummy/postwrite.svg"
 import postwriteImg2 from "@/dummy/postwrite2.svg"
 import Cookies from "js-cookie";
-import { access } from "fs";
 
 const Header = () => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -20,9 +19,9 @@ const Header = () => {
 
   const { userInfo, loading, fetchUserInfo } = useUserStore();
   const router = useRouter();
+  const pathname = usePathname(); // 현재 경로를 가져옴
 
   const accessToken = Cookies.get("accessToken");
-
 
   useEffect(() => {
     fetchUserInfo();
@@ -37,7 +36,6 @@ const Header = () => {
     setModalVisible(!modalVisible);
   };
 
-
   return (
     <header className="header flex justify-between items-center w-[66%] mx-auto relative">
       <div className="flex items-center">
@@ -48,12 +46,12 @@ const Header = () => {
         </div>
         <div className="flex space-x-4 text-lg">
           <Link href="/">
-            <div className="text-gray-800 px-10" style={{ fontSize: "1.4rem" }}>
+            <div className={`text-gray-800 px-10 ${pathname === '/' ? 'font-bold' : ''}`} style={{ fontSize: "1.4rem" }}>
               홈
             </div>
           </Link>
           <Link href="/ootd">
-            <div className="text-gray-800" style={{ fontSize: "1.4rem" }}>
+            <div className={`text-gray-800 ${pathname === '/ootd' ? 'font-bold' : ''}`} style={{ fontSize: "1.4rem" }}>
               OOTD
             </div>
           </Link>
@@ -66,16 +64,6 @@ const Header = () => {
           <>
             {userInfo && accessToken ? (
               <div className="flex relative">
-                <button
-                  className="w-[8.6rem] h-[3.5rem] bg-btn-color text-white px-7 py-2 rounded-lg mr-8"
-                  style={{ fontSize: "1.6rem" }}
-                  onMouseEnter={() => setIsDropdownOpen(true)}
-                // onMouseLeave={() => {
-                //   setIsDropdownOpen(false)
-                // }}
-                >
-                  글쓰기
-                </button>
                 {isDropdownOpen && (
                   <div
                     className="absolute w-[31rem] mt-[1rem] -ml-[10rem] top-[3.6rem] rounded-[0.8rem] bg-white shadowalltop rounded-lg animate-dropdown z-20"
@@ -111,7 +99,7 @@ const Header = () => {
                     </Link>
                   </div>
                 )}
-                <div className="mr-8 w-[24px] my-auto">
+                <div className="mr-12 w-[24px] my-auto">
                   <Image src={AlertImg} alt="alert" />
                 </div>
                 <div className="w-[32px] my-auto relative">
@@ -154,6 +142,13 @@ const Header = () => {
                     }}
                   />
                 </div>
+                <button
+                  className="w-[8.6rem] h-[3.5rem] bg-btn-color text-white px-7 py-2 rounded-lg ml-16"
+                  style={{ fontSize: "1.6rem" }}
+                  onMouseEnter={() => setIsDropdownOpen(true)}
+                >
+                  글쓰기
+                </button>
               </div>
             ) : (
               <div>
