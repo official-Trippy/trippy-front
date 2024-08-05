@@ -345,7 +345,7 @@ function PostWrite() {
                     <div className='w-full mt-[5rem] relative'>
                         <div className='flex justify-center'>
                             <div>
-                                <h1 className='h-[10rem] text-[6rem] font-extrabold'>{selectedCountryCode}</h1>
+                                <h1 className='h-[10rem] text-[6rem] font-extrabold font-akira'>{selectedCountryCode}</h1>
                                 <div className='w-[18rem] h-[3.6rem] px-[2rem] shadowall rounded-[0.8rem] flex'>
                                     <input
                                         className='w-[12rem] text-[1.6rem] outline-none'
@@ -370,10 +370,10 @@ function PostWrite() {
                                     </div>
                                 )}
                             </div>
-                            <div className='relative bg-white z-10 mx-[5rem]'>
+                            <div className='relative bg-white z-10 ml-[7%] mr-[10%]'>
                                 {
                                     isTransport ? (
-                                        <div className='w-[6rem] h-[28rem] absolute z-10 bg-white shadowall rounded-full flex items-center justify-center mt-[2rem] flex-col space-y-9'>
+                                        <div className='w-[6rem] h-[28rem] absolute z-10 bg-white shadowall rounded-[3rem] flex items-center justify-center mt-[2rem] flex-col space-y-9'>
                                             {isImageIdx.slice(0, 5).map((item: any, index) => (
                                                 <Image
                                                     key={index}
@@ -395,7 +395,7 @@ function PostWrite() {
                                 }
                             </div>
                             <div className='ml-[5rem]'>
-                                <h1 className='h-[9rem] text-[6rem] font-extrabold'>{selectedCountryCode2}</h1>
+                                <h1 className='h-[9rem] text-[6rem] font-extrabold font-akira'>{selectedCountryCode2}</h1>
                                 <div className='w-[18rem] h-[3.6rem] px-[2rem] shadowall rounded-[0.8rem] flex mt-4'>
                                     <input
                                         className='w-[12rem] text-[1.6rem] outline-none'
@@ -422,7 +422,9 @@ function PostWrite() {
                             </div>
                         </div>
                         <div className='w-[95%] border-2 border-dashed border-[#CFCFCF] my-[3rem] mx-auto relative z-0' />
-                        <div className={`flex ml-[7rem] text-[1.4rem] font-extrabold text-[${bgColor}]`}>
+                        <div className={`flex ml-[7rem] text-[1.4rem] font-extrabold`}
+                            style={{ color: bgColor || 'inherit' }}
+                        >
                             <span className='w-[16rem]'>PASSENGER</span>
                             <span className='w-[25rem]'>DATE</span>
                             <span className='w-[8rem]'>GROUP</span>
