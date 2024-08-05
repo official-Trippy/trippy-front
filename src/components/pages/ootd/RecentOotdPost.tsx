@@ -148,7 +148,7 @@ const RecentOotdPost: React.FC = () => {
           <h1 className='font-bold text-[2rem]'>트리피인들의 다양한 스타일을 만나보세요</h1>
         )}
       </div>
-      <div className='flex text-[1.6rem] pt-[5rem] px-[1rem]'>
+      <div className='flex text-[1.6rem] py-16'>
         <span
           className={`pr-[1rem] cursor-pointer ${tab === 'ALL' ? 'font-bold text-[#fa3463]' : ''}`}
           onClick={() => handleTabChange('ALL')}
@@ -176,13 +176,12 @@ const RecentOotdPost: React.FC = () => {
           {ootdList.map((item) => (
             <div key={item.post.id} className="flex flex-col overflow-hidden cursor-pointer" onClick={() => handleOotdItemClick(item.post.id)}>
               {item.post.images.length > 0 && (
-                <div className="relative w-[304px] h-[381px] pt-[100%]">
+                <div className="relative w-full" style={{ aspectRatio: '303 / 381' }}>
                   <Image
-                    className="absolute top-0 left-0 w-full h-[381px] object-cover rounded-xl"
+                    className="absolute top-0 left-0 w-full h-full object-cover rounded-xl"
                     src={item.post.images[0].accessUri}
                     alt="OOTD"
-                    width={200}
-                    height={250}
+                    layout="fill"
                   />
                 </div>
               )}
