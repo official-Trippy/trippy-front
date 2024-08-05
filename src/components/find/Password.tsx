@@ -196,7 +196,7 @@ const Password = () => {
   
 
   return (
-    <div className="flex flex-col items-center justify-center w-[80%] mx-auto mt-[19rem]">
+    <div className="flex flex-col items-center justify-center w-[66%] mx-auto mt-[19rem]">
       <Image src={LogoMain} alt="Logo" className="w-[16.4rem] mx-auto" />
       {!showPasswordFields && (
         <><div className="flex flex-col mt-[6rem]">

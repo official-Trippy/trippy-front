@@ -7,7 +7,7 @@ import Link from "next/link";
 const Footer = () => {
     return (
         <div className="w-full h-[100px] fixed bottom-0 bg-neutral-500">
-            <div className="w-[80%] h-full mx-auto flex justify-between items-center">
+            <div className="w-[66%] h-full mx-auto flex justify-between items-center">
                 <div className="flex space-x-4 items-center h-full my-auto">
                     <div className="text-white text-base font-light font-['Pretendard']">서비스 이용약관</div>
                     <div className="text-white text-base font-light font-['Pretendard']">개인정보 처리방침</div>

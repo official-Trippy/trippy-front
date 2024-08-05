@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useTransition } from 'react';
+import React, { useState, useEffect, useRef, useTransition } from 'react';
 import Cookies from 'js-cookie';
 import { useQuery } from 'react-query';
 import Image from 'next/image';
@@ -11,7 +11,64 @@ import { MemberInfo } from '@/services/auth';
 import EmptyHeartIcon from '../../../../public/empty_heart_default.svg';
 import CommentIcon1 from '../../../../public/empty_comment_default.svg';
 
-const PAGE_SIZE = 8;
+const PAGE_SIZE = 12;
+
+interface TagContainerProps {
+  item: {
+    post: {
+      id: number;
+      body: string;
+      tags: string[];
+      images: { accessUri: string }[];
+      likeCount: number;
+      commentCount: number;
+    };
+    member: {
+      profileUrl: string;
+      nickName: string;
+    };
+  };
+}
+
+const TagContainer: React.FC<TagContainerProps> = ({ item }) => {
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const [visibleTags, setVisibleTags] = useState<string[]>(item.post.tags);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const tags = Array.from(container.children) as HTMLElement[];
+    let totalWidth = 0;
+    let visibleCount = 0;
+
+    tags.forEach((tag, index) => {
+      totalWidth += tag.offsetWidth + parseInt(getComputedStyle(tag).marginRight);
+
+      if (totalWidth <= container.offsetWidth) {
+        visibleCount = index + 1;
+      }
+    });
+
+    setVisibleTags(item.post.tags.slice(0, visibleCount));
+  }, [item.post.tags]);
+
+  return (
+    <div className="mt-4">
+      <h2 className="text-[1.2rem] font-medium text-[#6B6B6B]">{item.post.body}</h2>
+      <div className="flex flex-wrap mt-4 gap-2" ref={containerRef}>
+        {visibleTags.map((tag, index) => (
+          <span
+            key={index}
+            className="px-4 py-1 bg-neutral-100 rounded-3xl text-xl justify-center items-center gap-2.5 inline-flex text-[#9d9d9d]"
+          >
+            {tag}
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+};
 
 const RecentOotdPost: React.FC = () => {
   const accessToken = Cookies.get('accessToken');
@@ -44,7 +101,7 @@ const RecentOotdPost: React.FC = () => {
     ['ootdPosts', page, orderType, tab],
     () => fetchAllOotdPosts(page, PAGE_SIZE, orderType), 
     {
-      enabled: tab === 'ALL' && totalCount !== undefined // Fetch only if tab is 'ALL'
+      enabled: tab === 'ALL' && totalCount !== undefined 
     }
   );
 
@@ -81,7 +138,7 @@ const RecentOotdPost: React.FC = () => {
   const ootdList = tab === 'ALL' ? data?.result || [] : [];
 
   return (
-    <div className='w-[80%] mx-auto py-[5rem]'>
+    <div className='w-[66%] mx-auto py-[5rem]'>
       <div>
         {accessToken ? (
           <h1 className='font-bold text-[2rem]'>
@@ -91,7 +148,7 @@ const RecentOotdPost: React.FC = () => {
           <h1 className='font-bold text-[2rem]'>트리피인들의 다양한 스타일을 만나보세요</h1>
         )}
       </div>
-      <div className='flex text-[1.6rem] pt-[5rem] px-[1rem]'>
+      <div className='flex text-[1.6rem] py-16'>
         <span
           className={`pr-[1rem] cursor-pointer ${tab === 'ALL' ? 'font-bold text-[#fa3463]' : ''}`}
           onClick={() => handleTabChange('ALL')}
@@ -119,13 +176,12 @@ const RecentOotdPost: React.FC = () => {
           {ootdList.map((item) => (
             <div key={item.post.id} className="flex flex-col overflow-hidden cursor-pointer" onClick={() => handleOotdItemClick(item.post.id)}>
               {item.post.images.length > 0 && (
-                <div className="relative w-full h-0 pt-[100%] overflow-hidden">
+                <div className="relative w-full" style={{ aspectRatio: '303 / 381' }}>
                   <Image
                     className="absolute top-0 left-0 w-full h-full object-cover rounded-xl"
                     src={item.post.images[0].accessUri}
                     alt="OOTD"
-                    width={200}
-                    height={200}
+                    layout="fill"
                   />
                 </div>
               )}
@@ -159,16 +215,7 @@ const RecentOotdPost: React.FC = () => {
                     <span className="mx-2 text-[#cfcfcf]"> {item.post.commentCount}</span>
                   </div>
                 </div>
-                <div className="mt-4">
-                  <h2 className="text-[1.2rem] font-medium text-[#6B6B6B]">{item.post.body}</h2>
-                  <div className="flex flex-wrap mt-4 gap-2">
-                    {item.post.tags.map((tag, index) => (
-                      <span key={index} className="px-4 py-1 bg-neutral-100 rounded-3xl text-xl justify-center items-center gap-2.5 inline-flex text-[#9d9d9d]">
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                </div>
+                <TagContainer item={item} />
               </div>
             </div>
           ))}

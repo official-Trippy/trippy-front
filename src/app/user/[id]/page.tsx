@@ -75,12 +75,12 @@ const UserPage = ({ params }: { params: { id: string } }) => {
           objectFit="cover"
         />
       </div>
-      <div className="w-[80%] mx-auto">
+      <div className="w-[66%] mx-auto">
         <h1 className="w-[80%] absolute ml-auto text-right top-[320px] text-white text-4xl font-bold">
           {userData && userData.blogName}
         </h1>
       </div>
-      <div className="w-[80%] mx-auto flex p-4">
+      <div className="w-[66%] mx-auto flex p-4">
         <div className="w-[250px] mb-4">
           <UserProfile memberId={id} setActiveTab={setActiveTab} />
         </div>
