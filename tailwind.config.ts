@@ -14,7 +14,7 @@ const config: Config = {
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
       screens: {
-        'md': '800px', 
+        'md': '800px',
       },
       colors: {
         'btn-color': '#FB3463',
@@ -35,6 +35,9 @@ const config: Config = {
       },
       animation: {
         fall: 'fall 3.5s linear infinite',
+      },
+      fontFamily: {
+        akira: ['Akira Expanded', 'sans-serif'], // 기본 폰트를 지정합니다.
       },
     },
   },
