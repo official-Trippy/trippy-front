@@ -1,7 +1,10 @@
 import { getUserBoard } from "@/services/board/get/getBoard";
+import { colorTicket } from "@/types/board";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { useQuery } from "react-query";
+import air from '@/dummy/air.svg'
 
 
 interface userProps {
@@ -9,11 +12,12 @@ interface userProps {
   userBoardCount: number | undefined;
 }
 
-const PAGE_SIZE = 5
+const PAGE_SIZE = 8
 
 const UserTicket = ({ memberEmail, userBoardCount }: userProps) => {
   const [orderTypes, setOrderTypes] = useState("LATEST");
   const [pages, setPages] = useState(0);
+  const router = useRouter();
 
   const { data: userTicketData } = useQuery({
     queryKey: ['userTicketData'],
@@ -26,94 +30,61 @@ const UserTicket = ({ memberEmail, userBoardCount }: userProps) => {
     setPages(pageIndex);
   };
 
+  const handleBoardLink = (boardId: number) => {
+    router.push(`/board/${boardId}`)
+  }
+
   console.log(userTicketData)
   return (
-    <div className="mt-[3rem] grid grid-cols-1">
-      <div className="flex">
-        <h1 className="text-[2rem] font-semibold text-[#292929]">티켓</h1>
-        <span className="text-[2rem] font-semibold text-[#FB3463] ml-[0.8rem]">{userBoardCount}</span>
-        <select
-          className='flex w-[8rem] h-[3rem] ml-auto text-[1.5rem] font-medium selectshadow'
-          value={orderTypes}
-          onChange={(e) => setOrderTypes(e.target.value)}
-        >
-          <option value='LATEST'>최신순</option>
-          <option value='VIEW'>조회순</option>
-          <option value='LIKE'>인기순</option>
-        </select>
-      </div>
-      {userTicketData?.result.map((ticektDatas: any) => {
-        return (
-          <div className="w-full h-[32rem] border border-[#D9D9D9] rounded-[1rem] flex mt-[2rem]">
-            <div
-              className={`w-[15.4rem] h-full bg-[#55FBAF] rounded-l-[1rem]`}
-            ></div>
-            <div className="w-full mt-[5rem] relative">
-              <div className="flex justify-center">
-                <div>
-                  <h1 className="text-[6rem] font-extrabold">KOR</h1>
-                  <div className="w-[16rem] h-[3.6rem] pl-[2rem] rounded-[0.8rem] flex">
-                    <span className="text-[#9D9D9D] text-[2.4rem] font-semibold">
-                      {ticektDatas.ticket.departure}
-                    </span>
-                  </div>
-                </div>
-                <div className="relative flex items-center bg-white z-10 mx-[5rem]">
-                  {/* <Image className="" src={air} alt="비행기" /> */}
-                </div>
-                <div className="ml-[5rem]">
-                  <h1 className="text-[6rem] font-extrabold">KOR</h1>
-                  <div className="w-[16rem] h-[3.6rem] pl-[2rem] rounded-[0.8rem] flex">
-                    <span className="text-[#9D9D9D] text-[2.4rem] font-semibold">
-                      {ticektDatas.ticket.destination}
-                    </span>
-                  </div>
-                </div>
-              </div>
-              <div className="w-[95%] border-2 border-dashed border-[#CFCFCF] my-[4rem] mx-auto relative z-0" />
-              <div
-                className={`flex justify-center text-[1.4rem] font-extrabold text-[#55FBAF]`}
-              >
-                <span className="w-[16rem]">PASSENGER</span>
-                <span className="w-[25rem]">DATE</span>
-                <span className="w-[8rem]">GROUP</span>
-              </div>
-              <div
-                className={`flex justify-center text-[1.4rem] font-extrabold text-[#6B6B6B]`}
-              >
-                <span className="w-[16rem]">USERID</span>
-                <span className="w-[25rem]">
-                  {ticektDatas.ticket.startDate} ~{" "}
-                  {ticektDatas.ticket.endDate}
-                </span>
-                <span className="w-[8rem]">
-                  {ticektDatas.ticket.memberNum}
-                </span>
-              </div>
-            </div>
-            <div
-              className={`w-[60rem] h-full bg-[#55FBAF] rounded-r-[1rem] ml-auto`}
-            >
-              <div className="absolute">
-                <div className="relative bg-white w-[4rem] h-[4rem] rounded-full -mt-[2rem] -ml-[2rem]"></div>
-                <div className="relative bg-white w-[4rem] h-[4rem] rounded-full mt-[28rem] -ml-[2rem]"></div>
-              </div>
-              <label className="w-full h-full flex" htmlFor="input-file">
-                <div className="flex flex-col m-auto">
+    <div>
+      <div className="grid grid-cols-4 gap-12">
+        {userTicketData?.result.map((ticektDatas: any) => {
+          console.log(colorTicket[ticektDatas.ticket.ticketColor])
+          return (
+            <div key={ticektDatas.ticket.id} className={`flex-1 cursor-pointer `} onClick={() => { handleBoardLink(ticektDatas.post.id) }} >
+              {ticektDatas.post.images.length > 0 && (
+                <div className={`relative w-full pb-[100%] rounded-[1rem] ${colorTicket[ticektDatas.ticket.ticketColor] ? `bg-[${colorTicket[ticektDatas.ticket.ticketColor]}]` : ''}`}> {/* 컨테이너를 정사각형으로 설정 */}
                   <Image
-                    className="w-[23rem] h-[26rem] rounded-[1rem]"
-                    src={ticektDatas.ticket.image.accessUri}
-                    alt=""
-                    width={230}
-                    height={260}
+                    src={ticektDatas.post.images[0].accessUri}
+                    alt="OOTD"
+                    className="absolute inset-0 w-full h-full object-cover rounded-[1rem] p-[1.3rem]"
+                    width={200} // Width and height are for aspect ratio purposes
+                    height={200}
                   />
                 </div>
-              </label>
+              )}
+              <div className="font-normal font-['Pretendard'] shadowall rounded-[1rem] p-[1rem] flex">
+                <div className="mx-auto">
+                  <div className="flex flex-col">
+                    <span className={`text-[1.2rem] font-extrabold`} style={{ color: colorTicket[ticektDatas.ticket.ticketColor] || 'inherit' }}>
+                      PASSENGER
+                    </span>
+                    <span className="text-[1.2rem] font-medium text-[#6B6B6B]">USERID</span>
+                  </div>
+                  <div className="flex flex-col mt-[0.5rem]">
+                    <span className={`text-[1.2rem] font-extrabold`} style={{ color: colorTicket[ticektDatas.ticket.ticketColor] || 'inherit' }}>DATE</span>
+                    <span className="text-[1.2rem] font-medium text-[#6B6B6B]">{ticektDatas.ticket.startDate} ~<br /> {ticektDatas.ticket.endDate}</span>
+                  </div>
+                  <div className="flex flex-col mt-[0.5rem]">
+                    <span className={`text-[1.2rem] font-extrabold`} style={{ color: colorTicket[ticektDatas.ticket.ticketColor] || 'inherit' }}>GROUP</span>
+                    <span className="text-[1.2rem] font-medium text-[#6B6B6B]">{ticektDatas.ticket.memberNum}</span>
+                  </div>
+                </div>
+                <div className="mx-auto border border-dashed border-[#CFCFCF]" />
+                <div className="flex flex-col text-[3.2rem] font-extrabold font-akira mx-auto">
+                  <span>KOR</span>
+                  <Image className="mx-auto my-[1rem]" src={air} width={15} height={15} alt="air" />
+                  <span>KOR</span>
+                </div>
+              </div>
+
             </div>
-          </div>
-        )
-      })}
-      <div className="flex justify-center my-16">
+          )
+        }
+
+        )}
+      </div>
+      <div className="flex w-full justify-center my-16">
         {Array.from({ length: totalPages }, (_, index) => (
           <button
             key={index}

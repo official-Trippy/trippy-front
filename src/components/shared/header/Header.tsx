@@ -37,9 +37,6 @@ const Header = () => {
     setModalVisible(!modalVisible);
   };
 
-  const handleDropdownToggle = () => {
-    setIsDropdownOpen(!isDropdownOpen);
-  };
 
   return (
     <header className="header flex justify-between items-center w-[80%] mx-auto relative">
@@ -72,7 +69,10 @@ const Header = () => {
                 <button
                   className="w-[8.6rem] h-[3.5rem] bg-btn-color text-white px-7 py-2 rounded-lg mr-8"
                   style={{ fontSize: "1.6rem" }}
-                  onClick={handleDropdownToggle}
+                  onMouseEnter={() => setIsDropdownOpen(true)}
+                // onMouseLeave={() => {
+                //   setIsDropdownOpen(false)
+                // }}
                 >
                   글쓰기
                 </button>
@@ -80,6 +80,8 @@ const Header = () => {
                   <div
                     className="absolute w-[31rem] mt-[1rem] -ml-[10rem] top-[3.6rem] rounded-[0.8rem] bg-white shadowalltop rounded-lg animate-dropdown z-20"
                     style={{ opacity: 0, transform: 'translateY(-10px)' }}
+                    onMouseEnter={() => setIsDropdownOpen(true)} // 드롭다운에 마우스가 올라가면 열려있도록 유지
+                    onMouseLeave={() => setIsDropdownOpen(false)}
                   >
                     <Link href="/post">
                       <div className="px-[1.3rem] pt-[1.2rem] rounded-lg border-b border-white">

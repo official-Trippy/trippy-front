@@ -31,6 +31,7 @@ import commentPink from "@/dummy/comentpink.svg";
 import { useFollowingStore } from "@/store/useFollowingStore";
 import { doFollow, unfollow } from "@/services/follow";
 import FollowButton from "@/components/followControl/followButton";
+import { colorTicket } from "@/types/board";
 
 export default function BoardPage({ params }: { params: { boardId: number } }) {
     const accessToken = Cookies.get("accessToken");
@@ -139,14 +140,14 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
 
     const handleProfileClick = () => {
         console.log("click");
-        if (memberDatas.result.memberId == userInfo.memberId) {
+        if (postData.result.member.memberId == userInfo.memberId) {
             router.push("/mypage");
         } else {
-            router.push(`/user/${memberDatas.result.memberId}`);
+            router.push(`/user/${postData.result.member.memberId}`);
         }
     };
 
-    console.log(memberDatas, userInfo)
+    console.log(postData, userInfo)
 
     const LikeHandler = async () => {
         try {
@@ -202,7 +203,12 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
         setReplyOpen(updatedReplyOpen);
     };
 
-    console.log(memberDatas);
+    if (!postData || !postCommentData) {
+        return <div>Loading...</div>; // 데이터가 로딩 중일 때
+    }
+
+
+    console.log(postData);
     return (
         <div>
             <Header />
@@ -217,23 +223,23 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
                 </div>
                 <div className="w-full h-[32rem] border border-[#D9D9D9] rounded-[1rem] flex mt-[2rem]">
                     <div
-                        className={`w-[15.4rem] h-full bg-[#55FBAF] rounded-l-[1rem]`}
+                        className={`w-[15.4rem] h-full ${colorTicket[postData.result.ticket.ticketColor] ? `bg-[${colorTicket[postData.result.ticket.ticketColor]}]` : ''} rounded-l-[1rem]`}
                     ></div>
                     <div className="w-full mt-[5rem] relative">
                         <div className="flex justify-center">
                             <div>
-                                <h1 className="text-[6rem] font-extrabold">KOR</h1>
+                                <h1 className="text-[6rem] font-extrabold font-akira">KOR</h1>
                                 <div className="w-[16rem] h-[3.6rem] pl-[2rem] rounded-[0.8rem] flex">
                                     <span className="text-[#9D9D9D] text-[2.4rem] font-semibold">
                                         {postData?.result.ticket.departure}
                                     </span>
                                 </div>
                             </div>
-                            <div className="relative flex items-center bg-white z-10 mx-[5rem]">
+                            <div className="relative flex -mt-[3.5rem] bg-white z-10 ml-[10%] mr-[5%]">
                                 <Image className="" src={air} alt="비행기" />
                             </div>
                             <div className="ml-[5rem]">
-                                <h1 className="text-[6rem] font-extrabold">KOR</h1>
+                                <h1 className="text-[6rem] font-extrabold font-akira">KOR</h1>
                                 <div className="w-[16rem] h-[3.6rem] pl-[2rem] rounded-[0.8rem] flex">
                                     <span className="text-[#9D9D9D] text-[2.4rem] font-semibold">
                                         {postData?.result.ticket.destination}
@@ -243,7 +249,8 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
                         </div>
                         <div className="w-[95%] border-2 border-dashed border-[#CFCFCF] my-[4rem] mx-auto relative z-0" />
                         <div
-                            className={`flex justify-center text-[1.4rem] font-extrabold text-[#55FBAF]`}
+                            className={`flex justify-center text-[1.4rem] font-extrabold text-[#55FBAF] font-akira`}
+                            style={{ color: colorTicket[postData?.result.ticket.ticketColor] || 'inherit' }}
                         >
                             <span className="w-[16rem]">PASSENGER</span>
                             <span className="w-[25rem]">DATE</span>
@@ -263,7 +270,7 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
                         </div>
                     </div>
                     <div
-                        className={`w-[60rem] h-full bg-[#55FBAF] rounded-r-[1rem] ml-auto`}
+                        className={`w-[60rem] h-full ${colorTicket[postData.result.ticket.ticketColor] ? `bg-[${colorTicket[postData.result.ticket.ticketColor]}]` : ''}  rounded-r-[1rem] ml-auto`}
                     >
                         <div className="absolute">
                             <div className="relative bg-white w-[4rem] h-[4rem] rounded-full -mt-[2rem] -ml-[2rem]"></div>

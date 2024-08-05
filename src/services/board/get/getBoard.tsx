@@ -44,7 +44,7 @@ export async function getBoardMyTotal(size: number, page: number, orderType: str
 export const getUserTotalBoardCount = async (memberId: string): Promise<number> => {
     try {
         const response = await axios.get<{ result: number }>(
-            `${backendUrl}/api/post/count/all?type=POST&memberId=${memberId}`
+            `${backendUrl}/api/post/count/by-member?type=POST&memberId=${memberId}`
         );
         return response.data.result;
     } catch (error) {
