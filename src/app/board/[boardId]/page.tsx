@@ -140,14 +140,14 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
 
     const handleProfileClick = () => {
         console.log("click");
-        if (memberDatas.result.memberId == userInfo.memberId) {
+        if (postData.result.member.memberId == userInfo.memberId) {
             router.push("/mypage");
         } else {
-            router.push(`/user/${memberDatas.result.memberId}`);
+            router.push(`/user/${postData.result.member.memberId}`);
         }
     };
 
-    console.log(memberDatas, userInfo)
+    console.log(postData, userInfo)
 
     const LikeHandler = async () => {
         try {
