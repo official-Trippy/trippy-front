@@ -228,18 +228,18 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
                     <div className="w-full mt-[5rem] relative">
                         <div className="flex justify-center">
                             <div>
-                                <h1 className="text-[6rem] font-extrabold">KOR</h1>
+                                <h1 className="text-[6rem] font-extrabold font-akira">KOR</h1>
                                 <div className="w-[16rem] h-[3.6rem] pl-[2rem] rounded-[0.8rem] flex">
                                     <span className="text-[#9D9D9D] text-[2.4rem] font-semibold">
                                         {postData?.result.ticket.departure}
                                     </span>
                                 </div>
                             </div>
-                            <div className="relative flex items-center bg-white z-10 mx-[5rem]">
+                            <div className="relative flex -mt-[3.5rem] bg-white z-10 ml-[10%] mr-[5%]">
                                 <Image className="" src={air} alt="비행기" />
                             </div>
                             <div className="ml-[5rem]">
-                                <h1 className="text-[6rem] font-extrabold">KOR</h1>
+                                <h1 className="text-[6rem] font-extrabold font-akira">KOR</h1>
                                 <div className="w-[16rem] h-[3.6rem] pl-[2rem] rounded-[0.8rem] flex">
                                     <span className="text-[#9D9D9D] text-[2.4rem] font-semibold">
                                         {postData?.result.ticket.destination}
@@ -249,7 +249,8 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
                         </div>
                         <div className="w-[95%] border-2 border-dashed border-[#CFCFCF] my-[4rem] mx-auto relative z-0" />
                         <div
-                            className={`flex justify-center text-[1.4rem] font-extrabold text-[#55FBAF]`}
+                            className={`flex justify-center text-[1.4rem] font-extrabold text-[#55FBAF] font-akira`}
+                            style={{ color: colorTicket[postData?.result.ticket.ticketColor] || 'inherit' }}
                         >
                             <span className="w-[16rem]">PASSENGER</span>
                             <span className="w-[25rem]">DATE</span>
