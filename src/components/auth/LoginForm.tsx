@@ -68,7 +68,7 @@ const LoginForm = () => {
   };
 
   return (
-    <div className="w-[80%] mx-auto mt-[15rem]">
+    <div className="w-[66%] mx-auto mt-[15rem]">
       <form onSubmit={handleSubmit} className="flex flex-col items-center">
         <Image src={LogoMain} alt="Logo" />
         <div className="flex flex-col mt-[6rem]">

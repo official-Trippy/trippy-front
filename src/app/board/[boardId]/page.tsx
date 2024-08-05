@@ -212,7 +212,7 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
     return (
         <div>
             <Header />
-            <div className="w-[80%] mx-auto">
+            <div className="w-[66%] mx-auto">
                 <div className="mt-[8rem] text-[#6B6B6B] font-semibold text-[2rem]">
                     <span>{postData?.result.member.blogName}의 블로그</span>
                 </div>

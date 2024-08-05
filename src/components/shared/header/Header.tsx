@@ -39,7 +39,7 @@ const Header = () => {
 
 
   return (
-    <header className="header flex justify-between items-center w-[80%] mx-auto relative">
+    <header className="header flex justify-between items-center w-[66%] mx-auto relative">
       <div className="flex items-center">
         <div className="mr-4">
           <Link href="/">

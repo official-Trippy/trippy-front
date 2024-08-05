@@ -11,7 +11,7 @@ const Recoootd: React.FC<HomeProps> = ({ children, memberData, isLoading }) => {
     const accessToken = Cookies.get('accessToken');
 
     return (
-        <div className='w-[80%] flex flex-col mx-auto'>
+        <div className='w-[66%] flex flex-col mx-auto'>
             {isLoading ? (
                 <div>Loading...</div>
             ) : (

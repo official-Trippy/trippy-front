@@ -11,7 +11,7 @@ const BlogRegisterThird = () => {
   const { userInfo } = useUserInfo();
 
   return (
-    <div className="flex flex-col items-center justify-center w-[80%] mx-auto mt-[15rem]">
+    <div className="flex flex-col items-center justify-center w-[66%] mx-auto mt-[15rem]">
       <Image src={BlogStep3} alt="Logo" className="w-[47.7rem] mx-auto" />
       <Image src={CheckIcon} alt="checkLogo" className="mx-auto mt-[10.9rem] w-[10.3rem] h-[10.3rem]" />
       <div className="sign-up-complete mt-[3.6rem] text-center">회원가입 완료</div>

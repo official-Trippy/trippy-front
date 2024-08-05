@@ -81,7 +81,7 @@ const RecentOotdPost: React.FC = () => {
   const ootdList = tab === 'ALL' ? data?.result || [] : [];
 
   return (
-    <div className='w-[80%] mx-auto py-[5rem]'>
+    <div className='w-[66%] mx-auto py-[5rem]'>
       <div>
         {accessToken ? (
           <h1 className='font-bold text-[2rem]'>
