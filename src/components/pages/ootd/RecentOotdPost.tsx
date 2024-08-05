@@ -119,13 +119,13 @@ const RecentOotdPost: React.FC = () => {
           {ootdList.map((item) => (
             <div key={item.post.id} className="flex flex-col overflow-hidden cursor-pointer" onClick={() => handleOotdItemClick(item.post.id)}>
               {item.post.images.length > 0 && (
-                <div className="relative w-full h-0 pt-[100%] overflow-hidden">
+                <div className="relative w-[304px] h-[381px] pt-[100%]">
                   <Image
-                    className="absolute top-0 left-0 w-full h-full object-cover rounded-xl"
+                    className="absolute top-0 left-0 w-full h-[381px] object-cover rounded-xl"
                     src={item.post.images[0].accessUri}
                     alt="OOTD"
                     width={200}
-                    height={200}
+                    height={250}
                   />
                 </div>
               )}
