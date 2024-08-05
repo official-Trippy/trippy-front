@@ -1,13 +1,22 @@
 // components/SearchBar.tsx
 
 import React, { useState } from "react";
-import { FaSearch } from "react-icons/fa"; // Import the search icon from react-icons
+import { useRouter } from "next/navigation"; // Import from next/navigation
+import { FaSearch } from "react-icons/fa";
 
 const SearchBar: React.FC = () => {
   const [query, setQuery] = useState("");
+  const router = useRouter();
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setQuery(event.target.value);
+  };
+
+  const handleSearch = () => {
+    if (query.trim() !== "") {
+      // Encode the query properly
+      router.push(`/search/${encodeURIComponent(query)}`);
+    }
   };
 
   return (
@@ -22,12 +31,18 @@ const SearchBar: React.FC = () => {
           style={{
             backgroundColor: "#F5F5F5",
           }}
+          onKeyDown={(event) => {
+            if (event.key === "Enter") {
+              handleSearch();
+            }
+          }}
         />
         <FaSearch
           className="absolute right-3 text-gray-600 cursor-pointer"
           style={{
             color: "#6B6B6B",
           }}
+          onClick={handleSearch}
         />
       </div>
     </div>
