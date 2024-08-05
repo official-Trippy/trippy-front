@@ -11,7 +11,7 @@ import { MemberInfo } from '@/services/auth';
 import EmptyHeartIcon from '../../../../public/empty_heart_default.svg';
 import CommentIcon1 from '../../../../public/empty_comment_default.svg';
 
-const PAGE_SIZE = 8;
+const PAGE_SIZE = 12;
 
 interface TagContainerProps {
   item: {
