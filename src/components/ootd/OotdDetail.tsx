@@ -66,25 +66,34 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
       );
       return;
     }
-  
+      
     const result = await Swal.fire({
       title: '정말 삭제하시겠습니까?',
-      text: "이 작업은 되돌릴 수 없습니다!",
       icon: 'warning',
+      iconColor: '#FB3463', 
       showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
       confirmButtonText: '네',
-      cancelButtonText: '아니오'
+      cancelButtonText: '아니오',
+      confirmButtonColor: '#FB3463', 
+      customClass: {
+        popup: 'swal-custom-popup',
+        icon: 'swal-custom-icon'
+      }
     });
   
     if (result.isConfirmed) {
       try {
         await deleteOotdPost(data.result.post.id);
-        await Swal.fire(
-          '삭제 완료',
-          '삭제를 완료했습니다.',
-          'success'
+        await Swal.fire({
+          icon: 'success',
+          title: '게시글을 삭제하였습니다.',
+          confirmButtonText: '확인',
+          confirmButtonColor: '#FB3463', 
+          customClass: {
+            popup: 'swal-custom-popup',
+            icon: 'swal-custom-icon'
+          }
+        }    
         );
         router.push('/ootd');
       } catch (error) {
