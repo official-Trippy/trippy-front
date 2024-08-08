@@ -9,6 +9,7 @@ export async function showFollows(memberId: string) {
     const response = await axios.get(
       `${backendUrl}/api/member/follower?memberId=${memberId}`
     );
+    console.log(response.data);
     return response.data;
   } catch (error) {
     throw new Error(`Error during showFollowers: ${error}`);
