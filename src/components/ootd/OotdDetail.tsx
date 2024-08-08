@@ -18,6 +18,7 @@ import { getWeatherStatusInKorean } from "@/constants/weatherTransition";
 import { useRouter } from "next/navigation";
 import FollowButton from "../followControl/followButton";
 import Cookies from "js-cookie";
+import CabapIcon from "../../../public/icon_cabap.svg";
 
 interface OotdDetailProps {
   id: number;
@@ -34,6 +35,8 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
   const userInfo = useUserStore((state) => state.userInfo);
 
   const userMemberId = userInfo?.memberId;
+
+  console.log(userMemberId);
 
   const router = useRouter();
 
@@ -108,7 +111,7 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
     <>
       <div className="container mx-auto p-4">
         <div className="w-full max-w-6xl mx-auto">
-          <div className="py-12 flex items-center justify-between">
+          <div className="py-12 flex items-center">
             <div className="flex items-center">
             <div className="relative w-[68px] h-[68px]">
                 <Image
@@ -121,7 +124,7 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
                 />
               </div>
               <div className="h-[48px] ml-4">
-                <span className="block font-bold text-[24px] ml-[2px]">
+                <span className="block font-bold text-[32px] ml-[2px]">
                   {ootdItem.member.nickName}
                 </span>
                 <div className="flex items-center gap-2">
@@ -139,14 +142,23 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
                 </div>
               </div>
             </div>
+            <div className="ml-auto flex">
             <div className="flex items-center space-x-2">
               <FollowButton
                 postMemberId={data.result.member.memberId}
                 userMemberId={userMemberId}
               />
-
               <i className="far fa-bookmark text-xl"></i>
               <i className="fas fa-ellipsis-h text-xl"></i>
+            </div>
+            {userMemberId === data.result.member.memberId && (
+              <Image
+                src = {CabapIcon}
+                alt = 'cabap'
+                width={24}
+                height={24}
+              />
+            )}
             </div>
           </div>
           <div className="relative">
