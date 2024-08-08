@@ -84,7 +84,7 @@ const UserModal: React.FC<
               className="text-neutral-500 text-2xl font-normal font-Pretendard cursor-pointer"
               onClick={handleMyPage}
             >
-              설정
+              마이페이지
             </span>
             <span
               className="text-rose-500 text-2xl font-normal font-Pretendard cursor-pointer ml-[10px]"
