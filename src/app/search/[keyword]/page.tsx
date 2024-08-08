@@ -127,9 +127,9 @@ const SearchPage = () => {
   console.log(posts.length);
 
   return (
-    <div className="w-[65%] mx-auto min-h-screen bg-white">
+    <div className="w-full min-h-screen bg-white">
       <Header />
-      <div className="w-full mt-8 ml-[50px]">
+      <div className="w-[80%]  mx-auto  mt-8 px-10">
         <h1 className="text-4xl font-semibold mb-6">
           <span className="text-[#FB3463]">{RealKeyword}</span>에 대한 검색 결과
         </h1>

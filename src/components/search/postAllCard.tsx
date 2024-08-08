@@ -30,11 +30,11 @@ const PostAllCard: React.FC<PostCardProps> = ({ post }) => {
         <img
           src={postDetails?.images[0]?.accessUri}
           alt={postDetails?.title}
-          className="w-full h-auto rounded-lg"
+          className="w-full h-auto rounded-lg h-full"
         />
       </div>
 
-      <div className="w-2/3">
+      <div className="w-2/3 ml-[10px]">
         <h2 className="text-3xl font-semibold mb-3">{postDetails?.title}</h2>
 
         <p className="text-gray-800 mb-3">{postDetails?.body}</p>
@@ -51,6 +51,11 @@ const PostAllCard: React.FC<PostCardProps> = ({ post }) => {
         </div>
         {/* 메타데이터 */}
         <div className="flex items-center space-x-6">
+          <img
+            src={member?.profileUrl}
+            alt=""
+            className="w-[30px] rounded-full h-[30px]"
+          />
           <p className="text-gray-800 font-semibold">{member?.nickName}</p>
           <p className="text-gray-600 text-sm">
             {postDetails?.likeCount} Likes

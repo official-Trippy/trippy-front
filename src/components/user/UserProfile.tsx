@@ -3,7 +3,8 @@ import Image from "next/image";
 import { useQuery } from "react-query";
 import { fetchUserProfile } from "@/services/ootd.ts/ootdGet";
 import { UserProfileResponse } from "@/types/ootd";
-import { doFollow } from "@/services/follow";
+import { useUserStore } from "@/store/useUserStore";
+import FollowButton from "../followControl/followButton";
 
 const TABS = {
   FOLLOWER: "FOLLOWER",
@@ -15,21 +16,37 @@ interface UserProfileProps {
   setActiveTab: (tab: string) => void;
 }
 
-const UserProfile: React.FC<UserProfileProps> = ({ memberId, setActiveTab }) => {
+const UserProfile: React.FC<UserProfileProps> = ({
+  memberId,
+  setActiveTab,
+}) => {
   const { data, isLoading, error } = useQuery<UserProfileResponse>(
-    ['userProfile', memberId],
+    ["userProfile", memberId],
     () => fetchUserProfile(memberId),
     {
       staleTime: Infinity,
       cacheTime: Infinity,
     }
   );
+  const userInfo = useUserStore((state) => state.userInfo);
+
+  const targetMemberId = data?.result?.email; // Ensure safe navigation
+  const userMemberId = userInfo?.memberId;
+  console.log(targetMemberId);
+  console.log(userMemberId);
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error loading data</div>;
   if (!data) return null;
 
-  const { nickName, profileImageUrl, blogIntroduce, followerCnt, followingCnt, email } = data.result;
+  const {
+    nickName,
+    profileImageUrl,
+    blogIntroduce,
+    followerCnt,
+    followingCnt,
+    email,
+  } = data.result;
 
   return (
     <div className="w-full flex flex-col relative">
@@ -50,9 +67,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ memberId, setActiveTab }) => 
             />
           </div>
           <h1 className="text-4xl font-bold mt-[10px]">{nickName}</h1>
-          <span className="text-xl text-gray-600 mt-[5px]">
-            {email}
-          </span>
+          <span className="text-xl text-gray-600 mt-[5px]">{email}</span>
           <div className="mt-[10px] flex px-4">
             <span
               className="text-sm text-gray-600 cursor-pointer"
@@ -68,12 +83,16 @@ const UserProfile: React.FC<UserProfileProps> = ({ memberId, setActiveTab }) => 
               팔로잉 {followingCnt}
             </span>
           </div>
-          <button
-            className="mt-[20px] pl-[20px] pr-[20px] py-2 bg-neutral-100 rounded-lg justify-center items-center inline-flex"
-            onClick={() => doFollow(memberId)}
-          >
-            팔로우
-          </button>
+          <div className="ml-auto flex items-center mt-[10px] mr-[50px]">
+            {targetMemberId &&
+              userMemberId && ( // Check both IDs are available
+                <FollowButton
+                  postMemberId={targetMemberId}
+                  userMemberId={userMemberId}
+                />
+              )}
+          </div>
+
           <span className="mt-[10px] text-sm text-gray-600">
             {blogIntroduce}
           </span>
@@ -84,6 +103,3 @@ const UserProfile: React.FC<UserProfileProps> = ({ memberId, setActiveTab }) => 
 };
 
 export default UserProfile;
-
-
-

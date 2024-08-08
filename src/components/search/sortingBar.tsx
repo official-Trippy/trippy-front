@@ -27,7 +27,7 @@ const SortingBar: React.FC<SortingBarProps> = ({
   ];
 
   return (
-    <div className="flex justify-between items-center mb-4 mr-[320px] mb-[50px] mt-[30px]">
+    <div className="flex justify-between items-center mb-4 mr-[520px] mb-[50px] mt-[30px]">
       <div className="flex space-x-4">
         {postTypes.map((type) => (
           <button
