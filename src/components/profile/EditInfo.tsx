@@ -384,7 +384,7 @@ const EditInfo = () => {
   return (
     <><div className="relative w-full h-[300px]">
       <Image src={backgroundImg} alt="Background" layout="fill" objectFit="cover" />
-    </div><div className="w-[80%] mx-auto">
+    </div><div className="w-[66%] mx-auto">
         <div className="mt-[8rem]">
           <div className="mt-[6.82rem]">
             <div className="sign-up-info">프로필 사진</div>

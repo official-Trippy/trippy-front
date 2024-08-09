@@ -39,7 +39,7 @@ const BlogRegisterSecond = () => {
   };
 
   return (
-    <div className="w-[80%] mx-auto mt-[15rem]">
+    <div className="w-[66%] mx-auto mt-[15rem]">
       <Image src={BlogStep2} alt="Logo" className="w-[47.7rem] mx-auto" />
       <div className="mt-[8rem]">
         <div className="mx-auto text-center">

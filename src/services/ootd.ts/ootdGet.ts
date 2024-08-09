@@ -61,6 +61,22 @@ export const fetchOotdPostDetail = async (id: number): Promise<OotdDetailGetResp
   }
 };
 
+export const deleteOotdPost = async (postId: number): Promise<void> => {
+  try {
+    const response = await axios.delete(`${backendUrl}/api/post/${postId}`);
+    console.log(response.data);
+    
+    if (response.data.isSuccess) {
+      return response.data.result;
+    } else {
+      throw new Error(response.data.message);
+    }
+  } catch (error) {
+    console.error(`게시물을 삭제하는 중 오류가 발생했습니다: ${error}`);
+    throw error;
+  }
+};
+
 
 export const fetchAllOotdPosts = async (page?: number, size?: number, orderType: string = 'LATEST'): Promise<OotdGetResponse> => {
   try {
@@ -90,6 +106,7 @@ export const fetchUserOotdPosts = async (memberId: string, page: number, size: n
 export const fetchUserProfile = (memberId: string) => {
   return axios.get(`${backendUrl}/api/member/profile?memberId=${memberId}`).then((res) => res.data);
 };
+
 
 
 axios.interceptors.request.use(

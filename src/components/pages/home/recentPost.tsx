@@ -77,7 +77,7 @@ function RecentPost({ allPosts, setAllPosts, boardData, userInfo }: HomeRecentPr
     console.log(sortedFollowPosts())
 
     return (
-        <div className='w-[80%] mx-auto py-[5rem]'>
+        <div className='w-[66%] mx-auto py-[5rem]'>
             <div>
                 <h1 className='font-bold text-[2rem]'>최신 포스트</h1>
                 <div className='flex text-[1.6rem] pt-[5rem] px-[1rem]'>

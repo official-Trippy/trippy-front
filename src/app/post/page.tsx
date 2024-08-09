@@ -314,7 +314,7 @@ function PostWrite() {
     return (
         <div>
             <Header />
-            <div className='w-[80%] mx-auto'>
+            <div className='w-[66%] mx-auto'>
                 <div className='flex items-center mt-[5rem]'>
                     <button
                         onClick={() => handleButtonClick('#55FBAF', 0)}
