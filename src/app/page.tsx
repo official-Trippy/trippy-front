@@ -7,10 +7,12 @@ import { useQuery } from "react-query";
 import { MemberInfo } from "@/services/auth";
 import Cookies from "js-cookie";
 import Header from "@/components/shared/header/Header";
-import getBoard from "@/services/board/get/getBoard";
+import getBoard, { getTotalBoardCount } from "@/services/board/get/getBoard";
 import { useEffect, useState } from "react";
 import { useUserStore } from "@/store/useUserStore";
 
+
+const PAGE_SIZE = 10;
 
 export default function Home() {
   const accessToken = Cookies.get("accessToken");
@@ -18,6 +20,8 @@ export default function Home() {
   const [visibleCards, setVisibleCards] = useState(4);
   const [isLikeNum, setIsLikeNum] = useState([]);
   const { userInfo, loading, fetchUserInfo } = useUserStore();
+  const [pages, setPages] = useState(0);
+
 
   useEffect(() => {
     const handleResize = () => {
@@ -39,6 +43,7 @@ export default function Home() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+
   const {
     data: memberData,
     error,
@@ -52,10 +57,12 @@ export default function Home() {
     },
   });
 
-  const { data: boardData } = useQuery({
+  const { data: boardData, refetch: boardRefetch } = useQuery({
     queryKey: ['boardData'],
-    queryFn: () => getBoard()
+    queryFn: () => getBoard(PAGE_SIZE, pages)
   })
+
+
 
   console.log(boardData)
   return (
@@ -91,7 +98,8 @@ export default function Home() {
           </div>
         </div>
       </Recommend>
-      <RecentPost allPosts={allPosts} setAllPosts={setAllPosts} boardData={boardData} userInfo={userInfo} />
+      <RecentPost allPosts={allPosts} setAllPosts={setAllPosts} boardData={boardData} userInfo={userInfo} boardRefetch={boardRefetch} PAGE_SIZE={PAGE_SIZE} pages={pages} setPages={setPages} />
+
     </div>
   );
 }
