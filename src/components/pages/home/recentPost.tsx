@@ -95,7 +95,7 @@ function RecentPost({ allPosts, setAllPosts, boardData, userInfo }: HomeRecentPr
                 </div>
             </div>
             {allPosts === 0 ? (
-                <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-8 mt-[5rem]">
+                <div className="grid grid-cols-1 lg:grid-cols-1 2xl:grid-cols-2 gap-x-[8rem] gap-y-[5.3rem] mt-[5rem]">
                     {sortedPosts().map((posts: any, index: number) => {
                         const BoardId = posts.post.id;
 
@@ -109,8 +109,9 @@ function RecentPost({ allPosts, setAllPosts, boardData, userInfo }: HomeRecentPr
                                 className="h-[20rem] shadowall rounded-[1rem] px-[1.6rem] py-[2rem] hover:-translate-y-4 duration-300 cursor-pointer"
                                 key={index}
                             >
-                                <div className="flex">
-                                    <div className="flex flex-col flex-1">
+                                <div className="flex w-full">
+                                    <Image className="w-[17rem] h-[17rem] rounded-[0.8rem]" src={posts.ticket.image.accessUri} alt="" width={170} height={170} />
+                                    <div className='flex flex-col w-full ml-[2.5rem]'>
                                         <h1 className="text-[2rem] font-medium text-ellipsis overflow-hidden">{posts.post.title}</h1>
                                         <span className="text-[1.6rem] mt-[0.4rem] h-[5rem] font-normal text-[#6B6B6B] text-ellipsis overflow-hidden">{posts.post.body}</span>
                                         <div className="flex flex-wrap text-ellipsis overflow-hidden">
@@ -123,34 +124,33 @@ function RecentPost({ allPosts, setAllPosts, boardData, userInfo }: HomeRecentPr
                                                 </span>
                                             ))}
                                         </div>
+                                        <div className="flex mt-[2rem]">
+                                            <div className="flex h-full text-[1.4rem] font-normal space-x-4 items-end mt-auto">
+                                                <Image src={posts.member.profileUrl} width={24} height={24} alt="" />
+                                                <span className="">{posts.member.nickName}</span>
+                                                <span className="">{formattedDate}</span>
+                                            </div>
+                                            <div className="flex items-end text-[#9D9D9D] ml-auto">
+                                                {posts.post.isLiked ? (
+                                                    <Image src={heartImg} alt='' width={24} height={24} />
+                                                ) : (
+                                                    <Image src={nonheartImg} alt='' width={24} height={24} />
+                                                )}
+                                                <span className="text-[1rem] font-normal ml-auto">{posts.post.likeCount}</span>
+                                                <Image className='ml-[1rem]' src={moment} alt='' width={24} height={24} />
+                                                <span className="text-[1rem] font-normal">{posts.post.commentCount}</span>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div className="flex flex-col justify-center">
-                                        <Image className="w-[12rem] h-[12rem] ml-auto flex rounded-[0.8rem]" src={posts.ticket.image.accessUri} alt="" width={120} height={120} />
-                                    </div>
+
                                 </div>
-                                <div className="flex mt-[2rem]">
-                                    <div className="flex h-full text-[1.4rem] font-normal space-x-4 items-center mt-auto">
-                                        <Image src={posts.member.profileUrl} width={24} height={24} alt="" />
-                                        <span className="">{posts.member.nickName}</span>
-                                        <span className="">{formattedDate}</span>
-                                    </div>
-                                    <div className="ml-auto flex items-center text-[#9D9D9D]">
-                                        {posts.post.isLiked ? (
-                                            <Image src={heartImg} alt='' width={24} height={24} />
-                                        ) : (
-                                            <Image src={nonheartImg} alt='' width={24} height={24} />
-                                        )}
-                                        <span className="text-[1rem] font-normal">{posts.post.likeCount}</span>
-                                        <Image className='ml-[1rem]' src={moment} alt='' width={24} height={24} />
-                                        <span className="text-[1rem] font-normal">{posts.post.commentCount}</span>
-                                    </div>
-                                </div>
+
                             </Link>
                         );
                     })}
                 </div>
             ) : (
-                <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-8 mt-[5rem]">
+                <div className="grid grid-cols-1 lg:grid-cols-1 2xl:grid-cols-2 gap-x-[8rem] gap-y-[5.3rem] mt-[5rem]">
                     {sortedFollowPosts().map((posts: any, index: number) => {
                         const BoardId = posts.post.id;
 
@@ -163,8 +163,9 @@ function RecentPost({ allPosts, setAllPosts, boardData, userInfo }: HomeRecentPr
                                 className="h-[20rem] shadowall rounded-[1rem] px-[1.6rem] py-[2rem] hover:-translate-y-4 duration-300 cursor-pointer"
                                 key={index}
                             >
-                                <div className="flex">
-                                    <div className="flex flex-col flex-1">
+                                <div className="flex w-full">
+                                    <Image className="w-[17rem] h-[17rem] rounded-[0.8rem]" src={posts.ticket.image.accessUri} alt="" width={170} height={170} />
+                                    <div className='flex flex-col w-full ml-[2.5rem]'>
                                         <h1 className="text-[2rem] font-medium text-ellipsis overflow-hidden">{posts.post.title}</h1>
                                         <span className="text-[1.6rem] mt-[0.4rem] h-[5rem] font-normal text-[#6B6B6B] text-ellipsis overflow-hidden">{posts.post.body}</span>
                                         <div className="flex flex-wrap text-ellipsis overflow-hidden">
@@ -177,28 +178,27 @@ function RecentPost({ allPosts, setAllPosts, boardData, userInfo }: HomeRecentPr
                                                 </span>
                                             ))}
                                         </div>
+                                        <div className="flex mt-[2rem]">
+                                            <div className="flex h-full text-[1.4rem] font-normal space-x-4 items-end mt-auto">
+                                                <Image src={posts.member.profileUrl} width={24} height={24} alt="" />
+                                                <span className="">{posts.member.nickName}</span>
+                                                <span className="">{formattedDate}</span>
+                                            </div>
+                                            <div className="flex items-end text-[#9D9D9D] ml-auto">
+                                                {posts.post.isLiked ? (
+                                                    <Image src={heartImg} alt='' width={24} height={24} />
+                                                ) : (
+                                                    <Image src={nonheartImg} alt='' width={24} height={24} />
+                                                )}
+                                                <span className="text-[1rem] font-normal ml-auto">{posts.post.likeCount}</span>
+                                                <Image className='ml-[1rem]' src={moment} alt='' width={24} height={24} />
+                                                <span className="text-[1rem] font-normal">{posts.post.commentCount}</span>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div className="flex flex-col justify-center">
-                                        <Image className="w-[12rem] h-[12rem] ml-auto flex rounded-[0.8rem]" src={posts.ticket.image.accessUri} alt="" width={120} height={120} />
-                                    </div>
+
                                 </div>
-                                <div className="flex mt-[2rem]">
-                                    <div className="flex h-full text-[1.4rem] font-normal space-x-4 items-center mt-auto">
-                                        <Image src={posts.member.profileUrl} width={24} height={24} alt="" />
-                                        <span className="">{posts.member.nickName}</span>
-                                        <span className="">{formattedDate}</span>
-                                    </div>
-                                    <div className="ml-auto flex items-center text-[#9D9D9D]">
-                                        {posts.post.isLiked ? (
-                                            <Image src={heartImg} alt='' width={24} height={24} />
-                                        ) : (
-                                            <Image src={nonheartImg} alt='' width={24} height={24} />
-                                        )}
-                                        <span className="text-[1rem] font-normal">{posts.post.likeCount}</span>
-                                        <Image className='ml-[1rem]' src={moment} alt='' width={24} height={24} />
-                                        <span className="text-[1rem] font-normal">{posts.post.commentCount}</span>
-                                    </div>
-                                </div>
+
                             </Link>
                         );
                     })}

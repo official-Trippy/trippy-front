@@ -55,17 +55,17 @@ const MyTicket = ({ totalBoardCount }: ticketProps) => {
               <div className="font-normal font-['Pretendard'] shadowall rounded-[1rem] p-[1rem] flex">
                 <div className="mx-auto">
                   <div className="flex flex-col">
-                    <span className={`text-[1.2rem] font-extrabold`} style={{ color: colorTicket[ticektDatas.ticket.ticketColor] || 'inherit' }}>
+                    <span className={`text-[1.2rem] font-extrabold font-akira`} style={{ color: colorTicket[ticektDatas.ticket.ticketColor] || 'inherit' }}>
                       PASSENGER
                     </span>
                     <span className="text-[1.2rem] font-medium text-[#6B6B6B]">USERID</span>
                   </div>
                   <div className="flex flex-col mt-[0.5rem]">
-                    <span className={`text-[1.2rem] font-extrabold`} style={{ color: colorTicket[ticektDatas.ticket.ticketColor] || 'inherit' }}>DATE</span>
+                    <span className={`text-[1.2rem] font-extrabold font-akira`} style={{ color: colorTicket[ticektDatas.ticket.ticketColor] || 'inherit' }}>DATE</span>
                     <span className="text-[1.2rem] font-medium text-[#6B6B6B]">{ticektDatas.ticket.startDate} ~<br /> {ticektDatas.ticket.endDate}</span>
                   </div>
                   <div className="flex flex-col mt-[0.5rem]">
-                    <span className={`text-[1.2rem] font-extrabold`} style={{ color: colorTicket[ticektDatas.ticket.ticketColor] || 'inherit' }}>GROUP</span>
+                    <span className={`text-[1.2rem] font-extrabold font-akira`} style={{ color: colorTicket[ticektDatas.ticket.ticketColor] || 'inherit' }}>GROUP</span>
                     <span className="text-[1.2rem] font-medium text-[#6B6B6B]">{ticektDatas.ticket.memberNum}</span>
                   </div>
                 </div>
