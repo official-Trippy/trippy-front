@@ -66,7 +66,7 @@ const Header = () => {
               <div className="flex relative">
                 {isDropdownOpen && (
                   <div
-                    className="absolute w-[31rem] mt-[1rem] -ml-[10rem] top-[3.6rem] rounded-[0.8rem] bg-white shadowalltop rounded-lg animate-dropdown z-20"
+                    className="absolute w-[31rem] mt-[1rem] ml-[1rem] top-[3.6rem] rounded-[0.8rem] bg-white shadowalltop rounded-lg animate-dropdown z-20"
                     style={{ opacity: 0, transform: 'translateY(-10px)' }}
                     onMouseEnter={() => setIsDropdownOpen(true)} // 드롭다운에 마우스가 올라가면 열려있도록 유지
                     onMouseLeave={() => setIsDropdownOpen(false)}
