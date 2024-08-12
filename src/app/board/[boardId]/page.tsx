@@ -100,6 +100,15 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
   console.log("Is Following:", following);
   console.log(isFollowing);
 
+  const handleProfileClick = () => {
+    console.log("click");
+    if (postMemberId == userMemberId) {
+      router.push("/mypage");
+    } else {
+      router.push(`/user/${postMemberId}`);
+    }
+  };
+
   const followHandler = async (memberId: string | undefined) => {
     if (!memberId) return; // memberId가 undefined인 경우 함수를 종료
     if (!isFollowing) {
@@ -197,10 +206,15 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
       <Header />
       <div className="w-[80%] mx-auto">
         <div className="mt-[8rem] text-[#6B6B6B] font-semibold text-[2rem]">
-          <span>{postData?.result.member.blogName}의 블로그</span>
+          <span onClick={handleProfileClick} className="cursor-pointer">
+            {postData?.result.member.blogName}의 블로그
+          </span>
         </div>
         <div className="flex items-center mt-[5rem]">
-          <h1 className="text-[3.6rem] font-bold">
+          <h1
+            className="text-[3.6rem] font-bold cursor-pointer"
+            onClick={handleProfileClick}
+          >
             {postData?.result.post.title}
           </h1>
         </div>
@@ -428,9 +442,7 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
                       console.log(coData);
                       return (
                         <div className="mb-[2.5rem]" key={key}>
-                          <div
-                            className={`py-[2rem] mr-[2rem]`}
-                          >
+                          <div className={`py-[2rem] mr-[2rem]`}>
                             <div className="flex items-center">
                               <Image
                                 className="flex items-center"

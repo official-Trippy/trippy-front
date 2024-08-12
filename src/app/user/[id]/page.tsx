@@ -159,7 +159,7 @@ const UserPage = ({ params }: { params: { id: string } }) => {
 
           <div className="w-full ml-4">
             {activeTab === TABS.TICKET && <UserTicket />}
-            {activeTab === TABS.OOTD && <UserOotd memberId={memberId} />}
+            {activeTab === TABS.OOTD && <UserOotd memberId={id} />}
             {activeTab === TABS.BADGE && <UserBadge />}
             {activeTab === TABS.BOOKMARK && <UserBookmark />}
             {activeTab === TABS.FOLLOWER && (
