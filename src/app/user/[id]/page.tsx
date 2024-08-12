@@ -25,6 +25,24 @@ const TABS = {
 const UserPage = ({ params }: { params: { id: string } }) => {
   const { id } = params;
   const [activeTab, setActiveTab] = useState(TABS.TICKET);
+  const [userMeberId, setUserMemberId] = useState("");
+
+  // Function to extract the user ID from the URL
+  useEffect(() => {
+    const extractUserId = () => {
+      const currentUrl = window.location.href;
+
+      const urlObj = new URL(currentUrl);
+
+      const pathname = urlObj.pathname;
+      const pathSegments = pathname.split("/");
+      const userId = pathSegments[pathSegments.length - 1];
+      setUserMemberId(userId);
+    };
+
+    extractUserId();
+  }, []);
+  console.log(userMeberId);
 
   const { data, error, isLoading, refetch } = useQuery({
     queryKey: ["userProfile", id],
@@ -35,7 +53,9 @@ const UserPage = ({ params }: { params: { id: string } }) => {
   });
 
   useEffect(() => {
-    refetch();
+    if (id) {
+      refetch();
+    }
   }, [id, refetch]);
 
   if (isLoading) {
@@ -48,8 +68,8 @@ const UserPage = ({ params }: { params: { id: string } }) => {
 
   const userData = data && data.result;
   console.log("userData: ", userData);
-  const member = userData.email;
-  console.log(member);
+  const memberEmail = userData?.email;
+  console.log(memberEmail);
 
   return (
     <>
@@ -133,37 +153,20 @@ const UserPage = ({ params }: { params: { id: string } }) => {
                 </span>
               </button>
             </div>
-            <div className="flex space-x-4">
-              {/* <button
-                className={`pr-8 py-2 ${
-                  activeTab === TABS.FOLLOWER ? 'text-rose-500 font-bold' : 'bg-white'
-                }`}
-                onClick={() => setActiveTab(TABS.FOLLOWER)}
-              >
-                팔로워
-              </button>
-              <button
-                className={`pr-8 py-2 ${
-                  activeTab === TABS.FOLLOWING ? 'text-rose-500 font-bold' : 'bg-white'
-                }`}
-                onClick={() => setActiveTab(TABS.FOLLOWING)}
-              >
-                팔로윙
-              </button> */}
-            </div>
+            <div className="flex space-x-4"></div>
           </div>
           <hr className="mb-4 w-full h-[1px]" />
 
           <div className="w-full ml-4">
             {activeTab === TABS.TICKET && <UserTicket />}
-            {activeTab === TABS.OOTD && <UserOotd memberId={id} />}
+            {activeTab === TABS.OOTD && <UserOotd memberId={memberId} />}
             {activeTab === TABS.BADGE && <UserBadge />}
             {activeTab === TABS.BOOKMARK && <UserBookmark />}
             {activeTab === TABS.FOLLOWER && (
-              <FollowList memberId={member} type="follower" />
+              <FollowList memberId={userMeberId} type="follower" />
             )}
             {activeTab === TABS.FOLLOWING && (
-              <FollowList memberId={member} type="following" />
+              <FollowList memberId={userMeberId} type="following" />
             )}
           </div>
         </div>
