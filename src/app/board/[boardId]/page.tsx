@@ -105,7 +105,7 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
     if (postMemberId == userMemberId) {
       router.push("/mypage");
     } else {
-      router.push(`/user/${postMemberId}`);
+      router.push(`/user/${userMemberId}`);
     }
   };
 
@@ -212,7 +212,7 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
         </div>
         <div className="flex items-center mt-[5rem]">
           <h1
-            className="text-[3.6rem] font-bold cursor-pointer"
+            className="text-[3.6rem] font-bold cursor-poin"
             onClick={handleProfileClick}
           >
             {postData?.result.post.title}
