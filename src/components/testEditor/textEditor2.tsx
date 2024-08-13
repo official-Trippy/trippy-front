@@ -1,12 +1,43 @@
 import React, { useState } from 'react';
 import { Editor } from '@tinymce/tinymce-react';
+import { uploadImage } from '@/services/blog';
 
-const MyTinyMCEEditor = () => {
-    const [content, setContent] = useState('');
+interface editorProps {
+    postRequest: any;
+    setPostRequest: any;
+}
+const MyTinyMCEEditor = ({ postRequest, setPostRequest }: editorProps) => {
 
-    const handleEditorChange = (content: string) => {
-        setContent(content);
+
+    const handleEditorChange = (newContent: string) => {
+        setPostRequest((prev: any) => ({
+            ...prev,
+            body: newContent, // 텍스트 내용 업데이트
+        }));
     };
+
+    const handleImageUpload = async (blobInfo: any, success: (url: string) => void, failure: (message: string) => void) => {
+        const file = blobInfo.blob(); // blobInfo에서 파일 추출
+
+        try {
+            const uploadedImage = await uploadImage(file);
+            const imageUrl = uploadedImage.result; // 업로드한 이미지의 URL
+
+            // 성공적인 업로드 후 URL을 배열에 추가
+            setPostRequest((prev: any) => ({
+                ...prev,
+                images: [...prev.images, imageUrl], // 이미지 URL 추가
+            }));
+
+            // 성공적인 업로드 후 URL을 반환
+            success(imageUrl);
+        } catch (error) {
+            console.error('Error uploading image:', error);
+            failure('이미지 업로드에 실패했습니다.'); // 실패 시 에러 메시지
+        }
+    };
+
+    console.log(postRequest); // postRequest 확인
 
     return (
         <div>
@@ -32,29 +63,14 @@ const MyTinyMCEEditor = () => {
                         'codesample',
                         'quickbars',
                     ],
-                    toolbar:
-
-                        'bold italic forecolor | alignleft aligncenter ' +
+                    toolbar: 'bold italic forecolor | alignleft aligncenter ' +
                         'alignright alignjustify | bullist numlist outdent indent | ' +
                         'lists table link charmap searchreplace | ' +
                         'image media codesample emoticons fullscreen preview | ' +
-                        'removeformat | undo redo' +
-                        '',
-                    // setup(editor) {
-                    //     setTinymceEditor(editor); // activeEditor를 전역적으로 관리
-
-                    //     // 이미지를 업로드하는 버튼 추가
-                    //     editor.ui.registry.addButton('image-upload', {
-                    //       icon: 'image',
-                    //       tooltip: '업로드',
-                    //       onAction: () => {
-                    //         editor.execCommand('image-upload');
-                    //       },
-                    //     });
-
-                    //     editor.addCommand('image-upload', onOpenFile); // onOpenFile 함수 실행
-                    //   },
+                        'removeformat | undo redo',
+                    images_upload_handler: handleImageUpload, // 이미지 업로드 핸들러 지정
                 }}
+                value={postRequest.body} // 에디터의 내용을 상태로 관리
                 onEditorChange={handleEditorChange}
             />
         </div>
