@@ -14,6 +14,7 @@ import DownIcon from '../../../public/arrow_down.svg';
 import UpIcon from '../../../public/icon_up.svg';
 import { Comment } from '@/types/ootd';
 import { useRouter } from "next/navigation";
+import Cookies from "js-cookie";
 
 
 interface CommentSectionProps {
@@ -31,13 +32,17 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
   const [replyTo, setReplyTo] = useState<number | null>(null);
   const [replyToNickname, setReplyToNickname] = useState<string | null>(null);
   const [isLiked, setIsLiked] = useState<boolean>(false);
-  const [showComments, setShowComments] = useState<boolean>(false);
   const [showLikes, setShowLikes] = useState<boolean>(false);
   const [likeList, setLikeList] = useState<any[]>([]);
   const [isLoadingLikes, setIsLoadingLikes] = useState<boolean>(false);
 
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 18;
+
+  const accessToken = Cookies.get("accessToken");
+
+  const [showComments, setShowComments] = useState<boolean>(!!accessToken);
+
 
   const handlePageChange = (pageNumber: number) => {
     setCurrentPage(pageNumber);
@@ -183,10 +188,10 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
     router.push('/login');
   };
 
-  const renderComments = (comments: Comment[], depth = 0, isChild = false) => {
-    return comments.map((comment) => (
-      <div key={comment.id} className={`${isChild ? '' : ''}`}>
-        <div className='comment-section p-4 rounded-lg'>
+const renderComments = (comments: Comment[], depth = 0, isChild = false) => {
+  return comments.map((comment) => (
+    <div key={comment.id} className={`${isChild ? 'p-4' : ''}`}>
+      <div className='comment-section p-4 rounded-lg'>
         <div className='flex flex-row items-center'>
           {comment.member?.profileUrl && (
             <div className="relative w-[32px] h-[32px]">
@@ -199,57 +204,69 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
               />
             </div>
           )}
-  <div className="text-zinc-800 text-sm font-normal font-['Pretendard'] ml-[5px]">
-    {comment.member?.nickName}
-  </div>
-</div>
-          <div className="ml-[3.7rem] items-center">
-            <div>
-              {comment.content}
-            </div>
-            <div className='flex flex-row my-2'>
-              <div className="text-gray-600">{formatTime(comment.createDateTime)}</div>
-              <div>&nbsp;&nbsp;|&nbsp;&nbsp;</div>
-              <button onClick={() => handleReplyClick(comment.id, comment.member?.nickName || '')} className="text-gray-500">
-                답글쓰기
-              </button>
-            </div>
+          <div className="text-[#292929] text-sm font-semibold font-['Pretendard'] ml-[5px]">
+            {comment.member?.nickName}
           </div>
         </div>
-        {comment.children.length > 0 && (
-          <div className={depth === 0 ? "my-4 ml-12 mr-4 bg-neutral-100 rounded-lg" : ""}>
-            {renderComments(comment.children, depth + 1)}
+        <div className="ml-[3.7rem] items-center">
+          <div
+            dangerouslySetInnerHTML={{
+              __html: comment.content
+                .replace(`@${replyToNickname}`, `<span class="highlighted-text">@${replyToNickname}</span>`)
+            }}
+          />
+          <div className='flex flex-row my-2'>
+            <div className="text-gray-600">{formatTime(comment.createDateTime)}</div>
+            <div>&nbsp;&nbsp;|&nbsp;&nbsp;</div>
+            <button onClick={() => handleReplyClick(comment.id, comment.member?.nickName || '')} className="text-gray-500">
+              답글쓰기
+            </button>
           </div>
-        )}
-        {replyTo === comment.id && (
-          <div className="flex flex-col p-4 mt-2 bg-white rounded-lg shadow-md">
-            <div className='flex flex-row items-center flex-1'>
-              {userInfo?.profileImageUrl && (
-                <Image src={userInfo.profileImageUrl} alt="사용자" width={32} height={32} className="rounded-full" />
-              )}
-              <div className="font-bold ml-[5px]">{userInfo?.nickName}</div>
-            </div>
-            <div className='flex-1 flex'>
-              <input
-                type="text"
-                className="w-[80%] max-w-[570px] mt-2 p-2 rounded-l flex-1"
-                value={replyComment}
-                onChange={(e) => setReplyComment(e.target.value)}
-                placeholder={`@${replyToNickname || ''}에게 답글쓰기`}
-                style={{ color: replyComment.startsWith(`@${replyToNickname}`) ? '#ffb9ca' : 'inherit' }}
-              />
-              <button
-                onClick={handleReplySubmit}
-                className="ml-auto mt-auto mb-[2px] px-8 py-1 bg-neutral-100 rounded-lg justify-center items-center inline-flex text-center text-zinc-800 text-base font-semibold font-['Pretendard']"
-              >
-                입력
-              </button>
-            </div>
-          </div>
-        )}
+        </div>
       </div>
-    ));
-  };
+      {comment.children.length > 0 && (
+        <div className={depth === 0 ? "my-4 ml-12 mr-4 bg-neutral-100 rounded-lg" : ""}>
+          {renderComments(comment.children, depth + 1)}
+        </div>
+      )}
+      {replyTo === comment.id && (
+        <div className="flex flex-col p-4 mt-2 bg-white rounded-lg shadow-md">
+          <div className='flex flex-row items-center flex-1'>
+            {userInfo?.profileImageUrl && (
+              <div className="relative w-[32px] h-[32px]">
+                <Image
+                  src={userInfo.profileImageUrl}
+                  alt="사용자 프로필"
+                  layout="fill"
+                  objectFit="cover"
+                  className="rounded-full"
+                />
+              </div>
+            )}
+            <div className="text-[#292929] font-semibold ml-[5px]">{userInfo?.nickName}</div>
+          </div>
+          <div className='flex-1 flex'>
+            <input
+              type="text"
+              className="w-[80%] max-w-[570px] mt-2 p-2 rounded-l flex-1"
+              value={replyComment}
+              onChange={(e) => setReplyComment(e.target.value)}
+              placeholder={`@${replyToNickname || ''}에게 답글쓰기`}
+              style={{ color: replyComment.startsWith(`@${replyToNickname}`) ? '#ffb9ca' : 'inherit' }}
+            />
+            <button
+              onClick={handleReplySubmit}
+              className="ml-auto mt-auto mb-[2px] px-8 py-1 bg-neutral-100 rounded-lg justify-center items-center inline-flex text-center text-zinc-800 text-base font-semibold font-['Pretendard']"
+            >
+              입력
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  ));
+};
+
 
 
   const renderLikeList = (likes: any[]) => {
@@ -302,7 +319,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
     );
   };
 
-  if (!userInfo) {
+  if (!accessToken) {
     return (
       <div className="max-w-6xl w-full mx-auto">
         <div className="flex items-center pb-4">
@@ -387,10 +404,17 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
             <div className='w-[90%] flex flex-col'>
               <div className='w-full flex-1'>
                 <div className='flex flex-row items-center'>
-                  {userInfo?.profileImageUrl && (
-                    <Image src={userInfo.profileImageUrl} alt="사용자" width={32} height={32} className="rounded-full" />
+                  {userInfo?.profileImageUrl &&  (
+                    <><div className="relative w-[32px] h-[32px]">
+                      <Image
+                        src={userInfo.profileImageUrl}
+                        alt="사용자"
+                        layout="fill"
+                        objectFit="cover"
+                        className="rounded-full" />
+                    </div></>
                   )}
-                  <div className="font-bold ml-[5px]">{userInfo?.nickName}</div>
+                  <div className="text-[#292929] font-semibold ml-[5px]">{userInfo?.nickName}</div>
                 </div>
               </div>
               <div className="w-[100%] flex-1 ml-1">
@@ -410,7 +434,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
               입력
             </button>
           </div>
-          <div className="comment-section w-full p-4 bg-white rounded-lg shadow-md items-center 4 p-4 mt-16">
+          <div className="comment-section w-full bg-white rounded-lg shadow-md items-center mt-16">
             {isLoading ? (
               <div></div>
             ) : (

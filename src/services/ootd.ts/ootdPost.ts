@@ -10,3 +10,11 @@ export const createPost = async (postRequest: PostRequest, ootdRequest: OotdRequ
   });
   return response.data;
 };
+
+export const updatePost = async (id: number, postRequest: PostRequest, ootdRequest: OotdRequest) => {
+  const response = await axios.patch(`/api/ootd`, {
+    id,
+    ...ootdRequest,
+  });
+  return response.data;
+};

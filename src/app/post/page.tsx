@@ -21,6 +21,10 @@ import postBoard from '@/services/board/post/postBoard'
 import { uploadImage } from '@/services/blog'
 import { UploadedImage } from '@/types/ootd'
 import { useRouter } from 'next/navigation'
+import Swal from 'sweetalert2'
+import { colorTicket } from '@/types/board'
+import TextEditor from '@/components/testEditor/TextEditor'
+import MyTinyMCEEditor from '@/components/testEditor/textEditor2'
 
 const countries: { [key: string]: string } = {
     KOR: '대한민국',
@@ -38,6 +42,9 @@ const countries: { [key: string]: string } = {
     RUS: '러시아',
     ITA: '이탈리아'
 };
+
+
+
 
 function PostWrite() {
     const [bgColor, setBgColor] = useState('#55FBAF');
@@ -70,6 +77,9 @@ function PostWrite() {
     const [suggestions2, setSuggestions2] = useState<string[]>([]);
     const [selectedCountryCode, setSelectedCountryCode] = useState('');
     const [selectedCountryCode2, setSelectedCountryCode2] = useState('');
+    const [tags, setTags] = useState<string[]>([]);
+    const [inputValue, setInputValue] = useState<string>('');
+    const [ticketColor, setTicketColor] = useState('')
 
     const handleInputChange1 = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
@@ -175,9 +185,13 @@ function PostWrite() {
     };
 
 
-    const handleButtonClick = (color: any) => {
+    const handleButtonClick = (color: string, index: number) => {
         setBgColor(color);
+        const selectedColor = Object.keys(colorTicket)[index]; // 인덱스를 사용하여 색상 가져오기
+        setTicketColor(selectedColor);
     };
+
+    console.log(ticketColor, bgColor)
 
 
     const selectTransport = (imgSrc: any) => {
@@ -234,7 +248,7 @@ function PostWrite() {
             postType: 'POST',
             location: '24.12342,12.12344',
             images: images,
-            tags: ['서울여행', '효도여행']
+            tags: tags,
         }
         const ticketRequest = {
             departure: inputValue1,
@@ -243,13 +257,26 @@ function PostWrite() {
             memberNum: Number(passengerCount),
             startDate: formatDates(startDate),
             endDate: formatDates(endDate),
-            ticketColor: 'Red',
+            ticketColor: ticketColor,
             transport: 'Airplane'
         }
         try {
             console.log(postRequest, ticketRequest)
             await postBoard(postRequest, ticketRequest);
-            router.push('/');
+            Swal.fire({
+                icon: 'success',
+                title: 'TICKET 게시글을 올렸습니다.',
+                confirmButtonText: '확인',
+                confirmButtonColor: '#FB3463',
+                customClass: {
+                    popup: 'swal-custom-popup',
+                    icon: 'swal-custom-icon'
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    router.push('/');
+                }
+            });
         } catch (e) {
 
         }
@@ -266,33 +293,51 @@ function PostWrite() {
         };
     }, [thumbnailPreview]);
     console.log(formatDates(startDate), formatDates(endDate))
+
+
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setInputValue(e.target.value);
+    };
+
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === 'Enter' && inputValue.trim() !== '') {
+            // 중복 태그 체크
+            if (!tags.includes(inputValue.trim())) {
+                setTags([...tags, inputValue.trim()]);
+                setInputValue(''); // 입력 필드 초기화
+            }
+        }
+    };
+
+
+    console.log(tags)
     return (
         <div>
             <Header />
-            <div className='w-[80%] mx-auto'>
+            <div className='w-[66%] mx-auto'>
                 <div className='flex items-center mt-[5rem]'>
                     <button
-                        onClick={() => handleButtonClick('#55FBAF')}
+                        onClick={() => handleButtonClick('#55FBAF', 0)}
                         className='w-[2.4rem] h-[2.4rem] bg-[#55FBAF] rounded-full'
                     ></button>
                     <button
-                        onClick={() => handleButtonClick('#FF4F4F')}
+                        onClick={() => handleButtonClick('#FF4F4F', 1)}
                         className='w-[2.4rem] h-[2.4rem] bg-[#FF4F4F] rounded-full ml-[1rem]'
                     ></button>
                     <button
-                        onClick={() => handleButtonClick('#4FDBFF')}
+                        onClick={() => handleButtonClick('#4FDBFF', 2)}
                         className='w-[2.4rem] h-[2.4rem] bg-[#4FDBFF] rounded-full ml-[1rem]'
                     ></button>
                     <button
-                        onClick={() => handleButtonClick('#FFD350')}
+                        onClick={() => handleButtonClick('#FFD350', 3)}
                         className='w-[2.4rem] h-[2.4rem] bg-[#FFD350] rounded-full ml-[1rem]'
                     ></button>
                     <button
-                        onClick={() => handleButtonClick('#A84FFF')}
+                        onClick={() => handleButtonClick('#A84FFF', 4)}
                         className='w-[2.4rem] h-[2.4rem] bg-[#A84FFF] rounded-full ml-[1rem]'
                     ></button>
                     <button
-                        onClick={() => handleButtonClick('#FB3463')}
+                        onClick={() => handleButtonClick('#FB3463', 5)}
                         className='w-[2.4rem] h-[2.4rem] bg-[#FB3463] rounded-full ml-[1rem]'
                     ></button>
                     <button className='ml-auto flex bg-[#FB3463] text-white text-[1.6rem] font-semibold rounded-[1rem] px-[2.5rem] py-[0.5rem]' onClick={addPost}>올리기</button>
@@ -302,7 +347,7 @@ function PostWrite() {
                     <div className='w-full mt-[5rem] relative'>
                         <div className='flex justify-center'>
                             <div>
-                                <h1 className='h-[10rem] text-[6rem] font-extrabold'>{selectedCountryCode}</h1>
+                                <h1 className='h-[10rem] text-[6rem] font-extrabold font-akira'>{selectedCountryCode}</h1>
                                 <div className='w-[18rem] h-[3.6rem] px-[2rem] shadowall rounded-[0.8rem] flex'>
                                     <input
                                         className='w-[12rem] text-[1.6rem] outline-none'
@@ -327,10 +372,10 @@ function PostWrite() {
                                     </div>
                                 )}
                             </div>
-                            <div className='relative bg-white z-10 mx-[5rem]'>
+                            <div className='relative bg-white z-10 ml-[7%] mr-[10%]'>
                                 {
                                     isTransport ? (
-                                        <div className='w-[6rem] h-[28rem] absolute z-10 bg-white shadowall rounded-full flex items-center justify-center mt-[2rem] flex-col space-y-9'>
+                                        <div className='w-[6rem] h-[28rem] absolute z-10 bg-white shadowall rounded-[3rem] flex items-center justify-center mt-[2rem] flex-col space-y-9'>
                                             {isImageIdx.slice(0, 5).map((item: any, index) => (
                                                 <Image
                                                     key={index}
@@ -352,7 +397,7 @@ function PostWrite() {
                                 }
                             </div>
                             <div className='ml-[5rem]'>
-                                <h1 className='h-[9rem] text-[6rem] font-extrabold'>{selectedCountryCode2}</h1>
+                                <h1 className='h-[9rem] text-[6rem] font-extrabold font-akira'>{selectedCountryCode2}</h1>
                                 <div className='w-[18rem] h-[3.6rem] px-[2rem] shadowall rounded-[0.8rem] flex mt-4'>
                                     <input
                                         className='w-[12rem] text-[1.6rem] outline-none'
@@ -379,7 +424,9 @@ function PostWrite() {
                             </div>
                         </div>
                         <div className='w-[95%] border-2 border-dashed border-[#CFCFCF] my-[3rem] mx-auto relative z-0' />
-                        <div className={`flex ml-[7rem] text-[1.4rem] font-extrabold text-[${bgColor}]`}>
+                        <div className={`flex ml-[7rem] text-[1.4rem] font-extrabold font-akira`}
+                            style={{ color: bgColor || 'inherit' }}
+                        >
                             <span className='w-[16rem]'>PASSENGER</span>
                             <span className='w-[25rem]'>DATE</span>
                             <span className='w-[8rem]'>GROUP</span>
@@ -443,10 +490,11 @@ function PostWrite() {
                     </div>
                 </div>
                 <>
-                    <div className="h-screen w-full overflow-hidden">
+                    <div className="h-screen w-full overflow-hidden shadowall mt-[2rem] rounded-[0.8rem]">
                         <form
                             className="h-screen w-full"
                         >
+
                             <div className="shadow-lg w-full h-screen">
                                 <div className='h-[13rem] border-b border-[#CFCFCF] flex'>
                                     <input
@@ -459,6 +507,9 @@ function PostWrite() {
                                         className="w-full outline-none text-[3.6rem] font-medium flex items-end px-[6rem]"
                                     />
                                 </div>
+                                {/* <TextEditor /> */}
+                                <MyTinyMCEEditor
+                                />
                                 <textarea
                                     className='w-full h-screen outline-none text-[2rem] px-[6rem] py-[2.5rem]'
                                     placeholder='여러분의 경험을 자유롭게 적어주세요.'
@@ -468,6 +519,21 @@ function PostWrite() {
                             </div>
 
                         </form>
+                    </div>
+                    <div className='w-full h-[13rem] shadowall mt-[0.5rem] mb-[10rem]'>
+                        <input className='text-[1.6rem] font-medium w-[50rem] outline-none ml-[6rem] mt-[3.4rem]'
+                            type='text'
+                            placeholder='태그를 3개 이상 입력해주세요.'
+                            value={inputValue}
+                            onChange={handleInputChange}
+                            onKeyDown={handleKeyDown} />
+                        <div className='ml-[6rem] mt-[1rem]'>
+                            {tags.map((tag, index) => (
+                                <span key={index} className='inline-block bg-[#F5F5F5] text-[#9D9D9D] rounded-[1.6rem] text-[1.6rem] px-[0.8rem] py-[0.4rem] mr-2'>
+                                    {tag}
+                                </span>
+                            ))}
+                        </div>
                     </div>
                 </>
             </div>

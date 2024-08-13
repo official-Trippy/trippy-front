@@ -8,8 +8,9 @@ import AlertImg from "../../../../public/AlertImg.png";
 import Profile from "../../../../public/Profile.png";
 import UserModal from "@/components/userInfo/userModal";
 import { useUserStore } from "@/store/useUserStore";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import postwriteImg from "@/dummy/postwrite.svg";
+import postwriteImg2 from "@/dummy/postwrite2.svg";
 import Cookies from "js-cookie";
 import SearchBar from "@/components/search/searchBar";
 
@@ -19,9 +20,13 @@ const Header = () => {
 
   const { userInfo, loading, fetchUserInfo } = useUserStore();
   const router = useRouter();
+  const pathname = usePathname(); // 현재 경로를 가져옴
+
+  const accessToken = Cookies.get("accessToken");
 
   useEffect(() => {
     fetchUserInfo();
+    console.log(userInfo);
   }, [fetchUserInfo]);
 
   const onClickLogin = () => {
@@ -32,12 +37,8 @@ const Header = () => {
     setModalVisible(!modalVisible);
   };
 
-  const handleDropdownToggle = () => {
-    setIsDropdownOpen(!isDropdownOpen);
-  };
-
   return (
-    <header className="flex justify-between items-center w-[80%] mx-auto px-4 md:px-8 lg:px-12 py-4">
+    <header className="header flex justify-between items-center w-[66%] mx-auto relative">
       <div className="flex items-center">
         <div className="mr-4">
           <Link href="/">
@@ -47,14 +48,17 @@ const Header = () => {
         <div className="flex space-x-4 text-lg">
           <Link href="/">
             <div
-              className="text-gray-800 px-4 md:px-6"
+              className={`text-gray-800 px-10 ${pathname === "/" ? "font-bold" : ""}`}
               style={{ fontSize: "1.4rem" }}
             >
               홈
             </div>
           </Link>
           <Link href="/ootd">
-            <div className="text-gray-800" style={{ fontSize: "1.4rem" }}>
+            <div
+              className={`text-gray-800 ${pathname === "/ootd" ? "font-bold" : ""}`}
+              style={{ fontSize: "1.4rem" }}
+            >
               OOTD
             </div>
           </Link>

@@ -16,7 +16,7 @@ function Recommend({ children, memberData, isLoading }: HomeProps) {
 
 
     return (
-        <div className='w-[80%] flex flex-col mx-auto mt-[8rem]'>
+        <div className='w-[66%] flex flex-col mx-auto mt-[8rem]'>
             {isLoading ? (<div>
 
             </div>) : (

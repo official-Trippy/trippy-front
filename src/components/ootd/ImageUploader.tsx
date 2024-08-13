@@ -14,10 +14,11 @@ import RightArrowIcon from '../../../public/right-arrow.svg';
 
 interface ImageUploaderProps {
   onImagesChange: (images: UploadedImage[]) => void;
+  initialImages?: UploadedImage[]; // 초기 이미지 리스트를 받을 수 있도록 추가
 }
 
-const ImageUploader: React.FC<ImageUploaderProps> = ({ onImagesChange }) => {
-  const [images, setImages] = useState<UploadedImage[]>([]);
+const ImageUploader: React.FC<ImageUploaderProps> = ({ onImagesChange, initialImages = [] }) => {
+  const [images, setImages] = useState<UploadedImage[]>(initialImages); 
   const [isUploading, setIsUploading] = useState(false);
 
   const handleImageUpload = async (event: ChangeEvent<HTMLInputElement>) => {

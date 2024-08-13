@@ -14,7 +14,7 @@ const Account = () => {
   const [maskedEmail, setMaskedEmail] = useState("");
 
   const isNicknameValid = () => {
-    return /^[A-Za-z]{4,}$/.test(nickname) || /^[가-힣]{2,}$/.test(nickname);
+    return /^[A-Za-z0-9]{4,}$/.test(nickname) || /^[가-힣0-9]{2,}$/.test(nickname);
   };
 
   const isNextButtonDisabled = () => {
@@ -54,7 +54,7 @@ const Account = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center w-[80%] mx-auto mt-[19rem]">
+    <div className="flex flex-col items-center justify-center w-[66%] mx-auto mt-[19rem]">
       <Image src={LogoMain} alt="Logo" className="w-[16.4rem] mx-auto" />
       <div className="flex flex-col mt-[6rem]">
         <div className="text-center text-zinc-800 text-4xl font-semibold font-['Pretendard']">계정 찾기</div>

@@ -14,6 +14,7 @@ import FollowList from "@/components/profile/FollowList";
 import Image from "next/image";
 import backgroundImg from "../../../public/DefaultBackground.svg";
 import { fetchOotdPostCount } from "@/services/ootd.ts/ootdGet";
+import { getTotalBoardCount } from "@/services/board/get/getBoard";
 
 const TABS = {
   ALL: "ALL",
@@ -47,6 +48,13 @@ const MyPage = () => {
     { enabled: !!accessToken }
   );
 
+  const { data: totalBoardCount } = useQuery({
+    queryKey: ["boardPostCount"],
+    queryFn: () => getTotalBoardCount(),
+    enabled: !!accessToken,
+  });
+
+  console.log(totalBoardCount);
   if (isLoading) {
     return <div>Loading...</div>;
   }
@@ -59,6 +67,8 @@ const MyPage = () => {
   console.log("userData : ", userData);
   const member = userData?.memberId;
 
+  console.log(totalBoardCount);
+
   return (
     <>
       <Header />
@@ -70,12 +80,12 @@ const MyPage = () => {
           objectFit="cover"
         />
       </div>
-      <div className="w-[80%] mx-auto">
-        <h1 className="w-[80%] absolute ml-auto text-right top-[320px] text-white text-4xl font-bold">
+      <div className="w-[66%] mx-auto">
+        <h1 className="w-[66%] absolute ml-auto text-right top-[320px] text-white text-4xl font-bold">
           {userData && userData.blogName}
         </h1>
       </div>
-      <div className="w-[80%] mx-auto flex p-4">
+      <div className="w-[66%] mx-auto flex p-4">
         <div className="w-[250px] mb-4">
           <UserInformation setActiveTab={setActiveTab} />
         </div>
@@ -149,13 +159,15 @@ const MyPage = () => {
           <div className="w-full ml-4">
             {activeTab === TABS.ALL && (
               <>
-                <MyTicket />
+                <MyTicket totalBoardCount={totalBoardCount} />
                 <MyOotd userInfo={userData} />
                 <MyBadge />
                 <MyBookmark />
               </>
             )}
-            {activeTab === TABS.TICKET && <MyTicket />}
+            {activeTab === TABS.TICKET && (
+              <MyTicket totalBoardCount={totalBoardCount} />
+            )}
             {activeTab === TABS.OOTD && <MyOotd userInfo={userData} />}
             {activeTab === TABS.BADGE && <MyBadge />}
             {activeTab === TABS.BOOKMARK && <MyBookmark />}

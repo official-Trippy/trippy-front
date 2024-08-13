@@ -131,7 +131,7 @@ export interface PostRequest {
         title: string;
         body: string;
         postType: string;
-        location: string | null;
+        location: string;
         images: {
           imgUrl: string;
           accessUri: string;

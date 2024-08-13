@@ -31,6 +31,7 @@ import commentPink from "@/dummy/comentpink.svg";
 import { useFollowingStore } from "@/store/useFollowingStore";
 import { doFollow, unfollow } from "@/services/follow";
 import FollowButton from "@/components/followControl/followButton";
+import { colorTicket } from "@/types/board";
 
 export default function BoardPage({ params }: { params: { boardId: number } }) {
   const accessToken = Cookies.get("accessToken");
@@ -100,15 +101,6 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
   console.log("Is Following:", following);
   console.log(isFollowing);
 
-  const handleProfileClick = () => {
-    console.log("click");
-    if (postMemberId == userMemberId) {
-      router.push("/mypage");
-    } else {
-      router.push(`/user/${userMemberId}`);
-    }
-  };
-
   const followHandler = async (memberId: string | undefined) => {
     if (!memberId) return; // memberId가 undefined인 경우 함수를 종료
     if (!isFollowing) {
@@ -145,6 +137,17 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
   }
   const createdAt = postData?.result.post.createDateTime;
   const formattedDate = formatDate(createdAt);
+
+  const handleProfileClick = () => {
+    console.log("click");
+    if (postData.result.member.memberId == userInfo.memberId) {
+      router.push("/mypage");
+    } else {
+      router.push(`/user/${postData.result.member.memberId}`);
+    }
+  };
+
+  console.log(postData, userInfo);
 
   const LikeHandler = async () => {
     try {
@@ -200,11 +203,36 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
     setReplyOpen(updatedReplyOpen);
   };
 
+  if (!postData || !postCommentData) {
+    return <div>Loading...</div>; // 데이터가 로딩 중일 때
+  }
+
+  const replaceImagesInBody = (body: any, images: any) => {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(body, "text/html");
+    const imgTags = doc.querySelectorAll("img");
+
+    imgTags.forEach((imgTag, index) => {
+      if (images[index]) {
+        const newImage = document.createElement("div"); // 새로운 div로 대체
+        newImage.innerHTML = `<Image class="max-w-[60rem] max-h-[60rem]" src="${images[index].accessUri}" alt="" width="900" height="900" />`;
+        imgTag.replaceWith(newImage);
+      }
+    });
+
+    return doc.body.innerHTML; // 변환된 HTML 반환
+  };
+
   console.log(memberDatas);
+  const images = postData?.result.post.images || [];
+  const bodyWithImages = replaceImagesInBody(
+    postData?.result.post.body,
+    images
+  );
   return (
     <div>
       <Header />
-      <div className="w-[80%] mx-auto">
+      <div className="w-[66%] mx-auto">
         <div className="mt-[8rem] text-[#6B6B6B] font-semibold text-[2rem]">
           <span onClick={handleProfileClick} className="cursor-pointer">
             {postData?.result.member.blogName}의 블로그
@@ -220,23 +248,23 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
         </div>
         <div className="w-full h-[32rem] border border-[#D9D9D9] rounded-[1rem] flex mt-[2rem]">
           <div
-            className={`w-[15.4rem] h-full bg-[#55FBAF] rounded-l-[1rem]`}
+            className={`w-[15.4rem] h-full ${colorTicket[postData.result.ticket.ticketColor] ? `bg-[${colorTicket[postData.result.ticket.ticketColor]}]` : ""} rounded-l-[1rem]`}
           ></div>
           <div className="w-full mt-[5rem] relative">
             <div className="flex justify-center">
               <div>
-                <h1 className="text-[6rem] font-extrabold">KOR</h1>
+                <h1 className="text-[6rem] font-extrabold font-akira">KOR</h1>
                 <div className="w-[16rem] h-[3.6rem] pl-[2rem] rounded-[0.8rem] flex">
                   <span className="text-[#9D9D9D] text-[2.4rem] font-semibold">
                     {postData?.result.ticket.departure}
                   </span>
                 </div>
               </div>
-              <div className="relative flex items-center bg-white z-10 mx-[5rem]">
+              <div className="relative flex -mt-[3.5rem] bg-white z-10 ml-[10%] mr-[5%]">
                 <Image className="" src={air} alt="비행기" />
               </div>
               <div className="ml-[5rem]">
-                <h1 className="text-[6rem] font-extrabold">KOR</h1>
+                <h1 className="text-[6rem] font-extrabold font-akira">KOR</h1>
                 <div className="w-[16rem] h-[3.6rem] pl-[2rem] rounded-[0.8rem] flex">
                   <span className="text-[#9D9D9D] text-[2.4rem] font-semibold">
                     {postData?.result.ticket.destination}
@@ -246,7 +274,11 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
             </div>
             <div className="w-[95%] border-2 border-dashed border-[#CFCFCF] my-[4rem] mx-auto relative z-0" />
             <div
-              className={`flex justify-center text-[1.4rem] font-extrabold text-[#55FBAF]`}
+              className={`flex justify-center text-[1.4rem] font-extrabold text-[#55FBAF] font-akira`}
+              style={{
+                color:
+                  colorTicket[postData?.result.ticket.ticketColor] || "inherit",
+              }}
             >
               <span className="w-[16rem]">PASSENGER</span>
               <span className="w-[25rem]">DATE</span>
@@ -266,7 +298,7 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
             </div>
           </div>
           <div
-            className={`w-[60rem] h-full bg-[#55FBAF] rounded-r-[1rem] ml-auto`}
+            className={`w-[60rem] h-full ${colorTicket[postData.result.ticket.ticketColor] ? `bg-[${colorTicket[postData.result.ticket.ticketColor]}]` : ""}  rounded-r-[1rem] ml-auto`}
           >
             <div className="absolute">
               <div className="relative bg-white w-[4rem] h-[4rem] rounded-full -mt-[2rem] -ml-[2rem]"></div>
@@ -292,6 +324,7 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
               alt=""
               width={60}
               height={60}
+              onClick={handleProfileClick}
             />
             <div className="flex flex-col text-[2rem] ml-[2rem]">
               <span className="font-medium text-black">
@@ -313,20 +346,21 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
             </div>
           </div>
         </div>
-        <div className="py-[5rem] h-[100rem]">
-          {postData?.result.post.images?.map((image: any, index: number) => (
-            <Image
-              className="max-w-[60rem] max-h-[60rem]"
-              src={image.accessUri}
-              alt=""
-              key={index}
-              width={900}
-              height={900}
-            />
-          ))}
-          <span className="text-[1.6rem] font-medium">
-            {postData?.result.post.body}
-          </span>
+        <div className="py-[5rem] min-h-[100rem] ">
+          {/* {images.map((image, index) => (
+                    <Image
+                        className="max-w-[60rem] max-h-[60rem]"
+                        src={image.accessUri}
+                        alt=""
+                        key={index}
+                        width={900}
+                        height={900}
+                    />
+                ))} */}
+          <span
+            className="text-[1.6rem] font-medium"
+            dangerouslySetInnerHTML={{ __html: bodyWithImages }}
+          />
         </div>
         {/* 댓글기능 */}
         <div className="w-full h-[7.5rem] mt-[8rem] flex items-center">
@@ -482,9 +516,14 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
                             </div>
                           </div>
                           {coData?.children.map((childData: any) => {
+                            const createDateTime = new Date(
+                              childData.createDateTime
+                            );
+                            const formattedDateTimes = `${createDateTime.getFullYear()}.${String(createDateTime.getMonth() + 1).padStart(2, "0")}.${String(createDateTime.getDate()).padStart(2, "0")} ${String(createDateTime.getHours()).padStart(2, "0")}:${String(createDateTime.getMinutes()).padStart(2, "0")}`;
+
                             return (
                               <div
-                                className={`bg-[#F5F5F5] w-[90%] py-[2rem] px-[1.6rem] mx-[5rem] rounded-[0.8rem] mb-[0.5rem]`}
+                                className={`bg-[#F5F5F5] w-[90%] py-[2rem] px-[1.6rem] mx-[5rem] rounded-[0.8rem]`}
                               >
                                 <div className="flex items-center">
                                   <Image
@@ -502,7 +541,7 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
                                   {childData.content}
                                 </span>
                                 <div className="flex ml-[4.5rem] text-[1.2rem] text-[#9D9D9D] items-center">
-                                  <span>{formattedDateTime}</span>
+                                  <span>{formattedDateTimes}</span>
                                   <hr className="mx-[1rem] h-[1rem] w-[0.1rem] bg-[#9D9D9D]" />
                                   {replyOpen[index] ? (
                                     <span

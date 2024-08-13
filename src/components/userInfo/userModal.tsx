@@ -18,6 +18,7 @@ const UserModal: React.FC<
   const handleMyPage = () => {
     router.push("/mypage");
   };
+  
   if (!isOpen || !userInfo) return null;
 
   return (

@@ -1,9 +1,9 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { useQuery } from "react-query";
 import Slider from "react-slick";
-import { fetchOotdPostDetail } from "@/services/ootd.ts/ootdGet";
+import { deleteOotdPost, fetchOotdPostDetail } from "@/services/ootd.ts/ootdGet";
 import { OotdDetailGetResponse } from "@/types/ootd";
 import { useUserStore } from "@/store/useUserStore";
 import "slick-carousel/slick/slick.css";
@@ -17,6 +17,9 @@ import RightArrowIcon from "../../../public/right-arrow.svg";
 import { getWeatherStatusInKorean } from "@/constants/weatherTransition";
 import { useRouter } from "next/navigation";
 import FollowButton from "../followControl/followButton";
+import Cookies from "js-cookie";
+import CabapIcon from "../../../public/icon_cabap.svg";
+import Swal from "sweetalert2";
 
 interface OotdDetailProps {
   id: number;
@@ -28,20 +31,81 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
     () => fetchOotdPostDetail(id)
   );
 
+  const accessToken = Cookies.get('accessToken');
+
   const userInfo = useUserStore((state) => state.userInfo);
 
   const userMemberId = userInfo?.memberId;
 
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const handleCabapIconClick = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
   const router = useRouter();
 
   const handleProfileClick = () => {
-    console.log("click");
-    if (ootdItem.member.memberId == userInfo.memberId) {
-      router.push("/mypage");
+    if (accessToken) {
+      if (ootdItem.member.memberId == userInfo.memberId) {
+        router.push("/mypage");
+      } else {
+        router.push(`/user/${ootdItem.member.memberId}`);
+      }
     } else {
       router.push(`/user/${ootdItem.member.memberId}`);
     }
   };
+
+  const handleDeleteClick = async () => {
+    if (!data || !data.result) {
+      await Swal.fire(
+        '오류 발생',
+        '게시물 데이터를 불러오는 중 문제가 발생했습니다. 다시 시도해주세요.',
+        'error'
+      );
+      return;
+    }
+      
+    const result = await Swal.fire({
+      title: '정말 삭제하시겠습니까?',
+      icon: 'warning',
+      iconColor: '#FB3463', 
+      showCancelButton: true,
+      confirmButtonText: '네',
+      cancelButtonText: '아니오',
+      confirmButtonColor: '#FB3463', 
+      customClass: {
+        popup: 'swal-custom-popup',
+        icon: 'swal-custom-icon'
+      }
+    });
+  
+    if (result.isConfirmed) {
+      try {
+        await deleteOotdPost(data.result.post.id);
+        await Swal.fire({
+          icon: 'success',
+          title: '게시글을 삭제하였습니다.',
+          confirmButtonText: '확인',
+          confirmButtonColor: '#FB3463', 
+          customClass: {
+            popup: 'swal-custom-popup',
+            icon: 'swal-custom-icon'
+          }
+        }    
+        );
+        router.push('/ootd');
+      } catch (error) {
+        await Swal.fire(
+          '오류 발생',
+          '삭제하는 중 문제가 발생했습니다. 다시 시도해주세요.',
+          'error'
+        );
+      }
+    }
+  };
+  
 
   if (isLoading) {
     return null;
@@ -56,6 +120,7 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
   }
 
   const ootdItem = data.result;
+
 
   const SampleNextArrow = (props: any) => {
     const { className, style, onClick, currentSlide, slideCount } = props;
@@ -102,18 +167,20 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
     <>
       <div className="container mx-auto p-4">
         <div className="w-full max-w-6xl mx-auto">
-          <div className="py-4 flex items-center justify-between">
+          <div className="py-12 flex items-center">
             <div className="flex items-center">
-              <Image
-                className="rounded-full"
-                width={48}
-                height={48}
-                src={ootdItem.member.profileUrl}
-                onClick={handleProfileClick}
-                alt="User Profile"
-              />
-              <div className="ml-4">
-                <span className="block font-bold text-xl ml-[2px]">
+            <div className="relative w-[50px] h-[50px]">
+                <Image
+                  src={ootdItem.member.profileUrl}
+                  alt="사용자 프로필"
+                  layout="fill"
+                  objectFit="cover"
+                  className="rounded-full"
+                  onClick={handleProfileClick}
+                />
+              </div>
+              <div className="h-[48px] ml-4">
+                <span className="block font-bold text-[20px] ml-[2px]">
                   {ootdItem.member.nickName}
                 </span>
                 <div className="flex items-center gap-2">
@@ -131,28 +198,65 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
                 </div>
               </div>
             </div>
+            <div className="ml-auto flex">
             <div className="flex items-center space-x-2">
               <FollowButton
                 postMemberId={data.result.member.memberId}
                 userMemberId={userMemberId}
               />
-
               <i className="far fa-bookmark text-xl"></i>
               <i className="fas fa-ellipsis-h text-xl"></i>
             </div>
+            {userMemberId === data.result.member.memberId && (
+          <div className="relative my-auto">
+            <Image
+              src={CabapIcon}
+              alt="cabap"
+              width={24}
+              height={24}
+              onClick={handleCabapIconClick}
+              className="cursor-pointer"
+            />
+            {isMenuOpen && (
+              <div className="w-[100px] absolute top-full right-4 mt-4 w-32 bg-white rounded shadow-lg z-10">
+                <div
+                  className="py-4 px-8 text-[#ff4f4f] hover:bg-gray-100 cursor-pointer text-center"
+                  onClick={handleDeleteClick}
+                >
+                  삭제
+                </div>
+                <hr/>
+                <div
+                  className="py-4 px-8 text-black hover:bg-gray-100 cursor-pointer text-center"
+                  onClick={() => {
+                    router.push(`/edit/${id}`);
+                  }}
+                >
+                  수정
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+            </div>
           </div>
           <div className="relative">
-            <Slider {...settings}>
-              {ootdItem.post.images.map((image, index) => (
-                <div key={index}>
-                  <img
-                    className="w-full rounded-t-lg"
+          <Slider {...settings}>
+            {ootdItem.post.images.map((image, index) => (
+              <div key={index}>
+                <div className="relative w-full" style={{ aspectRatio: '1 / 1' }}>
+                  <Image
                     src={image.accessUri}
                     alt={`OOTD Image ${index + 1}`}
+                    className="absolute inset-0 w-full h-full object-cover rounded-xl"
+                    width={720}
+                    height={720}
                   />
                 </div>
-              ))}
-            </Slider>
+              </div>
+            ))}
+          </Slider>
+
           </div>
           <div className="py-[50px] text-[20px]">{ootdItem.post.body}</div>
           <div className="flex pt-4">

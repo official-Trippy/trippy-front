@@ -8,10 +8,12 @@ import CalendarIcon from '../../../public/icon_calendar.svg';
 
 interface DateInputProps {
   onDateChange: (date: string) => void;
+  initialDate?: string; // 초기 date를 받을 수 있도록 추가
 }
 
-const DateInput: React.FC<DateInputProps> = ({ onDateChange }) => {
-  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+const DateInput: React.FC<DateInputProps> = ({ onDateChange, initialDate }) => {
+  const initialDateParsed = initialDate ? new Date(initialDate) : null;
+  const [selectedDate, setSelectedDate] = useState<Date | null>(initialDateParsed);
 
   const handleDateChange = (date: Date | null) => {
     if (date) {
