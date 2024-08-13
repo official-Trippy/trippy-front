@@ -1,4 +1,5 @@
 import { atom } from 'recoil';
+import { Editor } from 'tinymce';
 
 export const loginState = atom({
   key: 'loginState',
@@ -7,4 +8,10 @@ export const loginState = atom({
     accessToken: '',
     refreshToken: '',
   },
+});
+
+export const tinymceEditorState = atom<Editor | null>({
+  key: 'tinymceEditor',
+  default: null,
+  dangerouslyAllowMutability: true,
 });
