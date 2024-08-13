@@ -21,13 +21,12 @@ const FollowList: React.FC<{
 
   const followInfo = useUserStore((state) => state.userInfo);
 
-  if (isLoading)
-    return null;
+  if (isLoading) return null;
   if (error)
     return <div className="text-2xl font-bold my-12">Error loading data</div>;
 
   const userData =
-    type === "follower" ? data.result.follower : data.result.followings;
+    type === "follower" ? data.result.followers : data.result.followings;
 
   return (
     <div>
@@ -72,7 +71,7 @@ const FollowList: React.FC<{
                     console.log("Unfollow", user.idx);
                   }}
                 >
-                  {type === "follower" ? "삭제" : "팔로우 취소"}
+                  {type === "follower" ? "팔로우 삭제" : "팔로우 취소"}
                 </button>
               </div>
             ))

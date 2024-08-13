@@ -91,17 +91,17 @@ const UserInformation: React.FC<{ setActiveTab: (tab: string) => void }> = ({
             </span>
           </div>
           <button
-            className="mt-[20px] pl-[20px] pr-[20px] py-2 bg-neutral-100 rounded-lg justify-center items-center inline-flex"
+            className="mt-[10px] pl-[20px] pr-[20px] py-2 bg-btn-color text-white rounded-lg justify-center items-center inline-flex ]"
             onClick={handleEditProfile}
           >
             내 정보 수정
           </button>
-          <button
+          {/* <button
             className="mt-[20px] pl-[20px] pr-[20px] py-2 bg-neutral-100 rounded-lg justify-center items-center inline-flex"
             onClick={() => doFollow(userData?.memberId)}
           >
             팔로우
-          </button>
+          </button> */}
           <span className="mt-[10px] text-sm text-gray-600">
             {userData?.blogIntroduce}
           </span>

@@ -8,6 +8,7 @@ import "@/styles/globals.css";
 import { QueryClient, QueryClientProvider } from "react-query";
 import Script from "next/script";
 import { GoogleOAuthProvider } from "@react-oauth/google";
+import NewNotice from "@/components/notification/NewNotice";
 
 const inter = Inter({ subsets: ["latin"] });
 const queryClient = new QueryClient();
@@ -42,6 +43,7 @@ export default function RootLayout({
           <GoogleOAuthProvider clientId={clientId}>
             {/* <FallingContainer /> */}
             {children}
+            <NewNotice />
           </GoogleOAuthProvider>
         </QueryClientProvider>
       </body>
