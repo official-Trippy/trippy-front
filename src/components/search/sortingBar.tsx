@@ -18,7 +18,7 @@ const SortingBar: React.FC<SortingBarProps> = ({
   const postTypes = [
     { label: "게시글", value: "POST" },
     { label: "OOTD", value: "OOTD" },
-    { label: "사용자 닉네임", value: "USER" },
+    { label: "사용자 닉네임", value: "NICKNAME" },
   ];
 
   const sortOrders = [

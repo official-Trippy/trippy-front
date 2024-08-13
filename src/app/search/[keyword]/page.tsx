@@ -27,7 +27,7 @@ const SearchPage = () => {
 
   useEffect(() => {
     fetchPosts(RealKeyword, selectedPostType);
-  }, [keyword, selectedPostType, selectedSortOrder]);
+  }, [keyword, selectedPostType]);
 
   useEffect(() => {
     if (keyword) {
@@ -45,7 +45,7 @@ const SearchPage = () => {
     try {
       const response = await axios.get(`https://trippy-api.store/api/search`, {
         params: {
-          searchType: "TITLE",
+          searchType: "TITLE_OR_BODY",
           page: 0,
           size: 10,
           keyword: searchTerm,
