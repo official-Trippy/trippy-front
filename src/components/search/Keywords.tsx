@@ -1,20 +1,32 @@
 import React from "react";
 
-interface KeywordsProps {
-  keywords: string[];
-}
+const Keywords: React.FC = () => {
+  // Sample data for testing
+  const sampleKeywords = [
+    "키워드 1",
+    "키워드 2",
+    "키워드 3",
+    "키워드 4",
+    "키워드 5",
+    "키워드 6",
+    "키워드 7",
+    "키워드 8",
+    "키워드 9",
+  ];
 
-const Keywords: React.FC<KeywordsProps> = ({ keywords }) => {
   return (
-    <div>
-      <h2 className="text-xl font-semibold mb-4">Related Keywords</h2>
-      <ul className="list-disc pl-5">
-        {keywords.map((keyword, index) => (
-          <li key={index} className="mb-2">
+    <div className="p-3">
+      <h2 className="text-[2rem] font-semibold mb-4">추천 키워드</h2>
+      <div className="flex flex-wrap gap-5">
+        {sampleKeywords.map((keyword, index) => (
+          <span
+            key={index}
+            className="bg-gray-200 text-gray-800 px-4 py-2 rounded-full text-sm"
+          >
             {keyword}
-          </li>
+          </span>
         ))}
-      </ul>
+      </div>
     </div>
   );
 };
