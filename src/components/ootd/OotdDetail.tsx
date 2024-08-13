@@ -229,6 +229,7 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
                 <div
                   className="py-4 px-8 text-black hover:bg-gray-100 cursor-pointer text-center"
                   onClick={() => {
+                    router.push(`/edit/${id}`);
                   }}
                 >
                   수정
