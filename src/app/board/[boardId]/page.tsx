@@ -489,6 +489,9 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
                                                         </div>
                                                     </div>
                                                     {coData?.children.map((childData: any) => {
+                                                        const createDateTime = new Date(childData.createDateTime);
+                                                        const formattedDateTimes = `${createDateTime.getFullYear()}.${String(createDateTime.getMonth() + 1).padStart(2, "0")}.${String(createDateTime.getDate()).padStart(2, "0")} ${String(createDateTime.getHours()).padStart(2, "0")}:${String(createDateTime.getMinutes()).padStart(2, "0")}`;
+
                                                         return (
                                                             <div
                                                                 className={`bg-[#F5F5F5] w-[90%] py-[2rem] px-[1.6rem] mx-[5rem] rounded-[0.8rem]`}
@@ -509,7 +512,7 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
                                                                     {childData.content}
                                                                 </span>
                                                                 <div className="flex ml-[4.5rem] text-[1.2rem] text-[#9D9D9D] items-center">
-                                                                    <span>{formattedDateTime}</span>
+                                                                    <span>{formattedDateTimes}</span>
                                                                     <hr className="mx-[1rem] h-[1rem] w-[0.1rem] bg-[#9D9D9D]" />
                                                                     {replyOpen[index] ? (
                                                                         <span

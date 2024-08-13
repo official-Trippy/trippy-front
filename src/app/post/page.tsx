@@ -23,6 +23,8 @@ import { UploadedImage } from '@/types/ootd'
 import { useRouter } from 'next/navigation'
 import Swal from 'sweetalert2'
 import { colorTicket } from '@/types/board'
+import TextEditor from '@/components/testEditor/TextEditor'
+import MyTinyMCEEditor from '@/components/testEditor/textEditor2'
 
 const countries: { [key: string]: string } = {
     KOR: '대한민국',
@@ -422,7 +424,7 @@ function PostWrite() {
                             </div>
                         </div>
                         <div className='w-[95%] border-2 border-dashed border-[#CFCFCF] my-[3rem] mx-auto relative z-0' />
-                        <div className={`flex ml-[7rem] text-[1.4rem] font-extrabold`}
+                        <div className={`flex ml-[7rem] text-[1.4rem] font-extrabold font-akira`}
                             style={{ color: bgColor || 'inherit' }}
                         >
                             <span className='w-[16rem]'>PASSENGER</span>
@@ -492,6 +494,7 @@ function PostWrite() {
                         <form
                             className="h-screen w-full"
                         >
+
                             <div className="shadow-lg w-full h-screen">
                                 <div className='h-[13rem] border-b border-[#CFCFCF] flex'>
                                     <input
@@ -504,6 +507,9 @@ function PostWrite() {
                                         className="w-full outline-none text-[3.6rem] font-medium flex items-end px-[6rem]"
                                     />
                                 </div>
+                                {/* <TextEditor /> */}
+                                <MyTinyMCEEditor
+                                />
                                 <textarea
                                     className='w-full h-screen outline-none text-[2rem] px-[6rem] py-[2.5rem]'
                                     placeholder='여러분의 경험을 자유롭게 적어주세요.'
