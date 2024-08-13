@@ -207,6 +207,24 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
         return <div>Loading...</div>; // 데이터가 로딩 중일 때
     }
 
+    const replaceImagesInBody = (body: any, images: any) => {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(body, 'text/html');
+        const imgTags = doc.querySelectorAll('img');
+
+        imgTags.forEach((imgTag, index) => {
+            if (images[index]) {
+                const newImage = document.createElement('div'); // 새로운 div로 대체
+                newImage.innerHTML = `<Image class="max-w-[60rem] max-h-[60rem]" src="${images[index].accessUri}" alt="" width="900" height="900" />`;
+                imgTag.replaceWith(newImage);
+            }
+        });
+
+        return doc.body.innerHTML; // 변환된 HTML 반환
+    };
+
+    const images = postData?.result.post.images || [];
+    const bodyWithImages = replaceImagesInBody(postData?.result.post.body, images);
 
     console.log(postData);
     return (
@@ -318,8 +336,8 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
                         </div>
                     </div>
                 </div>
-                <div className="py-[5rem] h-[100rem]">
-                    {postData?.result.post.images?.map((image: any, index: number) => (
+                <div className="py-[5rem] min-h-[100rem] ">
+                    {/* {images.map((image, index) => (
                         <Image
                             className="max-w-[60rem] max-h-[60rem]"
                             src={image.accessUri}
@@ -328,10 +346,8 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
                             width={900}
                             height={900}
                         />
-                    ))}
-                    <span className="text-[1.6rem] font-medium">
-                        {postData?.result.post.body}
-                    </span>
+                    ))} */}
+                    <span className="text-[1.6rem] font-medium" dangerouslySetInnerHTML={{ __html: bodyWithImages }} />
                 </div>
                 {/* 댓글기능 */}
                 <div className="w-full h-[7.5rem] mt-[8rem] flex items-center">

@@ -76,6 +76,14 @@ export default function Home() {
               const createDateTime = new Date(posts.post.createDateTime);
               const formattedDateTime = `${createDateTime.getFullYear()}.${String(createDateTime.getMonth() + 1).padStart(2, '0')}.${String(createDateTime.getDate()).padStart(2, '0')} ${String(createDateTime.getHours()).padStart(2, '0')}:${String(createDateTime.getMinutes()).padStart(2, '0')}`;
 
+              const getTextFromHtml = (html: any) => {
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                return doc.body.innerText; // 텍스트만 반환
+              };
+
+              const bodyText = getTextFromHtml(posts.post.body);
+
               return (
                 <div className="h-[40rem] shadow-xl rounded-[1rem] mb-[2rem]" key={index}>
                   <div className="flex flex-col h-full">
@@ -89,7 +97,7 @@ export default function Home() {
                     </div>
                     <div className="px-[1rem] flex-1">
                       <h1 className="font-medium text-[2rem]">{posts.post.title}</h1>
-                      <span className="font-normal text-[1.2rem]">{posts.post.body}</span>
+                      <span className="font-normal text-[1.2rem]">{bodyText}</span>
                     </div>
                   </div>
                 </div>
