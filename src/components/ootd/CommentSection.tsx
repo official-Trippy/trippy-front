@@ -32,7 +32,6 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
   const [replyTo, setReplyTo] = useState<number | null>(null);
   const [replyToNickname, setReplyToNickname] = useState<string | null>(null);
   const [isLiked, setIsLiked] = useState<boolean>(false);
-  const [showComments, setShowComments] = useState<boolean>(false);
   const [showLikes, setShowLikes] = useState<boolean>(false);
   const [likeList, setLikeList] = useState<any[]>([]);
   const [isLoadingLikes, setIsLoadingLikes] = useState<boolean>(false);
@@ -41,6 +40,9 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
   const itemsPerPage = 18;
 
   const accessToken = Cookies.get("accessToken");
+
+  const [showComments, setShowComments] = useState<boolean>(!!accessToken);
+
 
   const handlePageChange = (pageNumber: number) => {
     setCurrentPage(pageNumber);
