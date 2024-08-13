@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { OotdDetailGetResponse, OotdGetResponse } from '@/types/ootd';
+import { OotdDetailGetResponse, OotdGetResponse, OotdRequest, PostRequest } from '@/types/ootd';
 import Cookies from "js-cookie";
 
 const backendUrl: string = process.env.NEXT_PUBLIC_BACKEND_URL || '';
@@ -107,6 +107,18 @@ export const fetchUserProfile = (memberId: string) => {
   return axios.get(`${backendUrl}/api/member/profile?memberId=${memberId}`).then((res) => res.data);
 };
 
+
+export const updateOotdPost = async (
+  id: number,
+  postRequest: PostRequest,
+  ootdRequest: OotdRequest
+) => {
+  const response = await axios.patch(`/api/ootd/${id}`, {
+    postRequest,
+    ootdRequest,
+  });
+  return response.data;
+};
 
 
 axios.interceptors.request.use(

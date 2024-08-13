@@ -218,7 +218,7 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
               className="cursor-pointer"
             />
             {isMenuOpen && (
-              <div className="absolute top-full right-4 mt-4 w-32 bg-white rounded shadow-lg z-10">
+              <div className="w-[100px] absolute top-full right-4 mt-4 w-32 bg-white rounded shadow-lg z-10">
                 <div
                   className="py-4 px-8 text-[#ff4f4f] hover:bg-gray-100 cursor-pointer text-center"
                   onClick={handleDeleteClick}
@@ -229,6 +229,7 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
                 <div
                   className="py-4 px-8 text-black hover:bg-gray-100 cursor-pointer text-center"
                   onClick={() => {
+                    router.push(`/edit/${id}`);
                   }}
                 >
                   수정

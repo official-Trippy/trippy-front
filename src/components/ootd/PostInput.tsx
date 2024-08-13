@@ -4,9 +4,11 @@ interface PostInputProps {
   onPostChange: (post: string) => void;
   onTagsChange: (tags: string[]) => void;
   tags: string[];
+  initialPost?: string; // 초기 post를 받을 수 있도록 추가
 }
 
-const PostInput: React.FC<PostInputProps> = ({ onPostChange, onTagsChange, tags }) => {
+const PostInput: React.FC<PostInputProps> = ({ onPostChange, onTagsChange, tags, initialPost = '' }) => {
+  const [post, setPost] = useState<string>(initialPost); 
   const [tagInput, setTagInput] = useState<string>('');
   const [isComposing, setIsComposing] = useState<boolean>(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -18,6 +20,8 @@ const PostInput: React.FC<PostInputProps> = ({ onPostChange, onTagsChange, tags 
   }, []);
 
   const handlePostChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const newPost = event.target.value;
+    setPost(newPost);
     onPostChange(event.target.value);
   };
 
@@ -56,6 +60,7 @@ const PostInput: React.FC<PostInputProps> = ({ onPostChange, onTagsChange, tags 
         ref={textareaRef}
         className="w-full h-64 text-lg border py-4 px-4 rounded resize-none"
         onChange={handlePostChange}
+        value={post}
       />
       <div className="relative w-full border py-4 px-4 rounded">
         <input
