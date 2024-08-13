@@ -80,6 +80,10 @@ function PostWrite() {
     const [tags, setTags] = useState<string[]>([]);
     const [inputValue, setInputValue] = useState<string>('');
     const [ticketColor, setTicketColor] = useState('')
+    const [postRequests, setPostRequests] = useState({
+        body: '',
+        images: [] as string[], // 이미지 URL을 저장할 배열
+    });
 
     const handleInputChange1 = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
@@ -244,10 +248,10 @@ function PostWrite() {
     const addPost = async () => {
         const postRequest = {
             title: title,
-            body: body,
+            body: postRequests.body,
             postType: 'POST',
             location: '24.12342,12.12344',
-            images: images,
+            images: postRequests.images,
             tags: tags,
         }
         const ticketRequest = {
@@ -509,6 +513,8 @@ function PostWrite() {
                                 </div>
                                 {/* <TextEditor /> */}
                                 <MyTinyMCEEditor
+                                    postRequest={postRequests}
+                                    setPostRequest={setPostRequests}
                                 />
                                 <textarea
                                     className='w-full h-screen outline-none text-[2rem] px-[6rem] py-[2.5rem]'

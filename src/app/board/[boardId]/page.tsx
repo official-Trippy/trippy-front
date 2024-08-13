@@ -223,26 +223,22 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
     return doc.body.innerHTML; // 변환된 HTML 반환
   };
 
-  console.log(memberDatas);
   const images = postData?.result.post.images || [];
   const bodyWithImages = replaceImagesInBody(
     postData?.result.post.body,
     images
   );
+
+  console.log(postData);
   return (
     <div>
       <Header />
       <div className="w-[66%] mx-auto">
         <div className="mt-[8rem] text-[#6B6B6B] font-semibold text-[2rem]">
-          <span onClick={handleProfileClick} className="cursor-pointer">
-            {postData?.result.member.blogName}의 블로그
-          </span>
+          <span>{postData?.result.member.blogName}의 블로그</span>
         </div>
         <div className="flex items-center mt-[5rem]">
-          <h1
-            className="text-[3.6rem] font-bold cursor-poin"
-            onClick={handleProfileClick}
-          >
+          <h1 className="text-[3.6rem] font-bold">
             {postData?.result.post.title}
           </h1>
         </div>
@@ -348,15 +344,15 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
         </div>
         <div className="py-[5rem] min-h-[100rem] ">
           {/* {images.map((image, index) => (
-                    <Image
-                        className="max-w-[60rem] max-h-[60rem]"
-                        src={image.accessUri}
-                        alt=""
-                        key={index}
-                        width={900}
-                        height={900}
-                    />
-                ))} */}
+                        <Image
+                            className="max-w-[60rem] max-h-[60rem]"
+                            src={image.accessUri}
+                            alt=""
+                            key={index}
+                            width={900}
+                            height={900}
+                        />
+                    ))} */}
           <span
             className="text-[1.6rem] font-medium"
             dangerouslySetInnerHTML={{ __html: bodyWithImages }}
