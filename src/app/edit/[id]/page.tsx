@@ -33,6 +33,7 @@ const EditOotd: React.FC = () => {
 
   useEffect(() => {
     if (data) {
+      console.log('Loaded data:', data);
       const ootdItem = data.result;
       setImages(ootdItem.post.images);
       setPost(ootdItem.post.body);

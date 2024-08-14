@@ -126,12 +126,19 @@ export const updateOotdPost = async (
   postRequest: PostRequest,
   ootdRequest: OotdRequest
 ) => {
-  const response = await axios.patch(`/api/ootd/${id}`, {
-    postRequest,
-    ootdRequest,
-  });
+  const requestBody = {
+    id,
+    area: ootdRequest.area,
+    weatherStatus: ootdRequest.weatherStatus,
+    weatherTemp: ootdRequest.weatherTemp,
+    detailLocation: ootdRequest.detailLocation,
+    date: ootdRequest.date,
+  };
+
+  const response = await axios.patch(`${backendUrl}/api/ootd`, requestBody);
   return response.data;
 };
+
 
 
 axios.interceptors.request.use(

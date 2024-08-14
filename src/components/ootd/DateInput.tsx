@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -14,6 +14,15 @@ interface DateInputProps {
 const DateInput: React.FC<DateInputProps> = ({ onDateChange, initialDate }) => {
   const initialDateParsed = initialDate ? new Date(initialDate) : null;
   const [selectedDate, setSelectedDate] = useState<Date | null>(initialDateParsed);
+
+  useEffect(() => {
+    if (initialDate) {
+      const parsedDate = new Date(initialDate);
+      if (!isNaN(parsedDate.getTime())) {
+        setSelectedDate(parsedDate);
+      }
+    }
+  }, [initialDate]);
 
   const handleDateChange = (date: Date | null) => {
     if (date) {
