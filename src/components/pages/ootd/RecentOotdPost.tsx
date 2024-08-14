@@ -6,7 +6,7 @@ import { useQuery } from 'react-query';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { OotdGetResponse } from '@/types/ootd';
-import { fetchAllOotdPostCount, fetchAllOotdPosts } from '@/services/ootd.ts/ootdGet';
+import { fetchAllOotdPostCount, fetchAllOotdPosts, fetchFollowOotdPosts } from '@/services/ootd.ts/ootdGet';
 import { MemberInfo } from '@/services/auth';
 import EmptyHeartIcon from '../../../../public/empty_heart_default.svg';
 import CommentIcon1 from '../../../../public/empty_comment_default.svg';
@@ -84,26 +84,35 @@ const RecentOotdPost: React.FC = () => {
     });
   }, [accessToken]);
 
-  const { data: memberData, isLoading: memberLoading } = useQuery({
+  const { data: memberData } = useQuery({
     queryKey: ['member', accessToken],
     queryFn: () => MemberInfo(accessToken),
-    onError: (error) => {
-      console.error('Error fetching member data:', error);
-    }
+    enabled: !!accessToken,  // accessToken이 있을 때만 실행
   });
 
-  const { data: totalCount, isLoading: isCountLoading, isError: isCountError } = useQuery<number>(
+  const { data: totalCount, isLoading: isCountLoading } = useQuery<number>(
     'ootdPostCount',
     fetchAllOotdPostCount
   );
 
-  const { data, isLoading, isError } = useQuery<OotdGetResponse>(
-    ['ootdPosts', page, orderType, tab],
-    () => fetchAllOotdPosts(page, PAGE_SIZE, orderType), 
+  const { data: allPostsData, isLoading: isAllPostsLoading } = useQuery<OotdGetResponse>(
+    ['ootdPosts', page, orderType],
+    () => fetchAllOotdPosts(page, PAGE_SIZE, orderType),
     {
-      enabled: tab === 'ALL' && totalCount !== undefined 
+      enabled: tab === 'ALL',  // 'ALL' 탭이 활성화될 때만 실행
     }
   );
+
+  const { data: followingPostsData, isLoading: isFollowingPostsLoading } = useQuery<OotdGetResponse>(
+    ['followingOotdPosts', page, orderType],
+    () => fetchFollowOotdPosts(page, PAGE_SIZE, orderType),
+    {
+      enabled: tab === 'FOLLOWING',  // 'FOLLOWING' 탭이 활성화될 때만 실행
+    }
+  );
+
+  const ootdList = tab === 'ALL' ? allPostsData?.result || [] : followingPostsData?.result || [];
+  const isLoading = isCountLoading || (tab === 'ALL' ? isAllPostsLoading : isFollowingPostsLoading);
 
   const totalPages = totalCount ? Math.ceil(totalCount / PAGE_SIZE) : 0;
 
@@ -127,15 +136,9 @@ const RecentOotdPost: React.FC = () => {
     });
   };
 
-  if (isCountLoading || (tab === 'ALL' && isLoading && isPending)) {
+  if (isLoading) {
     return <div></div>;
   }
-
-  if ((tab === 'ALL' && (isCountError || isError)) || (tab === 'FOLLOWING' && isCountError)) {
-    return <div>Error fetching data</div>;
-  }
-
-  const ootdList = tab === 'ALL' ? data?.result || [] : [];
 
   return (
     <div className='w-[66%] mx-auto py-[5rem]'>
@@ -171,65 +174,63 @@ const RecentOotdPost: React.FC = () => {
           <option value="VIEW">조회순</option>
         </select>
       </div>
-      {tab === 'ALL' && (
-        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-          {ootdList.map((item) => (
-            <div key={item.post.id} className="flex flex-col overflow-hidden cursor-pointer" onClick={() => handleOotdItemClick(item.post.id)}>
-              {item.post.images.length > 0 && (
-                <div className="relative w-full" style={{ aspectRatio: '303 / 381' }}>
-                  <Image
-                    className="absolute top-0 left-0 w-full h-full object-cover rounded-xl"
-                    src={item.post.images[0].accessUri}
-                    alt="OOTD"
-                    layout="fill"
-                  />
-                </div>
-              )}
-              <div className="py-8">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center">
-                    <div className="relative w-[24px] h-[24px]">
-                      <Image
-                        src={item.member.profileUrl}
-                        alt="Profile"
-                        layout="fill"
-                        objectFit="cover"
-                        className="rounded-full" />
-                    </div>
-                    <span className="text-[#6B6B6B] ml-[5px]">{item.member.nickName}</span>
-                  </div>
-                  <div className="flex items-center mt-2">
-                    <Image
-                      src={EmptyHeartIcon}
-                      alt="좋아요"
-                      width={20}
-                      height={18}
-                    />
-                    <span className="mx-2 text-[#cfcfcf]"> {item.post.likeCount}</span>
-                    <Image
-                      src={CommentIcon1}
-                      alt="댓글"
-                      width={18}
-                      height={18}
-                    />
-                    <span className="mx-2 text-[#cfcfcf]"> {item.post.commentCount}</span>
-                  </div>
-                </div>
-                <TagContainer item={item} />
+      <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        {ootdList.map((item) => (
+          <div key={item.post.id} className="flex flex-col overflow-hidden cursor-pointer" onClick={() => handleOotdItemClick(item.post.id)}>
+            {item.post.images.length > 0 && (
+              <div className="relative w-full" style={{ aspectRatio: '303 / 381' }}>
+                <Image
+                  className="absolute top-0 left-0 w-full h-full object-cover rounded-xl"
+                  src={item.post.images[0].accessUri}
+                  alt="OOTD"
+                  layout="fill"
+                />
               </div>
+            )}
+            <div className="py-8">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center">
+                  <div className="relative w-[24px] h-[24px]">
+                    <Image
+                      src={item.member.profileUrl}
+                      alt="Profile"
+                      layout="fill"
+                      objectFit="cover"
+                      className="rounded-full" />
+                  </div>
+                  <span className="text-[#6B6B6B] ml-[5px]">{item.member.nickName}</span>
+                </div>
+                <div className="flex items-center mt-2">
+                  <Image
+                    src={EmptyHeartIcon}
+                    alt="좋아요"
+                    width={20}
+                    height={18}
+                  />
+                  <span className="mx-2 text-[#cfcfcf]"> {item.post.likeCount}</span>
+                  <Image
+                    src={CommentIcon1}
+                    alt="댓글"
+                    width={18}
+                    height={18}
+                  />
+                  <span className="mx-2 text-[#cfcfcf]"> {item.post.commentCount}</span>
+                </div>
+              </div>
+              <TagContainer item={item} />
             </div>
-          ))}
-        </div>
-      )}
-      {tab === 'ALL' && totalPages > 1 && (
+          </div>
+        ))}
+      </div>
+      {totalPages > 1 && (
         <div className='flex justify-center mt-4'>
           {[...Array(totalPages)].map((_, index) => (
             <button
               key={index}
+              onClick={() => handlePageClick(index)}
               className={`mx-2 py-16 px-3  ${
                 page === index ? 'text-[#fa3463] font-semibold' : 'text-[#cfcfcf] font-normal'
               }`}
-              onClick={() => handlePageClick(index)}
             >
               {index + 1}
             </button>

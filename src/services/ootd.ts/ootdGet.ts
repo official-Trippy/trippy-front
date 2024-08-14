@@ -93,6 +93,19 @@ export const fetchAllOotdPosts = async (page?: number, size?: number, orderType:
   }
 }
 
+export const fetchFollowOotdPosts = async (page: number, size: number, orderType: string) => {
+  const response = await axios.get(`${backendUrl}/api/post/follow`, {
+    params: {
+      page,
+      size,
+      orderType,
+      postType: 'OOTD',
+    },
+  });
+
+  return response.data;
+};
+
 
 export const fetchUserOotdPosts = async (memberId: string, page: number, size: number) => {
   const response = await axios.get(`${backendUrl}/api/ootd/by-member`, {
