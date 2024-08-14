@@ -66,7 +66,7 @@ const Header = () => {
       </div>
 
       <div className="flex items-center">
-        <div className="mr-4">
+        <div className="ml-5">
           <SearchBar />
         </div>
         {!loading && (
