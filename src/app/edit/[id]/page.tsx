@@ -1,4 +1,3 @@
-// app/edit/[id].tsx
 'use client';
 
 import React, { useEffect, useState } from 'react';
@@ -8,10 +7,11 @@ import PostInput from '@/components/ootd/PostInput';
 import LocationInput from '@/components/ootd/LocationInput';
 import DateInput from '@/components/ootd/DateInput';
 import { useQuery, useMutation } from 'react-query';
-import { fetchOotdPostDetail, updateOotdPost } from '@/services/ootd.ts/ootdGet';;
+import { fetchOotdPostDetail, updateOotdPost, updatePost } from '@/services/ootd.ts/ootdGet';
 import { PostRequest, OotdRequest, UploadedImage } from '@/types/ootd';
 import Swal from 'sweetalert2';
 import { getWeatherStatusInKorean } from '@/constants/weatherTransition';
+import { fetchWeather } from '@/services/ootd.ts/weather';
 
 const EditOotd: React.FC = () => {
   const router = useRouter();
@@ -26,13 +26,12 @@ const EditOotd: React.FC = () => {
   const [date, setDate] = useState<string>('');
   const [weather, setWeather] = useState<any>(null);
 
-  // Fetching existing OOTD post details
   const { data, isLoading, error } = useQuery(['ootdPostDetail', id], () =>
     fetchOotdPostDetail(Number(id))
   );
 
   useEffect(() => {
-    if (data) {
+    if (data && !images.length && !post && !tags.length && !location && !date) {
       console.log('Loaded data:', data);
       const ootdItem = data.result;
       setImages(ootdItem.post.images);
@@ -47,9 +46,42 @@ const EditOotd: React.FC = () => {
     }
   }, [data]);
 
+  const weatherMutation = useMutation(
+    (variables: { latitude: number; longitude: number; date: string }) =>
+      fetchWeather(variables.latitude, variables.longitude, variables.date),
+    {
+      onSuccess: (data) => {
+        setWeather(data.result);
+      },
+      onError: () => {
+        Swal.fire({
+          icon: 'error',
+          title: '날씨 정보를 불러올 수 없습니다.',
+          text: '날씨와 온도를 직접 선택해주세요.',
+          confirmButtonText: '확인',
+          confirmButtonColor: '#FB3463',
+        });
+      },
+    }
+  );
+
+  const handleFetchWeather = () => {
+    if (!latitude || !longitude || !date) {
+      Swal.fire({
+        icon: 'error',
+        title: '입력 오류',
+        text: '위치와 날짜를 모두 입력해주세요.',
+      });
+      return;
+    }
+    weatherMutation.mutate({ latitude, longitude, date });
+  };
+
   const updatePostMutation = useMutation(
-    (variables: { postRequest: PostRequest; ootdRequest: OotdRequest }) =>
-      updateOotdPost(Number(id), variables.postRequest, variables.ootdRequest),
+    async (variables: { postRequest: PostRequest; ootdRequest: OotdRequest }) => {
+      await updatePost(Number(id), variables.postRequest);
+      return updateOotdPost(Number(id), variables.postRequest, variables.ootdRequest);
+    },
     {
       onSuccess: () => {
         Swal.fire({
@@ -73,7 +105,7 @@ const EditOotd: React.FC = () => {
 
   const handleUpdatePost = () => {
     const formattedDate = date.replace(/-/g, '');
-
+  
     const postRequest: PostRequest = {
       title: 'ootd 게시물',
       body: post,
@@ -85,8 +117,9 @@ const EditOotd: React.FC = () => {
         authenticateId: image.authenticateId,
       })),
       tags,
+      memberId: data?.result.member.memberId, 
     };
-
+  
     const ootdRequest: OotdRequest = {
       area: weather?.area || '',
       weatherStatus: weather?.status || '',
@@ -94,7 +127,7 @@ const EditOotd: React.FC = () => {
       detailLocation: location,
       date: formattedDate,
     };
-
+  
     updatePostMutation.mutate({ postRequest, ootdRequest });
   };
 
@@ -148,11 +181,7 @@ const EditOotd: React.FC = () => {
               </div>
             ) : (
               <button
-                onClick={() => {
-                  if (latitude && longitude && date) {
-                    // Trigger weather fetch
-                  }
-                }}
+                onClick={handleFetchWeather}
                 className="w-full bg-neutral-100 rounded-lg flex justify-center items-center py-4 text-neutral-500 text-lg"
               >
                 날씨 불러오기

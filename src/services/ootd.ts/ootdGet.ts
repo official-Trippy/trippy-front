@@ -120,6 +120,25 @@ export const fetchUserProfile = (memberId: string) => {
   return axios.get(`${backendUrl}/api/member/profile?memberId=${memberId}`).then((res) => res.data);
 };
 
+export const updatePost = async (id: number, postRequest: PostRequest) => {
+  const requestBody = {
+    id,
+    memberId: postRequest.memberId,
+    title: postRequest.title,
+    body: postRequest.body,
+    postType: postRequest.postType,
+    location: postRequest.location,
+    images: postRequest.images.map((image) => ({
+      accessUri: image.accessUri,
+      authenticateId: image.authenticateId,
+      imgUrl: image.imgUrl,
+    })),
+    tags: postRequest.tags,
+  };
+
+  const response = await axios.patch(`${backendUrl}/api/post`, requestBody);
+  return response.data;
+};
 
 export const updateOotdPost = async (
   id: number,

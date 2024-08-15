@@ -12,6 +12,7 @@ import { PostRequest, OotdRequest } from '@/types/ootd';
 import { UploadedImage } from '@/types/ootd';
 import Swal from 'sweetalert2';
 import { getWeatherStatusInKorean } from '@/constants/weatherTransition';
+import { useUserStore } from '@/store/useUserStore';
 
 const weatherOptions = [
   { value: 'rain', label: '비' },
@@ -37,6 +38,9 @@ const PostOotd: React.FC = () => {
   const [date, setDate] = useState<string>('');
   const [weather, setWeather] = useState<any>(null);
   const router = useRouter();
+
+  const userInfo = useUserStore((state) => state.userInfo);
+  const userMemberId = userInfo?.memberId;
 
   const weatherMutation = useMutation(
     (variables: { latitude: number; longitude: number; date: string }) =>
@@ -229,6 +233,7 @@ const PostOotd: React.FC = () => {
         authenticateId: image.authenticateId,
       })),
       tags,
+      memberId: userMemberId
     };
 
     const ootdRequest: OotdRequest = {
