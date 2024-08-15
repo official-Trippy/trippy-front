@@ -37,7 +37,9 @@ const EditOotd: React.FC = () => {
     fetchOotdPostDetail(Number(id))
   );
 
-  const formatDateString = (dateString: string) => {
+  const formatDateString = (dateString: string | null) => {
+    if (!dateString) return ''; // null이나 undefined일 경우 빈 문자열 반환
+  
     // dateString이 'yyyy-MM-dd' 형식일 경우에만 변환
     const dateParts = dateString.split('-');
     if (dateParts.length === 3) {
@@ -46,8 +48,11 @@ const EditOotd: React.FC = () => {
     }
     return dateString; // 형식이 다를 경우 원본 문자열 반환
   };
+  
 
-  const formatDateForApi = (dateString: string) => {
+  const formatDateForApi = (dateString: string | null) => {
+    if (!dateString) return ''; // null이나 undefined일 경우 빈 문자열 반환
+  
     // 'yyyyMMdd' 형식의 문자열을 'yyyy-MM-dd' 형식으로 변환
     const year = dateString.slice(0, 4);
     const month = dateString.slice(4, 6);
@@ -69,7 +74,7 @@ const EditOotd: React.FC = () => {
         setPost(postData.body);
         setTags(postData.tags);
         setLocation(postData.location);
-        setDate(formatDateString(ootdData.date)); // 날짜 포맷 변환
+        setDate(formatDateString(ootdData.date || '')); 
         setWeather({
           status: ootdData.weatherStatus,
           avgTemp: ootdData.weatherTemp,
