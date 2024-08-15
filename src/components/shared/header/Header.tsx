@@ -17,16 +17,20 @@ import SearchBar from "@/components/search/searchBar";
 const Header = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const { userInfo, loading, fetchUserInfo } = useUserStore();
   const router = useRouter();
-  const pathname = usePathname(); // 현재 경로를 가져옴
+  const pathname = usePathname(); 
 
   const accessToken = Cookies.get("accessToken");
 
   useEffect(() => {
-    fetchUserInfo();
-    console.log(userInfo);
+    const loadUserInfo = async () => {
+      await fetchUserInfo();
+      setIsLoading(false); 
+    };
+    loadUserInfo();
   }, [fetchUserInfo]);
 
   const onClickLogin = () => {
@@ -36,6 +40,10 @@ const Header = () => {
   const handleModalToggle = () => {
     setModalVisible(!modalVisible);
   };
+
+  if (isLoading) {
+    return null;
+  }
 
   return (
     <header className="header flex justify-between items-center w-[66%] mx-auto relative">
