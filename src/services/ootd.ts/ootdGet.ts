@@ -142,22 +142,20 @@ export const updatePost = async (id: number, postRequest: PostRequest) => {
 
 export const updateOotdPost = async (
   id: number,
-  postRequest: PostRequest,
   ootdRequest: OotdRequest
 ) => {
   const requestBody = {
     id,
-    area: ootdRequest.area,
-    weatherStatus: ootdRequest.weatherStatus,
-    weatherTemp: ootdRequest.weatherTemp,
-    detailLocation: ootdRequest.detailLocation,
-    date: ootdRequest.date,
+    area: ootdRequest.area || '', // 빈 문자열로 대체
+    weatherStatus: ootdRequest.weatherStatus || '', // 빈 문자열로 대체
+    weatherTemp: ootdRequest.weatherTemp || '', // 빈 문자열로 대체
+    detailLocation: ootdRequest.detailLocation || '', // 빈 문자열로 대체
+    date: ootdRequest.date || '', // 빈 문자열로 대체
   };
 
   const response = await axios.patch(`${backendUrl}/api/ootd`, requestBody);
   return response.data;
 };
-
 
 
 axios.interceptors.request.use(

@@ -12,6 +12,7 @@ import { PostRequest, OotdRequest, UploadedImage } from '@/types/ootd';
 import Swal from 'sweetalert2';
 import { getWeatherStatusInKorean } from '@/constants/weatherTransition';
 import { fetchWeather } from '@/services/ootd.ts/weather';
+import { formatDate } from '@/constants/dateFotmat';
 
 const EditOotd: React.FC = () => {
   const router = useRouter();
@@ -25,26 +26,40 @@ const EditOotd: React.FC = () => {
   const [longitude, setLongitude] = useState<number>(0);
   const [date, setDate] = useState<string>('');
   const [weather, setWeather] = useState<any>(null);
+  const [postId, setPostId] = useState<number | null>(null);
+  const [ootdId, setOotdId] = useState<number | null>(null);
 
   const { data, isLoading, error } = useQuery(['ootdPostDetail', id], () =>
     fetchOotdPostDetail(Number(id))
   );
 
   useEffect(() => {
-    if (data && !images.length && !post && !tags.length && !location && !date) {
-      console.log('Loaded data:', data);
-      const ootdItem = data.result;
-      setImages(ootdItem.post.images);
-      setPost(ootdItem.post.body);
-      setTags(ootdItem.post.tags);
-      setLocation(ootdItem.post.location);
-      setDate(ootdItem.post.createDateTime);
-      setWeather({
-        status: ootdItem.ootd.weatherStatus,
-        avgTemp: ootdItem.ootd.weatherTemp,
-      });
+    if (data && data.isSuccess) {
+      const postData = data.result.post;
+      const ootdData = data.result.ootd;
+      
+      if (postData && ootdData) {
+        setPostId(postData.id); 
+        setOotdId(ootdData.id);
+        console.log(postData.id)
+        console.log(ootdData.id)
+  
+        setImages(postData.images);
+        setPost(postData.body);
+        setTags(postData.tags);
+        setLocation(postData.location);
+        setDate(postData.createDateTime);
+        setWeather({
+          status: ootdData.weatherStatus,
+          avgTemp: ootdData.weatherTemp,
+        });
+      } else {
+        console.error('Post or OOTD data is missing');
+      }
     }
   }, [data]);
+
+  
 
   const weatherMutation = useMutation(
     (variables: { latitude: number; longitude: number; date: string }) =>
@@ -79,8 +94,11 @@ const EditOotd: React.FC = () => {
 
   const updatePostMutation = useMutation(
     async (variables: { postRequest: PostRequest; ootdRequest: OotdRequest }) => {
-      await updatePost(Number(id), variables.postRequest);
-      return updateOotdPost(Number(id), variables.postRequest, variables.ootdRequest);
+      if (postId === null || ootdId === null) {
+        throw new Error('Post ID or OOTD ID is missing');
+      }
+      await updatePost(postId, variables.postRequest);
+      return updateOotdPost(ootdId, variables.ootdRequest);
     },
     {
       onSuccess: () => {
@@ -102,10 +120,27 @@ const EditOotd: React.FC = () => {
       },
     }
   );
+  
 
   const handleUpdatePost = () => {
-    const formattedDate = date.replace(/-/g, '');
-  
+    if (postId === null || ootdId === null) {
+      Swal.fire({
+        icon: 'error',
+        title: '오류',
+        text: '포스트 ID 또는 OOTD ID가 없습니다.',
+      });
+      return;
+    }
+
+    const formatDateString = (dateString: string) => {
+      if (dateString.length === 8) {
+        return `${dateString.slice(0, 4)}-${dateString.slice(4, 6)}-${dateString.slice(6, 8)}`;
+      }
+      return dateString;
+    };
+
+    const formattedDate = formatDateString(date);
+    
     const postRequest: PostRequest = {
       title: 'ootd 게시물',
       body: post,
@@ -117,9 +152,9 @@ const EditOotd: React.FC = () => {
         authenticateId: image.authenticateId,
       })),
       tags,
-      memberId: data?.result.member.memberId, 
+      memberId: data?.result.member.memberId || '',
     };
-  
+    
     const ootdRequest: OotdRequest = {
       area: weather?.area || '',
       weatherStatus: weather?.status || '',
@@ -127,16 +162,16 @@ const EditOotd: React.FC = () => {
       detailLocation: location,
       date: formattedDate,
     };
-  
+    
     updatePostMutation.mutate({ postRequest, ootdRequest });
   };
-
+  
   if (isLoading) {
-    return <div>Loading...</div>;
+    return null;
   }
 
   if (error || !data) {
-    return <div>Error loading post data</div>;
+    return null;
   }
 
   return (
