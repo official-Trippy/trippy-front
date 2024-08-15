@@ -5,6 +5,7 @@ export interface Image {
   };
   
 export interface PostRequest {
+    memberId: any;
     title: string;
     body: string;
     postType: string;

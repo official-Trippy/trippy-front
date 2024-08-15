@@ -14,7 +14,7 @@ import RightArrowIcon from '../../../public/right-arrow.svg';
 
 interface ImageUploaderProps {
   onImagesChange: (images: UploadedImage[]) => void;
-  initialImages?: UploadedImage[]; // 초기 이미지 리스트를 받을 수 있도록 추가
+  initialImages?: UploadedImage[];
 }
 
 const ImageUploader: React.FC<ImageUploaderProps> = ({ onImagesChange, initialImages = [] }) => {
@@ -22,8 +22,14 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onImagesChange, initialIm
   const [isUploading, setIsUploading] = useState(false);
 
   useEffect(() => {
-    setImages(initialImages);
+    if (JSON.stringify(initialImages) !== JSON.stringify(images)) {
+      setImages(initialImages);
+    }
   }, [initialImages]);
+
+  useEffect(() => {
+    onImagesChange(images);
+  }, [images, onImagesChange]);
 
   const handleImageUpload = async (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -124,7 +130,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onImagesChange, initialIm
           {!isUploading && displayImages.length === 0 && (
             <div className="flex items-center justify-center w-full h-full">
               <Image
-                src={OotdDefault.src}
+                src={OotdDefault}
                 alt="Default Image"
                 className="object-cover"
                 width={400}
@@ -195,7 +201,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onImagesChange, initialIm
                           className="absolute top-0 right-0 rounded-full cursor-pointer"
                         >
                           <Image
-                            src={OOtdDeleteImage.src}
+                            src={OOtdDeleteImage}
                             alt="Delete Image"
                             width={20}
                             height={20}
@@ -212,7 +218,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onImagesChange, initialIm
                     className="w-[72px] h-[72px] ml-[5px] flex justify-center items-center cursor-pointer"
                   >
                     <Image
-                      src={OotdAddImage.src}
+                      src={OotdAddImage}
                       alt="Add Image"
                       width={72}
                       height={72}
