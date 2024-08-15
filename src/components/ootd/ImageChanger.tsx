@@ -17,9 +17,19 @@ interface ImageUploaderProps {
   initialImages?: UploadedImage[];
 }
 
-const ImageUploader: React.FC<ImageUploaderProps> = ({ onImagesChange, initialImages = [] }) => {
+const ImageChanger: React.FC<ImageUploaderProps> = ({ onImagesChange, initialImages = [] }) => {
   const [images, setImages] = useState<UploadedImage[]>(initialImages); 
   const [isUploading, setIsUploading] = useState(false);
+
+  // Update images when initialImages change
+  useEffect(() => {
+    setImages(initialImages);
+  }, [initialImages]);
+
+  // Notify parent component when images change
+  useEffect(() => {
+    onImagesChange(images);
+  }, [images, onImagesChange]);
 
   const handleImageUpload = async (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -31,6 +41,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onImagesChange, initialIm
       const uploadedImage = await uploadImage(file);
       const newImages = [...images, uploadedImage.result];
       setImages(newImages);
+      // Notify parent component about new images
       onImagesChange(newImages);
     } catch (error) {
       console.error('Error uploading image:', error);
@@ -228,4 +239,4 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onImagesChange, initialIm
   );
 };
 
-export default ImageUploader;
+export default ImageChanger;

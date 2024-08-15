@@ -13,6 +13,7 @@ import Swal from 'sweetalert2';
 import { getWeatherStatusInKorean } from '@/constants/weatherTransition';
 import { fetchWeather } from '@/services/ootd.ts/weather';
 import { getCoordinatesFromAddress } from '@/constants/geocode';
+import ImageChanger from '@/components/ootd/ImageChanger';
 
 const EditOotd: React.FC = () => {
   const router = useRouter();
@@ -257,7 +258,7 @@ const EditOotd: React.FC = () => {
         </button>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <ImageUploader onImagesChange={setImages} initialImages={images} />
+        <ImageChanger onImagesChange={setImages} initialImages={images} />
         <div className="">
           <PostInput
             onPostChange={setPost}
