@@ -12,6 +12,7 @@ import { PostRequest, OotdRequest, UploadedImage } from '@/types/ootd';
 import Swal from 'sweetalert2';
 import { getWeatherStatusInKorean } from '@/constants/weatherTransition';
 import { fetchWeather } from '@/services/ootd.ts/weather';
+import { getCoordinatesFromAddress } from '@/constants/geocode';
 
 const EditOotd: React.FC = () => {
   const router = useRouter();
@@ -21,16 +22,38 @@ const EditOotd: React.FC = () => {
   const [post, setPost] = useState<string>('');
   const [tags, setTags] = useState<string[]>([]);
   const [location, setLocation] = useState<string>('');
-  const [latitude, setLatitude] = useState<number>(0);
-  const [longitude, setLongitude] = useState<number>(0);
+  const [latitude, setLatitude] = useState<number | null>(null);
+  const [longitude, setLongitude] = useState<number | null>(null);
   const [date, setDate] = useState<string>('');
   const [weather, setWeather] = useState<any>(null);
   const [postId, setPostId] = useState<number | null>(null);
   const [ootdId, setOotdId] = useState<number | null>(null);
 
+  // 상태 변경 여부를 추적하는 상태
+  const [hasChanges, setHasChanges] = useState<boolean>(false);
+
   const { data, isLoading, error } = useQuery(['ootdPostDetail', id], () =>
     fetchOotdPostDetail(Number(id))
   );
+
+  const formatDateString = (dateString: string) => {
+    // dateString이 'yyyy-MM-dd' 형식일 경우에만 변환
+    const dateParts = dateString.split('-');
+    if (dateParts.length === 3) {
+      const [year, month, day] = dateParts;
+      return `${year}${month.padStart(2, '0')}${day.padStart(2, '0')}`;
+    }
+    return dateString; // 형식이 다를 경우 원본 문자열 반환
+  };
+
+  const formatDateForApi = (dateString: string) => {
+    // 'yyyyMMdd' 형식의 문자열을 'yyyy-MM-dd' 형식으로 변환
+    const year = dateString.slice(0, 4);
+    const month = dateString.slice(4, 6);
+    const day = dateString.slice(6, 8);
+    return `${year}-${month}-${day}`;
+  };
+  
 
   useEffect(() => {
     if (data && data.isSuccess) {
@@ -45,16 +68,32 @@ const EditOotd: React.FC = () => {
         setPost(postData.body);
         setTags(postData.tags);
         setLocation(postData.location);
-        setDate(postData.createDateTime);
+        setDate(formatDateString(ootdData.date)); // 날짜 포맷 변환
         setWeather({
           status: ootdData.weatherStatus,
           avgTemp: ootdData.weatherTemp,
+        });
+
+        console.log(formatDateString(ootdData.date)); // 변환된 날짜 확인
+
+        // 주소를 좌표로 변환하여 latitude와 longitude를 설정합니다.
+        getCoordinatesFromAddress(postData.location).then(coordinates => {
+          if (coordinates) {
+            setLatitude(coordinates.lat);
+            setLongitude(coordinates.lng);
+          }
         });
       } else {
         console.error('Post or OOTD data is missing');
       }
     }
   }, [data]);
+
+  useEffect(() => {
+    if (hasChanges && latitude !== null && longitude !== null && date) {
+      handleFetchWeather();
+    }
+  }, [hasChanges, latitude, longitude, date]);
 
   const weatherMutation = useMutation(
     (variables: { latitude: number; longitude: number; date: string }) =>
@@ -76,7 +115,7 @@ const EditOotd: React.FC = () => {
   );
 
   const handleFetchWeather = () => {
-    if (!latitude || !longitude || !date) {
+    if (latitude === null || longitude === null || !date) {
       Swal.fire({
         icon: 'error',
         title: '입력 오류',
@@ -125,7 +164,7 @@ const EditOotd: React.FC = () => {
       });
       return;
     }
-
+  
     if (images.length === 0) {
       Swal.fire({
         icon: 'error',
@@ -136,7 +175,7 @@ const EditOotd: React.FC = () => {
       });
       return;
     }
-
+  
     if (post.trim() === '') {
       Swal.fire({
         icon: 'error',
@@ -147,7 +186,7 @@ const EditOotd: React.FC = () => {
       });
       return;
     }
-
+  
     if (tags.length < 3) {
       Swal.fire({
         icon: 'error',
@@ -158,16 +197,9 @@ const EditOotd: React.FC = () => {
       });
       return;
     }
-
-    const formatDateString = (dateString: string) => {
-      if (dateString.length === 8) {
-        return `${dateString.slice(0, 4)}-${dateString.slice(4, 6)}-${dateString.slice(6, 8)}`;
-      }
-      return dateString;
-    };
-
-    const formattedDate = formatDateString(date);
-
+  
+    const formattedDateForApi = formatDateForApi(date);
+  
     const postRequest: PostRequest = {
       title: 'ootd 게시물',
       body: post,
@@ -181,16 +213,29 @@ const EditOotd: React.FC = () => {
       tags,
       memberId: data?.result.member.memberId || '',
     };
-
+  
     const ootdRequest: OotdRequest = {
       area: weather?.area || '',
       weatherStatus: weather?.status || '',
       weatherTemp: weather?.avgTemp === '정보 없음' ? '' : weather?.avgTemp || '',
       detailLocation: location,
-      date: formattedDate,
+      date: formattedDateForApi,
     };
-
+  
     updatePostMutation.mutate({ postRequest, ootdRequest });
+  };
+  
+
+  const handleLocationChange = (locationData: { address: string; lat: number; lng: number }) => {
+    setLocation(locationData.address);
+    setLatitude(locationData.lat);
+    setLongitude(locationData.lng);
+    setHasChanges(true);
+  };
+
+  const handleDateChange = (newDate: string) => {
+    setDate(formatDateString(newDate));
+    setHasChanges(true);
   };
 
   if (isLoading) {
@@ -222,15 +267,13 @@ const EditOotd: React.FC = () => {
           />
           <div className="space-y-4">
             <LocationInput
-              onLocationChange={(locationData) => {
-                setLocation(locationData.address);
-                setLatitude(locationData.lat);
-                setLongitude(locationData.lng);
-                setWeather(null);
-              }}
+              onLocationChange={handleLocationChange}
               selectedLocationName={location}
             />
-            <DateInput onDateChange={setDate} initialDate={date} />
+            <DateInput
+              onDateChange={handleDateChange}
+              initialDate={date}
+            />
             {weather ? (
               <div className="w-full bg-neutral-100 rounded-lg flex justify-center items-center py-4 text-neutral-500 text-lg">
                 <div>

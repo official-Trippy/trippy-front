@@ -109,6 +109,9 @@ const PostOotd: React.FC = () => {
     }
   );
 
+  console.log(latitude);
+  console.log(longitude);
+  
   const postMutation = useMutation(
     (variables: { postRequest: PostRequest; ootdRequest: OotdRequest }) =>
       createPost(variables.postRequest, variables.ootdRequest),
