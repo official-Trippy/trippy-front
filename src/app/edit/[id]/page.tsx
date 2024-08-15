@@ -12,7 +12,6 @@ import { PostRequest, OotdRequest, UploadedImage } from '@/types/ootd';
 import Swal from 'sweetalert2';
 import { getWeatherStatusInKorean } from '@/constants/weatherTransition';
 import { fetchWeather } from '@/services/ootd.ts/weather';
-import { formatDate } from '@/constants/dateFotmat';
 
 const EditOotd: React.FC = () => {
   const router = useRouter();
@@ -37,13 +36,11 @@ const EditOotd: React.FC = () => {
     if (data && data.isSuccess) {
       const postData = data.result.post;
       const ootdData = data.result.ootd;
-      
+
       if (postData && ootdData) {
-        setPostId(postData.id); 
+        setPostId(postData.id);
         setOotdId(ootdData.id);
-        console.log(postData.id)
-        console.log(ootdData.id)
-  
+
         setImages(postData.images);
         setPost(postData.body);
         setTags(postData.tags);
@@ -58,8 +55,6 @@ const EditOotd: React.FC = () => {
       }
     }
   }, [data]);
-
-  
 
   const weatherMutation = useMutation(
     (variables: { latitude: number; longitude: number; date: string }) =>
@@ -120,7 +115,6 @@ const EditOotd: React.FC = () => {
       },
     }
   );
-  
 
   const handleUpdatePost = () => {
     if (postId === null || ootdId === null) {
@@ -128,6 +122,39 @@ const EditOotd: React.FC = () => {
         icon: 'error',
         title: '오류',
         text: '포스트 ID 또는 OOTD ID가 없습니다.',
+      });
+      return;
+    }
+
+    if (images.length === 0) {
+      Swal.fire({
+        icon: 'error',
+        title: '이미지 오류',
+        text: '이미지를 업로드해주세요.',
+        confirmButtonText: '확인',
+        confirmButtonColor: '#FB3463',
+      });
+      return;
+    }
+
+    if (post.trim() === '') {
+      Swal.fire({
+        icon: 'error',
+        title: '문구 작성 오류',
+        text: 'OOTD 문구를 작성해주세요.',
+        confirmButtonText: '확인',
+        confirmButtonColor: '#FB3463',
+      });
+      return;
+    }
+
+    if (tags.length < 3) {
+      Swal.fire({
+        icon: 'error',
+        title: '태그 오류',
+        text: '태그를 3개 이상 등록해주세요.',
+        confirmButtonText: '확인',
+        confirmButtonColor: '#FB3463',
       });
       return;
     }
@@ -140,7 +167,7 @@ const EditOotd: React.FC = () => {
     };
 
     const formattedDate = formatDateString(date);
-    
+
     const postRequest: PostRequest = {
       title: 'ootd 게시물',
       body: post,
@@ -154,7 +181,7 @@ const EditOotd: React.FC = () => {
       tags,
       memberId: data?.result.member.memberId || '',
     };
-    
+
     const ootdRequest: OotdRequest = {
       area: weather?.area || '',
       weatherStatus: weather?.status || '',
@@ -162,10 +189,10 @@ const EditOotd: React.FC = () => {
       detailLocation: location,
       date: formattedDate,
     };
-    
+
     updatePostMutation.mutate({ postRequest, ootdRequest });
   };
-  
+
   if (isLoading) {
     return null;
   }
