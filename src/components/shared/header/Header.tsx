@@ -13,10 +13,12 @@ import postwriteImg from "@/dummy/postwrite.svg";
 import postwriteImg2 from "@/dummy/postwrite2.svg";
 import Cookies from "js-cookie";
 import SearchBar from "@/components/search/searchBar";
+import NotificationComponent from "@/components/notification/notificationComponent"; // Import NotificationComponent
 
 const Header = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isNotificationsVisible, setIsNotificationsVisible] = useState(false); // New state for notifications
 
   const { userInfo, loading, fetchUserInfo } = useUserStore();
   const router = useRouter();
@@ -35,6 +37,10 @@ const Header = () => {
 
   const handleModalToggle = () => {
     setModalVisible(!modalVisible);
+  };
+
+  const handleNotificationsToggle = () => {
+    setIsNotificationsVisible(!isNotificationsVisible); // Toggle notifications
   };
 
   return (
@@ -66,70 +72,27 @@ const Header = () => {
       </div>
 
       <div className="flex items-center">
-        <div className="mr-4">
+        <div className="ml-5">
           <SearchBar />
         </div>
         {!loading && (
           <>
             {userInfo && accessToken ? (
               <div className="flex relative">
-                {isDropdownOpen && (
-                  <div
-                    className="absolute w-[31rem] mt-[1rem] ml-[1rem] top-[3.6rem] rounded-[0.8rem] bg-white shadowalltop rounded-lg animate-dropdown z-20"
-                    style={{ opacity: 0, transform: "translateY(-10px)" }}
-                    onMouseEnter={() => setIsDropdownOpen(true)} // 드롭다운에 마우스가 올라가면 열려있도록 유지
-                    onMouseLeave={() => setIsDropdownOpen(false)}
-                  >
-                    <Link href="/post">
-                      <div className="px-[1.3rem] pt-[1.2rem] rounded-lg border-b border-white">
-                        <div className="hover:bg-gray-200 px-[1.3rem] py-[1.2rem]">
-                          <div className="flex items-start">
-                            <Image
-                              className="mr-[1.7rem] mt-[0.5rem]"
-                              src={postwriteImg}
-                              width={24}
-                              height={24}
-                              alt=""
-                            />
-                            <div>
-                              <h1 className="text-[1.6rem] font-medium text-black">
-                                블로그 티켓 글쓰기
-                              </h1>
-                              <span className="text-[1.4rem] font-normal text-[#9D9D9D]">
-                                여행에서 겪었던 이야기를 기록해 보세요.
-                              </span>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </Link>
-                    <Link href="/write">
-                      <div className="px-[1.3rem] pb-[1.2rem] rounded-lg border-b border-white">
-                        <div className="hover:bg-gray-200 px-[1.3rem] py-[1.2rem]">
-                          <div className="flex items-start">
-                            <Image
-                              className="mr-[1.7rem] mt-[0.5rem]"
-                              src={postwriteImg}
-                              width={24}
-                              height={24}
-                              alt=""
-                            />
-                            <div>
-                              <h1 className="text-[1.6rem] font-medium text-black">
-                                OOTD 글쓰기
-                              </h1>
-                              <span className="text-[1.4rem] font-normal text-[#9D9D9D]">
-                                여행 중 나의 특별한 OOTD를 공유해보세요.
-                              </span>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </Link>
-                  </div>
-                )}
-                <div className="mr-12 w-[24px] my-auto">
-                  <Image src={AlertImg} alt="alert" />
+                <div className="mr-12 w-[24px] my-auto relative">
+                  <Image
+                    src={AlertImg}
+                    alt="alert"
+                    onClick={handleNotificationsToggle}
+                    className="cursor-pointer"
+                  />
+
+                  {/* Notification Dropdown */}
+                  {isNotificationsVisible && (
+                    <div className="absolute right-0 mt-2 w-[350px] bg-white shadow-lg rounded-lg z-50">
+                      <NotificationComponent />
+                    </div>
+                  )}
                 </div>
                 <div className="w-[32px] my-auto relative">
                   <div onClick={handleModalToggle}>

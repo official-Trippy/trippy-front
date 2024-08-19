@@ -8,7 +8,8 @@ import "@/styles/globals.css";
 import { QueryClient, QueryClientProvider } from "react-query";
 import Script from "next/script";
 import { GoogleOAuthProvider } from "@react-oauth/google";
-import NewNotice from "@/components/notification/NewNotice";
+
+import NotificationComponent from "@/components/notification/notificationComponent";
 
 const inter = Inter({ subsets: ["latin"] });
 const queryClient = new QueryClient();
@@ -41,9 +42,9 @@ export default function RootLayout({
       <body className="flex flex-col">
         <QueryClientProvider client={queryClient}>
           <GoogleOAuthProvider clientId={clientId}>
+            <NotificationComponent />
             {/* <FallingContainer /> */}
             {children}
-            <NewNotice />
           </GoogleOAuthProvider>
         </QueryClientProvider>
       </body>
