@@ -10,6 +10,7 @@ interface Notification {
   createdAt: string;
   read: boolean;
 }
+let accessToken = "";
 
 async function fetchNotifications(): Promise<Notification[]> {
   const response = await axios.get(
