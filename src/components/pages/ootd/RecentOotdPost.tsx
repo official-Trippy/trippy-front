@@ -6,7 +6,7 @@ import { useQuery } from 'react-query';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { OotdGetResponse } from '@/types/ootd';
-import { fetchAllOotdPostCount, fetchAllOotdPosts, fetchFollowOotdPosts } from '@/services/ootd.ts/ootdGet';
+import { fetchAllOotdPostCount, fetchAllOotdPosts, fetchFollowOotdPosts, fetchOotdFollowPostCount } from '@/services/ootd.ts/ootdGet';
 import { MemberInfo } from '@/services/auth';
 import EmptyHeartIcon from '../../../../public/empty_heart_default.svg';
 import CommentIcon1 from '../../../../public/empty_comment_default.svg';
@@ -87,19 +87,22 @@ const RecentOotdPost: React.FC = () => {
   const { data: memberData } = useQuery({
     queryKey: ['member', accessToken],
     queryFn: () => MemberInfo(accessToken),
-    enabled: !!accessToken,  // accessToken이 있을 때만 실행
+    enabled: !!accessToken,
   });
 
   const { data: totalCount, isLoading: isCountLoading } = useQuery<number>(
-    'ootdPostCount',
-    fetchAllOotdPostCount
+    ['ootdPostCount', tab],
+    () => (tab === 'ALL' ? fetchAllOotdPostCount() : fetchOotdFollowPostCount()),
+    {
+      enabled: tab === 'ALL' || tab === 'FOLLOWING',
+    }
   );
 
   const { data: allPostsData, isLoading: isAllPostsLoading } = useQuery<OotdGetResponse>(
     ['ootdPosts', page, orderType],
     () => fetchAllOotdPosts(page, PAGE_SIZE, orderType),
     {
-      enabled: tab === 'ALL',  // 'ALL' 탭이 활성화될 때만 실행
+      enabled: tab === 'ALL',  
     }
   );
 
@@ -107,7 +110,7 @@ const RecentOotdPost: React.FC = () => {
     ['followingOotdPosts', page, orderType],
     () => fetchFollowOotdPosts(page, PAGE_SIZE, orderType),
     {
-      enabled: tab === 'FOLLOWING',  // 'FOLLOWING' 탭이 활성화될 때만 실행
+      enabled: tab === 'FOLLOWING', 
     }
   );
 
@@ -137,7 +140,7 @@ const RecentOotdPost: React.FC = () => {
   };
 
   if (isLoading) {
-    return <div></div>;
+    return <div></div>; 
   }
 
   return (

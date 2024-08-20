@@ -170,3 +170,16 @@ axios.interceptors.request.use(
     return Promise.reject(error);
   }
 );
+
+export const fetchOotdFollowPostCount = async (): Promise<number> => {
+  try {
+    const response = await axios.get<{ result: number }>(
+      `${backendUrl}/api/post/count/follow?type=OOTD`
+    );
+    console.log(response.data);
+    return response.data.result;
+  } catch (error) {
+    console.error(`팔로우 유저 OOTD 데이터 개수를 가져오는 중 오류가 발생했습니다: ${error}`);
+    throw error;
+  }
+};
