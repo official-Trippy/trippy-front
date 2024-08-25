@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useRef, useTransition } from 'react';
+import React, { useState, useEffect, useTransition, useRef } from 'react';
 import Cookies from 'js-cookie';
 import { useQuery } from 'react-query';
 import Image from 'next/image';
@@ -74,15 +74,26 @@ const RecentOotdPost: React.FC = () => {
   const accessToken = Cookies.get('accessToken');
   const [page, setPage] = useState(0);
   const [orderType, setOrderType] = useState('LATEST');
-  const [tab, setTab] = useState<'ALL' | 'FOLLOWING'>(accessToken ? 'FOLLOWING' : 'ALL');
+  const [tab, setTab] = useState<'ALL' | 'FOLLOWING' | null>(null); 
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
 
   useEffect(() => {
-    startTransition(() => {
+    const savedTab = sessionStorage.getItem('tab');
+    if (savedTab) {
+      setTab(savedTab as 'ALL' | 'FOLLOWING');
+    } else {
       setTab(accessToken ? 'FOLLOWING' : 'ALL');
-    });
+    }
   }, [accessToken]);
+
+  useEffect(() => {
+    if (tab) {
+      sessionStorage.setItem('tab', tab);
+    }
+  }, [tab]);
+
+  const isTabInitialized = tab !== null;
 
   const { data: memberData } = useQuery({
     queryKey: ['member', accessToken],
@@ -94,7 +105,7 @@ const RecentOotdPost: React.FC = () => {
     ['ootdPostCount', tab],
     () => (tab === 'ALL' ? fetchAllOotdPostCount() : fetchOotdFollowPostCount()),
     {
-      enabled: tab === 'ALL' || tab === 'FOLLOWING',
+      enabled: isTabInitialized,
     }
   );
 
@@ -102,7 +113,7 @@ const RecentOotdPost: React.FC = () => {
     ['ootdPosts', page, orderType],
     () => fetchAllOotdPosts(page, PAGE_SIZE, orderType),
     {
-      enabled: tab === 'ALL',  
+      enabled: tab === 'ALL' && isTabInitialized,
     }
   );
 
@@ -110,7 +121,7 @@ const RecentOotdPost: React.FC = () => {
     ['followingOotdPosts', page, orderType],
     () => fetchFollowOotdPosts(page, PAGE_SIZE, orderType),
     {
-      enabled: tab === 'FOLLOWING', 
+      enabled: tab === 'FOLLOWING' && isTabInitialized,
     }
   );
 
@@ -139,8 +150,8 @@ const RecentOotdPost: React.FC = () => {
     });
   };
 
-  if (isLoading) {
-    return <div></div>; 
+  if (!isTabInitialized) {
+    return <div></div>;
   }
 
   return (
