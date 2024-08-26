@@ -55,12 +55,14 @@ const TagContainer: React.FC<TagContainerProps> = ({ item }) => {
 
   return (
     <div className="mt-4">
-      <h2 className="text-[1.2rem] font-medium text-[#6B6B6B]">{item.post.body}</h2>
-      <div className="flex flex-wrap mt-4 gap-2" ref={containerRef}>
+       <div className="text-[#6b6b6b] text-xl font-normal font-['Pretendard'] text-ellipsis overflow-hidden whitespace-nowrap">
+              {item.post.body}
+            </div>
+      <div className="tag-container mt-2" ref={containerRef}>
         {visibleTags.map((tag, index) => (
           <span
             key={index}
-            className="px-4 py-1 bg-neutral-100 rounded-3xl text-xl justify-center items-center gap-2.5 inline-flex text-[#9d9d9d]"
+            className="tag-item px-4 py-1 bg-neutral-100 rounded-3xl text-xl justify-center items-center gap-2.5 inline-flex text-[#9d9d9d]"
           >
             {tag}
           </span>
