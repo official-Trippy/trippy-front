@@ -12,18 +12,22 @@ import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautif
 import LeftArrowIcon from '../../../public/left-arrow.svg'; 
 import RightArrowIcon from '../../../public/right-arrow.svg'; 
 
-interface ImageUploaderProps {
+interface ImageChangerProps {
   onImagesChange: (images: UploadedImage[]) => void;
   initialImages?: UploadedImage[];
 }
 
-const ImageChanger: React.FC<ImageUploaderProps> = ({ onImagesChange, initialImages = [] }) => {
-  const [images, setImages] = useState<UploadedImage[]>(initialImages); 
+const ImageChanger: React.FC<ImageChangerProps> = ({ onImagesChange, initialImages = [] }) => {
+  const [images, setImages] = useState<UploadedImage[]>(initialImages || []);
   const [isUploading, setIsUploading] = useState(false);
 
-  // Update images when initialImages change
+  console.log(initialImages);
+
+  // Update images when initialImages change, but only on initial load
   useEffect(() => {
-    setImages(initialImages);
+    if (initialImages && initialImages.length > 0) {
+      setImages(initialImages);
+    }
   }, [initialImages]);
 
   // Notify parent component when images change
@@ -41,7 +45,6 @@ const ImageChanger: React.FC<ImageUploaderProps> = ({ onImagesChange, initialIma
       const uploadedImage = await uploadImage(file);
       const newImages = [...images, uploadedImage.result];
       setImages(newImages);
-      // Notify parent component about new images
       onImagesChange(newImages);
     } catch (error) {
       console.error('Error uploading image:', error);
@@ -53,7 +56,6 @@ const ImageChanger: React.FC<ImageUploaderProps> = ({ onImagesChange, initialIma
   const handleDeleteImage = (index: number) => {
     const newImages = images.filter((_, i) => i !== index);
     setImages(newImages);
-    // Notify parent component about image deletion
     onImagesChange(newImages);
   };
 
@@ -65,7 +67,6 @@ const ImageChanger: React.FC<ImageUploaderProps> = ({ onImagesChange, initialIma
     newImages.splice(result.destination.index, 0, reorderedImage);
 
     setImages(newImages);
-    // Notify parent component about image reordering
     onImagesChange(newImages);
   };
 
@@ -215,17 +216,17 @@ const ImageChanger: React.FC<ImageUploaderProps> = ({ onImagesChange, initialIma
                     )}
                   </Draggable>
                 ))}
-                {images.length > 0 && images.length < 5 && (
+                {images.length > 0 && (
                   <div
                     onClick={() => document.getElementById('image-upload-input')?.click()}
-                    className="w-[72px] h-[72px] ml-[5px] flex justify-center items-center cursor-pointer"
+                    className="flex items-center justify-center w-[72px] h-[72px] cursor-pointer"
                   >
                     <Image
                       src={OotdAddImage.src}
                       alt="Add Image"
                       width={72}
                       height={72}
-                      style={{ objectFit: 'cover' }}
+                      style={{ objectFit: 'cover', width: '72px', height: '72px' }}
                     />
                   </div>
                 )}

@@ -96,6 +96,17 @@ const EditOotd: React.FC = () => {
   }, [data]);
 
   useEffect(() => {
+    console.log('렌더링된 이미지 상태: ', images); // 상태 업데이트 후의 이미지 상태를 로그합니다.
+  }, [images]);
+  
+  // 비동기적으로 상태가 설정되었는지 확인
+  useEffect(() => {
+    if (images.length > 0) {
+      console.log('렌더링된 이미지 상태 (비동기 확인): ', images);
+    }
+  }, [images]);
+
+  useEffect(() => {
     if (hasChanges && latitude !== null && longitude !== null && date) {
       handleFetchWeather();
     }
