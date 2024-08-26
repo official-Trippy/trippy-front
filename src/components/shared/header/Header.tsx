@@ -45,6 +45,9 @@ const Header = () => {
     return null;
   }
 
+  // Check if user role is "GUEST"
+  const isGuest = userInfo?.role === "GUEST";
+
   return (
     <header className="header flex justify-between items-center w-[66%] mx-auto relative">
       <div className="flex items-center">
@@ -77,7 +80,7 @@ const Header = () => {
         <div className="mr-4">
           <SearchBar />
         </div>
-        {!loading && (
+        {!loading && !isGuest && (
           <>
             {userInfo && accessToken ? (
               <div className="flex relative">
@@ -200,6 +203,18 @@ const Header = () => {
               </div>
             )}
           </>
+        )}
+        {!loading && isGuest && (
+          <div>
+            <Link href="/login">
+              <button
+                className="w-[8.6rem] h-[3.5rem] bg-btn-color text-white px-6 py-2 rounded-lg"
+                style={{ fontSize: "1.6rem" }}
+              >
+                로그인
+              </button>
+            </Link>
+          </div>
         )}
       </div>
     </header>
