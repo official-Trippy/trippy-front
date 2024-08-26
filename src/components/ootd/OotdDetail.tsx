@@ -18,8 +18,10 @@ import { getWeatherStatusInKorean } from "@/constants/weatherTransition";
 import { useRouter } from "next/navigation";
 import FollowButton from "../followControl/followButton";
 import Cookies from "js-cookie";
-import CabapIcon from "../../../public/icon_cabap.svg";
 import Swal from "sweetalert2";
+import CabapIcon from "../../../public/icon_cabap.svg";
+import BookmarkIcon from "../../../public/icon_bookmark.svg";
+import BookmarkedIcon from "../../../public/bookmark-fill.svg";
 
 interface OotdDetailProps {
   id: number;
@@ -206,6 +208,15 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
               />
               <i className="far fa-bookmark text-xl"></i>
               <i className="fas fa-ellipsis-h text-xl"></i>
+            </div>
+            <div className="relative my-auto">
+            <Image
+              src={BookmarkIcon}
+              alt="bookmark"
+              width={24}
+              height={24}
+              className="cursor-pointer"
+            />
             </div>
             {userMemberId === data.result.member.memberId && (
           <div className="relative my-auto">
