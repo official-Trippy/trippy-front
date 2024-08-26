@@ -94,7 +94,9 @@ const MyOotd: React.FC<MyOotdProps> = ({ userInfo }) => {
               />
               <span className="mx-2 text-[#cfcfcf]"> {item.post.commentCount}</span>
             </div>
-            <div className="text-[#6b6b6b] text-xl font-normal font-['Pretendard']">{item.post.body}</div>
+            <div className="min-h-[35px] text-[#6b6b6b] text-xl font-normal font-['Pretendard'] text-ellipsis overflow-hidden whitespace-nowrap">
+              {item.post.body}
+            </div>
             <div className="tag-container">
               {item.post.tags.map((tag: string, index: number) => (
                 <span
