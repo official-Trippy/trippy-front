@@ -76,13 +76,13 @@ export default function Home() {
               const createDateTime = new Date(posts.post.createDateTime);
               const formattedDateTime = `${createDateTime.getFullYear()}.${String(createDateTime.getMonth() + 1).padStart(2, '0')}.${String(createDateTime.getDate()).padStart(2, '0')} ${String(createDateTime.getHours()).padStart(2, '0')}:${String(createDateTime.getMinutes()).padStart(2, '0')}`;
 
-              const getTextFromHtml = (html: any) => {
-                const parser = new DOMParser();
-                const doc = parser.parseFromString(html, 'text/html');
-                return doc.body.innerText; // 텍스트만 반환
+              const stripHtml = (html: string) => {
+                const tmp = document.createElement('div');
+                tmp.innerHTML = html;
+                return tmp.textContent || tmp.innerText || '';
               };
 
-              const bodyText = getTextFromHtml(posts.post.body);
+              const bodyText = stripHtml(posts.post.body);
 
               return (
                 <div className="h-[40rem] shadow-xl rounded-[1rem] mb-[2rem]" key={index}>
