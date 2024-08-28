@@ -221,8 +221,9 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
               {data.result.post.bookmarkCount}
             </div>
             </div>
+            <div className="relative min-w-[50px] my-auto ml-auto flex justify-end">
             {userMemberId === data.result.member.memberId && (
-          <div className="relative my-auto">
+          <div className="relative">
             <Image
               src={CabapIcon}
               alt="cabap"
@@ -252,6 +253,7 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
             )}
           </div>
         )}
+        </div>
             </div>
           </div>
           <div className="relative">
