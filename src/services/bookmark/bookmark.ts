@@ -29,3 +29,19 @@ export const fetchBookmarkCount = async (): Promise<number> => {
       throw error;
     }
   };
+
+  export const addBookmark = async (postId: number): Promise<void> => {
+    try {
+      const response = await axios.post<{ isSuccess: boolean }>(
+        `${backendUrl}/api/bookmark`,
+        null,
+        { params: { postId } }
+      );
+      if (!response.data.isSuccess) {
+        throw new Error('북마크 추가 실패');
+      }
+    } catch (error) {
+      console.error(`북마크 추가 중 오류가 발생했습니다: ${error}`);
+      throw error;
+    }
+  };

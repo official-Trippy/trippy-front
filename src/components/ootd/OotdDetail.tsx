@@ -22,14 +22,14 @@ import Swal from "sweetalert2";
 import CabapIcon from "../../../public/icon_cabap.svg";
 import BookmarkIcon from "../../../public/icon_bookmark.svg";
 import BookmarkedIcon from "../../../public/bookmark-fill.svg";
-import { fetchIsBookmarked } from "@/services/bookmark/bookmark";
+import { addBookmark, fetchIsBookmarked } from "@/services/bookmark/bookmark";
 
 interface OotdDetailProps {
   id: number;
 }
 
 const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
-  const { data, error, isLoading } = useQuery<OotdDetailGetResponse>(
+  const { data, error, isLoading, refetch } = useQuery<OotdDetailGetResponse>(
     ["ootdPostDetail", id],
     () => fetchOotdPostDetail(id)
   );
@@ -45,6 +45,17 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
     };
     checkIfBookmarked();
   }, [data]);
+
+  const handleBookmarkClick = async () => {
+    try {
+      if (!data?.result?.post?.id) return;
+      await addBookmark(data.result.post.id);
+      setIsBookmarked(true);
+      await refetch();
+    } catch (error) {
+      console.error('북마크 추가 중 오류가 발생했습니다:', error);
+    }
+  };
   
   const accessToken = Cookies.get('accessToken');
 
@@ -228,6 +239,7 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
               width={24}
               height={24}
               className="cursor-pointer"
+              onClick={handleBookmarkClick}
             />
             <div className="text-[#9d9d9d] ml-[4px]">
               {data.result.post.bookmarkCount}
