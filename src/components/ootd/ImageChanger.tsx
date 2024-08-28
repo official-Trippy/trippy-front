@@ -29,9 +29,9 @@ const ImageChanger: React.FC<ImageChangerProps> = ({ onImagesChange, initialImag
   }, [initialImages]);
 
   // Notify parent component when images change
-  // useEffect(() => {
-  //   onImagesChange(images);
-  // }, [images, onImagesChange]);
+  useEffect(() => {
+    onImagesChange(images);
+  }, [images, onImagesChange]);
 
   const handleImageUpload = async (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -216,7 +216,7 @@ const ImageChanger: React.FC<ImageChangerProps> = ({ onImagesChange, initialImag
                 ))}
                 {images.length > 0 && (
                   <div
-                    onClick={() => document.getElementById('image-upload-input')?.click()}
+                    onClick={() => document.getElementById('image-change-input')?.click()}
                     className="flex items-center justify-center w-[72px] h-[72px] cursor-pointer"
                   >
                     <Image
