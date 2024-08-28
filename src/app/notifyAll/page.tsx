@@ -56,3 +56,9 @@
 //   if (text.length <= length) return text;
 //   return text.substring(0, length) + "...";
 // };
+
+const notifyAllPage = () => {
+  <div>알림페이지</div>
+};
+
+export default notifyAllPage;
