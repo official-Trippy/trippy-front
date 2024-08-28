@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import Slider from "react-slick";
 import { deleteOotdPost, fetchOotdPostDetail } from "@/services/ootd.ts/ootdGet";
@@ -22,6 +22,7 @@ import Swal from "sweetalert2";
 import CabapIcon from "../../../public/icon_cabap.svg";
 import BookmarkIcon from "../../../public/icon_bookmark.svg";
 import BookmarkedIcon from "../../../public/bookmark-fill.svg";
+import { fetchIsBookmarked } from "@/services/bookmark/bookmark";
 
 interface OotdDetailProps {
   id: number;
@@ -33,6 +34,18 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
     () => fetchOotdPostDetail(id)
   );
 
+  const [isBookmarked, setIsBookmarked] = useState<boolean>(false);
+
+  useEffect(() => {
+    const checkIfBookmarked = async () => {
+      if (data?.result?.post?.id) {
+        const bookmarked = await fetchIsBookmarked(data.result.post.id);
+        setIsBookmarked(bookmarked);
+      }
+    };
+    checkIfBookmarked();
+  }, [data]);
+  
   const accessToken = Cookies.get('accessToken');
 
   const userInfo = useUserStore((state) => state.userInfo);
@@ -107,7 +120,6 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
       }
     }
   };
-  
 
   if (isLoading) {
     return null;
@@ -211,7 +223,7 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
             </div>
             <div className="flex relative my-auto items-center">
             <Image
-              src={BookmarkIcon}
+              src={isBookmarked ? BookmarkedIcon : BookmarkIcon}
               alt="bookmark"
               width={24}
               height={24}
