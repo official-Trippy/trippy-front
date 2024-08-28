@@ -521,6 +521,10 @@
   dependencies:
     "@tanstack/query-core" "5.32.0"
 
+"@types/event-source-polyfill@^1.0.5":
+  version "1.0.5"
+  resolved "https://registry.npmjs.org/@types/event-source-polyfill/-/event-source-polyfill-1.0.5.tgz"
+  integrity sha512-iaiDuDI2aIFft7XkcwMzDWLqo7LVDixd2sR6B4wxJut9xcp/Ev9bO4EFg4rm6S9QxATLBj5OPxdeocgmhjwKaw==
 "@tinymce/tinymce-react@^5.1.1":
   version "5.1.1"
   resolved "https://registry.npmjs.org/@tinymce/tinymce-react/-/tinymce-react-5.1.1.tgz"

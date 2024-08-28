@@ -93,6 +93,19 @@ export const fetchAllOotdPosts = async (page?: number, size?: number, orderType:
   }
 }
 
+export const fetchFollowOotdPosts = async (page: number, size: number, orderType: string) => {
+  const response = await axios.get(`${backendUrl}/api/post/follow`, {
+    params: {
+      page,
+      size,
+      orderType,
+      postType: 'OOTD',
+    },
+  });
+
+  return response.data;
+};
+
 
 export const fetchUserOotdPosts = async (memberId: string, page: number, size: number) => {
   const response = await axios.get(`${backendUrl}/api/ootd/by-member`, {
@@ -107,16 +120,40 @@ export const fetchUserProfile = (memberId: string) => {
   return axios.get(`${backendUrl}/api/member/profile?memberId=${memberId}`).then((res) => res.data);
 };
 
+export const updatePost = async (id: number, postRequest: PostRequest) => {
+  const requestBody = {
+    id,
+    memberId: postRequest.memberId,
+    title: postRequest.title,
+    body: postRequest.body,
+    postType: postRequest.postType,
+    location: postRequest.location,
+    images: postRequest.images.map((image) => ({
+      accessUri: image.accessUri,
+      authenticateId: image.authenticateId,
+      imgUrl: image.imgUrl,
+    })),
+    tags: postRequest.tags,
+  };
+
+  const response = await axios.patch(`${backendUrl}/api/post`, requestBody);
+  return response.data;
+};
 
 export const updateOotdPost = async (
   id: number,
-  postRequest: PostRequest,
   ootdRequest: OotdRequest
 ) => {
-  const response = await axios.patch(`/api/ootd/${id}`, {
-    postRequest,
-    ootdRequest,
-  });
+  const requestBody = {
+    id,
+    area: ootdRequest.area || '', // 빈 문자열로 대체
+    weatherStatus: ootdRequest.weatherStatus || '', // 빈 문자열로 대체
+    weatherTemp: ootdRequest.weatherTemp || '', // 빈 문자열로 대체
+    detailLocation: ootdRequest.detailLocation || '', // 빈 문자열로 대체
+    date: ootdRequest.date || '', // 빈 문자열로 대체
+  };
+
+  const response = await axios.patch(`${backendUrl}/api/ootd`, requestBody);
   return response.data;
 };
 
@@ -133,3 +170,16 @@ axios.interceptors.request.use(
     return Promise.reject(error);
   }
 );
+
+export const fetchOotdFollowPostCount = async (): Promise<number> => {
+  try {
+    const response = await axios.get<{ result: number }>(
+      `${backendUrl}/api/post/count/follow?type=OOTD`
+    );
+    console.log(response.data);
+    return response.data.result;
+  } catch (error) {
+    console.error(`팔로우 유저 OOTD 데이터 개수를 가져오는 중 오류가 발생했습니다: ${error}`);
+    throw error;
+  }
+};

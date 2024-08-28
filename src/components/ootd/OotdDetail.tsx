@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import Slider from "react-slick";
 import { deleteOotdPost, fetchOotdPostDetail } from "@/services/ootd.ts/ootdGet";
@@ -18,19 +18,45 @@ import { getWeatherStatusInKorean } from "@/constants/weatherTransition";
 import { useRouter } from "next/navigation";
 import FollowButton from "../followControl/followButton";
 import Cookies from "js-cookie";
-import CabapIcon from "../../../public/icon_cabap.svg";
 import Swal from "sweetalert2";
+import CabapIcon from "../../../public/icon_cabap.svg";
+import BookmarkIcon from "../../../public/icon_bookmark.svg";
+import BookmarkedIcon from "../../../public/bookmark-fill.svg";
+import { addBookmark, fetchIsBookmarked } from "@/services/bookmark/bookmark";
 
 interface OotdDetailProps {
   id: number;
 }
 
 const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
-  const { data, error, isLoading } = useQuery<OotdDetailGetResponse>(
+  const { data, error, isLoading, refetch } = useQuery<OotdDetailGetResponse>(
     ["ootdPostDetail", id],
     () => fetchOotdPostDetail(id)
   );
 
+  const [isBookmarked, setIsBookmarked] = useState<boolean>(false);
+
+  useEffect(() => {
+    const checkIfBookmarked = async () => {
+      if (data?.result?.post?.id) {
+        const bookmarked = await fetchIsBookmarked(data.result.post.id);
+        setIsBookmarked(bookmarked);
+      }
+    };
+    checkIfBookmarked();
+  }, [data]);
+
+  const handleBookmarkClick = async () => {
+    try {
+      if (!data?.result?.post?.id) return;
+      await addBookmark(data.result.post.id);
+      setIsBookmarked(true);
+      await refetch();
+    } catch (error) {
+      console.error('북마크 추가 중 오류가 발생했습니다:', error);
+    }
+  };
+  
   const accessToken = Cookies.get('accessToken');
 
   const userInfo = useUserStore((state) => state.userInfo);
@@ -105,7 +131,6 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
       }
     }
   };
-  
 
   if (isLoading) {
     return null;
@@ -207,8 +232,22 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
               <i className="far fa-bookmark text-xl"></i>
               <i className="fas fa-ellipsis-h text-xl"></i>
             </div>
+            <div className="flex relative my-auto items-center">
+            <Image
+              src={isBookmarked ? BookmarkedIcon : BookmarkIcon}
+              alt="bookmark"
+              width={24}
+              height={24}
+              className="cursor-pointer"
+              onClick={handleBookmarkClick}
+            />
+            <div className="text-[#9d9d9d] ml-[4px]">
+              {data.result.post.bookmarkCount}
+            </div>
+            </div>
+            <div className="relative min-w-[50px] my-auto ml-auto flex justify-end">
             {userMemberId === data.result.member.memberId && (
-          <div className="relative my-auto">
+          <div className="relative">
             <Image
               src={CabapIcon}
               alt="cabap"
@@ -238,6 +277,7 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
             )}
           </div>
         )}
+        </div>
             </div>
           </div>
           <div className="relative">

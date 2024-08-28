@@ -509,3 +509,17 @@ body {
   height: 300px;
   /* 에디터 높이 설정 */
 }
+
+.tag-container {
+  display: flex;      
+  overflow-x: auto;        
+  white-space: nowrap;   
+  padding: 8px 0;       
+}
+
+
+.tag-item {
+  display: inline-block;  
+  margin-right: 8px;         
+  white-space: nowrap;       
+}

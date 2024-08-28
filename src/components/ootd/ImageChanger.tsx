@@ -9,17 +9,29 @@ import { uploadImage } from '@/services/blog';
 import { UploadedImage } from '@/types/ootd';
 import Image from 'next/image';
 import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
-import LeftArrowIcon from '../../../public/left-arrow.svg';
-import RightArrowIcon from '../../../public/right-arrow.svg';
+import LeftArrowIcon from '../../../public/left-arrow.svg'; 
+import RightArrowIcon from '../../../public/right-arrow.svg'; 
 
-interface ImageUploaderProps {
+interface ImageChangerProps {
   onImagesChange: (images: UploadedImage[]) => void;
   initialImages?: UploadedImage[];
 }
 
-const ImageUploader: React.FC<ImageUploaderProps> = ({ onImagesChange, initialImages = [] }) => {
+const ImageChanger: React.FC<ImageChangerProps> = ({ onImagesChange, initialImages = [] }) => {
   const [images, setImages] = useState<UploadedImage[]>(initialImages);
   const [isUploading, setIsUploading] = useState(false);
+
+  console.log(initialImages);
+
+  // Update images when initialImages change, but only on initial load
+  useEffect(() => {
+    setImages(initialImages);
+  }, [initialImages]);
+
+  // Notify parent component when images change
+  useEffect(() => {
+    onImagesChange(images);
+  }, [images, onImagesChange]);
 
   const handleImageUpload = async (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -42,7 +54,6 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onImagesChange, initialIm
   const handleDeleteImage = (index: number) => {
     const newImages = images.filter((_, i) => i !== index);
     setImages(newImages);
-    // Notify parent component about image deletion
     onImagesChange(newImages);
   };
 
@@ -54,7 +65,6 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onImagesChange, initialIm
     newImages.splice(result.destination.index, 0, reorderedImage);
 
     setImages(newImages);
-    // Notify parent component about image reordering
     onImagesChange(newImages);
   };
 
@@ -108,10 +118,10 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onImagesChange, initialIm
           type="file"
           onChange={handleImageUpload}
           style={{ display: 'none' }}
-          id="image-upload-input"
+          id="image-change-input"
         />
         <div
-          onClick={() => displayImages.length === 0 && document.getElementById('image-upload-input')?.click()}
+          onClick={() => displayImages.length === 0 && document.getElementById('image-change-input')?.click()}
           className="relative cursor-pointer overflow-hidden bg-cover bg-center"
           style={{
             backgroundImage: displayImages.length > 0 ? 'none' : `url(${OotdDefault.src})`,
@@ -204,17 +214,17 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onImagesChange, initialIm
                     )}
                   </Draggable>
                 ))}
-                {images.length > 0 && images.length < 5 && (
+                {images.length > 0 && (
                   <div
-                    onClick={() => document.getElementById('image-upload-input')?.click()}
-                    className="w-[72px] h-[72px] ml-[5px] flex justify-center items-center cursor-pointer"
+                    onClick={() => document.getElementById('image-change-input')?.click()}
+                    className="flex items-center justify-center w-[72px] h-[72px] cursor-pointer"
                   >
                     <Image
                       src={OotdAddImage.src}
                       alt="Add Image"
                       width={72}
                       height={72}
-                      style={{ objectFit: 'cover' }}
+                      style={{ objectFit: 'cover', width: '72px', height: '72px' }}
                     />
                   </div>
                 )}
@@ -228,4 +238,4 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onImagesChange, initialIm
   );
 };
 
-export default ImageUploader;
+export default ImageChanger;

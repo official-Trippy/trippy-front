@@ -19,6 +19,10 @@ const PostInput: React.FC<PostInputProps> = ({ onPostChange, onTagsChange, tags,
     }
   }, []);
 
+  useEffect(() => {
+    setPost(initialPost);
+  }, [initialPost]);
+
   const handlePostChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     const newPost = event.target.value;
     setPost(newPost);
