@@ -23,9 +23,13 @@ interface PostCardProps {
 
 const PostAllCard: React.FC<PostCardProps> = ({ posts = [] }) => {
   if (!Array.isArray(posts) || posts.length === 0) {
-    // Render a message or nothing if no posts are available
     return <p>No posts available</p>;
   }
+
+  const truncateText = (text: string, maxLength: number) => {
+    if (text.length <= maxLength) return text;
+    return text.substring(0, maxLength) + "...";
+  };
 
   return (
     <div className="flex flex-col items-stretch gap-[25.012px] h-174px w-789px">
@@ -52,7 +56,7 @@ const PostAllCard: React.FC<PostCardProps> = ({ posts = [] }) => {
               </h2>
 
               <p className="text-gray-800 mb-3">
-                {postDetails?.body || "No content available"}
+                {truncateText(postDetails?.body || "No content available", 100)}
               </p>
 
               <div className="flex flex-wrap gap-2 mb-4 mt-[2rem]">
