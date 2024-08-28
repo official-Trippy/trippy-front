@@ -209,7 +209,7 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
               <i className="far fa-bookmark text-xl"></i>
               <i className="fas fa-ellipsis-h text-xl"></i>
             </div>
-            <div className="relative my-auto">
+            <div className="flex relative my-auto items-center">
             <Image
               src={BookmarkIcon}
               alt="bookmark"
@@ -217,6 +217,9 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
               height={24}
               className="cursor-pointer"
             />
+            <div className="text-[#9d9d9d] ml-[4px]">
+              {data.result.post.bookmarkCount}
+            </div>
             </div>
             {userMemberId === data.result.member.memberId && (
           <div className="relative my-auto">

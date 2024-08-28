@@ -141,6 +141,7 @@ export interface PostRequest {
         tags: string[];
         likeCount: number;
         commentCount: number;
+        bookmarkCount: number;
       };
     };
   };
