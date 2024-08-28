@@ -72,7 +72,7 @@ const FollowButton: React.FC<FollowButtonProps> = ({
   return (
     <div className="ml-auto flex items-center">
       <button
-        className={`bg-${localIsFollowing ? "[#55FBAF]" : "[#FB3463]"} text-white text-[1.6rem] p-[0.8rem] rounded-[1rem]`}
+        className={`bg-${localIsFollowing ? "[#55FBAF]" : "[#FB3463]"} text-white text-[1.6rem] px-[2rem] py-[0.5rem] rounded-[1rem]`}
         onClick={followHandler}
         disabled={loading}
       >

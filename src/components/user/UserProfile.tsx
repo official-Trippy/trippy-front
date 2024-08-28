@@ -83,7 +83,7 @@ const UserProfile: React.FC<UserProfileProps> = ({
               팔로잉 {followingCnt}
             </span>
           </div>
-          <div className="ml-auto flex items-center mt-[10px] mr-[50px]">
+          <div className="ml-auto flex items-center mt-[10px] mr-[4rem]">
             {targetMemberId &&
               userMemberId && ( // Check both IDs are available
                 <FollowButton
