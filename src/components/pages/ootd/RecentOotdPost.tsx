@@ -10,6 +10,8 @@ import { fetchAllOotdPostCount, fetchAllOotdPosts, fetchFollowOotdPosts, fetchOo
 import { MemberInfo } from '@/services/auth';
 import EmptyHeartIcon from '../../../../public/empty_heart_default.svg';
 import CommentIcon1 from '../../../../public/empty_comment_default.svg';
+import { fetchLikedPosts } from '@/services/ootd.ts/ootdComments';
+import HeartIcon from '../../../../public/icon_heart.svg';
 
 const PAGE_SIZE = 12;
 
@@ -78,6 +80,7 @@ const RecentOotdPost: React.FC = () => {
   const [orderType, setOrderType] = useState('LATEST');
   const [tab, setTab] = useState<'ALL' | 'FOLLOWING' | null>(null); 
   const [isPending, startTransition] = useTransition();
+  const [likedPosts, setLikedPosts] = useState<number[]>([]);  
   const router = useRouter();
 
   useEffect(() => {
@@ -94,6 +97,12 @@ const RecentOotdPost: React.FC = () => {
       sessionStorage.setItem('tab', tab);
     }
   }, [tab]);
+
+  useEffect(() => {
+    if (accessToken) {
+      fetchLikedPosts().then(setLikedPosts);  
+    }
+  }, [accessToken]);
 
   const isTabInitialized = tab !== null;
 
@@ -217,8 +226,8 @@ const RecentOotdPost: React.FC = () => {
                   <span className="text-[#6B6B6B] ml-[5px]">{item.member.nickName}</span>
                 </div>
                 <div className="flex items-center mt-2">
-                  <Image
-                    src={EmptyHeartIcon}
+                <Image
+                    src={likedPosts.includes(item.post.id) ? HeartIcon : EmptyHeartIcon} 
                     alt="좋아요"
                     width={20}
                     height={18}
