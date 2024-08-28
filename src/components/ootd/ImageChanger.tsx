@@ -18,22 +18,20 @@ interface ImageChangerProps {
 }
 
 const ImageChanger: React.FC<ImageChangerProps> = ({ onImagesChange, initialImages = [] }) => {
-  const [images, setImages] = useState<UploadedImage[]>(initialImages || []);
+  const [images, setImages] = useState<UploadedImage[]>(initialImages);
   const [isUploading, setIsUploading] = useState(false);
 
   console.log(initialImages);
 
   // Update images when initialImages change, but only on initial load
   useEffect(() => {
-    if (initialImages && initialImages.length > 0) {
-      setImages(initialImages);
-    }
+    setImages(initialImages);
   }, [initialImages]);
 
   // Notify parent component when images change
-  useEffect(() => {
-    onImagesChange(images);
-  }, [images, onImagesChange]);
+  // useEffect(() => {
+  //   onImagesChange(images);
+  // }, [images, onImagesChange]);
 
   const handleImageUpload = async (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -120,10 +118,10 @@ const ImageChanger: React.FC<ImageChangerProps> = ({ onImagesChange, initialImag
           type="file"
           onChange={handleImageUpload}
           style={{ display: 'none' }}
-          id="image-upload-input"
+          id="image-change-input"
         />
         <div
-          onClick={() => displayImages.length === 0 && document.getElementById('image-upload-input')?.click()}
+          onClick={() => displayImages.length === 0 && document.getElementById('image-change-input')?.click()}
           className="relative cursor-pointer overflow-hidden bg-cover bg-center"
           style={{
             backgroundImage: displayImages.length > 0 ? 'none' : `url(${OotdDefault.src})`,

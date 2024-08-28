@@ -9,8 +9,8 @@ import { uploadImage } from '@/services/blog';
 import { UploadedImage } from '@/types/ootd';
 import Image from 'next/image';
 import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
-import LeftArrowIcon from '../../../public/left-arrow.svg'; 
-import RightArrowIcon from '../../../public/right-arrow.svg'; 
+import LeftArrowIcon from '../../../public/left-arrow.svg';
+import RightArrowIcon from '../../../public/right-arrow.svg';
 
 interface ImageUploaderProps {
   onImagesChange: (images: UploadedImage[]) => void;
@@ -18,7 +18,7 @@ interface ImageUploaderProps {
 }
 
 const ImageUploader: React.FC<ImageUploaderProps> = ({ onImagesChange, initialImages = [] }) => {
-  const [images, setImages] = useState<UploadedImage[]>(initialImages); 
+  const [images, setImages] = useState<UploadedImage[]>(initialImages);
   const [isUploading, setIsUploading] = useState(false);
 
   const handleImageUpload = async (event: ChangeEvent<HTMLInputElement>) => {

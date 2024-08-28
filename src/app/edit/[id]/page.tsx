@@ -66,6 +66,8 @@ const EditOotd: React.FC = () => {
       const postData = data.result.post;
       const ootdData = data.result.ootd;
 
+      console.log(postData.images);
+
       if (postData && ootdData) {
         setPostId(postData.id);
         setOotdId(ootdData.id);
