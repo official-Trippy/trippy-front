@@ -114,13 +114,13 @@ export const fetchUserOotdPosts = async (memberId: string, page: number, size: n
       memberId
     },
   });
-  console.log('유저 정보 api: ', response);
   return response.data;
 };
 
-export const fetchUserProfile = (memberId: string) => {
-  console.log('유저 아이디:',memberId);
-  return axios.get(`${backendUrl}/api/member/profile?memberId=${memberId}`).then((res) => res.data);
+export const fetchUserProfile = async (memberId: string) => {
+  const response = await axios.get(`${backendUrl}/api/member/profile?memberId=${memberId}`);
+  console.log('유저정보 api: ', response)
+  return response.data;
 };
 
 export const updatePost = async (id: number, postRequest: PostRequest) => {

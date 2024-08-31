@@ -25,9 +25,10 @@ const TABS = {
 
 const UserPage = ({ params }: { params: { id: string } }) => {
   const { id } = params;
+  const decodedId = decodeURIComponent(params.id);
   const [activeTab, setActiveTab] = useState(() => {
 
-    const savedTab = sessionStorage.getItem(`activeTab_${id}`);
+    const savedTab = sessionStorage.getItem(`activeTab_${decodedId}`);
     return savedTab ? savedTab : TABS.TICKET;
   });
   const [userMeberId, setUserMemberId] = useState("");
@@ -46,14 +47,14 @@ const UserPage = ({ params }: { params: { id: string } }) => {
   }, []);
 
   const { data, error, isLoading, refetch } = useQuery({
-    queryKey: ["userProfile", id],
-    queryFn: () => fetchUserProfile(id),
+    queryKey: ["userProfile", decodedId],
+    queryFn: () => fetchUserProfile(decodedId),
     onError: (error) => {
       console.error(error);
     },
   });
 
-  console.log('유저정보', data);
+  console.log('유저아이디', decodedId);
 
   const emailData = data && data.result.email;
   const { data: userBoardCount } = useQuery({
@@ -63,14 +64,14 @@ const UserPage = ({ params }: { params: { id: string } }) => {
   });
 
   useEffect(() => {
-    if (id) {
+    if (decodedId) {
       refetch();
     }
-  }, [id, refetch]);
+  }, [decodedId, refetch]);
 
   useEffect(() => {
   
-    sessionStorage.setItem(`activeTab_${id}`, activeTab);
+    sessionStorage.setItem(`activeTab_${decodedId}`, activeTab);
   }, [activeTab, id]);
 
   if (isLoading) {
@@ -105,7 +106,7 @@ const UserPage = ({ params }: { params: { id: string } }) => {
       </div>
       <div className="w-[66%] mx-auto flex p-4">
         <div className="w-[250px] mb-4">
-          <UserProfile memberId={id} setActiveTab={setActiveTab} />
+          <UserProfile memberId={decodedId} setActiveTab={setActiveTab} />
         </div>
         <div className="w-[100%] ml-[50px]">
           <div className="flex justify-between mb-4 ml-4 text-2xl">
@@ -179,7 +180,7 @@ const UserPage = ({ params }: { params: { id: string } }) => {
                 memberEmail={memberEmail}
               />
             )}
-            {activeTab === TABS.OOTD && <UserOotd memberId={id} />}
+            {activeTab === TABS.OOTD && <UserOotd memberId={decodedId} />}
             {activeTab === TABS.BADGE && <UserBadge />}
             {activeTab === TABS.BOOKMARK && <UserBookmark />}
             {activeTab === TABS.FOLLOWER && (

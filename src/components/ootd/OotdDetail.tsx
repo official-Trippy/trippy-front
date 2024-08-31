@@ -76,6 +76,7 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
       if (ootdItem.member.memberId == userInfo.memberId) {
         router.push("/mypage");
       } else {
+        console.log(ootdItem.member.memberId);
         router.push(`/user/${ootdItem.member.memberId}`);
       }
     } else {
