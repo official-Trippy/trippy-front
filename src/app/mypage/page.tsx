@@ -84,9 +84,12 @@ const MyPage = () => {
         />
       </div>
       <div className="w-[66%] mx-auto">
-        <h1 className="w-[66%] absolute ml-auto text-right top-[320px] text-white text-4xl font-bold">
+        <h1 className="w-[66%] absolute ml-[240px] text-left top-[320px] text-white text-4xl font-bold">
           {userData && userData.blogName}
         </h1>
+        <div className="w-[66%] absolute ml-[240px] text-left top-[350px] text-white text-xl font-normal font-['Pretendard']">
+          {userData && userData.blogIntroduce}
+        </div>
       </div>
       <div className="w-[66%] mx-auto flex p-4">
         <div className="w-[250px] mb-4">
