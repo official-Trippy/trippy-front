@@ -28,8 +28,16 @@ const TABS = {
 };
 
 const MyPage = () => {
-  const [activeTab, setActiveTab] = useState(TABS.TICKET);
   const accessToken = Cookies.get("accessToken");
+
+  const [activeTab, setActiveTab] = useState(() => {
+    const savedTab = sessionStorage.getItem("activeTab");
+    return savedTab ? savedTab : TABS.TICKET;
+  });
+
+  useEffect(() => {
+    sessionStorage.setItem("activeTab", activeTab);
+  }, [activeTab]);
 
   const { data, error, isLoading, refetch } = useQuery({
     queryKey: ["member", accessToken],
