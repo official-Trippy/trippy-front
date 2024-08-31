@@ -25,16 +25,17 @@ const TABS = {
 
 const UserPage = ({ params }: { params: { id: string } }) => {
   const { id } = params;
-  const [activeTab, setActiveTab] = useState(TABS.TICKET);
+  const [activeTab, setActiveTab] = useState(() => {
+
+    const savedTab = sessionStorage.getItem(`activeTab_${id}`);
+    return savedTab ? savedTab : TABS.TICKET;
+  });
   const [userMeberId, setUserMemberId] = useState("");
 
-  // Function to extract the user ID from the URL
   useEffect(() => {
     const extractUserId = () => {
       const currentUrl = window.location.href;
-
       const urlObj = new URL(currentUrl);
-
       const pathname = urlObj.pathname;
       const pathSegments = pathname.split("/");
       const userId = pathSegments[pathSegments.length - 1];
@@ -43,7 +44,6 @@ const UserPage = ({ params }: { params: { id: string } }) => {
 
     extractUserId();
   }, []);
-  console.log(userMeberId);
 
   const { data, error, isLoading, refetch } = useQuery({
     queryKey: ["userProfile", id],
@@ -59,29 +59,28 @@ const UserPage = ({ params }: { params: { id: string } }) => {
     queryFn: () => getUserTotalBoardCount(emailData),
     enabled: !!data,
   });
-  console.log(data);
-  console.log(userBoardCount);
 
-  console.log(id);
   useEffect(() => {
     if (id) {
       refetch();
     }
   }, [id, refetch]);
 
+  useEffect(() => {
+  
+    sessionStorage.setItem(`activeTab_${id}`, activeTab);
+  }, [activeTab, id]);
+
   if (isLoading) {
-    return <div>Loading...</div>;
+    return null;
   }
 
   if (error) {
-    return <div>Error</div>;
+    return null;
   }
 
   const userData = data && data.result;
-
-  console.log("userData: ", userData);
   const memberEmail = userData?.email;
-  console.log(memberEmail);
 
   return (
     <>
@@ -165,7 +164,6 @@ const UserPage = ({ params }: { params: { id: string } }) => {
                 </span>
               </button>
             </div>
-            <div className="flex space-x-4"></div>
           </div>
           <hr className="mb-4 w-full h-[1px]" />
 
