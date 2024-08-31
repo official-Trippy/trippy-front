@@ -1,51 +1,38 @@
 import React, { useEffect, useState } from "react";
 import { useQuery } from "react-query";
-import { fetchOotdPostCount, fetchOotdPosts } from "@/services/ootd.ts/ootdGet";
-import Cookies from "js-cookie";
-import { UserInfoType } from "@/types/auth";
+import { fetchUserOotdPosts } from "@/services/ootd.ts/ootdGet";
 import { OotdGetResponse } from "@/types/ootd";
 import EmptyHeartIcon from '../../../public/empty_heart_default.svg';
 import CommentIcon1 from '../../../public/empty_comment_default.svg';
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import HeartIcon from '../../../public/icon_heart.svg';
+import Cookies from "js-cookie";
 import { fetchLikedPosts } from "@/services/ootd.ts/ootdComments";
 
 const PAGE_SIZE = 9;
 
-interface MyOotdProps {
-  userInfo: UserInfoType;
+interface UserOotdProps {
+  memberId: string;
 }
 
-const MyOotd: React.FC<MyOotdProps> = ({ userInfo }) => {
-  const [page, setPage] = React.useState(0);
-  const [likedPosts, setLikedPosts] = useState<number[]>([]);  
+const UserOotd: React.FC<UserOotdProps> = ({ memberId }) => {
+  const [likedPosts, setLikedPosts] = useState<number[]>([]);
 
   const accessToken = Cookies.get('accessToken');
 
   useEffect(() => {
     if (accessToken) {
-      fetchLikedPosts().then(setLikedPosts);  
+      fetchLikedPosts().then(setLikedPosts);
     }
   }, [accessToken]);
 
-  const { data: totalCount, isLoading: isCountLoading, isError: isCountError } = useQuery<number>(
-    'ootdPostCount',
-    fetchOotdPostCount,
-    { enabled: !!accessToken }
-  );
-  
+  // 첫 번째 페이지의 OOTD 게시물 가져오기
   const { data, isLoading, isError } = useQuery<OotdGetResponse>(
-    ['ootdPosts', page],
-    () => fetchOotdPosts(page, PAGE_SIZE),
-    { enabled: !!totalCount }
+    ['userOotdPosts', memberId],
+    () => fetchUserOotdPosts(memberId, 0, PAGE_SIZE),
+    { enabled: !!memberId }
   );
-
-  const totalPages = totalCount ? Math.ceil(totalCount / PAGE_SIZE) : 0;
-
-  const handlePageClick = (pageIndex: number) => {
-    setPage(pageIndex);
-  };
 
   const router = useRouter();
 
@@ -53,12 +40,12 @@ const MyOotd: React.FC<MyOotdProps> = ({ userInfo }) => {
     router.push(`/ootd/${id}`);
   };
 
-  if (isCountLoading || isLoading) {
-    return null;
+  if (isLoading) {
+    return <div>Loading...</div>;
   }
 
-  if (isCountError || isError || !data) {
-    return null;
+  if (isError || !data) {
+    return <div>Error fetching OOTD posts</div>;
   }
 
   const ootdList = data.result;
@@ -67,7 +54,11 @@ const MyOotd: React.FC<MyOotdProps> = ({ userInfo }) => {
     <div className="h-full">
       <div className="grid grid-cols-3 gap-12">
         {ootdList.map((item) => (
-          <div key={item.ootd.id} className="flex-1 cursor-pointer" onClick={() => handleOotdItemClick(item.post.id)}>
+          <div
+            key={item.ootd.id}
+            className="flex-1 cursor-pointer"
+            onClick={() => handleOotdItemClick(item.post.id)}
+          >
             {item.post.images.length > 0 && (
               <div className="relative w-full pb-[100%]">
                 <Image
@@ -81,15 +72,17 @@ const MyOotd: React.FC<MyOotdProps> = ({ userInfo }) => {
             )}
             <div className="flex items-center my-4">
               <img
-                src={userInfo.profileImageUrl}
+                src={item.member.profileUrl}
                 alt="User Profile"
                 className="w-10 h-10 rounded-full mr-2"
               />
               <div className="flex-1">
-                <div className="text-[#6b6b6b] text-xl font-normal font-['Pretendard']">{item.member.nickName}</div>
+                <div className="text-[#6b6b6b] text-xl font-normal font-['Pretendard']">
+                  {item.member.nickName}
+                </div>
               </div>
               <Image
-                src={likedPosts.includes(item.post.id) ? HeartIcon : EmptyHeartIcon} 
+                src={likedPosts.includes(item.post.id) ? HeartIcon : EmptyHeartIcon}
                 alt="좋아요"
                 width={20}
                 height={18}
@@ -119,19 +112,8 @@ const MyOotd: React.FC<MyOotdProps> = ({ userInfo }) => {
           </div>
         ))}
       </div>
-      <div className="flex justify-center my-16">
-        {Array.from({ length: totalPages }, (_, index) => (
-          <button
-            key={index}
-            onClick={() => handlePageClick(index)}
-            className={`mx-1 py-2 px-4 ${page === index ? 'text-[#fa3463] font-semibold' : 'text-[#cfcfcf] font-normal'}`}
-          >
-            {index + 1}
-          </button>
-        ))}
-      </div>
     </div>
   );
 };
 
-export default MyOotd;
+export default UserOotd;
