@@ -12,7 +12,7 @@ const MyBookmark = () => {
   const [totalOotdCount, setTotalOotdCount] = useState(0); 
   const PAGE_SIZE = 9;
 
-  const { data: bookmarkCounts } = useQuery("bookmarkCount", fetchBookmarkCount, {
+  useQuery("bookmarkCount", fetchBookmarkCount, {
     onSuccess: (data) => {
       setTotalOotdCount(data.ootdCount);
     },
@@ -49,15 +49,15 @@ const MyBookmark = () => {
 
   return (
     <div className="h-[400px]">
-      <div className="flex border-b">
+      <div className="flex">
         <button
-          className={`p-2 ${activeTab === "posts" ? "border-b-2 border-blue-500" : ""}`}
+          className={`p-2 text-2xl ${activeTab === "posts" ? "text-[#fa3463] font-semibold" : ""}`}
           onClick={() => setActiveTab("posts")}
         >
           게시글
         </button>
         <button
-          className={`p-2 ${activeTab === "ootd" ? "border-b-2 border-blue-500" : ""}`}
+          className={`ml-[10px] p-2 text-2xl ${activeTab === "ootd" ? "text-[#fa3463] font-semibold" : ""}`}
           onClick={() => setActiveTab("ootd")}
         >
           OOTD
@@ -66,12 +66,13 @@ const MyBookmark = () => {
 
       <div className="flex flex-wrap gap-4 mt-4">
         {activeTab === "posts" && (
-          <div>게시글 탭의 내용이 여기에 표시됩니다.</div>
+          // todo: bookmark 한 게시글 post 레이아웃 영역 //
+          <></>
         )}
         {activeTab === "ootd" && (
           <div className="h-full">
             {isOotdLoading ? (
-              <p>Loading...</p>
+              <></>
             ) : (
               <>
                 <div className="grid grid-cols-3 gap-12">
