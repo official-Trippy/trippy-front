@@ -1,16 +1,28 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import Image from "next/image";
 import { fetchBookmarkedOotd, fetchBookmarkCount } from "@/services/bookmark/bookmark";
 import EmptyHeartIcon from '../../../public/empty_heart_default.svg';
 import CommentIcon1 from '../../../public/empty_comment_default.svg';
+import { fetchLikedPosts } from "@/services/ootd.ts/ootdComments";
+import Cookies from 'js-cookie';
+import HeartIcon from '../../../public/icon_heart.svg';
 
 
 const MyBookmark = () => {
   const [activeTab, setActiveTab] = useState("posts");
   const [pageOotd, setPageOotd] = useState(0); 
   const [totalOotdCount, setTotalOotdCount] = useState(0); 
+  const [likedPosts, setLikedPosts] = useState<number[]>([]);  
+  const accessToken = Cookies.get('accessToken');
   const PAGE_SIZE = 9;
+
+
+  useEffect(() => {
+    if (accessToken) {
+      fetchLikedPosts().then(setLikedPosts);  
+    }
+  }, [accessToken]);
 
   useQuery("bookmarkCount", fetchBookmarkCount, {
     onSuccess: (data) => {
@@ -101,7 +113,7 @@ const MyBookmark = () => {
                           </div>
                         </div>
                         <Image
-                          src={EmptyHeartIcon}
+                          src={likedPosts.includes(item.post.id) ? HeartIcon : EmptyHeartIcon} 
                           alt="좋아요"
                           width={20}
                           height={18}

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { fetchOotdPostCount, fetchOotdPosts } from "@/services/ootd.ts/ootdGet";
 import Cookies from "js-cookie";
@@ -8,6 +8,8 @@ import EmptyHeartIcon from '../../../public/empty_heart_default.svg';
 import CommentIcon1 from '../../../public/empty_comment_default.svg';
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import HeartIcon from '../../../public/icon_heart.svg';
+import { fetchLikedPosts } from "@/services/ootd.ts/ootdComments";
 
 const PAGE_SIZE = 9;
 
@@ -17,8 +19,15 @@ interface MyOotdProps {
 
 const MyOotd: React.FC<MyOotdProps> = ({ userInfo }) => {
   const [page, setPage] = React.useState(0);
+  const [likedPosts, setLikedPosts] = useState<number[]>([]);  
 
   const accessToken = Cookies.get('accessToken');
+
+  useEffect(() => {
+    if (accessToken) {
+      fetchLikedPosts().then(setLikedPosts);  
+    }
+  }, [accessToken]);
 
   const { data: totalCount, isLoading: isCountLoading, isError: isCountError } = useQuery<number>(
     'ootdPostCount',
@@ -80,7 +89,7 @@ const MyOotd: React.FC<MyOotdProps> = ({ userInfo }) => {
                 <div className="text-[#6b6b6b] text-xl font-normal font-['Pretendard']">{item.member.nickName}</div>
               </div>
               <Image
-                src={EmptyHeartIcon}
+                src={likedPosts.includes(item.post.id) ? HeartIcon : EmptyHeartIcon} 
                 alt="좋아요"
                 width={20}
                 height={18}
