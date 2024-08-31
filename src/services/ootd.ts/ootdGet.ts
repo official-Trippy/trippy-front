@@ -2,6 +2,7 @@ import axios from 'axios';
 import { OotdDetailGetResponse, OotdGetResponse, OotdRequest, PostRequest } from '@/types/ootd';
 import Cookies from "js-cookie";
 
+
 const backendUrl: string = process.env.NEXT_PUBLIC_BACKEND_URL || '';
 
 export const fetchOotdPostCount = async (): Promise<number> => {
@@ -113,10 +114,12 @@ export const fetchUserOotdPosts = async (memberId: string, page: number, size: n
       memberId
     },
   });
+  console.log('유저 정보 api: ', response);
   return response.data;
 };
 
 export const fetchUserProfile = (memberId: string) => {
+  console.log('유저 아이디:',memberId);
   return axios.get(`${backendUrl}/api/member/profile?memberId=${memberId}`).then((res) => res.data);
 };
 

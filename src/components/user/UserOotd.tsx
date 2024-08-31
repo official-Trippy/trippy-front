@@ -9,6 +9,9 @@ interface UserOotdProps {
 }
 
 const UserOotd: React.FC<UserOotdProps> = ({ memberId }) => {
+
+  console.log('Member ID:', memberId);
+  
   const { data, isLoading, error } = useQuery<OotdGetResponse>(
     ['userOotdPosts', memberId],
     () => fetchUserOotdPosts(memberId, 0, 9),
