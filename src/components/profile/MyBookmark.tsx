@@ -4,10 +4,12 @@ import Image from "next/image";
 import { fetchBookmarkedOotd, fetchBookmarkCount } from "@/services/bookmark/bookmark";
 import EmptyHeartIcon from '../../../public/empty_heart_default.svg';
 import CommentIcon1 from '../../../public/empty_comment_default.svg';
+import HeartIcon from '../../../public/icon_heart.svg';
 import { fetchLikedPosts } from "@/services/ootd.ts/ootdComments";
 import Cookies from 'js-cookie';
-import HeartIcon from '../../../public/icon_heart.svg';
+import { useRouter } from "next/navigation";
 
+const PAGE_SIZE = 9;
 
 const MyBookmark = () => {
   const [activeTab, setActiveTab] = useState("posts");
@@ -15,8 +17,7 @@ const MyBookmark = () => {
   const [totalOotdCount, setTotalOotdCount] = useState(0); 
   const [likedPosts, setLikedPosts] = useState<number[]>([]);  
   const accessToken = Cookies.get('accessToken');
-  const PAGE_SIZE = 9;
-
+  const router = useRouter();
 
   useEffect(() => {
     if (accessToken) {
@@ -40,6 +41,10 @@ const MyBookmark = () => {
 
   const handlePageClick = (pageIndex: number) => {
     setPageOotd(pageIndex);
+  };
+
+  const handlePostClick = (postId: number) => {
+    router.push(`/ootd/${postId}`); 
   };
 
   const renderPagination = (totalCount: number, currentPage: number) => {
@@ -89,7 +94,11 @@ const MyBookmark = () => {
               <>
                 <div className="grid grid-cols-3 gap-12">
                   {ootdData?.result?.map((item: any) => (
-                    <div key={item.ootd.id} className="flex-1 cursor-pointer">
+                    <div 
+                      key={item.ootd.id} 
+                      className="flex-1 cursor-pointer"
+                      onClick={() => handlePostClick(item.post.id)} 
+                    >
                       {item.post.images?.length > 0 && (
                         <div className="relative w-full pb-[100%]">
                           <Image
