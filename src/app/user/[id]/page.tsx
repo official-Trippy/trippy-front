@@ -55,11 +55,12 @@ const UserPage = ({ params }: { params: { id: string } }) => {
   });
 
   console.log('유저아이디', decodedId);
+  console.log('데이터', data);
 
   const emailData = data && data.result.email;
   const { data: userBoardCount } = useQuery({
-    queryKey: ["userBoardCount", emailData],
-    queryFn: () => getUserTotalBoardCount(emailData),
+    queryKey: ["userBoardCount", decodedId],
+    queryFn: () => getUserTotalBoardCount(decodedId),
     enabled: !!data,
   });
 
@@ -177,7 +178,7 @@ const UserPage = ({ params }: { params: { id: string } }) => {
             {activeTab === TABS.TICKET && (
               <UserTicket
                 userBoardCount={userBoardCount}
-                memberEmail={memberEmail}
+                memberEmail={decodedId}
               />
             )}
             {activeTab === TABS.OOTD && <UserOotd memberId={decodedId} />}

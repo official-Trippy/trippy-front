@@ -187,7 +187,7 @@ export const fetchOotdFollowPostCount = async (): Promise<number> => {
   }
 };
 
-export const getUserTotalOOtdCount = async (memberId: string): Promise<number> => {
+export const getUserTotalOotdCount = async (memberId: string): Promise<number> => {
   try {
       const response = await axios.get<{ result: number }>(
           `${backendUrl}/api/post/count/by-member?type=OOTD&memberId=${memberId}`
