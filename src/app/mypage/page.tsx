@@ -55,13 +55,12 @@ const MyPage = () => {
     enabled: !!accessToken,
   });
 
-  const { data: totalBookmarkCount } = useQuery<number>(
-    "bookMarkCount",
-    fetchBookmarkCount,
-    { enabled: !!accessToken }
-  );
+  const { data: bookmarkCounts } = useQuery({
+    queryKey: ["bookmarkCounts"],
+    queryFn: fetchBookmarkCount,
+    enabled: !!accessToken,
+  });
 
-  console.log(totalBoardCount);
   if (isLoading) {
     return <div>Loading...</div>;
   }
@@ -71,13 +70,7 @@ const MyPage = () => {
   }
 
   const userData = data && data.result;
-  console.log("userData : ", userData);
   const member = userData?.memberId;
-
-  console.log(totalBoardCount);
-
-  console.log('totalBookbark:', totalBookmarkCount)
-  console.log('totalOotdCount:', totalOotdCount)
 
   return (
     <>
@@ -146,7 +139,7 @@ const MyPage = () => {
                 >
                   북마크
                 </span>
-                <span className="text-[#fa3463] ml-1">{totalBookmarkCount}</span>
+                <span className="text-[#fa3463] ml-1">{bookmarkCounts?.totalCount}</span>
               </button>
             </div>
           </div>
