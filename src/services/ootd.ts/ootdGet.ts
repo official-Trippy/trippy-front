@@ -107,14 +107,21 @@ export const fetchFollowOotdPosts = async (page: number, size: number, orderType
   return response.data;
 };
 
-
-export const fetchUserOotdPosts = async (memberId: string, page: number, size: number) => {
-  const response = await axios.get(`${backendUrl}/api/ootd/by-member`, {
-    params: {
-      memberId
-    },
-  });
-  return response.data;
+export const fetchUserOotdPosts = async (memberId: string, page: number, size: number): Promise<OotdGetResponse> => {
+  try {
+    const response = await axios.get<OotdGetResponse>(`${backendUrl}/api/ootd/by-member`, {
+      params: {
+        memberId,
+        page,
+        size,
+        orderType: 'LATEST',
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error(`Error fetching user OOTD posts: ${error}`);
+    throw error;
+  }
 };
 
 export const fetchUserProfile = async (memberId: string) => {

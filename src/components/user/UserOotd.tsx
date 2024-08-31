@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useQuery } from "react-query";
-import { fetchUserOotdPosts } from "@/services/ootd.ts/ootdGet";
+import { fetchUserOotdPosts, getUserTotalOotdCount } from "@/services/ootd.ts/ootdGet";
 import { OotdGetResponse } from "@/types/ootd";
 import EmptyHeartIcon from '../../../public/empty_heart_default.svg';
 import CommentIcon1 from '../../../public/empty_comment_default.svg';
@@ -17,6 +17,7 @@ interface UserOotdProps {
 }
 
 const UserOotd: React.FC<UserOotdProps> = ({ memberId }) => {
+  const [page, setPage] = useState(0); 
   const [likedPosts, setLikedPosts] = useState<number[]>([]);
 
   const accessToken = Cookies.get('accessToken');
@@ -27,12 +28,23 @@ const UserOotd: React.FC<UserOotdProps> = ({ memberId }) => {
     }
   }, [accessToken]);
 
-  // 첫 번째 페이지의 OOTD 게시물 가져오기
-  const { data, isLoading, isError } = useQuery<OotdGetResponse>(
-    ['userOotdPosts', memberId],
-    () => fetchUserOotdPosts(memberId, 0, PAGE_SIZE),
+  const { data: totalCount, isLoading: isCountLoading, isError: isCountError } = useQuery<number>(
+    ['userOotdPostCount', memberId],
+    () => getUserTotalOotdCount(memberId),
     { enabled: !!memberId }
   );
+
+  const { data, isLoading, isError } = useQuery<OotdGetResponse>(
+    ['userOotdPosts', memberId, page],
+    () => fetchUserOotdPosts(memberId, page, PAGE_SIZE),  
+    { enabled: !!totalCount }
+  );
+
+  const totalPages = totalCount ? Math.ceil(totalCount / PAGE_SIZE) : 0;
+
+  const handlePageClick = (pageIndex: number) => {
+    setPage(pageIndex);
+  };
 
   const router = useRouter();
 
@@ -40,12 +52,12 @@ const UserOotd: React.FC<UserOotdProps> = ({ memberId }) => {
     router.push(`/ootd/${id}`);
   };
 
-  if (isLoading) {
-    return <div>Loading...</div>;
+  if (isCountLoading || isLoading) {
+    return null;
   }
 
-  if (isError || !data) {
-    return <div>Error fetching OOTD posts</div>;
+  if (isCountError || isError || !data) {
+    return null;
   }
 
   const ootdList = data.result;
@@ -110,6 +122,17 @@ const UserOotd: React.FC<UserOotdProps> = ({ memberId }) => {
               ))}
             </div>
           </div>
+        ))}
+      </div>
+      <div className="flex justify-center my-16">
+        {Array.from({ length: totalPages }, (_, index) => (
+          <button
+            key={index}
+            onClick={() => handlePageClick(index)}
+            className={`mx-1 py-2 px-4 ${page === index ? 'text-[#fa3463] font-semibold' : 'text-[#cfcfcf] font-normal'}`}
+          >
+            {index + 1}
+          </button>
         ))}
       </div>
     </div>
