@@ -57,9 +57,9 @@ const TagContainer: React.FC<TagContainerProps> = ({ item }) => {
 
   return (
     <div className="mt-4">
-       <div className="text-[#6b6b6b] text-xl font-normal font-['Pretendard'] text-ellipsis overflow-hidden whitespace-nowrap">
-              {item.post.body}
-            </div>
+      <div className="text-[#6b6b6b] text-xl font-normal font-['Pretendard'] text-ellipsis overflow-hidden whitespace-nowrap">
+        {item.post.body}
+      </div>
       <div className="tag-container mt-2" ref={containerRef}>
         {visibleTags.map((tag, index) => (
           <span
@@ -247,21 +247,19 @@ const RecentOotdPost: React.FC = () => {
           </div>
         ))}
       </div>
-      {totalPages > 1 && (
-        <div className='flex justify-center mt-4'>
-          {[...Array(totalPages)].map((_, index) => (
-            <button
-              key={index}
-              onClick={() => handlePageClick(index)}
-              className={`mx-2 py-16 px-3  ${
-                page === index ? 'text-[#fa3463] font-semibold' : 'text-[#cfcfcf] font-normal'
-              }`}
-            >
-              {index + 1}
-            </button>
-          ))}
-        </div>
-      )}
+      <div className='flex justify-center mt-4'>
+        {[...Array(totalPages)].map((_, index) => (
+          <button
+            key={index}
+            onClick={() => handlePageClick(index)}
+            className={`mx-2 py-16 px-3  ${
+              page === index ? 'text-[#fa3463] font-semibold' : 'text-[#cfcfcf] font-normal'
+            }`}
+          >
+            {index + 1}
+          </button>
+        ))}
+      </div>
     </div>
   );
 };
