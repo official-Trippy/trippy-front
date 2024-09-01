@@ -34,6 +34,7 @@ const UserOotd: React.FC<UserOotdProps> = ({ memberId }) => {
     { enabled: !!memberId }
   );
 
+
   const { data, isLoading, isError } = useQuery<OotdGetResponse>(
     ['userOotdPosts', memberId, page],
     () => fetchUserOotdPosts(memberId, page, PAGE_SIZE),  

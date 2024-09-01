@@ -10,7 +10,7 @@ import UserBadge from "@/components/user/UserBadge";
 import UserBookmark from "@/components/user/UserBookmark";
 import Image from "next/image";
 import backgroundImg from "../../../../public/DefaultBackground.svg";
-import { fetchUserProfile } from "@/services/ootd.ts/ootdGet";
+import { fetchUserProfile, getUserTotalOotdCount } from "@/services/ootd.ts/ootdGet";
 import FollowList from "@/components/profile/FollowList";
 import { getUserTotalBoardCount } from "@/services/board/get/getBoard";
 
@@ -58,11 +58,19 @@ const UserPage = ({ params }: { params: { id: string } }) => {
   console.log('데이터', data);
 
   const emailData = data && data.result.email;
+
   const { data: userBoardCount } = useQuery({
     queryKey: ["userBoardCount", decodedId],
     queryFn: () => getUserTotalBoardCount(decodedId),
     enabled: !!data,
   });
+
+  const { data: userOotdCount } = useQuery({
+    queryKey: ["userOotdCount", decodedId],
+    queryFn: () => getUserTotalOotdCount(decodedId),
+    enabled: !!data,
+  });
+
 
   useEffect(() => {
     if (decodedId) {
@@ -139,6 +147,7 @@ const UserPage = ({ params }: { params: { id: string } }) => {
                 >
                   OOTD
                 </span>
+                 <span className="text-[#fa3463] ml-1">{userOotdCount}</span>
               </button>
               <button
                 className={`px-8 py-2 rounded-[999px] justify-center items-center ${
