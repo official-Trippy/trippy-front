@@ -8,3 +8,9 @@ export interface bookmarkCount {
 	    ootdCount : number;
     }
 }
+
+export interface BookmarkCounts {
+    totalCount: number;
+    postCount: number;
+    ootdCount: number;
+  }

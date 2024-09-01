@@ -76,6 +76,7 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
       if (ootdItem.member.memberId == userInfo.memberId) {
         router.push("/mypage");
       } else {
+        console.log(ootdItem.member.memberId);
         router.push(`/user/${ootdItem.member.memberId}`);
       }
     } else {
@@ -200,7 +201,7 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
                   alt="사용자 프로필"
                   layout="fill"
                   objectFit="cover"
-                  className="rounded-full"
+                  className="rounded-full cursor-pointer"
                   onClick={handleProfileClick}
                 />
               </div>

@@ -10,7 +10,7 @@ import UserBadge from "@/components/user/UserBadge";
 import UserBookmark from "@/components/user/UserBookmark";
 import Image from "next/image";
 import backgroundImg from "../../../../public/DefaultBackground.svg";
-import { fetchUserProfile } from "@/services/ootd.ts/ootdGet";
+import { fetchUserProfile, getUserTotalOotdCount } from "@/services/ootd.ts/ootdGet";
 import FollowList from "@/components/profile/FollowList";
 import { getUserTotalBoardCount } from "@/services/board/get/getBoard";
 
@@ -25,16 +25,18 @@ const TABS = {
 
 const UserPage = ({ params }: { params: { id: string } }) => {
   const { id } = params;
-  const [activeTab, setActiveTab] = useState(TABS.TICKET);
+  const decodedId = decodeURIComponent(params.id);
+  const [activeTab, setActiveTab] = useState(() => {
+
+    const savedTab = sessionStorage.getItem(`activeTab_${decodedId}`);
+    return savedTab ? savedTab : TABS.TICKET;
+  });
   const [userMeberId, setUserMemberId] = useState("");
 
-  // Function to extract the user ID from the URL
   useEffect(() => {
     const extractUserId = () => {
       const currentUrl = window.location.href;
-
       const urlObj = new URL(currentUrl);
-
       const pathname = urlObj.pathname;
       const pathSegments = pathname.split("/");
       const userId = pathSegments[pathSegments.length - 1];
@@ -43,45 +45,54 @@ const UserPage = ({ params }: { params: { id: string } }) => {
 
     extractUserId();
   }, []);
-  console.log(userMeberId);
 
   const { data, error, isLoading, refetch } = useQuery({
-    queryKey: ["userProfile", id],
-    queryFn: () => fetchUserProfile(id),
+    queryKey: ["userProfile", decodedId],
+    queryFn: () => fetchUserProfile(decodedId),
     onError: (error) => {
       console.error(error);
     },
   });
 
+  console.log('유저아이디', decodedId);
+  console.log('데이터', data);
+
   const emailData = data && data.result.email;
+
   const { data: userBoardCount } = useQuery({
-    queryKey: ["userBoardCount", emailData],
-    queryFn: () => getUserTotalBoardCount(emailData),
+    queryKey: ["userBoardCount", decodedId],
+    queryFn: () => getUserTotalBoardCount(decodedId),
     enabled: !!data,
   });
-  console.log(data);
-  console.log(userBoardCount);
 
-  console.log(id);
+  const { data: userOotdCount } = useQuery({
+    queryKey: ["userOotdCount", decodedId],
+    queryFn: () => getUserTotalOotdCount(decodedId),
+    enabled: !!data,
+  });
+
+
   useEffect(() => {
-    if (id) {
+    if (decodedId) {
       refetch();
     }
-  }, [id, refetch]);
+  }, [decodedId, refetch]);
+
+  useEffect(() => {
+  
+    sessionStorage.setItem(`activeTab_${decodedId}`, activeTab);
+  }, [activeTab, id]);
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return null;
   }
 
   if (error) {
-    return <div>Error</div>;
+    return null;
   }
 
   const userData = data && data.result;
-
-  console.log("userData: ", userData);
   const memberEmail = userData?.email;
-  console.log(memberEmail);
 
   return (
     <>
@@ -95,13 +106,16 @@ const UserPage = ({ params }: { params: { id: string } }) => {
         />
       </div>
       <div className="w-[66%] mx-auto">
-        <h1 className="w-[80%] absolute ml-auto text-right top-[320px] text-white text-4xl font-bold">
+      <h1 className="w-[66%] absolute ml-[240px] text-left top-[320px] text-white text-4xl font-bold">
           {userData && userData.blogName}
         </h1>
+        <div className="w-[66%] absolute ml-[240px] text-left top-[350px] text-white text-xl font-normal font-['Pretendard']">
+          {userData && userData.blogIntroduce}
+        </div>
       </div>
       <div className="w-[66%] mx-auto flex p-4">
         <div className="w-[250px] mb-4">
-          <UserProfile memberId={id} setActiveTab={setActiveTab} />
+          <UserProfile memberId={decodedId} setActiveTab={setActiveTab} />
         </div>
         <div className="w-[100%] ml-[50px]">
           <div className="flex justify-between mb-4 ml-4 text-2xl">
@@ -133,6 +147,7 @@ const UserPage = ({ params }: { params: { id: string } }) => {
                 >
                   OOTD
                 </span>
+                 <span className="text-[#fa3463] ml-1">{userOotdCount}</span>
               </button>
               <button
                 className={`px-8 py-2 rounded-[999px] justify-center items-center ${
@@ -165,7 +180,6 @@ const UserPage = ({ params }: { params: { id: string } }) => {
                 </span>
               </button>
             </div>
-            <div className="flex space-x-4"></div>
           </div>
           <hr className="mb-4 w-full h-[1px]" />
 
@@ -173,10 +187,10 @@ const UserPage = ({ params }: { params: { id: string } }) => {
             {activeTab === TABS.TICKET && (
               <UserTicket
                 userBoardCount={userBoardCount}
-                memberEmail={memberEmail}
+                memberEmail={decodedId}
               />
             )}
-            {activeTab === TABS.OOTD && <UserOotd memberId={id} />}
+            {activeTab === TABS.OOTD && <UserOotd memberId={decodedId} />}
             {activeTab === TABS.BADGE && <UserBadge />}
             {activeTab === TABS.BOOKMARK && <UserBookmark />}
             {activeTab === TABS.FOLLOWER && (
