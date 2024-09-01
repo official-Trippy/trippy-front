@@ -12,6 +12,7 @@ import EmptyHeartIcon from '../../../../public/empty_heart_default.svg';
 import CommentIcon1 from '../../../../public/empty_comment_default.svg';
 import { fetchLikedPosts } from '@/services/ootd.ts/ootdComments';
 import HeartIcon from '../../../../public/icon_heart.svg';
+import CustomSelect from './CustomSelect';
 
 const PAGE_SIZE = 12;
 
@@ -149,8 +150,8 @@ const RecentOotdPost: React.FC = () => {
     router.push(`/ootd/${id}`);
   };
 
-  const handleOrderTypeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setOrderType(event.target.value);
+  const handleOrderTypeChange = (value: string) => {
+    setOrderType(value);
     setPage(0);
   };
 
@@ -189,15 +190,9 @@ const RecentOotdPost: React.FC = () => {
         >
           팔로잉
         </span>
-        <select
-          className='flex w-[8rem] h-[3rem] ml-auto font-medium selectshadow'
-          value={orderType}
-          onChange={handleOrderTypeChange}
-        >
-          <option value="LATEST">최신순</option>
-          <option value="LIKE">인기순</option>
-          <option value="VIEW">조회순</option>
-        </select>
+        <div className='ml-auto'>
+          <CustomSelect orderType={orderType} onOrderTypeChange={handleOrderTypeChange} />
+        </div>
       </div>
       <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-8">
         {ootdList.map((item) => (
