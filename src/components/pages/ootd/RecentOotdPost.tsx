@@ -85,20 +85,23 @@ const RecentOotdPost: React.FC = () => {
   const router = useRouter();
 
   useEffect(() => {
-    const savedTab = sessionStorage.getItem('tab');
-    if (savedTab) {
-      setTab(savedTab as 'ALL' | 'FOLLOWING');
-    } else {
-      setTab(accessToken ? 'FOLLOWING' : 'ALL');
+    if (typeof window !== 'undefined') { 
+      const savedTab = sessionStorage.getItem('tab');
+      if (savedTab) {
+        setTab(savedTab as 'ALL' | 'FOLLOWING');
+      } else {
+        setTab(accessToken ? 'FOLLOWING' : 'ALL');
+      }
     }
   }, [accessToken]);
 
   useEffect(() => {
-    if (tab) {
-      sessionStorage.setItem('tab', tab);
+    if (typeof window !== 'undefined') { 
+      if (tab) {
+        sessionStorage.setItem('tab', tab);
+      }
     }
   }, [tab]);
-
   useEffect(() => {
     if (accessToken) {
       fetchLikedPosts().then(setLikedPosts);  

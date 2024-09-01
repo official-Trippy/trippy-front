@@ -31,14 +31,18 @@ const MyPage = () => {
   const accessToken = Cookies.get("accessToken");
 
   const [activeTab, setActiveTab] = useState(() => {
-    const savedTab = sessionStorage.getItem("activeTab");
-    return savedTab ? savedTab : TABS.TICKET;
+    if (typeof window !== 'undefined') { 
+      const savedTab = sessionStorage.getItem("activeTab");
+      return savedTab ? savedTab : TABS.TICKET;
+    }
+    return TABS.TICKET;
   });
 
   useEffect(() => {
-    sessionStorage.setItem("activeTab", activeTab);
+    if (typeof window !== 'undefined') { 
+      sessionStorage.setItem("activeTab", activeTab);
+    }
   }, [activeTab]);
-
   const { data, error, isLoading, refetch } = useQuery({
     queryKey: ["member", accessToken],
     queryFn: () => MemberInfo(accessToken),
