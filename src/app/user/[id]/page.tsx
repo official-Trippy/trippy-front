@@ -27,10 +27,13 @@ const UserPage = ({ params }: { params: { id: string } }) => {
   const { id } = params;
   const decodedId = decodeURIComponent(params.id);
   const [activeTab, setActiveTab] = useState(() => {
-
-    const savedTab = sessionStorage.getItem(`activeTab_${decodedId}`);
-    return savedTab ? savedTab : TABS.TICKET;
+    if (typeof window !== 'undefined') { 
+      const savedTab = sessionStorage.getItem(`activeTab_${decodedId}`);
+      return savedTab ? savedTab : TABS.TICKET;
+    }
+    return TABS.TICKET; 
   });
+
   const [userMeberId, setUserMemberId] = useState("");
 
   useEffect(() => {
@@ -79,9 +82,10 @@ const UserPage = ({ params }: { params: { id: string } }) => {
   }, [decodedId, refetch]);
 
   useEffect(() => {
-  
-    sessionStorage.setItem(`activeTab_${decodedId}`, activeTab);
-  }, [activeTab, id]);
+    if (typeof window !== 'undefined') { 
+      sessionStorage.setItem(`activeTab_${decodedId}`, activeTab);
+    }
+  }, [activeTab, id]);;
 
   if (isLoading) {
     return null;
