@@ -34,6 +34,7 @@ import FollowButton from "@/components/followControl/followButton";
 import { colorTicket } from "@/types/board";
 import deleteBoard from "@/services/board/delete/deleteBoard";
 import Swal from "sweetalert2";
+import menubars from "@/dummy/menubars.svg"
 
 export default function BoardPage({ params }: { params: { boardId: number } }) {
     const accessToken = Cookies.get("accessToken");
@@ -44,7 +45,7 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
     const { userInfo, loading, fetchUserInfo } = useUserStore();
     const [replyId, setReplyId] = useState(0);
     const [isReplyOpen, setIsReplyOpen] = useState(false);
-
+    const [isOpenMenu, setIsOpenMenu] = useState(false);
 
     const { data: postData, refetch: postRefetch } = useQuery({
         queryKey: ["postData"],
@@ -245,7 +246,7 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
     }
 
     const editBoardEdit = () => {
-        router.push(`${params.boardId}/edit1`)
+        router.push(`/edits/${params.boardId}`)
     }
 
     const loginEdit = () => {
@@ -264,8 +265,14 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
                     <span>{postData?.result.member.blogName}의 블로그</span>
                     {memberDatas?.result.blogName === postData?.result.member.blogName && (
                         <div className="flex ml-auto gap-[1rem]">
-                            <span className="cursor-pointer" onClick={editBoardEdit}>수정하기</span>
-                            <span className="cursor-pointer" onClick={deleteBoardHandler}>삭제</span>
+                            <Image src={menubars} alt="" onClick={() => { setIsOpenMenu(!isOpenMenu) }} />
+                            {isOpenMenu && (
+                                <div className="absolute bg-white shadow-md rounded-md mt-[3rem] -ml-[6rem] p-2 animate-dropdown z-20" style={{ opacity: 0, transform: 'translateY(-10px)' }}> {/* 스타일 추가 */}
+                                    <span className="cursor-pointer block hover:bg-gray-200" onClick={editBoardEdit}>수정하기</span>
+                                    <span className="cursor-pointer block hover:bg-gray-200" onClick={deleteBoardHandler}>삭제</span>
+                                </div>
+                            )}
+
                         </div>
                     )}
                 </div>
