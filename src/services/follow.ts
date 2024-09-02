@@ -3,11 +3,17 @@ import { useUserStore } from "@/store/useUserStore";
 import { useFollowingStore } from "@/store/useFollowingStore";
 
 const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
+let accessToken = "";
 
 export async function showFollows(memberId: string) {
   try {
     const response = await axios.get(
-      `${backendUrl}/api/member/follower?memberId=${memberId}`
+      `${backendUrl}/api/member/follower?memberId=${memberId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
     );
     console.log(response.data);
     return response.data;
@@ -19,7 +25,12 @@ export async function showFollows(memberId: string) {
 export async function showFollowings(memberId: string) {
   try {
     const response = await axios.get(
-      `${backendUrl}/api/member/following?memberId=${memberId}`
+      `${backendUrl}/api/member/following?memberId=${memberId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
     );
     console.log(response.data);
     return response.data;
