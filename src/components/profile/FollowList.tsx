@@ -3,6 +3,7 @@ import { useQuery } from "react-query";
 import { showFollows, showFollowings } from "@/services/follow";
 import { useUserStore } from "@/store/useUserStore";
 import { unfollow } from "@/services/follow";
+import { ACCESS_TOKEN } from "@/constants/general";
 
 const FollowList: React.FC<{
   memberId: string;
@@ -12,8 +13,8 @@ const FollowList: React.FC<{
     queryKey: [type, memberId],
     queryFn:
       type === "follower"
-        ? () => showFollows(memberId)
-        : () => showFollowings(memberId),
+        ? () => showFollows(memberId, ACCESS_TOKEN)
+        : () => showFollowings(memberId, ACCESS_TOKEN),
     onError: (error) => {
       console.error(error);
     },
