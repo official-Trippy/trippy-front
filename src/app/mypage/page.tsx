@@ -15,6 +15,7 @@ import Image from "next/image";
 import backgroundImg from "../../../public/DefaultBackground.svg";
 import { fetchOotdPostCount } from "@/services/ootd.ts/ootdGet";
 import { getTotalBoardCount } from "@/services/board/get/getBoard";
+import { fetchBookmarkCount } from "@/services/bookmark/bookmark";
 
 const TABS = {
   ALL: "ALL",
@@ -27,9 +28,21 @@ const TABS = {
 };
 
 const MyPage = () => {
-  const [activeTab, setActiveTab] = useState(TABS.TICKET);
   const accessToken = Cookies.get("accessToken");
 
+  const [activeTab, setActiveTab] = useState(() => {
+    if (typeof window !== 'undefined') { 
+      const savedTab = sessionStorage.getItem("activeTab");
+      return savedTab ? savedTab : TABS.TICKET;
+    }
+    return TABS.TICKET;
+  });
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') { 
+      sessionStorage.setItem("activeTab", activeTab);
+    }
+  }, [activeTab]);
   const { data, error, isLoading, refetch } = useQuery({
     queryKey: ["member", accessToken],
     queryFn: () => MemberInfo(accessToken),
@@ -54,7 +67,12 @@ const MyPage = () => {
     enabled: !!accessToken,
   });
 
-  console.log(totalBoardCount);
+  const { data: bookmarkCounts } = useQuery({
+    queryKey: ["bookmarkCounts"],
+    queryFn: fetchBookmarkCount,
+    enabled: !!accessToken,
+  });
+
   if (isLoading) {
     return <div>Loading...</div>;
   }
@@ -64,10 +82,7 @@ const MyPage = () => {
   }
 
   const userData = data && data.result;
-  console.log("userData : ", userData);
   const member = userData?.memberId;
-
-  console.log(totalBoardCount);
 
   return (
     <>
@@ -81,9 +96,12 @@ const MyPage = () => {
         />
       </div>
       <div className="w-[66%] mx-auto">
-        <h1 className="w-[66%] absolute ml-auto text-right top-[320px] text-white text-4xl font-bold">
+        <h1 className="w-[66%] absolute ml-[240px] text-left top-[320px] text-white text-4xl font-bold">
           {userData && userData.blogName}
         </h1>
+        <div className="w-[66%] absolute ml-[240px] text-left top-[350px] text-white text-xl font-normal font-['Pretendard']">
+          {userData && userData.blogIntroduce}
+        </div>
       </div>
       <div className="w-[66%] mx-auto flex p-4">
         <div className="w-[250px] mb-4">
@@ -136,22 +154,8 @@ const MyPage = () => {
                 >
                   북마크
                 </span>
-                <span className="text-[#fa3463] ml-1">{totalOotdCount}</span>
+                <span className="text-[#fa3463] ml-1">{bookmarkCounts?.totalCount}</span>
               </button>
-            </div>
-            <div className="flex space-x-4">
-              {/* <button
-                className={`pr-8 py-2 ${activeTab === TABS.FOLLOWER ? "text-rose-500 font-bold" : "bg-white"}`}
-                onClick={() => setActiveTab(TABS.FOLLOWER)}
-              >
-                팔로워
-              </button>
-              <button
-                className={`pr-8 py-2 ${activeTab === TABS.FOLLOWING ? "text-rose-500 font-bold" : "bg-white"}`}
-                onClick={() => setActiveTab(TABS.FOLLOWING)}
-              >
-                팔로윙
-              </button> */}
             </div>
           </div>
           <hr className="mb-4 w-full h-[1px]" />

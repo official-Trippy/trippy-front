@@ -19,16 +19,20 @@ const Header = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isNotificationsVisible, setIsNotificationsVisible] = useState(false); // New state for notifications
+  const [isLoading, setIsLoading] = useState(true);
 
   const { userInfo, loading, fetchUserInfo } = useUserStore();
   const router = useRouter();
-  const pathname = usePathname(); // 현재 경로를 가져옴
+  const pathname = usePathname(); 
 
   const accessToken = Cookies.get("accessToken");
 
   useEffect(() => {
-    fetchUserInfo();
-    console.log(userInfo);
+    const loadUserInfo = async () => {
+      await fetchUserInfo();
+      setIsLoading(false); 
+    };
+    loadUserInfo();
   }, [fetchUserInfo]);
 
   const onClickLogin = () => {
@@ -42,6 +46,12 @@ const Header = () => {
   const handleNotificationsToggle = () => {
     setIsNotificationsVisible(!isNotificationsVisible); // Toggle notifications
   };
+
+  if (isLoading) {
+    return null;
+  }
+
+  const isGuest = userInfo?.role === "GUEST";
 
   return (
     <header className="header flex justify-between items-center w-[66%] mx-auto relative">
@@ -75,7 +85,7 @@ const Header = () => {
         <div className="ml-5">
           <SearchBar />
         </div>
-        {!loading && (
+        {!loading && !isGuest && (
           <>
             {userInfo && accessToken ? (
               <div className="flex relative">
@@ -155,6 +165,18 @@ const Header = () => {
               </div>
             )}
           </>
+        )}
+        {!loading && isGuest && (
+          <div>
+            <Link href="/login">
+              <button
+                className="w-[8.6rem] h-[3.5rem] bg-btn-color text-white px-6 py-2 rounded-lg"
+                style={{ fontSize: "1.6rem" }}
+              >
+                로그인
+              </button>
+            </Link>
+          </div>
         )}
       </div>
     </header>

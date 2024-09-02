@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { fetchOotdPostCount, fetchOotdPosts } from "@/services/ootd.ts/ootdGet";
 import Cookies from "js-cookie";
@@ -8,8 +8,10 @@ import EmptyHeartIcon from '../../../public/empty_heart_default.svg';
 import CommentIcon1 from '../../../public/empty_comment_default.svg';
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import HeartIcon from '../../../public/icon_heart.svg';
+import { fetchLikedPosts } from "@/services/ootd.ts/ootdComments";
 
-const PAGE_SIZE = 9; 
+const PAGE_SIZE = 9;
 
 interface MyOotdProps {
   userInfo: UserInfoType;
@@ -17,19 +19,26 @@ interface MyOotdProps {
 
 const MyOotd: React.FC<MyOotdProps> = ({ userInfo }) => {
   const [page, setPage] = React.useState(0);
+  const [likedPosts, setLikedPosts] = useState<number[]>([]);  
 
   const accessToken = Cookies.get('accessToken');
+
+  useEffect(() => {
+    if (accessToken) {
+      fetchLikedPosts().then(setLikedPosts);  
+    }
+  }, [accessToken]);
 
   const { data: totalCount, isLoading: isCountLoading, isError: isCountError } = useQuery<number>(
     'ootdPostCount',
     fetchOotdPostCount,
-    { enabled: !!accessToken }  
+    { enabled: !!accessToken }
   );
   
   const { data, isLoading, isError } = useQuery<OotdGetResponse>(
     ['ootdPosts', page],
     () => fetchOotdPosts(page, PAGE_SIZE),
-    { enabled: !!totalCount } 
+    { enabled: !!totalCount }
   );
 
   const totalPages = totalCount ? Math.ceil(totalCount / PAGE_SIZE) : 0;
@@ -60,12 +69,12 @@ const MyOotd: React.FC<MyOotdProps> = ({ userInfo }) => {
         {ootdList.map((item) => (
           <div key={item.ootd.id} className="flex-1 cursor-pointer" onClick={() => handleOotdItemClick(item.post.id)}>
             {item.post.images.length > 0 && (
-              <div className="relative w-full pb-[100%]"> {/* 컨테이너를 정사각형으로 설정 */}
+              <div className="relative w-full pb-[100%]">
                 <Image
                   src={item.post.images[0].accessUri}
                   alt="OOTD"
                   className="absolute inset-0 w-full h-full object-cover rounded-lg"
-                  width={200} // Width and height are for aspect ratio purposes
+                  width={200}
                   height={200}
                 />
               </div>
@@ -80,7 +89,7 @@ const MyOotd: React.FC<MyOotdProps> = ({ userInfo }) => {
                 <div className="text-[#6b6b6b] text-xl font-normal font-['Pretendard']">{item.member.nickName}</div>
               </div>
               <Image
-                src={EmptyHeartIcon}
+                src={likedPosts.includes(item.post.id) ? HeartIcon : EmptyHeartIcon} 
                 alt="좋아요"
                 width={20}
                 height={18}
@@ -94,10 +103,15 @@ const MyOotd: React.FC<MyOotdProps> = ({ userInfo }) => {
               />
               <span className="mx-2 text-[#cfcfcf]"> {item.post.commentCount}</span>
             </div>
-            <div className="text-[#6b6b6b] text-xl font-normal font-['Pretendard']">{item.post.body}</div>
-            <div className="flex gap-2 mt-2">
+            <div className="text-[#6b6b6b] text-xl font-normal font-['Pretendard'] text-ellipsis overflow-hidden whitespace-nowrap">
+              {item.post.body}
+            </div>
+            <div className="tag-container">
               {item.post.tags.map((tag: string, index: number) => (
-                <span key={index} className="px-4 py-1 bg-neutral-100 rounded-3xl text-xl justify-center items-center gap-2.5 inline-flex text-[#9d9d9d]">
+                <span
+                  key={index}
+                  className="tag-item px-4 py-1 bg-neutral-100 rounded-3xl text-xl text-[#9d9d9d]"
+                >
                   {tag}
                 </span>
               ))}
@@ -118,7 +132,6 @@ const MyOotd: React.FC<MyOotdProps> = ({ userInfo }) => {
       </div>
     </div>
   );
-  
 };
 
 export default MyOotd;

@@ -54,3 +54,11 @@ export interface FetchCommentsResponse {
     return response.data;
   };
   
+  export const fetchLikedPosts = async () => {
+    const response = await axios.get(`${backendUrl}/api/like/my-list`, {
+      params: { page: 0, size: 0, postType: 'OOTD' },
+    });
+
+    return response.data.result.map((item: any) => item.post.id);
+  };
+  

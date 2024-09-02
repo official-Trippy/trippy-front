@@ -23,7 +23,6 @@ import { UploadedImage } from '@/types/ootd'
 import { useRouter } from 'next/navigation'
 import Swal from 'sweetalert2'
 import { colorTicket } from '@/types/board'
-import TextEditor from '@/components/testEditor/TextEditor'
 import MyTinyMCEEditor from '@/components/testEditor/textEditor2'
 
 const countries: { [key: string]: string } = {
