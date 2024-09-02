@@ -20,6 +20,11 @@ const FollowList: React.FC<{
   });
 
   const followInfo = useUserStore((state) => state.userInfo);
+  // console.log(followInfo.followingCnt);
+  // console.log(followInfo);
+
+  // const userFollowingCnt = data.result.followingCnt;
+  // const userFollowCnt = data.result.followCnt;
 
   if (isLoading) return null;
   if (error)
@@ -32,11 +37,7 @@ const FollowList: React.FC<{
     <div>
       <div className="h-[400px]">
         <h3 className="text-2xl font-bold my-12">
-          {type === "follower" ? (
-            <div>팔로워 {followInfo.followerCnt}</div>
-          ) : (
-            <div>팔로잉 {followInfo.followingCnt}</div>
-          )}
+          {type === "follower" ? <div>팔로워</div> : <div>팔로잉</div>}
         </h3>
         <div>
           {!userData || userData.length === 0 ? (
