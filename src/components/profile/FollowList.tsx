@@ -14,6 +14,9 @@ const FollowList: React.FC<{
   const [isAvailable, setIsAvailable] = useState<boolean | null>(null);
   const [availabilityMessage, setAvailabilityMessage] = useState<string>("");
 
+  const currentUser = useUserStore((state) => state.userInfo);
+  const currentUserId = currentUser?.memberId;
+
   useEffect(() => {
     const checkAvailability = async () => {
       try {
@@ -105,15 +108,17 @@ const FollowList: React.FC<{
                     <p className="text-gray-600">{user.memberId}</p>
                   </div>
                 </div>
-                <button
-                  className="bg-red-500 text-white px-4 py-2 rounded rounded-lg"
-                  onClick={() => {
-                    unfollow(user.memberId);
-                    console.log("Unfollow", user.idx);
-                  }}
-                >
-                  {type === "follower" ? "팔로우 삭제" : "팔로우 취소"}
-                </button>
+                {currentUserId === memberId && (
+                  <button
+                    className="bg-red-500 text-white px-4 py-2 rounded rounded-lg"
+                    onClick={() => {
+                      unfollow(user.memberId);
+                      console.log("Unfollow", user.idx);
+                    }}
+                  >
+                    {type === "follower" ? "팔로우 삭제" : "팔로우 취소"}
+                  </button>
+                )}
               </div>
             ))
           )}
