@@ -1,9 +1,6 @@
-// components/PostAllCard.tsx
-
 import React from "react";
 import Link from "next/link";
 
-// Define the props interface to expect an array of posts
 interface PostCardProps {
   posts: {
     post: {
@@ -21,9 +18,13 @@ interface PostCardProps {
       profileUrl: string;
     };
   }[];
+  selectedPostType: string; // 새로운 prop 추가
 }
 
-const PostAllCard: React.FC<PostCardProps> = ({ posts = [] }) => {
+const PostAllCard: React.FC<PostCardProps> = ({
+  posts = [],
+  selectedPostType,
+}) => {
   if (!Array.isArray(posts) || posts.length === 0) {
     return <p>No posts available</p>;
   }
@@ -32,16 +33,26 @@ const PostAllCard: React.FC<PostCardProps> = ({ posts = [] }) => {
     if (text.length <= maxLength) return text;
     return text.substring(0, maxLength) + "...";
   };
+  console.log("postType", selectedPostType);
 
   return (
     <div className="flex flex-col items-stretch gap-[25.012px] h-174px w-789px">
       {posts.map((post, index) => {
         const { post: postDetails, member } = post;
+
+        // 타입에 따른 링크 경로 설정
+        const linkPath =
+          selectedPostType === "POST"
+            ? `/board/${postDetails?.id}`
+            : selectedPostType === "OOTD"
+              ? `/ootd/${postDetails?.id}`
+              : `/profile/${postDetails?.id}`; // NICKNAME일 경우 프로필로 연결
+
         return (
           <Link
-            href={`/board/${postDetails?.id}`} // 링크 설정
+            href={linkPath} // 동적 링크 경로 사용
             key={index}
-            className="no-underline" // 기본 스타일링 제거
+            className="no-underline"
           >
             <div className="flex justify-center items-start p-6 bg-white rounded-lg shadow-md mb-6 h-[174px] w-[789px]">
               {/* Image */}
