@@ -24,6 +24,8 @@ import { useRouter } from 'next/navigation'
 import Swal from 'sweetalert2'
 import { colorTicket } from '@/types/board'
 import MyTinyMCEEditor from '@/components/testEditor/textEditor2'
+import { useQuery } from 'react-query'
+import { getPost } from '@/services/board/get/getBoard'
 
 const countries: { [key: string]: string } = {
     KOR: '대한민국',
@@ -45,8 +47,13 @@ const countries: { [key: string]: string } = {
 
 
 
-function PostWrite() {
-    const [bgColor, setBgColor] = useState('#55FBAF');
+function PostEdit({ params }: { params: { boardId: number } }) {
+    const { data: postData, refetch: postRefetch } = useQuery({
+        queryKey: ["postData"],
+        queryFn: () => getPost(Number(params.boardId)),
+    });
+
+    const [bgColor, setBgColor] = useState(colorTicket[postData?.result.ticket.ticketColor]);
     const [thumbnailPreview, setThumbnailPreview] = useState<string | null>(null);
     const [isTransport, setIsTransport] = useState(false);
     const [isImageIdx, setIsImageIdx] = useState([
@@ -83,6 +90,8 @@ function PostWrite() {
         body: '',
         images: [] as string[], // 이미지 URL을 저장할 배열
     });
+
+
 
     const handleInputChange1 = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
@@ -241,6 +250,8 @@ function PostWrite() {
         }
     };
 
+    console.log(postData)
+
     const displayImages = images.map(image => image.accessUri);
 
     console.log(displayImages)
@@ -255,9 +266,7 @@ function PostWrite() {
         }
         const ticketRequest = {
             departure: inputValue1,
-            departureCode: inputValue1,
             destination: inputValue2,
-            destinationCode: inputValue2,
             image: images[0],
             memberNum: Number(passengerCount),
             startDate: formatDates(startDate),
@@ -348,7 +357,8 @@ function PostWrite() {
                     <button className='ml-auto flex bg-[#FB3463] text-white text-[1.6rem] font-semibold rounded-[1rem] px-[2.5rem] py-[0.5rem]' onClick={addPost}>올리기</button>
                 </div>
                 <div className='w-full h-[32rem] border border-[#D9D9D9] rounded-[1rem] flex mx-auto mt-[2rem]'>
-                    <div className={`w-[15.4rem] h-full bg-[${bgColor}] rounded-l-[1rem]`}></div>
+                    <div className={`w-[15.4rem] h-full bg-[${bgColor}] rounded-l-[1rem]`}
+                        style={{ color: colorTicket[postData?.result.ticket.ticketColor] || 'inherit' }}></div>
                     <div className='w-full mt-[5rem] relative'>
                         <div className='flex justify-center'>
                             <div>
@@ -548,4 +558,4 @@ function PostWrite() {
     )
 }
 
-export default PostWrite;
+export default PostEdit;

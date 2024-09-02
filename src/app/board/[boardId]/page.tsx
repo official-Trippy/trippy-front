@@ -32,6 +32,8 @@ import { useFollowingStore } from "@/store/useFollowingStore";
 import { doFollow, unfollow } from "@/services/follow";
 import FollowButton from "@/components/followControl/followButton";
 import { colorTicket } from "@/types/board";
+import deleteBoard from "@/services/board/delete/deleteBoard";
+import Swal from "sweetalert2";
 
 export default function BoardPage({ params }: { params: { boardId: number } }) {
     const accessToken = Cookies.get("accessToken");
@@ -42,6 +44,7 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
     const { userInfo, loading, fetchUserInfo } = useUserStore();
     const [replyId, setReplyId] = useState(0);
     const [isReplyOpen, setIsReplyOpen] = useState(false);
+
 
     const { data: postData, refetch: postRefetch } = useQuery({
         queryKey: ["postData"],
@@ -203,7 +206,7 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
         setReplyOpen(updatedReplyOpen);
     };
 
-    if (!postData || !postCommentData) {
+    if (!postData) {
         return <div>Loading...</div>; // 데이터가 로딩 중일 때
     }
 
@@ -223,6 +226,32 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
         return doc.body.innerHTML; // 변환된 HTML 반환
     };
 
+    const deleteBoardHandler = async () => {
+        await deleteBoard(params.boardId)
+        Swal.fire({
+            icon: 'success',
+            title: '정상적으로 삭제되었습니다.',
+            confirmButtonText: '확인',
+            confirmButtonColor: '#FB3463',
+            customClass: {
+                popup: 'swal-custom-popup',
+                icon: 'swal-custom-icon'
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                router.push('/');
+            }
+        });
+    }
+
+    const editBoardEdit = () => {
+        router.push(`${params.boardId}/edit1`)
+    }
+
+    const loginEdit = () => {
+        router.push(`/login`)
+    }
+
     const images = postData?.result.post.images || [];
     const bodyWithImages = replaceImagesInBody(postData?.result.post.body, images);
 
@@ -231,8 +260,14 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
         <div>
             <Header />
             <div className="w-[66%] mx-auto">
-                <div className="mt-[8rem] text-[#6B6B6B] font-semibold text-[2rem]">
+                <div className="flex mt-[8rem] text-[#6B6B6B] font-semibold text-[2rem]">
                     <span>{postData?.result.member.blogName}의 블로그</span>
+                    {memberDatas?.result.blogName === postData?.result.member.blogName && (
+                        <div className="flex ml-auto gap-[1rem]">
+                            <span className="cursor-pointer" onClick={editBoardEdit}>수정하기</span>
+                            <span className="cursor-pointer" onClick={deleteBoardHandler}>삭제</span>
+                        </div>
+                    )}
                 </div>
                 <div className="flex items-center mt-[5rem]">
                     <h1 className="text-[3.6rem] font-bold">
@@ -246,7 +281,7 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
                     <div className="w-full mt-[5rem] relative">
                         <div className="flex justify-center">
                             <div>
-                                <h1 className="text-[6rem] font-extrabold font-akira">KOR</h1>
+                                <h1 className="text-[6rem] font-extrabold font-akira">{postData?.result.ticket.departureCode}</h1>
                                 <div className="w-[16rem] h-[3.6rem] pl-[2rem] rounded-[0.8rem] flex">
                                     <span className="text-[#9D9D9D] text-[2.4rem] font-semibold">
                                         {postData?.result.ticket.departure}
@@ -257,7 +292,7 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
                                 <Image className="" src={air} alt="비행기" />
                             </div>
                             <div className="ml-[5rem]">
-                                <h1 className="text-[6rem] font-extrabold font-akira">KOR</h1>
+                                <h1 className="text-[6rem] font-extrabold font-akira">{postData?.result.ticket.destinationCode}</h1>
                                 <div className="w-[16rem] h-[3.6rem] pl-[2rem] rounded-[0.8rem] flex">
                                     <span className="text-[#9D9D9D] text-[2.4rem] font-semibold">
                                         {postData?.result.ticket.destination}
@@ -416,184 +451,194 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
                         />
                     )}
                 </div>
-                <div className="mb-[10rem]">
-                    {isReplyOpen && (
-                        <div>
-                            {userInfo && (
-                                <div className="w-full h-[9.3rem] shadowall pl-[1.7rem] pt-[1.4rem] flex">
-                                    <div className="w-full">
-                                        <div className="flex items-center">
-                                            <Image
-                                                className="flex items-center"
-                                                src={memberDatas?.result.profileImageUrl}
-                                                alt=""
-                                                width={28}
-                                                height={28}
+                {accessToken ? (
+                    <div className="mb-[10rem]">
+                        {isReplyOpen && (
+                            <div>
+                                {userInfo && (
+                                    <div className="w-full h-[9.3rem] shadowall pl-[1.7rem] pt-[1.4rem] flex">
+                                        <div className="w-full">
+                                            <div className="flex items-center">
+                                                <Image
+                                                    className="flex items-center"
+                                                    src={memberDatas?.result.profileImageUrl}
+                                                    alt=""
+                                                    width={28}
+                                                    height={28}
+                                                />
+                                                <span className="ml-[1.4rem] text-[1.8rem] font-semibold flex items-center">
+                                                    {memberDatas?.result.nickName}
+                                                </span>
+                                            </div>
+                                            <input
+                                                className="w-full outline-none ml-[4.5rem] text-[1.4rem] font-normal"
+                                                type="text"
+                                                value={comment}
+                                                onChange={(e) => setComment(e.target.value)}
+                                                placeholder="블로그가 훈훈해지는 댓글 부탁드립니다."
                                             />
-                                            <span className="ml-[1.4rem] text-[1.8rem] font-semibold flex items-center">
-                                                {memberDatas?.result.nickName}
-                                            </span>
                                         </div>
-                                        <input
-                                            className="w-full outline-none ml-[4.5rem] text-[1.4rem] font-normal"
-                                            type="text"
-                                            value={comment}
-                                            onChange={(e) => setComment(e.target.value)}
-                                            placeholder="블로그가 훈훈해지는 댓글 부탁드립니다."
-                                        />
+                                        <button
+                                            className="bg-[#F5F5F5] rounded-[0.8rem] text-[1.6rem] font-semibold w-[8.6rem] h-[3.5rem] flex ml-auto mr-[1.4rem] items-center justify-center"
+                                            onClick={commentHandler}
+                                        >
+                                            입력
+                                        </button>
                                     </div>
-                                    <button
-                                        className="bg-[#F5F5F5] rounded-[0.8rem] text-[1.6rem] font-semibold w-[8.6rem] h-[3.5rem] flex ml-auto mr-[1.4rem] items-center justify-center"
-                                        onClick={commentHandler}
-                                    >
-                                        입력
-                                    </button>
-                                </div>
-                            )}
+                                )}
 
-                            <div
-                                className={`w-full h-full shadowall pl-[4.7rem] py-[1.4rem] my-[3.5rem] flex flex-col`}
-                            >
-                                {postCommentData?.result &&
-                                    Object.entries(postCommentData.result).map(
-                                        ([key, coData]: [string, any], index: number) => {
-                                            const createDateTime = new Date(coData.createDateTime);
-                                            const formattedDateTime = `${createDateTime.getFullYear()}.${String(createDateTime.getMonth() + 1).padStart(2, "0")}.${String(createDateTime.getDate()).padStart(2, "0")} ${String(createDateTime.getHours()).padStart(2, "0")}:${String(createDateTime.getMinutes()).padStart(2, "0")}`;
+                                <div
+                                    className={`w-full h-full shadowall pl-[4.7rem] py-[1.4rem] my-[3.5rem] flex flex-col`}
+                                >
+                                    {postCommentData?.result &&
+                                        Object.entries(postCommentData.result).map(
+                                            ([key, coData]: [string, any], index: number) => {
+                                                const createDateTime = new Date(coData.createDateTime);
+                                                const formattedDateTime = `${createDateTime.getFullYear()}.${String(createDateTime.getMonth() + 1).padStart(2, "0")}.${String(createDateTime.getDate()).padStart(2, "0")} ${String(createDateTime.getHours()).padStart(2, "0")}:${String(createDateTime.getMinutes()).padStart(2, "0")}`;
 
-                                            console.log(coData);
-                                            return (
-                                                <div className="mb-[2.5rem]" key={key}>
-                                                    <div
-                                                        className={`py-[2rem] mr-[2rem]`}
-                                                    >
-                                                        <div className="flex items-center">
-                                                            <Image
-                                                                className="flex items-center"
-                                                                src={coData.member.profileUrl}
-                                                                alt=""
-                                                                width={28}
-                                                                height={28}
-                                                            />
-                                                            <span className="ml-[1.4rem] text-[1.8rem] font-semibold flex items-center">
-                                                                {coData.member.nickName}
-                                                            </span>
-                                                        </div>
-                                                        <span className="text-[1.4rem] font-normal ml-[4.4rem] text-[#292929]">
-                                                            {coData.content}
-                                                        </span>
-                                                        <div className="flex ml-[4.5rem] text-[1.2rem] text-[#9D9D9D] items-center">
-                                                            <span>{formattedDateTime}</span>
-                                                            <hr className="mx-[1rem] h-[1rem] w-[0.1rem] bg-[#9D9D9D]" />
-                                                            {replyOpen[index] ? (
-                                                                <span
-                                                                    className="cursor-pointer"
-                                                                    onClick={() => toggleReply(index)}
-                                                                >
-                                                                    답글취소
-                                                                </span>
-                                                            ) : (
-                                                                <span
-                                                                    className="cursor-pointer"
-                                                                    onClick={() => {
-                                                                        toggleReply(index);
-                                                                        setReplyId(coData.id);
-                                                                    }}
-                                                                >
-                                                                    답글달기
-                                                                </span>
-                                                            )}
-                                                        </div>
-                                                    </div>
-                                                    {coData?.children.map((childData: any) => {
-                                                        const createDateTime = new Date(childData.createDateTime);
-                                                        const formattedDateTimes = `${createDateTime.getFullYear()}.${String(createDateTime.getMonth() + 1).padStart(2, "0")}.${String(createDateTime.getDate()).padStart(2, "0")} ${String(createDateTime.getHours()).padStart(2, "0")}:${String(createDateTime.getMinutes()).padStart(2, "0")}`;
-
-                                                        return (
-                                                            <div
-                                                                className={`bg-[#F5F5F5] w-[90%] py-[2rem] px-[1.6rem] mx-[5rem] rounded-[0.8rem]`}
-                                                            >
-                                                                <div className="flex items-center">
-                                                                    <Image
-                                                                        className="flex items-center"
-                                                                        src={childData.member.profileUrl}
-                                                                        alt=""
-                                                                        width={28}
-                                                                        height={28}
-                                                                    />
-                                                                    <span className="ml-[1.4rem] text-[1.8rem] font-semibold flex items-center">
-                                                                        {childData.member.nickName}
-                                                                    </span>
-                                                                </div>
-                                                                <span className="text-[1.4rem] font-normal ml-[4.4rem] text-[#292929]">
-                                                                    {childData.content}
-                                                                </span>
-                                                                <div className="flex ml-[4.5rem] text-[1.2rem] text-[#9D9D9D] items-center">
-                                                                    <span>{formattedDateTimes}</span>
-                                                                    <hr className="mx-[1rem] h-[1rem] w-[0.1rem] bg-[#9D9D9D]" />
-                                                                    {replyOpen[index] ? (
-                                                                        <span
-                                                                            className="cursor-pointer"
-                                                                            onClick={() => toggleReply(index)}
-                                                                        >
-                                                                            답글취소
-                                                                        </span>
-                                                                    ) : (
-                                                                        <span
-                                                                            className="cursor-pointer"
-                                                                            onClick={() => {
-                                                                                toggleReply(index);
-                                                                                setReplyId(coData.id);
-                                                                            }}
-                                                                        >
-                                                                            답글달기
-                                                                        </span>
-                                                                    )}
-                                                                </div>
-                                                            </div>
-                                                        );
-                                                    })}
-
-                                                    {replyOpen[index] && userInfo && (
-                                                        <div className="w-[95%] h-[9.3rem] shadowall mt-[2rem] pl-[1.7rem] pt-[1.4rem] flex mx-auto border border-[#CFCFCF] rounded-[0.8rem]">
-                                                            <div className="w-full">
-                                                                <div className="flex items-center">
-                                                                    <Image
-                                                                        className="flex items-center"
-                                                                        src={memberDatas?.result.profileImageUrl}
-                                                                        alt=""
-                                                                        width={28}
-                                                                        height={28}
-                                                                    />
-                                                                    <span className="ml-[1.4rem] text-[1.8rem] font-semibold flex items-center">
-                                                                        {memberDatas?.result.nickName}
-                                                                    </span>
-                                                                </div>
-                                                                <input
-                                                                    className="w-full outline-none ml-[4.5rem] text-[1.4rem] font-normal"
-                                                                    type="text"
-                                                                    value={replyComment}
-                                                                    onChange={(e) =>
-                                                                        setReplyComment(e.target.value)
-                                                                    }
-                                                                    placeholder="블로그가 훈훈해지는 댓글 부탁드립니다."
+                                                console.log(coData);
+                                                return (
+                                                    <div className="mb-[2.5rem]" key={key}>
+                                                        <div
+                                                            className={`py-[2rem] mr-[2rem]`}
+                                                        >
+                                                            <div className="flex items-center">
+                                                                <Image
+                                                                    className="flex items-center"
+                                                                    src={coData.member.profileUrl}
+                                                                    alt=""
+                                                                    width={28}
+                                                                    height={28}
                                                                 />
+                                                                <span className="ml-[1.4rem] text-[1.8rem] font-semibold flex items-center">
+                                                                    {coData.member.nickName}
+                                                                </span>
                                                             </div>
-                                                            <button
-                                                                className="bg-[#F5F5F5] rounded-[0.8rem] text-[1.6rem] font-semibold w-[8.6rem] h-[3.5rem] flex ml-auto mr-[1.4rem] items-center justify-center"
-                                                                onClick={commentReplyHandler}
-                                                            >
-                                                                입력
-                                                            </button>
+                                                            <span className="text-[1.4rem] font-normal ml-[4.4rem] text-[#292929]">
+                                                                {coData.content}
+                                                            </span>
+                                                            <div className="flex ml-[4.5rem] text-[1.2rem] text-[#9D9D9D] items-center">
+                                                                <span>{formattedDateTime}</span>
+                                                                <hr className="mx-[1rem] h-[1rem] w-[0.1rem] bg-[#9D9D9D]" />
+                                                                {replyOpen[index] ? (
+                                                                    <span
+                                                                        className="cursor-pointer"
+                                                                        onClick={() => toggleReply(index)}
+                                                                    >
+                                                                        답글취소
+                                                                    </span>
+                                                                ) : (
+                                                                    <span
+                                                                        className="cursor-pointer"
+                                                                        onClick={() => {
+                                                                            toggleReply(index);
+                                                                            setReplyId(coData.id);
+                                                                        }}
+                                                                    >
+                                                                        답글달기
+                                                                    </span>
+                                                                )}
+                                                            </div>
                                                         </div>
-                                                    )}
-                                                </div>
-                                            );
-                                        }
-                                    )}
+                                                        {coData?.children.map((childData: any) => {
+                                                            const createDateTime = new Date(childData.createDateTime);
+                                                            const formattedDateTimes = `${createDateTime.getFullYear()}.${String(createDateTime.getMonth() + 1).padStart(2, "0")}.${String(createDateTime.getDate()).padStart(2, "0")} ${String(createDateTime.getHours()).padStart(2, "0")}:${String(createDateTime.getMinutes()).padStart(2, "0")}`;
+
+                                                            return (
+                                                                <div
+                                                                    className={`bg-[#F5F5F5] w-[90%] py-[2rem] px-[1.6rem] mx-[5rem] rounded-[0.8rem]`}
+                                                                >
+                                                                    <div className="flex items-center">
+                                                                        <Image
+                                                                            className="flex items-center"
+                                                                            src={childData.member.profileUrl}
+                                                                            alt=""
+                                                                            width={28}
+                                                                            height={28}
+                                                                        />
+                                                                        <span className="ml-[1.4rem] text-[1.8rem] font-semibold flex items-center">
+                                                                            {childData.member.nickName}
+                                                                        </span>
+                                                                    </div>
+                                                                    <span className="text-[1.4rem] font-normal ml-[4.4rem] text-[#292929]">
+                                                                        {childData.content}
+                                                                    </span>
+                                                                    <div className="flex ml-[4.5rem] text-[1.2rem] text-[#9D9D9D] items-center">
+                                                                        <span>{formattedDateTimes}</span>
+                                                                        <hr className="mx-[1rem] h-[1rem] w-[0.1rem] bg-[#9D9D9D]" />
+                                                                        {replyOpen[index] ? (
+                                                                            <span
+                                                                                className="cursor-pointer"
+                                                                                onClick={() => toggleReply(index)}
+                                                                            >
+                                                                                답글취소
+                                                                            </span>
+                                                                        ) : (
+                                                                            <span
+                                                                                className="cursor-pointer"
+                                                                                onClick={() => {
+                                                                                    toggleReply(index);
+                                                                                    setReplyId(coData.id);
+                                                                                }}
+                                                                            >
+                                                                                답글달기
+                                                                            </span>
+                                                                        )}
+                                                                    </div>
+                                                                </div>
+                                                            );
+                                                        })}
+
+                                                        {replyOpen[index] && userInfo && (
+                                                            <div className="w-[95%] h-[9.3rem] shadowall mt-[2rem] pl-[1.7rem] pt-[1.4rem] flex mx-auto border border-[#CFCFCF] rounded-[0.8rem]">
+                                                                <div className="w-full">
+                                                                    <div className="flex items-center">
+                                                                        <Image
+                                                                            className="flex items-center"
+                                                                            src={memberDatas?.result.profileImageUrl}
+                                                                            alt=""
+                                                                            width={28}
+                                                                            height={28}
+                                                                        />
+                                                                        <span className="ml-[1.4rem] text-[1.8rem] font-semibold flex items-center">
+                                                                            {memberDatas?.result.nickName}
+                                                                        </span>
+                                                                    </div>
+                                                                    <input
+                                                                        className="w-full outline-none ml-[4.5rem] text-[1.4rem] font-normal"
+                                                                        type="text"
+                                                                        value={replyComment}
+                                                                        onChange={(e) =>
+                                                                            setReplyComment(e.target.value)
+                                                                        }
+                                                                        placeholder="블로그가 훈훈해지는 댓글 부탁드립니다."
+                                                                    />
+                                                                </div>
+                                                                <button
+                                                                    className="bg-[#F5F5F5] rounded-[0.8rem] text-[1.6rem] font-semibold w-[8.6rem] h-[3.5rem] flex ml-auto mr-[1.4rem] items-center justify-center"
+                                                                    onClick={commentReplyHandler}
+                                                                >
+                                                                    입력
+                                                                </button>
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                );
+                                            }
+                                        )}
+                                </div>
                             </div>
+                        )}
+                    </div>
+                ) : (
+                    <div className="w-full h-[75rem] bg-[#F5F5F5]">
+                        <div className="flex flex-col pt-[25rem]">
+                            <span className="flex text-center mx-auto text-[3.2rem] font-medium">트리피 회원이면 댓글을 달 수 있어요</span>
+                            <button className="flex text-center mx-auto bg-[#FB3463] text-[2.4rem] py-[1.5rem] px-[3rem] rounded-[0.8rem] text-white mt-[3rem]" onClick={loginEdit}>로그인 하러가기</button>
                         </div>
-                    )}
-                </div>
+                    </div>
+                )}
+
             </div>
         </div>
     );
