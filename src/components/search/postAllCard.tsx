@@ -18,7 +18,7 @@ interface PostCardProps {
       profileUrl: string;
     };
   }[];
-  selectedPostType: string; // 새로운 prop 추가
+  selectedPostType: string;
 }
 
 const PostAllCard: React.FC<PostCardProps> = ({
