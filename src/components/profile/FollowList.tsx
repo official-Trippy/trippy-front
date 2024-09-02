@@ -65,7 +65,7 @@ const FollowList: React.FC<{
   if (isAvailable === false) {
     return (
       <div className="text-2xl font-bold my-12">
-        {availabilityMessage || "비공개 계정입니다."}
+        {availabilityMessage + " 계정입니다." || "비공개 계정입니다."}
       </div>
     );
   }
