@@ -114,15 +114,11 @@ const SearchPage = () => {
     queryKey: ["boardData"],
     queryFn: () => getBoard(PAGE_SIZE, pages),
   });
-<<<<<<< HEAD
+
   console.log();
 
   console.log(boardData);
   console.log(selectedPostType);
-=======
-
-  console.log(boardData);
->>>>>>> 2664a4e (feat : 검색 게시물 상세보기 연동)
 
   return (
     <div className="w-full min-h-screen bg-white">
