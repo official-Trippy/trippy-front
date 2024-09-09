@@ -8,8 +8,8 @@ import Keywords from "@/components/search/Keywords";
 import PopularSearches from "@/components/search/popularSearches";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import SortingBar from "@/components/search/\bsortingBar";
-import PostAllCard from "@/components/search/\bpostAllCard";
+import SortingBar from "@/components/search/sortingBar";
+import PostAllCard from "@/components/search/postAllCard";
 import getBoard from "@/services/board/get/getBoard";
 import { useQuery } from "react-query";
 
@@ -114,6 +114,7 @@ const SearchPage = () => {
     queryKey: ["boardData"],
     queryFn: () => getBoard(PAGE_SIZE, pages),
   });
+
   console.log();
 
   console.log(boardData);
@@ -122,7 +123,7 @@ const SearchPage = () => {
   return (
     <div className="w-full min-h-screen bg-white">
       <Header />
-      <div className="w-[80%] mx-auto mt-8 px-10">
+      <div className="mx-auto mt-8 px-10 w-[66%] mx-auto">
         <h1 className="text-4xl font-semibold mb-6">
           <span className="text-[#FB3463]">{RealKeyword}</span>에 대한
           <span className="text-[#FB3463]"> {count}</span>건의 검색 결과입니다.
@@ -144,7 +145,7 @@ const SearchPage = () => {
                   posts={posts}
                   selectedPostType={selectedPostType}
                 />
-                <div className="flexflex mt-8">
+                <div className="flexflex mt-8 ml-[25px]">
                   <div className="flex-none w-[300px] ml-8">
                     <Keywords />
                   </div>

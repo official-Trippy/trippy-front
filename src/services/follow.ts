@@ -5,7 +5,7 @@ import { useFollowingStore } from "@/store/useFollowingStore";
 const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 let accessToken = "";
 
-export async function showFollows(memberId: string) {
+export async function showFollows(memberId: string, accessToken: any) {
   try {
     const response = await axios.get(
       `${backendUrl}/api/member/follower?memberId=${memberId}`,
@@ -22,7 +22,7 @@ export async function showFollows(memberId: string) {
   }
 }
 
-export async function showFollowings(memberId: string) {
+export async function showFollowings(memberId: string, accessToken: any) {
   try {
     const response = await axios.get(
       `${backendUrl}/api/member/following?memberId=${memberId}`,
