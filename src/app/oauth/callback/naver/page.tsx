@@ -59,7 +59,7 @@ const NaverCallback = () => {
   }, [router]);
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen text-center">
+    <div className="flex flex-col items-center justify-center min-h-[100dvh] text-center">
       <div className="mb-4">
         <Image src={LogoMain} alt="Logo" width={300} height={300} />
       </div>

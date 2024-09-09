@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from '@/app/api/axios';
 import { Comment } from '@/types/ootd';
 
 const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
@@ -24,15 +24,19 @@ export interface FetchCommentsResponse {
     return response.data;
   };
 
-  export const createReply = async (postId: number, content: string, parentId: number) => {
+  export const createReply = async (postId: number, content: string, parentId: number, mentionMemberId: string, mentionMemberNickName: string, mentionCommentId: number) => {
     const response = await axios.post(`${backendUrl}/api/comment`, {
       postId,
       content,
       status: 'PUBLIC',
-      parentId
+      parentId, // 최상위 댓글 ID
+      mentionMemberId, // 답글 대상 멤버 ID
+      mentionMemberNickName, // 답글 대상 멤버 닉네임
+      mentionCommentId // 답글 대상 댓글 ID
     });
     return response.data;
   };
+  
   
   export const checkIfLiked = async (postId: number) => {
     const response = await axios.get(`${backendUrl}/api/like/isLiked/${postId}`);
@@ -52,5 +56,13 @@ export interface FetchCommentsResponse {
   export const likePostList = async (postId: number) => {
     const response = await axios.get(`${backendUrl}/api/like/${postId}`);
     return response.data;
+  };
+  
+  export const fetchLikedPosts = async () => {
+    const response = await axios.get(`${backendUrl}/api/like/my-list`, {
+      params: { page: 0, size: 0, postType: 'OOTD' },
+    });
+
+    return response.data.result.map((item: any) => item.post.id);
   };
   

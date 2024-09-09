@@ -1,7 +1,5 @@
-// components/SearchBar.tsx
-
 import React, { useState } from "react";
-import { useRouter } from "next/navigation"; // Import from next/navigation
+import { useRouter } from "next/navigation";
 import { FaSearch } from "react-icons/fa";
 
 const SearchBar: React.FC = () => {
@@ -14,20 +12,19 @@ const SearchBar: React.FC = () => {
 
   const handleSearch = () => {
     if (query.trim() !== "") {
-      // Encode the query properly
       router.push(`/search/${encodeURIComponent(query)}`);
     }
   };
 
   return (
-    <div className="flex items-center justify-center p-4 mr-30 w-[627px]">
-      <div className="relative flex items-center">
+    <div className="w-full flex items-center justify-end px-4 mx-auto">
+      <div className="relative flex items-center w-full mx-auto max-w-[600px] min-w-[100px]">
         <input
           type="text"
           value={query}
           onChange={handleInputChange}
           placeholder="찾으시는 게시물을 입력하세요"
-          className="w-[50rem] h-[32px] pl-4 pr-10 text-gray-800 border-none rounded-[16px] outline-none focus:ring-2 focus:ring-gray-300"
+          className="w-full min-w-[100px] h-[32px] pl-4 pr-10 text-gray-800 border-none rounded-[16px] outline-none focus:ring-2 focus:ring-gray-300"
           style={{
             backgroundColor: "#F5F5F5",
           }}

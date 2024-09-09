@@ -14,10 +14,6 @@ import {
 import useUserInfo from "@/hooks/useUserInfo";
 import { swear_words_arr } from "@/constants/wearWordsArr";
 
-import Cookies from "js-cookie";
-import { signUp } from "@/services/auth";
-import CheckUserRegistration from "../auth/CheckUserResister";
-
 const BlogRegisterFirst = () => {
   const [profileImage, setProfileImage] = useState<{
     accessUri: string;
@@ -180,34 +176,38 @@ const BlogRegisterFirst = () => {
   
 
   return (
-    <div className="w-[66%] mx-auto mt-[15rem]">
-      <Image src={BlogStep1} alt="Logo" className="w-[47.7rem] mx-auto" />
-      <div className="mt-[8rem]">
+    <div className="min-h-[calc(100dvh-60px)] flex flex-col justify-between flex-col-reverse mb-[60px] sm:flex-col sm-700:min-h-[100vh] sm-700:justify-center sm-700:mb-0 items-center w-full">
+      <div className="w-[90%] max-w-[400px] mx-auto">
+      <div className="w-full flex justify-center mt-[20px]">
+      <Image src={BlogStep1} alt="Logo" className="w-[30rem]"  />
+    </div>
+    </div>
+    <div className="w-[90%] max-w-[400px] mx-auto">
+      <div className="mt-[20px]">
         <div className="sign-up-info">기본 회원 정보를 등록해주세요</div>
-        <div className="mt-[6.82rem]">
+        <div className="mt-[2rem]">
           <div className="sign-up-info">프로필 사진</div>
-          <div className="mt-[4rem] flex items-center">
-            <div className="rounded-full overflow-hidden w-[16rem] h-[16rem]">
+          <div className="mt-[2rem] flex items-center">
+            <div className="rounded-full overflow-hidden w-[100px] h-[100px]">
               {profileImage ? (
                 <Image
                   src={profileImage.accessUri}
                   alt="Profile"
-                  width="0"
-                  height="0"
-                  sizes="100vw"
-                  className="w-full h-auto"
-                  style={{ width: 160, height: 160 }}
+                  className="object-cover w-full h-full"
+                  width={100}
+                  height={100}
                 />
               ) : (
                 <Image
                   src={DefaultProfileImg}
                   alt="Default Profile"
-                  width={160}
-                  height={160}
+                  width={100}
+                  height={100}
+                  className="object-cover w-full h-full"
                 />
               )}
             </div>
-            <div className="ml-4 flex flex-col">
+            <div className="ml-8 flex flex-col justify-center">
               <input
                 type="file"
                 accept="image/*"
@@ -215,23 +215,26 @@ const BlogRegisterFirst = () => {
                 className="hidden"
                 id="imageUpload"
               />
-              <label htmlFor="imageUpload" className="ml-[4rem] custom-label">
+              <label
+                htmlFor="imageUpload"
+                className="max-w-[200px] px-8 py-4 custom-label text-center"
+              >
                 프로필 사진 업로드
               </label>
+              <div className="mt-[2px] h-[16px]">
               {profileImage && (
-                <div className="h-[1rem]">
                   <button
                     onClick={handleImageDelete}
-                    className="ml-[4rem] mt-[1.857rem] text-[1.4rem] text-gray-500 hover:text-gray-900"
+                    className="ml-[4rem] text-[1rem] text-gray-500 hover:text-gray-900"
                   >
                     이미지 삭제
                   </button>
-                </div>
-              )}
+                )}
+              </div>
             </div>
           </div>
           <div className="flex-col">
-            <div className="mt-[6rem]">
+            <div className="mt-[2rem]">
               <label htmlFor="nickName" className="sign-up-info block">
                 닉네임
               </label>
@@ -239,11 +242,11 @@ const BlogRegisterFirst = () => {
                 type="text"
                 value={nickName}
                 onChange={handleNickName}
-                placeholder="닉네임은 한글 2-8자, 영어 4-16자 이내로 입력 가능합니다."
-                className="w-full px-4 py-2 mt-[2.5rem] mb-2 h-[6rem] rounded-xl border border-gray-300 focus:border-[#FB3463] focus:outline-none"
-                style={{ background: "var(--4, #F5F5F5)", fontSize: "1.5rem" }}
+                placeholder="한글 2-8자, 영어 4-16자 이내로 입력 가능합니다."
+                className="w-full px-4 py-2 mt-[2rem] mb-2 h-[4rem] rounded-xl border border-gray-300 focus:border-[#FB3463] focus:outline-none"
+                style={{ background: "var(--4, #F5F5F5)", fontSize: "1.2rem" }}
               />
-              <div className="h-[1.7rem] mt-[1.2rem]">
+              <div className="h-[1.7rem]">
                 {nickNameError && (
                   <p
                     className={`text-${
@@ -255,7 +258,7 @@ const BlogRegisterFirst = () => {
                 )}
               </div>
             </div>
-            <div className="mt-[6rem]">
+            <div className="mt-[2rem]">
               <label htmlFor="blogName" className="sign-up-info block">
                 블로그 이름
               </label>
@@ -263,11 +266,11 @@ const BlogRegisterFirst = () => {
                 type="text"
                 value={blogName}
                 onChange={handleBlogName}
-                placeholder="블로그 이름은 한글 2-15자, 영어 4-30자 이내로 입력 가능합니다."
-                className="w-full px-4 py-2 mt-[2.5rem] mb-2 h-[6rem] rounded-xl border border-gray-300 focus:border-[#FB3463] focus:outline-none"
-                style={{ background: "var(--4, #F5F5F5)", fontSize: "1.5rem" }}
+                placeholder="한글 2-15자, 영어 4-30자 이내로 입력 가능합니다."
+                className="w-full px-4 py-2 mt-[2rem] mb-2 h-[4rem] rounded-xl border border-gray-300 focus:border-[#FB3463] focus:outline-none"
+                style={{ background: "var(--4, #F5F5F5)", fontSize: "1.2rem" }}
               />
-              <div className="h-[1.7rem] mt-[1.2rem]">
+              <div className="h-[1.7rem]">
                 {blogNameError && (
                   <p
                     className={`text-${
@@ -279,7 +282,7 @@ const BlogRegisterFirst = () => {
                 )}
               </div>
             </div>
-            <div className="mt-[6rem]">
+            <div className="mt-[2rem]">
               <label htmlFor="blogIntroduce" className="sign-up-info block">
                 한 줄 소개(선택)
               </label>
@@ -288,28 +291,32 @@ const BlogRegisterFirst = () => {
                 value={blogIntroduce}
                 onChange={handleBlogIntroduce}
                 placeholder="50글자 이내로 소개글을 작성해보세요."
-                className="w-full px-4 py-2 mt-[2.5rem] mb-2 h-[6rem] rounded-xl border border-gray-300 focus:border-[#FB3463] focus:outline-none"
-                style={{ background: "var(--4, #F5F5F5)", fontSize: "1.5rem" }}
+                className="w-full px-4 py-2 mt-[2rem] mb-2 h-[4rem] rounded-xl border border-gray-300 focus:border-[#FB3463] focus:outline-none"
+                style={{ background: "var(--4, #F5F5F5)", fontSize: "1.2rem" }}
               />
-              <div className="h-[1.7rem] mt-[1.2rem]">
+              <div className="h-[1.7rem]">
                 {blogIntroduceError && (
                   <p className="text-red-500">{blogIntroduceError}</p>
                 )}
               </div>
             </div>
           </div>
+          </div>
+          </div>
+          </div>
+          <div className="w-[90%] max-w-[400px] mx-auto mt-auto sm-700:mt-0">
           <div className="text-center">
           <button
               type="submit"
-              className={`mx-auto mt-32 mb-32 w-[22rem] h-[6rem] bg-btn-color text-white py-2 rounded-lg focus:outline-none ${
+              className={`mx-auto w-full h-[44px] mt-[2rem] mb-[2rem] bg-btn-color text-white py-2 rounded-xl focus:outline-none${
                 !nickNameError.includes("사용 가능") ||
                 !blogNameError.includes("사용 가능") ||
                 !imageUploaded
-                  ? "cursor-not-allowed bg-gray-400 hover:bg-gray-400"
+                  ? "cursor-not-allowed bg-[#cfcfcf] hover:bg-[#cfcfcf]"
                   : ""
               }`}
               onClick={handleSubmit}
-              style={{ fontSize: "2rem" }}
+              style={{ fontSize: "1.2rem" }}
               disabled={
                 !nickNameError.includes("사용 가능") ||
                 !blogNameError.includes("사용 가능") ||
@@ -319,8 +326,7 @@ const BlogRegisterFirst = () => {
               다음
             </button>
           </div>
-        </div>
-      </div>
+          </div>
     </div>
   );
 };

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import Slider from "react-slick";
 import { deleteOotdPost, fetchOotdPostDetail } from "@/services/ootd.ts/ootdGet";
@@ -18,19 +18,51 @@ import { getWeatherStatusInKorean } from "@/constants/weatherTransition";
 import { useRouter } from "next/navigation";
 import FollowButton from "../followControl/followButton";
 import Cookies from "js-cookie";
-import CabapIcon from "../../../public/icon_cabap.svg";
 import Swal from "sweetalert2";
+import CabapIcon from "../../../public/icon_cabap.svg";
+import BookmarkIcon from "../../../public/icon_bookmark.svg";
+import BookmarkedIcon from "../../../public/bookmark-fill.svg";
+import { addBookmark, deleteBookmark, fetchIsBookmarked } from "@/services/bookmark/bookmark";
 
 interface OotdDetailProps {
   id: number;
 }
 
 const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
-  const { data, error, isLoading } = useQuery<OotdDetailGetResponse>(
+  const { data, error, isLoading, refetch } = useQuery<OotdDetailGetResponse>(
     ["ootdPostDetail", id],
     () => fetchOotdPostDetail(id)
   );
 
+  const [isBookmarked, setIsBookmarked] = useState<boolean>(false);
+
+  useEffect(() => {
+    const checkIfBookmarked = async () => {
+      if (data?.result?.post?.id) {
+        const bookmarked = await fetchIsBookmarked(data.result.post.id);
+        setIsBookmarked(bookmarked);
+      }
+    };
+    checkIfBookmarked();
+  }, [data]);
+
+  const handleBookmarkClick = async () => {
+    if (!data?.result?.post?.id) return;
+
+    try {
+      if (isBookmarked) {
+        await deleteBookmark(data.result.post.id);
+        setIsBookmarked(false);
+      } else {
+        await addBookmark(data.result.post.id);
+        setIsBookmarked(true);
+      }
+      await refetch();
+    } catch (error) {
+      console.error('북마크 처리 중 오류가 발생했습니다:', error);
+    }
+  };
+  
   const accessToken = Cookies.get('accessToken');
 
   const userInfo = useUserStore((state) => state.userInfo);
@@ -47,9 +79,10 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
 
   const handleProfileClick = () => {
     if (accessToken) {
-      if (ootdItem.member.memberId == userInfo.memberId) {
+      if (ootdItem.member.memberId == userInfo?.memberId) {
         router.push("/mypage");
       } else {
+        console.log(ootdItem.member.memberId);
         router.push(`/user/${ootdItem.member.memberId}`);
       }
     } else {
@@ -105,18 +138,17 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
       }
     }
   };
-  
 
   if (isLoading) {
     return null;
   }
 
   if (error) {
-    return <div>Error loading data</div>;
+    return <div></div>;
   }
 
   if (!data) {
-    return <div>No data available</div>;
+    return <div></div>;
   }
 
   const ootdItem = data.result;
@@ -165,8 +197,8 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
 
   return (
     <>
-      <div className="container mx-auto p-4">
-        <div className="w-full max-w-6xl mx-auto">
+      <div className="w-[90%] sm-700:w-full sm-700:max-w-6xl mx-auto sm-700:p-4">
+        <div className="w-full mx-auto">
           <div className="py-12 flex items-center">
             <div className="flex items-center">
             <div className="relative w-[50px] h-[50px]">
@@ -175,12 +207,12 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
                   alt="사용자 프로필"
                   layout="fill"
                   objectFit="cover"
-                  className="rounded-full"
+                  className="rounded-full cursor-pointer"
                   onClick={handleProfileClick}
                 />
               </div>
               <div className="h-[48px] ml-4">
-                <span className="block font-bold text-[20px] ml-[2px]">
+                <span className="block font-bold text-[20px] ml-[2px] cursor-pointer" onClick={handleProfileClick}>
                   {ootdItem.member.nickName}
                 </span>
                 <div className="flex items-center gap-2">
@@ -190,7 +222,7 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
                     src={LocationIcon}
                     alt="location"
                   />
-                  <span className="block text-gray-600">
+                  <span className="block text-gray-600 mt-[2px]">
                     {ootdItem.post.location} |{" "}
                     {getWeatherStatusInKorean(ootdItem.ootd.weatherStatus)},{" "}
                     {ootdItem.ootd.weatherTemp}°C
@@ -198,8 +230,8 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
                 </div>
               </div>
             </div>
-            <div className="ml-auto flex">
-            <div className="flex items-center space-x-2">
+            <div className="ml-auto flex items-center">
+            <div className="flex items-center space-x-2 ml-auto">
               <FollowButton
                 postMemberId={data.result.member.memberId}
                 userMemberId={userMemberId}
@@ -207,38 +239,53 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
               <i className="far fa-bookmark text-xl"></i>
               <i className="fas fa-ellipsis-h text-xl"></i>
             </div>
+            <div className="hidden sm-700:flex items-center my-auto ml-4">
+              <Image
+                src={isBookmarked ? BookmarkedIcon : BookmarkIcon}
+                alt="bookmark"
+                width={24}
+                height={24}
+                className="cursor-pointer mr-2"
+                onClick={handleBookmarkClick}
+              />
+              <div className="text-[#9d9d9d] min-w-[10px] text-center">
+                {data.result.post.bookmarkCount}
+              </div>
+            </div>
             {userMemberId === data.result.member.memberId && (
-          <div className="relative my-auto">
-            <Image
-              src={CabapIcon}
-              alt="cabap"
-              width={24}
-              height={24}
-              onClick={handleCabapIconClick}
-              className="cursor-pointer"
-            />
-            {isMenuOpen && (
-              <div className="w-[100px] absolute top-full right-4 mt-4 w-32 bg-white rounded shadow-lg z-10">
-                <div
-                  className="py-4 px-8 text-[#ff4f4f] hover:bg-gray-100 cursor-pointer text-center"
-                  onClick={handleDeleteClick}
-                >
-                  삭제
-                </div>
-                <hr/>
-                <div
-                  className="py-4 px-8 text-black hover:bg-gray-100 cursor-pointer text-center"
-                  onClick={() => {
-                    router.push(`/edit/${id}`);
-                  }}
-                >
-                  수정
+              <div className="relative my-auto flex justify-end">
+                <div className="relative mt-[2px] ml-4">
+                  <Image
+                    src={CabapIcon}
+                    alt="cabap"
+                    width={36}
+                    height={36}
+                    onClick={handleCabapIconClick}
+                    className="cursor-pointer"
+                  />
+                  {isMenuOpen && (
+                    <div className="w-[100px] absolute top-full right-4 mt-4 w-32 bg-white rounded shadow-lg z-10">
+                      <div
+                        className="py-6 px-8 text-[#ff4f4f] hover:bg-gray-100 cursor-pointer text-center"
+                        onClick={handleDeleteClick}
+                      >
+                        삭제
+                      </div>
+                      <hr/>
+                      <div
+                        className="py-6 px-8 text-black hover:bg-gray-100 cursor-pointer text-center"
+                        onClick={() => {
+                          router.push(`/edit/${id}`);
+                        }}
+                      >
+                        수정
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             )}
           </div>
-        )}
-            </div>
           </div>
           <div className="relative">
           <Slider {...settings}>
@@ -258,7 +305,7 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
           </Slider>
 
           </div>
-          <div className="py-[50px] text-[20px]">{ootdItem.post.body}</div>
+          <div className="py-[50px] text-[#292929] text-xl" dangerouslySetInnerHTML={{ __html: ootdItem.post.body.replace(/\n/g, '<br />') }}></div>
           <div className="flex pt-4">
             <div className="flex flex-wrap gap-2">
               {ootdItem.post.tags.map((tag: string, index: number) => (
@@ -276,7 +323,7 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
           </div>
         </div>
       </div>
-      <div className="w-full mb-[100px]">
+      <div className="w-full mb-[120px]">
         <div className="w-full mx-auto">
           <CommentSection
             postId={id}

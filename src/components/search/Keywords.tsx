@@ -21,7 +21,7 @@ const Keywords: React.FC = () => {
         {sampleKeywords.map((keyword, index) => (
           <span
             key={index}
-            className="bg-gray-200 text-gray-800 px-4 py-2 rounded-full text-sm"
+            className="bg-gray-200 text-gray-800 px-4 py-2 rounded-full text-m"
           >
             {keyword}
           </span>

@@ -42,7 +42,7 @@ const UserInformation: React.FC<{ setActiveTab: (tab: string) => void }> = ({
   useEffect(() => {
     if (!accessToken) {
       router.refresh();
-      router.push('/');
+      router.push('/login');
     }
   }, [router]);
 
@@ -50,7 +50,7 @@ const UserInformation: React.FC<{ setActiveTab: (tab: string) => void }> = ({
   return (
     <div className="w-full flex flex-col relative">
       <div className="w-[80%]">
-        <div className="absolute top-[-150px] w-[200px] h-auto bg-white px-8 py-4 rounded-lg shadow-lg flex flex-col items-center">
+        <div className="absolute top-[-150px] w-[200px] h-auto bg-white px-8 py-6 rounded-lg shadow-lg flex flex-col items-center">
           <div className="relative my-4">
             <Image
               src={userData?.profileImageUrl}
@@ -76,22 +76,18 @@ const UserInformation: React.FC<{ setActiveTab: (tab: string) => void }> = ({
             {userData?.email}
           </span>
           <div className="mt-[10px] flex px-4">
-            <span
-              className="text-sm text-gray-600 cursor-pointer"
-              onClick={() => setActiveTab(TABS.FOLLOWER)}
-            >
-              팔로워 {userData?.followerCnt}
+            <span className="text-base text-[#9d9d9d] cursor-pointer" onClick={() => setActiveTab(TABS.FOLLOWER)}>
+              팔로워 
+              <span className="text-[#6b6b6b]"> {userData?.followerCnt}</span>
             </span>
-            <span className="text-sm text-gray-600">&ensp;|&ensp;</span>
-            <span
-              className="text-sm text-gray-600 cursor-pointer"
-              onClick={() => setActiveTab(TABS.FOLLOWING)}
-            >
-              팔로윙 {userData?.followingCnt}
+            <span className="text-base text-[#9d9d9d]">&ensp;|&ensp;</span>
+            <span className="text-base text-[#9d9d9d] cursor-pointer" onClick={() => setActiveTab(TABS.FOLLOWING)}>
+              팔로잉 
+              <span className="text-[#6b6b6b]"> {userData?.followingCnt}</span>
             </span>
           </div>
           <button
-            className="mt-[10px] pl-[20px] pr-[20px] py-2 bg-btn-color text-white rounded-lg justify-center items-center inline-flex ]"
+            className="w-full mt-[10px] pl-[20px] pr-[20px] py-[7px] text-base border border-[#cfcfcf] text-[#6b6b6b] rounded-2xl justify-center items-center inline-flex"
             onClick={handleEditProfile}
           >
             내 정보 수정
@@ -102,9 +98,7 @@ const UserInformation: React.FC<{ setActiveTab: (tab: string) => void }> = ({
           >
             팔로우
           </button> */}
-          <span className="mt-[10px] text-sm text-gray-600">
-            {userData?.blogIntroduce}
-          </span>
+          
         </div>
       </div>
     </div>

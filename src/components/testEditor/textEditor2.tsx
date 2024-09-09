@@ -68,7 +68,7 @@ const MyTinyMCEEditor = ({ postRequest, setPostRequest }: editorProps) => {
                         'lists table link charmap searchreplace | ' +
                         'image media codesample emoticons fullscreen preview | ' +
                         'removeformat | undo redo',
-                    images_upload_handler: handleImageUpload, // 이미지 업로드 핸들러 지정
+                    // images_upload_handler: handleImageUpload, // 이미지 업로드 핸들러 지정
                 }}
                 value={postRequest.body} // 에디터의 내용을 상태로 관리
                 onEditorChange={handleEditorChange}
