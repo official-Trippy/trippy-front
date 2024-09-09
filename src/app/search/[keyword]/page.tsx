@@ -8,8 +8,8 @@ import Keywords from "@/components/search/Keywords";
 import PopularSearches from "@/components/search/popularSearches";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import SortingBar from "@/components/search/\bsortingBar";
-import PostAllCard from "@/components/search/\bpostAllCard";
+import SortingBar from "@/components/search/sortingBar";
+import PostAllCard from "@/components/search/postAllCard";
 import getBoard from "@/services/board/get/getBoard";
 import { useQuery } from "react-query";
 
