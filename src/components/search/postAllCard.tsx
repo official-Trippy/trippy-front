@@ -46,7 +46,7 @@ const PostAllCard: React.FC<PostCardProps> = ({
             ? `/board/${postDetails?.id}`
             : selectedPostType === "OOTD"
               ? `/ootd/${postDetails?.id}`
-              : `/profile/${postDetails?.id}`; // NICKNAME일 경우 프로필로 연결
+              : `/user/${member?.nickName}`;
 
         return (
           <Link
