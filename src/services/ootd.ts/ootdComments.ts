@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from '@/app/api/axios';
 import { Comment } from '@/types/ootd';
 
 const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;

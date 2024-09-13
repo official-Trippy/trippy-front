@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from '@/app/api/axios';
 import { OotdDetailGetResponse, OotdGetResponse, OotdRequest, PostRequest } from '@/types/ootd';
 import Cookies from "js-cookie";
 

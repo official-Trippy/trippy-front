@@ -6,7 +6,7 @@ import Header from "@/components/shared/header/Header";
 import PostList from "@/components/search/postList";
 import Keywords from "@/components/search/Keywords";
 import PopularSearches from "@/components/search/popularSearches";
-import axios from "axios";
+import axios from '@/app/api/axios';
 import { useRouter } from "next/navigation";
 import SortingBar from "@/components/search/sortingBar";
 import PostAllCard from "@/components/search/postAllCard";

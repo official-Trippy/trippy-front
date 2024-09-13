@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from '@/app/api/axios';
 import { bookmarkCount } from '@/types/bookmark';
 const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 

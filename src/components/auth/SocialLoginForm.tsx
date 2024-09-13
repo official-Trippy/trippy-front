@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import axios from "axios";
+import axios from '@/app/api/axios';
 import { signIn, signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import { useEffect } from "react";

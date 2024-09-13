@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import axios from "axios";
+import axios from '@/app/api/axios';
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";

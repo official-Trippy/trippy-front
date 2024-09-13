@@ -1,5 +1,5 @@
 import { UpdateMemberInfoRequest } from "@/types/auth";
-import axios from "axios";
+import axios from '@/app/api/axios';
 import Cookies from "js-cookie";
 import { headers } from "next/headers";
 
@@ -56,6 +56,7 @@ export async function Login(memberId: string, password: string) {
       password,
     });
     accessToken = response.data.result.accessToken;
+    console.log(response.headers['Set-Cookie']);
     return response.data;
   } catch (error) {
     throw new Error(`Error during login: ${error}`);
