@@ -300,7 +300,7 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
           </Slider>
 
           </div>
-          <div className="py-[50px] text-[20px]" dangerouslySetInnerHTML={{ __html: ootdItem.post.body.replace(/\n/g, '<br />') }}></div>
+          <div className="py-[50px] text-[#292929] text-xl" dangerouslySetInnerHTML={{ __html: ootdItem.post.body.replace(/\n/g, '<br />') }}></div>
           <div className="flex pt-4">
             <div className="flex flex-wrap gap-2">
               {ootdItem.post.tags.map((tag: string, index: number) => (

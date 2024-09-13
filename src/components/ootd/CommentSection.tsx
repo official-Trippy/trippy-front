@@ -194,7 +194,7 @@ const renderComments = (comments: Comment[], depth = 0, isChild = false) => {
       <div className='comment-section p-4 rounded-lg'>
         <div className='flex flex-row items-center'>
           {comment.member?.profileUrl && (
-            <div className="relative w-[32px] h-[32px]">
+            <div className="relative w-[28px] h-[28px]">
               <Image 
                 src={comment.member.profileUrl} 
                 alt="사용자 프로필" 
@@ -243,7 +243,7 @@ const renderComments = (comments: Comment[], depth = 0, isChild = false) => {
                 />
               </div>
             )}
-            <div className="text-[#292929] font-semibold ml-[5px]">{userInfo?.nickName}</div>
+            <div className="text-[#292929] font-semibold ml-[8px]">{userInfo?.nickName}</div>
           </div>
           <div className='flex-1 flex'>
             <input
@@ -373,7 +373,7 @@ const renderComments = (comments: Comment[], depth = 0, isChild = false) => {
 
   return (
     <div className="max-w-6xl w-full mx-auto">
-      <div className="flex items-center pb-4">
+      <div className="flex items-center pt-12">
         <button className="flex items-center" onClick={handleLikeClick}>
           <Image
             src={
@@ -400,12 +400,12 @@ const renderComments = (comments: Comment[], depth = 0, isChild = false) => {
       </div>
       {showComments && (
         <>
-          <div className="comment-section w-full p-4 bg-white rounded-lg shadow-md flex items-center 4 mt-16">
+          <div className="comment-section w-full p-4 bg-white rounded-lg shadow flex items-center mt-8">
             <div className='w-[90%] flex flex-col'>
               <div className='w-full flex-1'>
                 <div className='flex flex-row items-center'>
                   {userInfo?.profileImageUrl &&  (
-                    <><div className="relative w-[32px] h-[32px]">
+                    <><div className="relative w-[28px] h-[28px]">
                       <Image
                         src={userInfo.profileImageUrl}
                         alt="사용자"
@@ -414,13 +414,13 @@ const renderComments = (comments: Comment[], depth = 0, isChild = false) => {
                         className="rounded-full" />
                     </div></>
                   )}
-                  <div className="text-[#292929] font-semibold ml-[5px]">{userInfo?.nickName}</div>
+                  <div className="text-[#292929] font-semibold ml-[8px]">{userInfo?.nickName}</div>
                 </div>
               </div>
-              <div className="w-[100%] flex-1 ml-1">
+              <div className="flex-1 ml-12">
                 <input
                   type="text"
-                  className="mt-2 p-2 rounded w-full"
+                  className="mt-2 p-2 rounded w-full focus:outline-normal"
                   value={newComment}
                   onChange={(e) => setNewComment(e.target.value)}
                   placeholder="블로그가 훈훈해지는 댓글 부탁드립니다."
