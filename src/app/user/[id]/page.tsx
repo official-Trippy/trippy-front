@@ -167,7 +167,7 @@ const UserPage = ({ params }: { params: { id: string } }) => {
                   뱃지
                 </span>
               </button>
-              <button
+              {/* <button
                 className={`px-8 py-2 rounded-[999px] justify-center items-center ${
                   activeTab === TABS.BOOKMARK
                     ? "bg-[#ffe3ea] border-2 border-[#fa3463]"
@@ -182,7 +182,7 @@ const UserPage = ({ params }: { params: { id: string } }) => {
                 >
                   북마크
                 </span>
-              </button>
+              </button> */}
             </div>
           </div>
           <hr className="mb-4 w-full h-[1px]" />

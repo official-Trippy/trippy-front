@@ -212,7 +212,7 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
                 />
               </div>
               <div className="h-[48px] ml-4">
-                <span className="block font-bold text-[20px] ml-[2px]">
+                <span className="block font-bold text-[20px] ml-[2px] cursor-pointer" onClick={handleProfileClick}>
                   {ootdItem.member.nickName}
                 </span>
                 <div className="flex items-center gap-2">
@@ -222,7 +222,7 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
                     src={LocationIcon}
                     alt="location"
                   />
-                  <span className="block text-gray-600">
+                  <span className="block text-gray-600 mt-[2px]">
                     {ootdItem.post.location} |{" "}
                     {getWeatherStatusInKorean(ootdItem.ootd.weatherStatus)},{" "}
                     {ootdItem.ootd.weatherTemp}°C
