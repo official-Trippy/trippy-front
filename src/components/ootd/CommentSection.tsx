@@ -106,7 +106,13 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
   );
 
   const replyMutation = useMutation(
-    ({ content, parentId }: { content: string, parentId: number }) => createReply(postId, content, parentId),
+    ({ content, parentId, mentionMemberId, mentionMemberNickName, mentionCommentId }: { 
+        content: string, 
+        parentId: number, 
+        mentionMemberId: string, 
+        mentionMemberNickName: string, 
+        mentionCommentId: number 
+      }) => createReply(postId, content, parentId, mentionMemberId, mentionMemberNickName, mentionCommentId), 
     {
       onSuccess: () => {
         refetch();
@@ -117,6 +123,8 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
       },
     }
   );
+  
+  
 
   const likeMutation = useMutation(
     () => likePost(postId),
@@ -154,16 +162,70 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
     }
   };
 
-  const handleReplySubmit = () => {
-    if (replyComment.trim() && replyTo !== null) {
-      const formattedReply = `@${replyToNickname} ${replyComment}`;
-      replyMutation.mutate({ content: formattedReply, parentId: replyTo });
-    }
-  };
+  useEffect(() => {
+    console.log('댓글 데이터:', comments);
+  }, [comments]);
+
+    // 재귀적으로 commentId에 해당하는 댓글을 찾는 함수
+    const findCommentById = (comments: Comment[], commentId: number): Comment | undefined => {
+      for (const comment of comments) {
+        if (comment.id === commentId) {
+          return comment;
+        }
+    
+        // children에 대댓글이 있다면, 대댓글에서도 검색
+        if (comment.children && comment.children.length > 0) {
+          const found = findCommentById(comment.children, commentId);
+          if (found) return found;
+        }
+      }
+    
+      // 찾지 못하면 undefined 반환
+      return undefined;
+    };
+    
+
+    const handleReplySubmit = () => {
+      console.log('클릭은됨');
+      if (replyComment.trim() && replyTo !== null) {
+        const currentReplyTarget = findCommentById(comments, replyTo); // 재귀 함수로 댓글 찾기
+        console.log(replyTo);
+        console.log(currentReplyTarget);
+    
+        if (!currentReplyTarget) {
+          console.log('댓글을 찾을 수 없습니다.');
+          return;
+        }
+    
+        const mentionCommentId = replyTo;  // 대댓글의 ID
+        const mentionMemberId = currentReplyTarget.member?.memberId || ''; // 대댓글 작성자의 ID
+        const mentionMemberNickName = currentReplyTarget.member?.nickName || ''; // 대댓글 작성자의 닉네임
+    
+        // 대댓글의 parentId는 원본 댓글의 ID가 되어야 함
+        const parentId = currentReplyTarget.parentId || replyTo; 
+    
+        const formattedReply = `@${mentionMemberNickName} ${replyComment}`;
+    
+        // API 요청 전송
+        replyMutation.mutate({
+          content: formattedReply,
+          parentId,  // 원본 댓글의 ID
+          mentionMemberId,  // 대댓글 작성자의 ID
+          mentionMemberNickName,  // 대댓글 작성자의 닉네임
+          mentionCommentId,  // 대댓글 ID
+        });
+      } else {
+        console.log('댓글 내용을 입력해주세요.');
+      }
+    };
+    
+  
 
   const handleReplyClick = (commentId: number, nickName: string) => {
     setReplyTo(commentId);
     setReplyToNickname(nickName);
+
+    console.log(commentId);
   };
 
   const handleLikeClick = () => {

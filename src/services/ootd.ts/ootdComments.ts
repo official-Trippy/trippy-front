@@ -24,15 +24,19 @@ export interface FetchCommentsResponse {
     return response.data;
   };
 
-  export const createReply = async (postId: number, content: string, parentId: number) => {
+  export const createReply = async (postId: number, content: string, parentId: number, mentionMemberId: string, mentionMemberNickName: string, mentionCommentId: number) => {
     const response = await axios.post(`${backendUrl}/api/comment`, {
       postId,
       content,
       status: 'PUBLIC',
-      parentId
+      parentId, // 최상위 댓글 ID
+      mentionMemberId, // 답글 대상 멤버 ID
+      mentionMemberNickName, // 답글 대상 멤버 닉네임
+      mentionCommentId // 답글 대상 댓글 ID
     });
     return response.data;
   };
+  
   
   export const checkIfLiked = async (postId: number) => {
     const response = await axios.get(`${backendUrl}/api/like/isLiked/${postId}`);
