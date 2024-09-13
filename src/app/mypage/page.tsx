@@ -74,11 +74,11 @@ const MyPage = () => {
   });
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <div></div>;
   }
 
   if (error) {
-    return <div>Error</div>;
+    return <div></div>;
   }
 
   const userData = data && data.result;

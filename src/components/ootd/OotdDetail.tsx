@@ -224,8 +224,8 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
                 </div>
               </div>
             </div>
-            <div className="ml-auto flex">
-            <div className="flex items-center space-x-2">
+            <div className="ml-auto flex items-center">
+            <div className="flex items-center space-x-2 ml-auto">
               <FollowButton
                 postMemberId={data.result.member.memberId}
                 userMemberId={userMemberId}
@@ -233,53 +233,54 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
               <i className="far fa-bookmark text-xl"></i>
               <i className="fas fa-ellipsis-h text-xl"></i>
             </div>
-            <div className="flex relative my-auto items-center">
-            <Image
-              src={isBookmarked ? BookmarkedIcon : BookmarkIcon}
-              alt="bookmark"
-              width={24}
-              height={24}
-              className="cursor-pointer"
-              onClick={handleBookmarkClick}
-            />
-            <div className="text-[#9d9d9d] ml-[4px]">
-              {data.result.post.bookmarkCount}
+            <div className="flex relative my-auto items-center ml-4"> 
+              <Image
+                src={isBookmarked ? BookmarkedIcon : BookmarkIcon}
+                alt="bookmark"
+                width={24}
+                height={24}
+                className="cursor-pointer"
+                onClick={handleBookmarkClick}
+              />
+              <div className="text-[#9d9d9d] ml-[4px]">
+                {data.result.post.bookmarkCount}
+              </div>
             </div>
-            </div>
-            <div className="relative min-w-[50px] my-auto ml-auto flex justify-end">
+            
             {userMemberId === data.result.member.memberId && (
-          <div className="relative">
-            <Image
-              src={CabapIcon}
-              alt="cabap"
-              width={24}
-              height={24}
-              onClick={handleCabapIconClick}
-              className="cursor-pointer"
-            />
-            {isMenuOpen && (
-              <div className="w-[100px] absolute top-full right-4 mt-4 w-32 bg-white rounded shadow-lg z-10">
-                <div
-                  className="py-4 px-8 text-[#ff4f4f] hover:bg-gray-100 cursor-pointer text-center"
-                  onClick={handleDeleteClick}
-                >
-                  삭제
-                </div>
-                <hr/>
-                <div
-                  className="py-4 px-8 text-black hover:bg-gray-100 cursor-pointer text-center"
-                  onClick={() => {
-                    router.push(`/edit/${id}`);
-                  }}
-                >
-                  수정
+              <div className="relative my-auto flex justify-end">
+                <div className="relative mt-[2px] ml-4">
+                  <Image
+                    src={CabapIcon}
+                    alt="cabap"
+                    width={36}
+                    height={36}
+                    onClick={handleCabapIconClick}
+                    className="cursor-pointer"
+                  />
+                  {isMenuOpen && (
+                    <div className="w-[100px] absolute top-full right-4 mt-4 w-32 bg-white rounded shadow-lg z-10">
+                      <div
+                        className="py-6 px-8 text-[#ff4f4f] hover:bg-gray-100 cursor-pointer text-center"
+                        onClick={handleDeleteClick}
+                      >
+                        삭제
+                      </div>
+                      <hr/>
+                      <div
+                        className="py-6 px-8 text-black hover:bg-gray-100 cursor-pointer text-center"
+                        onClick={() => {
+                          router.push(`/edit/${id}`);
+                        }}
+                      >
+                        수정
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             )}
           </div>
-        )}
-        </div>
-            </div>
           </div>
           <div className="relative">
           <Slider {...settings}>
