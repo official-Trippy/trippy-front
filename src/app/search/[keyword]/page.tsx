@@ -8,8 +8,10 @@ import Keywords from "@/components/search/Keywords";
 import PopularSearches from "@/components/search/popularSearches";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import SortingBar from "@/components/search/\bsortingBar";
-import PostAllCard from "@/components/search/\bpostAllCard";
+import SortingBar from "@/components/search/sortingBar";
+import PostAllCard from "@/components/search/postAllCard";
+import getBoard from "@/services/board/get/getBoard";
+import { useQuery } from "react-query";
 
 const SearchPage = () => {
   const [targetPost, setTargetPost] = useState<any[]>([]);
@@ -21,6 +23,9 @@ const SearchPage = () => {
   const { keyword } = useParams();
   const [selectedPostType, setSelectedPostType] = useState("POST");
   const [selectedSortOrder, setSelectedSortOrder] = useState("newest");
+
+  const PAGE_SIZE = 10;
+  const pages = 1;
 
   const RealKeyword = decodeURIComponent(keyword as string);
   console.log(RealKeyword);
@@ -101,14 +106,24 @@ const SearchPage = () => {
 
   console.log("target post", posts);
   console.log(targetPost);
+  console.log("id", posts);
 
   console.log(posts.length);
   const count = posts.length;
+  const { data: boardData, refetch: boardRefetch } = useQuery({
+    queryKey: ["boardData"],
+    queryFn: () => getBoard(PAGE_SIZE, pages),
+  });
+
+  console.log();
+
+  console.log(boardData);
+  console.log(selectedPostType);
 
   return (
     <div className="w-full min-h-screen bg-white">
       <Header />
-      <div className="w-[80%] mx-auto mt-8 px-10">
+      <div className="mx-auto mt-8 px-10 w-[66%] mx-auto">
         <h1 className="text-4xl font-semibold mb-6">
           <span className="text-[#FB3463]">{RealKeyword}</span>에 대한
           <span className="text-[#FB3463]"> {count}</span>건의 검색 결과입니다.
@@ -126,8 +141,11 @@ const SearchPage = () => {
               <p>Loading...</p>
             ) : posts.length > 0 ? ( // Check if there are posts to display
               <div className="flex flex-wrap justify-start items-start gap-[25.012px]">
-                <PostAllCard posts={posts} />
-                <div className="flexflex mt-8">
+                <PostAllCard
+                  posts={posts}
+                  selectedPostType={selectedPostType}
+                />
+                <div className="flexflex mt-8 ml-[25px]">
                   <div className="flex-none w-[300px] ml-8">
                     <Keywords />
                   </div>

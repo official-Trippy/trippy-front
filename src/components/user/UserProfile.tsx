@@ -80,7 +80,9 @@ const UserProfile: React.FC<UserProfileProps> = ({
             </span>
           </div>
 
+
           <div className="ml-auto flex items-center mt-[10px] mr-[50px]">
+
             {targetMemberId &&
               userMemberId && ( // Check both IDs are available
                 <FollowButton

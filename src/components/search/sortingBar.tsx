@@ -19,6 +19,7 @@ const SortingBar: React.FC<SortingBarProps> = ({
     { label: "게시글", value: "POST" },
     { label: "OOTD", value: "OOTD" },
     { label: "사용자 닉네임", value: "NICKNAME" },
+    { label: "블로그 이름", value: "BLOGNAME" },
   ];
 
   const sortOrders = [
@@ -27,7 +28,7 @@ const SortingBar: React.FC<SortingBarProps> = ({
   ];
 
   return (
-    <div className="flex justify-between items-center mb-4 mr-[520px] mb-[50px] mt-[30px]">
+    <div className="flex justify-between items-center mb-4 mr-[0px] mb-[50px] mt-[30px] w-[789px]">
       <div className="flex space-x-4">
         {postTypes.map((type) => (
           <button
