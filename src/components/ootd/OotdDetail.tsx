@@ -22,7 +22,7 @@ import Swal from "sweetalert2";
 import CabapIcon from "../../../public/icon_cabap.svg";
 import BookmarkIcon from "../../../public/icon_bookmark.svg";
 import BookmarkedIcon from "../../../public/bookmark-fill.svg";
-import { addBookmark, fetchIsBookmarked } from "@/services/bookmark/bookmark";
+import { addBookmark, deleteBookmark, fetchIsBookmarked } from "@/services/bookmark/bookmark";
 
 interface OotdDetailProps {
   id: number;
@@ -47,13 +47,19 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
   }, [data]);
 
   const handleBookmarkClick = async () => {
+    if (!data?.result?.post?.id) return;
+
     try {
-      if (!data?.result?.post?.id) return;
-      await addBookmark(data.result.post.id);
-      setIsBookmarked(true);
+      if (isBookmarked) {
+        await deleteBookmark(data.result.post.id);
+        setIsBookmarked(false);
+      } else {
+        await addBookmark(data.result.post.id);
+        setIsBookmarked(true);
+      }
       await refetch();
     } catch (error) {
-      console.error('북마크 추가 중 오류가 발생했습니다:', error);
+      console.error('북마크 처리 중 오류가 발생했습니다:', error);
     }
   };
   
@@ -233,20 +239,19 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
               <i className="far fa-bookmark text-xl"></i>
               <i className="fas fa-ellipsis-h text-xl"></i>
             </div>
-            <div className="flex relative my-auto items-center ml-4"> 
+            <div className="flex items-center my-auto ml-4">
               <Image
                 src={isBookmarked ? BookmarkedIcon : BookmarkIcon}
                 alt="bookmark"
                 width={24}
                 height={24}
-                className="cursor-pointer"
+                className="cursor-pointer mr-2"
                 onClick={handleBookmarkClick}
               />
-              <div className="text-[#9d9d9d] ml-[4px]">
+              <div className="text-[#9d9d9d] min-w-[10px] text-center">
                 {data.result.post.bookmarkCount}
               </div>
             </div>
-            
             {userMemberId === data.result.member.memberId && (
               <div className="relative my-auto flex justify-end">
                 <div className="relative mt-[2px] ml-4">

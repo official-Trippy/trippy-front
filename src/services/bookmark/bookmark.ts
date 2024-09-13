@@ -66,3 +66,17 @@ export const fetchBookmarkCount = async (): Promise<BookmarkCounts> => {
     return response.data;
   };
   
+  export const deleteBookmark = async (postId: number): Promise<void> => {
+    try {
+      const response = await axios.delete<{ isSuccess: boolean }>(
+        `${backendUrl}/api/bookmark`,
+        { params: { postId } }
+      );
+      if (!response.data.isSuccess) {
+        throw new Error('북마크 삭제 실패');
+      }
+    } catch (error) {
+      console.error(`북마크 삭제 중 오류가 발생했습니다: ${error}`);
+      throw error;
+    }
+  };
