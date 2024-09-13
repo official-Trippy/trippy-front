@@ -250,9 +250,10 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
     router.push('/login');
   };
 
-const renderComments = (comments: Comment[], depth = 0, isChild = false) => {
+const renderComments = (comments: Comment[], depth = 0) => {
   return comments.map((comment) => (
-    <div key={comment.id} className={`${isChild ? 'p-4' : ''}`}>
+    <div key={comment.id} className={`comment ${depth === 0 ? 'px-4' : ''}`}>
+      {/* 댓글 표시 */}
       <div className='comment-section p-4 rounded-lg'>
         <div className='flex flex-row items-center'>
           {comment.member?.profileUrl && (
@@ -266,17 +267,12 @@ const renderComments = (comments: Comment[], depth = 0, isChild = false) => {
               />
             </div>
           )}
-          <div className="text-[#292929] text-sm font-semibold font-['Pretendard'] ml-[5px]">
+          <div className="text-[#292929] text-sm font-semibold ml-[5px]">
             {comment.member?.nickName}
           </div>
         </div>
         <div className="ml-[3.7rem] items-center">
-          <div
-            dangerouslySetInnerHTML={{
-              __html: comment.content
-                .replace(`@${replyToNickname}`, `<span class="highlighted-text">@${replyToNickname}</span>`)
-            }}
-          />
+          <div>{comment.content}</div>
           <div className='flex flex-row my-2'>
             <div className="text-gray-600">{formatTime(comment.createDateTime)}</div>
             <div>&nbsp;&nbsp;|&nbsp;&nbsp;</div>
@@ -286,16 +282,13 @@ const renderComments = (comments: Comment[], depth = 0, isChild = false) => {
           </div>
         </div>
       </div>
-      {comment.children.length > 0 && (
-        <div className={depth === 0 ? "my-4 ml-12 mr-4 bg-neutral-100 rounded-lg" : ""}>
-          {renderComments(comment.children, depth + 1)}
-        </div>
-      )}
+
+      {/* 답글쓰기 입력창, 해당 댓글 아래에 표시되도록 설정 */}
       {replyTo === comment.id && (
         <div className="flex flex-col p-4 mt-2 bg-white rounded-lg shadow-md">
           <div className='flex flex-row items-center flex-1'>
             {userInfo?.profileImageUrl && (
-              <div className="relative w-[32px] h-[32px]">
+              <div className="relative w-[28px] h-[28px]">
                 <Image
                   src={userInfo.profileImageUrl}
                   alt="사용자 프로필"
@@ -307,27 +300,34 @@ const renderComments = (comments: Comment[], depth = 0, isChild = false) => {
             )}
             <div className="text-[#292929] font-semibold ml-[8px]">{userInfo?.nickName}</div>
           </div>
-          <div className='flex-1 flex'>
+          <div className='flex-1 flex gap-2'>
             <input
               type="text"
-              className="w-[80%] max-w-[570px] mt-2 p-2 rounded-l flex-1"
+              className="mt-2 p-2 rounded-l flex-1"
               value={replyComment}
               onChange={(e) => setReplyComment(e.target.value)}
               placeholder={`@${replyToNickname || ''}에게 답글쓰기`}
-              style={{ color: replyComment.startsWith(`@${replyToNickname}`) ? '#ffb9ca' : 'inherit' }}
             />
             <button
               onClick={handleReplySubmit}
-              className="ml-auto mt-auto mb-[2px] px-8 py-1 bg-neutral-100 rounded-lg justify-center items-center inline-flex text-center text-zinc-800 text-base font-semibold font-['Pretendard']"
+              className="ml-auto mt-auto mb-[2px] px-8 py-1 bg-neutral-100 rounded-lg justify-center items-center inline-flex text-center text-zinc-800 text-base font-semibold"
             >
               입력
             </button>
           </div>
         </div>
       )}
+
+      {/* 대댓글이 있는 경우 */}
+      {comment.children.length > 0 && (
+        <div className="ml-12 mr-12 my-4 bg-neutral-100 rounded-lg">
+          {renderComments(comment.children, depth + 1)}
+        </div>
+      )}
     </div>
   ));
 };
+
 
 
 
@@ -496,17 +496,19 @@ const renderComments = (comments: Comment[], depth = 0, isChild = false) => {
               입력
             </button>
           </div>
-          <div className="comment-section w-full bg-white rounded-lg shadow-md items-center mt-16">
-            {isLoading ? (
-              <div></div>
+          <div
+          className={`comment-section w-full bg-white rounded-lg shadow-md items-center mt-16 ${comments.length > 0 ? 'pb-4' : ''}`}
+        >
+          {isLoading ? (
+            <div></div>
+          ) : (
+            comments.length === 0 ? (
+              <div className='pb-0'></div>
             ) : (
-              comments.length === 0 ? (
-                <div></div>
-              ) : (
-                renderComments(comments)
-              )
-            )}
-          </div>
+              renderComments(comments)
+            )
+          )}
+        </div>
         </>
       )}
       {showLikes && (
