@@ -301,20 +301,22 @@ const renderComments = (comments: Comment[], depth = 0) => {
             <div className="text-[#292929] font-semibold ml-[8px]">{userInfo?.nickName}</div>
           </div>
           <div className='flex-1 flex gap-2'>
-            <input
-              type="text"
-              className="mt-2 p-2 rounded-l flex-1"
-              value={replyComment}
-              onChange={(e) => setReplyComment(e.target.value)}
-              placeholder={`@${replyToNickname || ''}에게 답글쓰기`}
-            />
-            <button
-              onClick={handleReplySubmit}
-              className="ml-auto mt-auto mb-[2px] px-8 py-1 bg-neutral-100 rounded-lg justify-center items-center inline-flex text-center text-zinc-800 text-base font-semibold"
-            >
-              입력
-            </button>
-          </div>
+          <input
+            type="text"
+            className="mt-2 p-2 rounded-l flex-1"
+            value={replyComment}
+            onChange={(e) => setReplyComment(e.target.value)}
+            placeholder={`@${replyToNickname || ''}에게 답글쓰기`}
+          />
+          <button
+            onClick={handleReplySubmit}
+            className={`ml-auto mt-auto mb-[2px] px-8 py-1 rounded-lg justify-center items-center inline-flex text-center text-base font-semibold ${replyComment.trim() ? 'bg-[#fa3463] text-white' : 'bg-neutral-100 text-zinc-800'}`}
+            disabled={!replyComment.trim()} 
+          >
+            입력
+          </button>
+        </div>
+
         </div>
       )}
 
@@ -491,7 +493,8 @@ const renderComments = (comments: Comment[], depth = 0) => {
             </div>
             <button
               onClick={handleCommentSubmit}
-              className="ml-auto mt-auto mb-[2px] px-8 py-1 bg-neutral-100 rounded-lg justify-center items-center inline-flex text-center text-zinc-800 text-base font-semibold font-['Pretendard']"
+              className={`ml-auto mt-auto mb-[2px] px-8 py-1 rounded-lg justify-center items-center inline-flex text-center text-base font-semibold font-['Pretendard'] ${newComment.trim() ? 'bg-[#fa3463] text-white' : 'bg-neutral-100 text-zinc-800'}`}
+              disabled={!newComment.trim()}
             >
               입력
             </button>
