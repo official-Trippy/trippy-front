@@ -28,9 +28,21 @@ const TABS = {
 };
 
 const MyPage = () => {
-  const [activeTab, setActiveTab] = useState(TABS.TICKET);
   const accessToken = Cookies.get("accessToken");
 
+  const [activeTab, setActiveTab] = useState(() => {
+    if (typeof window !== 'undefined') { 
+      const savedTab = sessionStorage.getItem("activeTab");
+      return savedTab ? savedTab : TABS.TICKET;
+    }
+    return TABS.TICKET;
+  });
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') { 
+      sessionStorage.setItem("activeTab", activeTab);
+    }
+  }, [activeTab]);
   const { data, error, isLoading, refetch } = useQuery({
     queryKey: ["member", accessToken],
     queryFn: () => MemberInfo(accessToken),
@@ -55,29 +67,22 @@ const MyPage = () => {
     enabled: !!accessToken,
   });
 
-  const { data: totalBookmarkCount } = useQuery<number>(
-    "bookMarkCount",
-    fetchBookmarkCount,
-    { enabled: !!accessToken }
-  );
+  const { data: bookmarkCounts } = useQuery({
+    queryKey: ["bookmarkCounts"],
+    queryFn: fetchBookmarkCount,
+    enabled: !!accessToken,
+  });
 
-  console.log(totalBoardCount);
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <div></div>;
   }
 
   if (error) {
-    return <div>Error</div>;
+    return <div></div>;
   }
 
   const userData = data && data.result;
-  console.log("userData : ", userData);
   const member = userData?.memberId;
-
-  console.log(totalBoardCount);
-
-  console.log('totalBookbark:', totalBookmarkCount)
-  console.log('totalOotdCount:', totalOotdCount)
 
   return (
     <>
@@ -91,9 +96,12 @@ const MyPage = () => {
         />
       </div>
       <div className="w-[66%] mx-auto">
-        <h1 className="w-[66%] absolute ml-auto text-right top-[320px] text-white text-4xl font-bold">
+        <h1 className="w-[66%] absolute ml-[240px] text-left top-[320px] text-white text-4xl font-bold">
           {userData && userData.blogName}
         </h1>
+        <div className="w-[66%] absolute ml-[240px] text-left top-[350px] text-white text-xl font-normal font-['Pretendard']">
+          {userData && userData.blogIntroduce}
+        </div>
       </div>
       <div className="w-[66%] mx-auto flex p-4">
         <div className="w-[250px] mb-4">
@@ -146,7 +154,7 @@ const MyPage = () => {
                 >
                   북마크
                 </span>
-                <span className="text-[#fa3463] ml-1">{totalBookmarkCount}</span>
+                <span className="text-[#fa3463] ml-1">{bookmarkCounts?.totalCount}</span>
               </button>
             </div>
           </div>

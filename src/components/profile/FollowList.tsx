@@ -1,29 +1,77 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useQuery } from "react-query";
 import { showFollows, showFollowings } from "@/services/follow";
 import { useUserStore } from "@/store/useUserStore";
 import { unfollow } from "@/services/follow";
+import { ACCESS_TOKEN } from "@/constants/general";
+import axios from "axios";
 
+const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 const FollowList: React.FC<{
   memberId: string;
   type: "follower" | "following";
 }> = ({ memberId, type }) => {
+  const [isAvailable, setIsAvailable] = useState<boolean | null>(null);
+  const [availabilityMessage, setAvailabilityMessage] = useState<string>("");
+
+  const currentUser = useUserStore((state) => state.userInfo);
+  const currentUserId = currentUser?.memberId;
+
+  useEffect(() => {
+    const checkAvailability = async () => {
+      try {
+        const response = await axios.get(
+          `${backendUrl}/api/member/follow/available?memberId=${memberId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${ACCESS_TOKEN}`,
+            },
+          }
+        );
+        const { available, message, status } = response.data.result;
+        setIsAvailable(available);
+        setAvailabilityMessage(message);
+        console.log("data!!!!", response.data.result);
+      } catch (error) {
+        console.error("Error checking availability:", error);
+        setIsAvailable(false); // 오류가 발생한 경우 비공개로 처리
+      }
+    };
+
+    checkAvailability();
+  }, [memberId]);
+
   const { data, error, isLoading } = useQuery({
     queryKey: [type, memberId],
     queryFn:
       type === "follower"
-        ? () => showFollows(memberId)
-        : () => showFollowings(memberId),
+        ? () => showFollows(memberId, ACCESS_TOKEN)
+        : () => showFollowings(memberId, ACCESS_TOKEN),
+
     onError: (error) => {
       console.error(error);
     },
   });
 
   const followInfo = useUserStore((state) => state.userInfo);
+  // console.log(followInfo.followingCnt);
+  // console.log(followInfo);
+
+  // const userFollowingCnt = data.result.followingCnt;
+  // const userFollowCnt = data.result.followCnt;
 
   if (isLoading) return null;
   if (error)
     return <div className="text-2xl font-bold my-12">Error loading data</div>;
+  console.log("가능?", isAvailable);
+
+  if (isAvailable === false) {
+    return (
+      <div className="text-2xl font-bold my-12">
+        {availabilityMessage + " 계정입니다." || "비공개 계정입니다."}
+      </div>
+    );
+  }
 
   const userData =
     type === "follower" ? data.result.followers : data.result.followings;
@@ -32,11 +80,7 @@ const FollowList: React.FC<{
     <div>
       <div className="h-[400px]">
         <h3 className="text-2xl font-bold my-12">
-          {type === "follower" ? (
-            <div>팔로워 {followInfo.followerCnt}</div>
-          ) : (
-            <div>팔로잉 {followInfo.followingCnt}</div>
-          )}
+          {type === "follower" ? <div>팔로워</div> : <div>팔로잉</div>}
         </h3>
         <div>
           {!userData || userData.length === 0 ? (
@@ -64,15 +108,17 @@ const FollowList: React.FC<{
                     <p className="text-gray-600">{user.memberId}</p>
                   </div>
                 </div>
-                <button
-                  className="bg-red-500 text-white px-4 py-2 rounded rounded-lg"
-                  onClick={() => {
-                    unfollow(user.memberId);
-                    console.log("Unfollow", user.idx);
-                  }}
-                >
-                  {type === "follower" ? "팔로우 삭제" : "팔로우 취소"}
-                </button>
+                {currentUserId === memberId && (
+                  <button
+                    className="bg-red-500 text-white px-4 py-2 rounded rounded-lg"
+                    onClick={() => {
+                      unfollow(user.memberId);
+                      console.log("Unfollow", user.idx);
+                    }}
+                  >
+                    {type === "follower" ? "팔로우 삭제" : "팔로우 취소"}
+                  </button>
+                )}
               </div>
             ))
           )}

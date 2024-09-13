@@ -65,6 +65,7 @@ const PostInput: React.FC<PostInputProps> = ({ onPostChange, onTagsChange, tags,
         className="w-full h-64 text-lg border py-4 px-4 rounded resize-none"
         onChange={handlePostChange}
         value={post}
+        style={{ whiteSpace: 'pre-wrap' }} 
       />
       <div className="relative w-full border py-4 px-4 rounded">
         <input

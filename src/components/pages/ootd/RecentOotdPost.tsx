@@ -12,6 +12,7 @@ import EmptyHeartIcon from '../../../../public/empty_heart_default.svg';
 import CommentIcon1 from '../../../../public/empty_comment_default.svg';
 import { fetchLikedPosts } from '@/services/ootd.ts/ootdComments';
 import HeartIcon from '../../../../public/icon_heart.svg';
+import CustomSelect from './CustomSelect';
 
 const PAGE_SIZE = 12;
 
@@ -57,9 +58,9 @@ const TagContainer: React.FC<TagContainerProps> = ({ item }) => {
 
   return (
     <div className="mt-4">
-       <div className="text-[#6b6b6b] text-xl font-normal font-['Pretendard'] text-ellipsis overflow-hidden whitespace-nowrap">
-              {item.post.body}
-            </div>
+      <div className="text-[#6b6b6b] text-xl font-normal font-['Pretendard'] text-ellipsis overflow-hidden whitespace-nowrap">
+        {item.post.body}
+      </div>
       <div className="tag-container mt-2" ref={containerRef}>
         {visibleTags.map((tag, index) => (
           <span
@@ -84,20 +85,23 @@ const RecentOotdPost: React.FC = () => {
   const router = useRouter();
 
   useEffect(() => {
-    const savedTab = sessionStorage.getItem('tab');
-    if (savedTab) {
-      setTab(savedTab as 'ALL' | 'FOLLOWING');
-    } else {
-      setTab(accessToken ? 'FOLLOWING' : 'ALL');
+    if (typeof window !== 'undefined') { 
+      const savedTab = sessionStorage.getItem('tab');
+      if (savedTab) {
+        setTab(savedTab as 'ALL' | 'FOLLOWING');
+      } else {
+        setTab(accessToken ? 'FOLLOWING' : 'ALL');
+      }
     }
   }, [accessToken]);
 
   useEffect(() => {
-    if (tab) {
-      sessionStorage.setItem('tab', tab);
+    if (typeof window !== 'undefined') { 
+      if (tab) {
+        sessionStorage.setItem('tab', tab);
+      }
     }
   }, [tab]);
-
   useEffect(() => {
     if (accessToken) {
       fetchLikedPosts().then(setLikedPosts);  
@@ -149,8 +153,8 @@ const RecentOotdPost: React.FC = () => {
     router.push(`/ootd/${id}`);
   };
 
-  const handleOrderTypeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setOrderType(event.target.value);
+  const handleOrderTypeChange = (value: string) => {
+    setOrderType(value);
     setPage(0);
   };
 
@@ -189,15 +193,9 @@ const RecentOotdPost: React.FC = () => {
         >
           팔로잉
         </span>
-        <select
-          className='flex w-[8rem] h-[3rem] ml-auto font-medium selectshadow'
-          value={orderType}
-          onChange={handleOrderTypeChange}
-        >
-          <option value="LATEST">최신순</option>
-          <option value="LIKE">인기순</option>
-          <option value="VIEW">조회순</option>
-        </select>
+        <div className='ml-auto'>
+          <CustomSelect orderType={orderType} onOrderTypeChange={handleOrderTypeChange} />
+        </div>
       </div>
       <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-8">
         {ootdList.map((item) => (
@@ -247,21 +245,19 @@ const RecentOotdPost: React.FC = () => {
           </div>
         ))}
       </div>
-      {totalPages > 1 && (
-        <div className='flex justify-center mt-4'>
-          {[...Array(totalPages)].map((_, index) => (
-            <button
-              key={index}
-              onClick={() => handlePageClick(index)}
-              className={`mx-2 py-16 px-3  ${
-                page === index ? 'text-[#fa3463] font-semibold' : 'text-[#cfcfcf] font-normal'
-              }`}
-            >
-              {index + 1}
-            </button>
-          ))}
-        </div>
-      )}
+      <div className='flex justify-center mt-4'>
+        {[...Array(totalPages)].map((_, index) => (
+          <button
+            key={index}
+            onClick={() => handlePageClick(index)}
+            className={`mx-2 py-16 px-3  ${
+              page === index ? 'text-[#fa3463] font-semibold' : 'text-[#cfcfcf] font-normal'
+            }`}
+          >
+            {index + 1}
+          </button>
+        ))}
+      </div>
     </div>
   );
 };

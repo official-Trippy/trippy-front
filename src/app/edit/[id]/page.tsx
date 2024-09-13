@@ -159,7 +159,11 @@ const EditOotd: React.FC = () => {
           icon: 'success',
           title: 'OOTD 게시글을 수정하였습니다.',
           confirmButtonText: '확인',
-          confirmButtonColor: '#FB3463',
+          confirmButtonColor: '#FB3463', 
+          customClass: {
+            popup: 'swal-custom-popup',
+            icon: 'swal-custom-icon'
+          }
         }).then(() => {
           router.push(`/ootd/${id}`);
         });

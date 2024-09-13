@@ -3,18 +3,24 @@ import { bookmarkCount } from '@/types/bookmark';
 const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 
-export const fetchBookmarkCount = async (): Promise<number> => {
-    try {
-      const response = await axios.get<{ result: { totalCount: number; postCount: number; ootdCount: number } }>(
-        `${backendUrl}/api/bookmark/count/my`
-      );
-      console.log(response.data);
-      return response.data.result.totalCount;
-    } catch (error) {
-      console.error(`전체 북마크 데이터 개수를 가져오는 중 오류가 발생했습니다: ${error}`);
-      throw error;
-    }
-  };
+export interface BookmarkCounts {
+  totalCount: number;
+  postCount: number;
+  ootdCount: number;
+}
+
+export const fetchBookmarkCount = async (): Promise<BookmarkCounts> => {
+  try {
+    const response = await axios.get<{ result: BookmarkCounts }>(
+      `${backendUrl}/api/bookmark/count/my`
+    );
+    return response.data.result;
+  } catch (error) {
+    console.error(`북마크 데이터를 가져오는 중 오류가 발생했습니다: ${error}`);
+    throw error;
+  }
+};
+
 
   export const fetchIsBookmarked = async (postId: number): Promise<boolean> => {
     try {
@@ -42,6 +48,35 @@ export const fetchBookmarkCount = async (): Promise<number> => {
       }
     } catch (error) {
       console.error(`북마크 추가 중 오류가 발생했습니다: ${error}`);
+      throw error;
+    }
+  };
+
+
+  export const fetchBookmarkedOotd = async (page = 0, size = 9) => {
+    const response = await axios.get(`${backendUrl}/api/bookmark`, {
+      params: {
+        orderType: "LATEST",  
+        postType: "OOTD",     
+        page,                 
+        size,                
+      },
+    });
+  
+    return response.data;
+  };
+  
+  export const deleteBookmark = async (postId: number): Promise<void> => {
+    try {
+      const response = await axios.delete<{ isSuccess: boolean }>(
+        `${backendUrl}/api/bookmark`,
+        { params: { postId } }
+      );
+      if (!response.data.isSuccess) {
+        throw new Error('북마크 삭제 실패');
+      }
+    } catch (error) {
+      console.error(`북마크 삭제 중 오류가 발생했습니다: ${error}`);
       throw error;
     }
   };

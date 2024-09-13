@@ -69,21 +69,20 @@ const UserProfile: React.FC<UserProfileProps> = ({
           <h1 className="text-4xl font-bold mt-[10px]">{nickName}</h1>
           <span className="text-xl text-gray-600 mt-[5px]">{email}</span>
           <div className="mt-[10px] flex px-4">
-            <span
-              className="text-sm text-gray-600 cursor-pointer"
-              onClick={() => setActiveTab(TABS.FOLLOWER)}
-            >
-              팔로워 {followerCnt}
+            <span className="text-base text-[#9d9d9d] cursor-pointer" onClick={() => setActiveTab(TABS.FOLLOWER)}>
+              팔로워 
+              <span className="text-[#6b6b6b]"> {followerCnt}</span>
             </span>
-            <span className="text-sm text-gray-600">&ensp;|&ensp;</span>
-            <span
-              className="text-sm text-gray-600 cursor-pointer"
-              onClick={() => setActiveTab(TABS.FOLLOWING)}
-            >
-              팔로잉 {followingCnt}
+            <span className="text-base text-[#9d9d9d]">&ensp;|&ensp;</span>
+            <span className="text-base text-[#9d9d9d] cursor-pointer" onClick={() => setActiveTab(TABS.FOLLOWING)}>
+              팔로잉 
+              <span className="text-[#6b6b6b]"> {followingCnt}</span>
             </span>
           </div>
+
+
           <div className="ml-auto flex items-center mt-[10px] mr-[50px]">
+
             {targetMemberId &&
               userMemberId && ( // Check both IDs are available
                 <FollowButton
@@ -92,10 +91,6 @@ const UserProfile: React.FC<UserProfileProps> = ({
                 />
               )}
           </div>
-
-          <span className="mt-[10px] text-sm text-gray-600">
-            {blogIntroduce}
-          </span>
         </div>
       </div>
     </div>
