@@ -54,7 +54,7 @@ const Account = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center w-[66%] mx-auto mt-[19rem]">
+    <div className="min-h-screen flex flex-col justify-center items-center w-[66%] mx-auto">
       <Image src={LogoMain} alt="Logo" className="w-[16.4rem] mx-auto" />
       <div className="flex flex-col mt-[6rem]">
         <div className="text-center text-zinc-800 text-4xl font-semibold font-['Pretendard']">계정 찾기</div>

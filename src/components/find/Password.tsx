@@ -196,14 +196,14 @@ const Password = () => {
   
 
   return (
-    <div className="flex flex-col items-center justify-center w-[66%] mx-auto mt-[19rem]">
+    <div className="min-h-screen flex flex-col justify-center items-center w-[100%] mx-auto">
       <Image src={LogoMain} alt="Logo" className="w-[16.4rem] mx-auto" />
       {!showPasswordFields && (
         <><div className="flex flex-col mt-[6rem]">
           <div className="text-center text-zinc-800 text-4xl font-semibold font-['Pretendard']">비밀번호 재설정</div>
           <div className="text-center text-neutral-400 text-2xl text-base font-normal font-['Pretendard'] mt-[1rem]">트리피에 등록한 이메일을 입력해주세요.</div>
         </div><div
-          className={`flex w-full px-4 py-2 mt-[2.5rem] mb-2 h-[6rem] rounded-xl border ${isInputFocused ? "border-[#FB3463]" : "border-gray-300"} focus:border-[#FB3463] focus:outline-none`}
+          className={`flex w-[90%] max-w-[800px] px-4 py-2 mt-[2.5rem] mb-2 h-[6rem] rounded-xl border ${isInputFocused ? "border-[#FB3463]" : "border-gray-300"} focus:border-[#FB3463] focus:outline-none`}
           style={{ background: "var(--4, #F5F5F5)" }}
         >
             <input
@@ -229,18 +229,18 @@ const Password = () => {
                 {(verificationClicked ? "재전송" : "인증하기")}
               </button>
             )}
-          </div><div className="h-[1.7rem] w-full">
+          </div><div className="h-[1.7rem] w-[90%] max-w-[800px]">
             {emailErrorMessage && (
               <p className="text-red-500">{emailErrorMessage}</p>
             )}
             {duplicateMessage && (
-              <p className={`text-${duplicateMessage.includes("존재합니다") ? "red" : "green"}-500`}>
+              <p className={`text-${duplicateMessage.includes("없습니다.") ? "red" : "green"}-500`}>
                 {duplicateMessage}
               </p>
             )}
           </div>
           {verificationClicked && (
-            <div className="w-full">
+            <div className="w-[90%] max-w-[800px]">
               <div className="flex w-full">
                 <label htmlFor="verificationCode" className="sign-up-info block mt-[6rem]">
                   인증 코드
@@ -294,7 +294,7 @@ const Password = () => {
           <div className="text-center text-neutral-400 text-2xl text-base font-normal font-['Pretendard'] mt-[1rem]">비밀번호는 8~14자리의 영어, 숫자, 특수 기호를 포함해야 합니다.</div>
         </div>
           <motion.div
-            className='w-full'
+            className='w-[90%] max-w-[800px]'
             initial={{ opacity: 0, translateX: -90 }}
             transition={{
               duration: 0.4,
@@ -326,7 +326,7 @@ const Password = () => {
                 )}
               </div>
             </div>
-            <div className="mt-[6rem] w-full">
+            <div className="mt-[4rem] w-full">
               <label htmlFor="confirmPassword" className="sign-up-info block">
                 비밀번호 확인
               </label>

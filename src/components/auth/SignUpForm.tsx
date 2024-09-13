@@ -198,7 +198,7 @@ const SignUpForm = () => {
   }, [timer, verificationClicked]);
 
   return (
-    <form onSubmit={handleSubmit} className="w-[66%] mx-auto mt-[15rem]">
+    <form onSubmit={handleSubmit} className="min-h-screen flex flex-col justify-center items-center">
       <Image src={LogoMain} alt="Logo" className="mx-auto" />
       <div className="sign-up-info mt-[8rem]">로그인 정보를 설정해주세요</div>
       <label htmlFor="email" className="sign-up-info block mt-[6.9rem]">
