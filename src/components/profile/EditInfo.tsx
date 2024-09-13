@@ -12,6 +12,7 @@ import { blogInterests } from "@/constants/blogPreference";
 import { getMyInfo, updateMemberInfo } from "@/services/auth";
 import { UpdateMemberInfoRequest } from "@/types/auth";
 import backgroundImg from "../../../public/DefaultBackground.svg";
+import backgroundAddIcon from "../../../public/AddBlogImageIcon.svg";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import RightIcon from '../../../public/icon_right.svg';
 import UpIcon from '../../../public/arrow_up.svg';
@@ -383,7 +384,24 @@ const EditInfo = () => {
   
   return (
     <><div className="relative w-full h-[300px]">
-      <Image src={backgroundImg} alt="Background" layout="fill" objectFit="cover" />
+      <Image 
+    src={backgroundImg} 
+    alt="Background" 
+    layout="fill" 
+    objectFit="cover" 
+    className="z-0" 
+  />
+  
+  <div className="absolute inset-0 flex flex-col items-center justify-center z-10">
+    <Image 
+      src={backgroundAddIcon}
+      alt="Add Blog Image Icon" 
+      width={50} 
+      height={50} 
+    />
+    <div className="text-white text-2xl font-semibold font-['Pretendard'] mt-[10px]">대표사진 추가</div>
+    <div className="text-[#cfcfcf] text-base font-semibold font-['Pretendard'] mt-[5px]">최적치수 1926 x 240 px</div>
+  </div>
     </div><div className="w-[66%] mx-auto">
         <div className="mt-[8rem]">
           <div className="mt-[6.82rem]">
