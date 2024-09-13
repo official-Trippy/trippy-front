@@ -285,7 +285,7 @@ const renderComments = (comments: Comment[], depth = 0) => {
 
       {/* 답글쓰기 입력창, 해당 댓글 아래에 표시되도록 설정 */}
       {replyTo === comment.id && (
-        <div className="flex flex-col p-4 mt-2 bg-white rounded-lg shadow-md">
+        <div className={`flex flex-col p-4 mt-2 bg-white rounded-lg shadow-md ${depth === 0 ? 'mx-12' : ''}`}>
           <div className='flex flex-row items-center flex-1'>
             {userInfo?.profileImageUrl && (
               <div className="relative w-[28px] h-[28px]">
