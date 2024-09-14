@@ -196,14 +196,14 @@ const Password = () => {
   
 
   return (
-    <div className="min-h-screen flex flex-col justify-center items-center w-[100%] mx-auto">
-      <Image src={LogoMain} alt="Logo" className="w-[16.4rem] mx-auto" />
+    <div className="min-h-[100dvh] flex flex-col justify-center items-center w-[100%] mx-auto">
+      <Image src={LogoMain} alt="Logo" className="" />
       {!showPasswordFields && (
         <><div className="flex flex-col mt-[6rem]">
           <div className="text-center text-zinc-800 text-4xl font-semibold font-['Pretendard']">비밀번호 재설정</div>
           <div className="text-center text-neutral-400 text-2xl text-base font-normal font-['Pretendard'] mt-[1rem]">트리피에 등록한 이메일을 입력해주세요.</div>
         </div><div
-          className={`flex w-[90%] max-w-[800px] px-4 py-2 mt-[2.5rem] mb-2 h-[6rem] rounded-xl border ${isInputFocused ? "border-[#FB3463]" : "border-gray-300"} focus:border-[#FB3463] focus:outline-none`}
+          className={`flex w-[90%] max-w-[800px] px-4 py-2 mt-[8.5rem] mb-2 h-[6rem] rounded-xl border ${isInputFocused ? "border-[#FB3463]" : "border-gray-300"} focus:border-[#FB3463] focus:outline-none`}
           style={{ background: "var(--4, #F5F5F5)" }}
         >
             <input
@@ -240,7 +240,7 @@ const Password = () => {
             )}
           </div>
           {verificationClicked && (
-            <div className="w-[90%] max-w-[800px]">
+            <><div className="w-[90%] max-w-[800px]">
               <div className="flex w-full">
                 <label htmlFor="verificationCode" className="sign-up-info block mt-[6rem]">
                   인증 코드
@@ -252,8 +252,7 @@ const Password = () => {
                 )}
               </div>
               <div
-                className={`flex w-full px-4 py-2 mt-[2.5rem] mb-2 h-[6rem] rounded-xl border ${isCodeFocused ? "border-[#FB3463]" : "border-gray-300"
-                  } focus:border-[#FB3463] focus:outline-none`}
+                className={`flex w-full px-4 py-2 mt-[2.5rem] mb-2 h-[6rem] rounded-xl border ${isCodeFocused ? "border-[#FB3463]" : "border-gray-300"} focus:border-[#FB3463] focus:outline-none`}
                 style={{ background: "var(--4, #F5F5F5)" }}
               >
                 <input
@@ -266,16 +265,14 @@ const Password = () => {
                   placeholder="인증 코드를 입력하세요"
                   className="flex-1 border-gray-300 focus:border-[#FB3463] focus:outline-none"
                   style={{ background: "var(--4, #F5F5F5)", fontSize: "1.5rem" }}
-                  disabled={isCodeVerified}
-                />
+                  disabled={isCodeVerified} />
                 <button
                   type="button"
                   onClick={handleCodeVerification}
                   disabled={isVerificationButtonDisabled}
                   className={`${isVerificationButtonDisabled
                     ? "bg-gray-400 text-white cursor-not-allowed"
-                    : "bg-black text-white hover:bg-gray-900 focus:outline-none focus:bg-gray-900"
-                    } w-[8.6rem] h-[3.5rem] my-auto rounded-lg`}
+                    : "bg-black text-white hover:bg-gray-900 focus:outline-none focus:bg-gray-900"} w-[8.6rem] h-[3.5rem] my-auto rounded-lg`}
                   style={{ fontSize: "1.6rem" }}
                 >
                   {codeMessage === '인증이 완료되었습니다.' ? '인증 완료' : '확인하기'}
@@ -284,8 +281,11 @@ const Password = () => {
               <div className={`text-${codeMessage.includes('완료') ? 'green' : 'red'}-500 mt-2`}>
                 {codeMessage}
               </div>
-            </div>
+            </div></>
           )}
+          <div className='h-[16rem]'>
+
+</div>
         </>
       )}
       {showPasswordFields && (

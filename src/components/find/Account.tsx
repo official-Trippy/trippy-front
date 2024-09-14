@@ -54,8 +54,8 @@ const Account = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col justify-center items-center w-[66%] mx-auto">
-      <Image src={LogoMain} alt="Logo" className="w-[16.4rem] mx-auto" />
+    <div className="min-h-[100dvh] flex flex-col justify-center items-center w-[100%] mx-auto">
+      <Image src={LogoMain} alt="Logo" className="" />
       <div className="flex flex-col mt-[6rem]">
         <div className="text-center text-zinc-800 text-4xl font-semibold font-['Pretendard']">계정 찾기</div>
         <div className="text-center text-neutral-400 text-2xl text-base font-normal font-['Pretendard'] mt-[1rem]">
@@ -82,7 +82,7 @@ const Account = () => {
               placeholder="가입 시 입력했던 닉네임을 입력해주세요."
               value={nickname}
               onChange={handleNicknameChange}
-              className={`w-full px-4 py-2 mt-[2.5rem] mb-2 h-[6rem] rounded-xl border border-gray-300 focus:border-[#FB3463] focus:outline-none ${isNicknameValid() ? "bg-white" : "bg-gray-100"}`}
+              className={`flex w-[90%] max-w-[800px] mx-auto px-4 py-2 mt-[2.5rem] mb-2 h-[6rem] rounded-xl border border-gray-300 focus:border-[#FB3463] focus:outline-none ${isNicknameValid() ? "bg-white" : "bg-gray-100"}`}
               style={{ fontSize: "1.5rem" }}
             />
             <button
