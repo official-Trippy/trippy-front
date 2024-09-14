@@ -21,7 +21,7 @@ const BlogRegisterThird = () => {
       </div>
       <Link href='/'>
         <button
-          className="mx-auto bg-btn-color mt-[8rem] mb-[10rem] w-[22rem] h-[6rem] text-white py-2 rounded-2xl focus:outline-none text-center"
+          className="mx-auto w-full h-[44px] mt-[2rem] mb-[2rem] bg-btn-color text-white py-2 rounded-xl "
           style={{ fontSize: "1.6rem" }}
         >
           다음

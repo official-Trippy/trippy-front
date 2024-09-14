@@ -39,16 +39,21 @@ const BlogRegisterSecond = () => {
   };
 
   return (
-    <div className="w-[66%] mx-auto mt-[15rem]">
-      <Image src={BlogStep2} alt="Logo" className="w-[47.7rem] mx-auto" />
-      <div className="mt-[8rem]">
+    <div className="min-h-[100dvh] flex flex-col justify-center items-center w-full space-between">
+      <div className="w-[90%] max-w-[400px] mx-auto">
+      <div className="w-full flex justify-center mt-[20px]">
+        <Image src={BlogStep2} alt="Logo" className="w-[30rem]" />
+      </div>
+      </div>
+      <div className="w-[90%] max-w-[400px] mx-auto">
+      <div className="mt-[20px]">
         <div className="mx-auto text-center">
           <div className="sign-up-info">관심분야를 선택해주세요 (선택)</div>
-          <div className="mt-[.87rem] text-[1.6rem] text-[#9D9D9D]">
+          <div className="mt-[.87rem] text-[1rem] text-[#9D9D9D]">
             관심분야를 2개 이상 선택해주세요. (최대 5개까지)
           </div>
         </div>
-        <div className="w-[70rem] mx-auto grid grid-cols-5 gap-2 mt-[3.9rem]">
+        <div className="mx-auto grid grid-cols-5 gap-2 my-[5rem]">
           {blogInterests.map((interest, index) => (
             <button
               key={index}
@@ -62,12 +67,15 @@ const BlogRegisterSecond = () => {
             </button>
           ))}
         </div>
+        </div>
+        </div>
+        <div className="w-[90%] max-w-[400px] mx-auto">
         <div className="text-center">
           <Link href="/blogRegister3">
             <button
               type="submit"
-              className={`mx-auto ${isButtonActive ? "bg-btn-color" : "bg-gray-400"
-                } mt-[8rem] mb-[10rem] items-center w-[22rem] h-[6rem] text-white py-2 rounded-2xl focus:outline-none`}
+              className={`mx-auto w-full ${isButtonActive ? "bg-btn-color" : "bg-gray-400"
+                } mt-[2rem] mb-[2rem] items-center h-[44px] text-white rounded-xl focus:outline-none`}
               onClick={handleSubmit}
               style={{ fontSize: "1.6rem" }}
               disabled={!isButtonActive}
@@ -76,7 +84,7 @@ const BlogRegisterSecond = () => {
             </button>
           </Link>
         </div>
-      </div>
+        </div>
     </div>
   );
 };

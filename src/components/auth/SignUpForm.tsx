@@ -216,7 +216,7 @@ const SignUpForm = () => {
       </label>
       {/* <EmailVerification /> */}
       <div
-        className={`flex w-full px-4 py-2 mt-[2rem] mb-2 h-[5rem] rounded-xl border ${isInputFocused ? "border-[#FB3463]" : "border-gray-300"
+        className={`flex w-full px-4 py-2 mt-[2rem] mb-2 h-[4rem] rounded-xl border ${isInputFocused ? "border-[#FB3463]" : "border-gray-300"
           } focus:border-[#FB3463] focus:outline-none`}
         style={{ background: "var(--4, #F5F5F5)" }}
       >
@@ -228,7 +228,7 @@ const SignUpForm = () => {
           onChange={handleEmailChange}
           placeholder="Trippy@trip.com"
           className="flex-1 border-gray-300 focus:border-[#FB3463] focus:outline-none"
-          style={{ background: "var(--4, #F5F5F5)", fontSize: "1.5rem" }}
+          style={{ background: "var(--4, #F5F5F5)", fontSize: "1.2rem" }}
           disabled={isCodeVerified}
         />
         {!isCodeVerified && (
@@ -241,8 +241,8 @@ const SignUpForm = () => {
             className={`${duplicateMessage === "사용 가능한 이메일입니다."
               ? "bg-black text-white hover:bg-gray-900 focus:outline-none focus:bg-gray-900"
               : "bg-gray-400 text-white cursor-not-allowed"
-              } w-[8.6rem] h-[3.5rem] my-auto rounded-lg`}
-            style={{ fontSize: "1.3rem" }}
+              } w-[8.6rem] h-[2.8rem] my-auto rounded-lg`}
+            style={{ fontSize: "1.2rem" }}
           >
             {isCodeVerified ? "인증 완료" : (verificationClicked ? "재전송" : "인증하기")}
           </button>
@@ -272,7 +272,7 @@ const SignUpForm = () => {
             )}
           </div>
           <div
-            className={`flex w-full px-4 py-2 mt-[2rem] mb-2 h-[5rem] rounded-xl border ${isCodeFocused ? "border-[#FB3463]" : "border-gray-300"
+            className={`flex w-full px-4 py-2 mt-[2rem] mb-2 h-[4rem] rounded-xl border ${isCodeFocused ? "border-[#FB3463]" : "border-gray-300"
               } focus:border-[#FB3463] focus:outline-none`}
             style={{ background: "var(--4, #F5F5F5)" }}
           >
@@ -285,7 +285,7 @@ const SignUpForm = () => {
               onChange={handleValidNumberChange}
               placeholder="인증 코드를 입력하세요"
               className="flex-1 border-gray-300 focus:border-[#FB3463] focus:outline-none"
-              style={{ background: "var(--4, #F5F5F5)", fontSize: "1.5rem" }}
+              style={{ background: "var(--4, #F5F5F5)", fontSize: "1.2rem" }}
               disabled={isCodeVerified}
             />
             <button
@@ -316,8 +316,8 @@ const SignUpForm = () => {
           value={password}
           onChange={handlePasswordChange}
           placeholder="영어, 숫자, 특수 기호를 포함한 8~14자리"
-          className="w-full px-4 py-2 mt-[2rem] mb-2 h-[5rem] rounded-xl border border-gray-300 focus:border-[#FB3463] focus:outline-none"
-          style={{ background: "var(--4, #F5F5F5)", fontSize: "1.5rem" }}
+          className="w-full px-4 py-2 mt-[2rem] mb-2 h-[4rem] rounded-xl border border-gray-300 focus:border-[#FB3463] focus:outline-none"
+          style={{ background: "var(--4, #F5F5F5)", fontSize: "1.2rem" }}
         />
         <div className="h-[1.7rem]">
           {passwordErrorMessage && (
@@ -338,8 +338,8 @@ const SignUpForm = () => {
           value={confirmPassword}
           onChange={handleConfirmPasswordChange}
           placeholder="영어, 숫자, 특수 기호를 포함한 8~14자리"
-          className="w-full px-4 py-2  mt-[2rem] mb-2 h-[5rem] rounded-xl border border-gray-300 focus:border-[#FB3463] focus:outline-none"
-          style={{ background: "var(--4, #F5F5F5)", fontSize: "1.5rem" }}
+          className="w-full px-4 py-2  mt-[2rem] mb-2 h-[4rem] rounded-xl border border-gray-300 focus:border-[#FB3463] focus:outline-none"
+          style={{ background: "var(--4, #F5F5F5)", fontSize: "1.2rem" }}
         />
         <div className="h-[1.7rem]">
           {confirmPassword && !passwordMatch && (
@@ -352,7 +352,7 @@ const SignUpForm = () => {
       </div>
       <div
         className="mt-[3rem] flex items-center"
-        style={{ fontSize: "1.5rem" }}
+        style={{ fontSize: "1.2rem" }}
       >
         <input
           type="checkbox"
@@ -395,7 +395,7 @@ const SignUpForm = () => {
       <div className="text-center">
               <button
                 type="submit"
-                className={`mx-auto w-full h-[50px] mt-[4rem] mb-[2rem] bg-btn-color text-white py-2 rounded-lg focus:outline-none ${!verificationClicked ||
+                className={`mx-auto w-full h-[44px] mt-[4rem] mb-[2rem] bg-btn-color text-white py-2 rounded-lg focus:outline-none ${!verificationClicked ||
                   !passwordValid ||
                   !passwordMatch ||
                   !agreementChecked ||
@@ -403,7 +403,7 @@ const SignUpForm = () => {
                   ? "cursor-not-allowed bg-gray-400 hover:bg-gray-400"
                   : ""
                   }`}
-                style={{ fontSize: "1.8rem" }}
+                style={{ fontSize: "1.2rem" }}
                 disabled={
                   !isCodeVerified ||
                   !passwordValid ||
