@@ -207,9 +207,10 @@ const SignUpForm = () => {
   }, [timer, verificationClicked]);
 
   return (
-    <form onSubmit={handleSubmit} className="min-h-[100dvh] flex flex-col justify-center items-center">
+    <form onSubmit={handleSubmit} className="min-h-[100dvh] flex flex-col justify-between flex-col-reverse sm:flex-col sm:justify-center items-center w-full">
+      <div className="w-[90%] max-w-[400px] mx-auto">
       <Image src={LogoMain} alt="Logo" className="mx-auto mt-[2rem]" />
-      <div className="w-full">
+      </div>
       <div className="w-[90%] max-w-[400px] mx-auto">
       <label htmlFor="email" className="sign-up-info block mt-[4rem]">
         이메일
@@ -392,6 +393,8 @@ const SignUpForm = () => {
           에 동의합니다.
         </label>
       </div>
+      </div>
+      <div className="w-[90%] max-w-[400px] mx-auto">
       <div className="text-center">
               <button
                 type="submit"
@@ -413,6 +416,7 @@ const SignUpForm = () => {
               >
                 다음
               </button>
+            </div>
             </div>
             {modalOpen && (
               <div className="modal">
@@ -472,8 +476,6 @@ const SignUpForm = () => {
           </div>
         </div>
       )}
-      </div>
-      </div>
     </form>
   );
 };

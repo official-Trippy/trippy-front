@@ -176,11 +176,13 @@ const BlogRegisterFirst = () => {
   
 
   return (
-    <div className="min-h-[100dvh] flex flex-col justify-center items-center w-full">
+    <div className="min-h-[100dvh] flex flex-col justify-between flex-col-reverse sm:flex-col sm:justify-center items-center w-full">
       <div className="w-[90%] max-w-[400px] mx-auto">
       <div className="w-full flex justify-center mt-[20px]">
       <Image src={BlogStep1} alt="Logo" className="w-[30rem]" />
     </div>
+    </div>
+    <div className="w-[90%] max-w-[400px] mx-auto">
       <div className="mt-[20px]">
         <div className="sign-up-info">기본 회원 정보를 등록해주세요</div>
         <div className="mt-[2rem]">
@@ -299,6 +301,10 @@ const BlogRegisterFirst = () => {
               </div>
             </div>
           </div>
+          </div>
+          </div>
+          </div>
+          <div className="w-[90%] max-w-[400px] mx-auto">
           <div className="text-center">
           <button
               type="submit"
@@ -320,9 +326,7 @@ const BlogRegisterFirst = () => {
               다음
             </button>
           </div>
-        </div>
-      </div>
-      </div>
+          </div>
     </div>
   );
 };

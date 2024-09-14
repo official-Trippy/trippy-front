@@ -39,14 +39,14 @@ const BlogRegisterSecond = () => {
   };
 
   return (
-    <div className="min-h-[100dvh] flex flex-col justify-center items-center w-full space-between">
+    <div className="min-h-[100dvh] flex flex-col justify-between flex-col-reverse sm:flex-col sm:justify-center items-center w-full">
       <div className="w-[90%] max-w-[400px] mx-auto">
       <div className="w-full flex justify-center mt-[20px]">
         <Image src={BlogStep2} alt="Logo" className="w-[30rem]" />
       </div>
       </div>
       <div className="w-[90%] max-w-[400px] mx-auto">
-      <div className="mt-[20px]">
+      <div className="w-[90%] max-w-[400px] mx-auto sm:h-[551px] flex flex-col justify-center">
         <div className="mx-auto text-center">
           <div className="sign-up-info">관심분야를 선택해주세요 (선택)</div>
           <div className="mt-[.87rem] text-[1rem] text-[#9D9D9D]">
@@ -77,7 +77,7 @@ const BlogRegisterSecond = () => {
               className={`mx-auto w-full ${isButtonActive ? "bg-btn-color" : "bg-gray-400"
                 } mt-[2rem] mb-[2rem] items-center h-[44px] text-white rounded-xl focus:outline-none`}
               onClick={handleSubmit}
-              style={{ fontSize: "1.6rem" }}
+              style={{ fontSize: "1.2rem" }}
               disabled={!isButtonActive}
             >
               다음
