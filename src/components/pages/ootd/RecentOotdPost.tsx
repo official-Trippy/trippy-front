@@ -174,7 +174,7 @@ const RecentOotdPost: React.FC = () => {
   }
 
   return (
-    <div className='w-[90%] sm-700:w-[66%]  mx-auto py-[5rem]'>
+    <div className='w-[90%] sm-700:w-[66%]  mx-auto pt-[5rem] mb-[90px]'>
       <div>
       {accessToken ? (
                         isGuest ? ( 

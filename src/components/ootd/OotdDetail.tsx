@@ -197,8 +197,8 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
 
   return (
     <>
-      <div className="container mx-auto p-4">
-        <div className="w-full max-w-6xl mx-auto">
+      <div className="w-[90%] sm-700:w-full sm-700:max-w-6xl mx-auto sm-700:p-4">
+        <div className="w-full mx-auto">
           <div className="py-12 flex items-center">
             <div className="flex items-center">
             <div className="relative w-[50px] h-[50px]">
@@ -239,7 +239,7 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
               <i className="far fa-bookmark text-xl"></i>
               <i className="fas fa-ellipsis-h text-xl"></i>
             </div>
-            <div className="flex items-center my-auto ml-4">
+            <div className="hidden sm-700:flex items-center my-auto ml-4">
               <Image
                 src={isBookmarked ? BookmarkedIcon : BookmarkIcon}
                 alt="bookmark"
@@ -323,7 +323,7 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
           </div>
         </div>
       </div>
-      <div className="w-full mb-[100px]">
+      <div className="w-full mb-[120px]">
         <div className="w-full mx-auto">
           <CommentSection
             postId={id}

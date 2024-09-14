@@ -285,7 +285,7 @@ const renderComments = (comments: Comment[], depth = 0) => {
 
       {/* 답글쓰기 입력창, 해당 댓글 아래에 표시되도록 설정 */}
       {replyTo === comment.id && (
-        <div className={`flex flex-col p-4 mt-2 bg-white rounded-lg shadow-md ${depth === 0 ? 'mx-12' : ''}`}>
+        <div className={`flex flex-col p-4 mt-2 bg-white rounded-lg shadow-md ${depth === 0 ? 'mx-4 sm-700:mx-12' : ''}`}>
           <div className='flex flex-row items-center flex-1'>
             {userInfo?.profileImageUrl && (
               <div className="relative w-[28px] h-[28px]">
@@ -322,7 +322,7 @@ const renderComments = (comments: Comment[], depth = 0) => {
 
       {/* 대댓글이 있는 경우 */}
       {comment.children.length > 0 && (
-        <div className="ml-12 mr-12 my-4 bg-neutral-100 rounded-lg">
+        <div className="mr-4 ml-4 sm-700:ml-12 sm-700:mr-12 my-4 bg-neutral-100 rounded-lg">
           {renderComments(comment.children, depth + 1)}
         </div>
       )}
@@ -436,7 +436,7 @@ const renderComments = (comments: Comment[], depth = 0) => {
   }
 
   return (
-    <div className="max-w-6xl w-full mx-auto">
+    <div className="w-[90%] sm-700:w-full sm-700:max-w-6xl mx-auto sm-700:px-4">
       <div className="flex items-center pt-12">
         <button className="flex items-center" onClick={handleLikeClick}>
           <Image
@@ -484,7 +484,7 @@ const renderComments = (comments: Comment[], depth = 0) => {
               <div className="flex-1 ml-12">
                 <input
                   type="text"
-                  className="mt-2 p-2 rounded w-full focus:outline-normal"
+                  className="mt-2 p-2 rounded w-[97%] sm-700:w-full focus:outline-normal"
                   value={newComment}
                   onChange={(e) => setNewComment(e.target.value)}
                   placeholder="블로그가 훈훈해지는 댓글 부탁드립니다."
@@ -493,7 +493,7 @@ const renderComments = (comments: Comment[], depth = 0) => {
             </div>
             <button
               onClick={handleCommentSubmit}
-              className={`ml-auto mt-auto mb-[2px] px-8 py-1 rounded-lg justify-center items-center inline-flex text-center text-base font-semibold font-['Pretendard'] ${newComment.trim() ? 'bg-[#fa3463] text-white' : 'bg-neutral-100 text-zinc-800'}`}
+              className={`flex-shrink-0 ml-auto mt-auto mb-[2px] px-8 py-1 rounded-lg justify-center items-center inline-flex text-center text-base font-semibold font-['Pretendard'] ${newComment.trim() ? 'bg-[#fa3463] text-white' : 'bg-neutral-100 text-zinc-800'}`}
               disabled={!newComment.trim()}
             >
               입력

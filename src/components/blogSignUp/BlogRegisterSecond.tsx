@@ -69,7 +69,7 @@ const BlogRegisterSecond = () => {
         </div>
         </div>
         </div>
-        <div className="w-[90%] max-w-[400px] mx-auto">
+        <div className="w-[90%] max-w-[400px] mx-auto mb-[90px]">
         <div className="text-center">
           <Link href="/blogRegister3">
             <button

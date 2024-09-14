@@ -25,7 +25,7 @@ const BlogRegisterThird = () => {
         <div>다양한 여행 이야기를 둘러보세요!</div>
       </div>
       </div>
-      <div className="w-[90%] max-w-[400px] mx-auto">
+      <div className="w-[90%] max-w-[400px] mx-auto mb-[90px]">
       <Link href='/'>
         <button
           className="mx-auto w-full h-[44px] mt-[2rem] mb-[2rem] bg-btn-color text-white py-2 rounded-xl "

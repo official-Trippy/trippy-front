@@ -179,7 +179,7 @@ const BlogRegisterFirst = () => {
     <div className="min-h-[100dvh] flex flex-col justify-between flex-col-reverse sm:flex-col sm:justify-center items-center w-full">
       <div className="w-[90%] max-w-[400px] mx-auto">
       <div className="w-full flex justify-center mt-[20px]">
-      <Image src={BlogStep1} alt="Logo" className="w-[30rem]" />
+      <Image src={BlogStep1} alt="Logo" className="w-[30rem]"  />
     </div>
     </div>
     <div className="w-[90%] max-w-[400px] mx-auto">
@@ -304,7 +304,7 @@ const BlogRegisterFirst = () => {
           </div>
           </div>
           </div>
-          <div className="w-[90%] max-w-[400px] mx-auto">
+          <div className="w-[90%] max-w-[400px] mx-auto mb-[90px]">
           <div className="text-center">
           <button
               type="submit"
