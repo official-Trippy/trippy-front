@@ -54,17 +54,21 @@ const Header = () => {
   const isGuest = userInfo?.role === "GUEST";
 
   return (
-    <header className="header flex justify-between items-center w-[66%] mx-auto relative">
-      <div className="flex items-center">
-        <div className="mr-4">
+    <header className="header flex justify-between items-center w-[82%] mx-auto relative">
+      <div className="flex items-center gap-6">
+        <div className="flex-shrink-0">
           <Link href="/">
-            <Image src={LogoHeader} alt="Logo" />
+            <Image
+              src={LogoHeader}
+              alt="Logo"
+              className="w-[110px] h-[34px] object-contain"
+            />
           </Link>
         </div>
-        <div className="flex space-x-4 text-lg">
+        <div className="flex text-lg">
           <Link href="/">
             <div
-              className={`text-gray-800 px-10 ${pathname === "/" ? "font-bold" : ""}`}
+              className={`text-gray-800 px-6 ${pathname === "/" ? "font-bold" : ""}`}
               style={{ fontSize: "1.4rem" }}
             >
               홈
@@ -72,7 +76,7 @@ const Header = () => {
           </Link>
           <Link href="/ootd">
             <div
-              className={`text-gray-800 ${pathname === "/ootd" ? "font-bold" : ""}`}
+              className={`text-gray-800 pl-4 ${pathname === "/ootd" ? "font-bold" : ""}`}
               style={{ fontSize: "1.4rem" }}
             >
               OOTD
@@ -80,23 +84,25 @@ const Header = () => {
           </Link>
         </div>
       </div>
-
-      <div className="flex items-center">
-        <div className="ml-5">
+    
+      <div className="flex items-center flex-grow">
+        <div className="ml-auto flex-grow max-w-[600px] min-w-[200px]">
           <SearchBar />
         </div>
         {!loading && !isGuest && (
           <>
             {userInfo && accessToken ? (
-              <div className="flex relative">
-                <div className="mr-12 w-[24px] my-auto relative">
+              <div className="flex relative items-center gap-8">
+                <div className="w-[20px] h-[20px] relative">
                   <Image
                     src={AlertImg}
                     alt="alert"
+                    width={20}
+                    height={20}
                     onClick={handleNotificationsToggle}
                     className="cursor-pointer"
                   />
-
+    
                   {/* Notification Dropdown */}
                   {isNotificationsVisible && (
                     <div className="absolute right-0 mt-2 w-[350px] bg-white shadow-lg rounded-lg z-50">
@@ -145,8 +151,8 @@ const Header = () => {
                   />
                 </div>
                 <button
-                  className="w-[8.6rem] h-[3.5rem] bg-btn-color text-white px-7 py-2 rounded-lg ml-16"
-                  style={{ fontSize: "1.6rem" }}
+                  className="w-[8.6rem] bg-btn-color text-white px-7 py-2 rounded-lg"
+                  style={{ fontSize: "1.4rem" }}
                   onMouseEnter={() => setIsDropdownOpen(true)}
                 >
                   글쓰기
@@ -156,7 +162,7 @@ const Header = () => {
               <div>
                 <Link href="/login">
                   <button
-                    className="w-[8.6rem] h-[3.5rem] bg-btn-color text-white px-6 py-2 rounded-lg"
+                    className="w-[8.6rem] bg-btn-color text-white px-6 py-2 rounded-lg"
                     style={{ fontSize: "1.6rem" }}
                   >
                     로그인
@@ -170,7 +176,7 @@ const Header = () => {
           <div>
             <Link href="/login">
               <button
-                className="w-[8.6rem] h-[3.5rem] bg-btn-color text-white px-6 py-2 rounded-lg"
+                className="w-[8.6rem] bg-btn-color text-white px-6 py-2 rounded-lg"
                 style={{ fontSize: "1.6rem" }}
               >
                 로그인
