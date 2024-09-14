@@ -14,10 +14,6 @@ import {
 import useUserInfo from "@/hooks/useUserInfo";
 import { swear_words_arr } from "@/constants/wearWordsArr";
 
-import Cookies from "js-cookie";
-import { signUp } from "@/services/auth";
-import CheckUserRegistration from "../auth/CheckUserResister";
-
 const BlogRegisterFirst = () => {
   const [profileImage, setProfileImage] = useState<{
     accessUri: string;

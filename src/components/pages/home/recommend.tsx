@@ -1,9 +1,8 @@
-
 "use client"
-import { loginState } from '@/atoms/user';
-import React, { ReactNode, useState } from 'react'
-import { useRecoilValue } from 'recoil';
+
+import React, { ReactNode } from 'react';
 import Cookies from "js-cookie";
+import { useUserStore } from '@/store/useUserStore';
 
 interface HomeProps {
     children: ReactNode;
@@ -14,16 +13,28 @@ interface HomeProps {
 function Recommend({ children, memberData, isLoading }: HomeProps) {
     const accessToken = Cookies.get('accessToken');
 
+    const { userInfo } = useUserStore();
+
+    console.log('유저정보', userInfo);
+
+    const isGuest = userInfo?.role === 'GUEST'; 
+
+    console.log('유저게스트?', isGuest);
 
     return (
         <div className='w-[66%] flex flex-col mx-auto mt-[8rem]'>
-            {isLoading ? (<div>
-
-            </div>) : (
+            {isLoading ? (
                 <div>
-                    {accessToken ? (
-                        <h1 className='font-bold text-[2rem]'>{memberData?.result.nickName}님을 위해 준비한 맞춤 추천 포스트</h1>
-                    ) : (
+                </div>
+            ) : (
+                <div>
+                    {accessToken ? ( 
+                        isGuest ? (
+                            <h1 className='font-bold text-[2rem]'>트리피의 인기 게시글을 만나보세요</h1>
+                        ) : ( 
+                            <h1 className='font-bold text-[2rem]'>{memberData?.result.nickName}님을 위해 준비한 맞춤 추천 포스트</h1>
+                        )
+                    ) : ( 
                         <h1 className='font-bold text-[2rem]'>트리피의 인기 게시글을 만나보세요</h1>
                     )}
                 </div>
@@ -33,5 +44,4 @@ function Recommend({ children, memberData, isLoading }: HomeProps) {
     )
 }
 
-export default Recommend
-
+export default Recommend;
