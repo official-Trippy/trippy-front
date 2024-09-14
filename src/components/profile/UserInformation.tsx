@@ -42,7 +42,7 @@ const UserInformation: React.FC<{ setActiveTab: (tab: string) => void }> = ({
   useEffect(() => {
     if (!accessToken) {
       router.refresh();
-      router.push('/');
+      router.push('/login');
     }
   }, [router]);
 
