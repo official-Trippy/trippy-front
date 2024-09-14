@@ -65,7 +65,7 @@ const UserOotd: React.FC<UserOotdProps> = ({ memberId }) => {
 
   return (
     <div className="h-full">
-      <div className="grid grid-cols-3 gap-12">
+      <div className="grid grid-cols-2 gap-12 lg:grid-cols-3">
         {ootdList.map((item) => (
           <div
             key={item.ootd.id}

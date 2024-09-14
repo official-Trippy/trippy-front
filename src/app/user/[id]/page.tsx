@@ -13,6 +13,7 @@ import backgroundImg from "../../../../public/DefaultBackground.svg";
 import { fetchUserProfile, getUserTotalOotdCount } from "@/services/ootd.ts/ootdGet";
 import FollowList from "@/components/profile/FollowList";
 import { getUserTotalBoardCount } from "@/services/board/get/getBoard";
+import UserMobileProfile from "@/components/user/UserMobileProfile";
 
 const TABS = {
   TICKET: "TICKET",
@@ -109,19 +110,17 @@ const UserPage = ({ params }: { params: { id: string } }) => {
           objectFit="cover"
         />
       </div>
-      <div className="w-[66%] mx-auto">
-      <h1 className="w-[66%] absolute ml-[240px] text-left top-[320px] text-white text-4xl font-bold">
-          {userData && userData.blogName}
-        </h1>
-        <div className="w-[66%] absolute ml-[240px] text-left top-[350px] text-white text-xl font-normal font-['Pretendard']">
-          {userData && userData.blogIntroduce}
-        </div>
-      </div>
-      <div className="w-[66%] mx-auto flex p-4">
+      <div className="hidden sm-700:flex w-[75%] mx-auto p-4">
         <div className="w-[250px] mb-4">
           <UserProfile memberId={decodedId} setActiveTab={setActiveTab} />
         </div>
         <div className="w-[100%] ml-[50px]">
+        <h1 className="absolute ml-[20px] text-left top-[320px] text-white text-4xl font-bold">
+          {userData && userData.blogName}
+        </h1>
+        <div className="absolute ml-[20px] text-left top-[350px] text-white text-xl font-normal font-['Pretendard']">
+          {userData && userData.blogIntroduce}
+        </div>
           <div className="flex justify-between mb-4 ml-4 text-2xl">
             <div className="flex space-x-4">
               <button
@@ -205,6 +204,85 @@ const UserPage = ({ params }: { params: { id: string } }) => {
             )}
           </div>
         </div>
+      </div>
+
+      <div className="w-full mx-auto mb-[90px] sm-700:hidden">
+        <div className="relative z-[9999]">
+          <div className="absolute top-[-300px] left-1/2 transform -translate-x-1/2 w-[200px] h-[300px] px-8 py-4 flex flex-col items-center">
+            <h1 className="text-white text-4xl font-bold mt-[20px]">
+              {userData && userData.blogName}
+            </h1>
+          </div>
+        </div>
+        <UserMobileProfile memberId={decodedId} setActiveTab={setActiveTab}/>
+        <div className="flex w-[100%] justify-center my-4 text-2xl gap-10">
+            <div className="flex flex-col space-x-4">
+              <div className="flex flex-row gap-10">
+              <button
+                className={`px-8 py-2 rounded-[999px] justify-center items-center ${
+                  activeTab === TABS.TICKET
+                    ? "bg-[#ffe3ea] border-2 border-[#fa3463]"
+                    : "border border-[#cfcfcf]"
+                }`}
+                onClick={() => setActiveTab(TABS.TICKET)}
+              >
+                <span
+                  className={activeTab === TABS.TICKET ? "text-[#fa3463]" : ""}
+                >
+                  티켓
+                </span>
+              </button>
+              <button
+                className={`px-8 py-2 rounded-[999px] justify-center items-center ${
+                  activeTab === TABS.OOTD
+                    ? "bg-[#ffe3ea] border-2 border-[#fa3463]"
+                    : "border border-[#cfcfcf]"
+                }`}
+                onClick={() => setActiveTab(TABS.OOTD)}
+              >
+                <span
+                  className={activeTab === TABS.OOTD ? "text-[#fa3463]" : ""}
+                >
+                  OOTD
+                </span>
+                 <span className="text-[#fa3463] ml-1">{userOotdCount}</span>
+              </button>
+              <button
+                className={`px-8 py-2 rounded-[999px] justify-center items-center ${
+                  activeTab === TABS.BADGE
+                    ? "bg-[#ffe3ea] border-2 border-[#fa3463]"
+                    : "border border-[#cfcfcf]"
+                }`}
+                onClick={() => setActiveTab(TABS.BADGE)}
+              >
+                <span
+                  className={activeTab === TABS.BADGE ? "text-[#fa3463]" : ""}
+                >
+                  뱃지
+                </span>
+              </button>
+              </div>
+            </div>
+          </div>
+          <div className="w-full mx-auto mt-4">
+          <div className="w-[90%] mx-auto">
+            {activeTab === TABS.TICKET && (
+              <UserTicket
+                userBoardCount={userBoardCount}
+                memberEmail={decodedId}
+              />
+            )}
+            {activeTab === TABS.OOTD && <UserOotd memberId={decodedId} />}
+            {activeTab === TABS.BADGE && <UserBadge />}
+            {activeTab === TABS.BOOKMARK && <UserBookmark />}
+            {activeTab === TABS.FOLLOWER && (
+              <FollowList memberId={userMeberId} type="follower" />
+            )}
+            {activeTab === TABS.FOLLOWING && (
+              <FollowList memberId={userMeberId} type="following" />
+            )}
+          </div>
+          </div>
       </div>
     </>
   );
