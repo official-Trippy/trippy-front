@@ -79,7 +79,7 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
 
   const handleProfileClick = () => {
     if (accessToken) {
-      if (ootdItem.member.memberId == userInfo.memberId) {
+      if (ootdItem.member.memberId == userInfo?.memberId) {
         router.push("/mypage");
       } else {
         console.log(ootdItem.member.memberId);

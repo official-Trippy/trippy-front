@@ -56,7 +56,7 @@ const Header = () => {
   return (
     <header className="relative">
       {/* Desktop Layout */}
-      <div className="hidden mt-[20px] sm-700:flex sm-700:justify-between sm-700:items-center sm-700:w-[82%] sm-700:mx-auto sm-700:relative">
+      <div className="hidden mt-[20px] mb-[20px] sm-700:flex sm-700:justify-between sm-700:items-center sm-700:w-[82%] sm-700:mx-auto sm-700:relative">
         <div className="flex items-center gap-6">
           <div className="flex-shrink-0">
             <Link href="/">
@@ -186,37 +186,36 @@ const Header = () => {
           )}
         </div>
       </div>
-
+    
       {/* Mobile Layout */}
-      <div className="flex mt-[20px] sm-700:hidden sm-700:justify-between sm-700:items-center w-[90%] mx-auto py-4">
-  <div className="flex-shrink-0">
-    <Link href="/">
-      <Image
-        src={LogoHeader}
-        alt="Logo"
-        className="w-[110px] h-[34px] object-contain"
-      />
-    </Link>
-  </div>
-  <div className="flex items-center gap-4 ml-auto">
-    <Image
-      src={searchIconMobile}
-      alt="Search"
-      width={24}
-      height={24}
-      className="cursor-pointer"
-    />
-    <Image
-      src={alertIconMobile}
-      alt="Notifications"
-      width={24}
-      height={24}
-      onClick={handleNotificationsToggle}
-      className="cursor-pointer"
-    />
-  </div>
-</div>
-
+      <div className="flex mt-[20px] mb-[20px] sm-700:hidden sm-700:justify-between sm-700:items-center w-[90%] mx-auto">
+      <div className="flex-shrink-0">
+        <Link href="/">
+          <Image
+            src={LogoHeader}
+            alt="Logo"
+            className="w-[110px] h-[34px] object-contain"
+          />
+        </Link>
+      </div>
+      <div className="flex items-center gap-4 ml-auto">
+        <Image
+          src={searchIconMobile}
+          alt="Search"
+          width={24}
+          height={24}
+          className="cursor-pointer"
+        />
+        <Image
+          src={alertIconMobile}
+          alt="Notifications"
+          width={24}
+          height={24}
+          onClick={handleNotificationsToggle}
+          className="cursor-pointer"
+        />
+      </div>
+    </div>
     </header>
   );
 };
