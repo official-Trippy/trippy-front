@@ -68,7 +68,7 @@ const Header = () => {
         <div className="flex text-lg">
           <Link href="/">
             <div
-              className={`text-gray-800 px-6 ${pathname === "/" ? "font-bold" : ""}`}
+              className={`text-gray-800 ${pathname === "/" ? "font-bold" : ""}`}
               style={{ fontSize: "1.4rem" }}
             >
               홈
@@ -76,7 +76,7 @@ const Header = () => {
           </Link>
           <Link href="/ootd">
             <div
-              className={`text-gray-800 pl-4 ${pathname === "/ootd" ? "font-bold" : ""}`}
+              className={`text-gray-800 pl-8 ${pathname === "/ootd" ? "font-bold" : ""}`}
               style={{ fontSize: "1.4rem" }}
             >
               OOTD

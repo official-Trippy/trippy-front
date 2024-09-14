@@ -18,13 +18,13 @@ const SearchBar: React.FC = () => {
 
   return (
     <div className="flex items-center justify-end p-4 mr-4">
-      <div className="relative flex items-center w-full max-w-[600px] min-w-[150px]">
+      <div className="relative flex items-center w-full max-w-[600px] min-w-[100px]">
         <input
           type="text"
           value={query}
           onChange={handleInputChange}
           placeholder="찾으시는 게시물을 입력하세요"
-          className="w-full h-[32px] pl-4 pr-10 text-gray-800 border-none rounded-[16px] outline-none focus:ring-2 focus:ring-gray-300"
+          className="w-full min-w-[100px] h-[32px] pl-4 pr-10 text-gray-800 border-none rounded-[16px] outline-none focus:ring-2 focus:ring-gray-300"
           style={{
             backgroundColor: "#F5F5F5",
           }}
