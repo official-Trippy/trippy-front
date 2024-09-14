@@ -22,7 +22,7 @@ function Recommend({ children, memberData, isLoading }: HomeProps) {
     console.log('유저게스트?', isGuest);
 
     return (
-        <div className='w-[66%] flex flex-col mx-auto mt-[8rem]'>
+        <div className="w-[90%] sm-700:w-[66%] flex flex-col mx-auto mt-[8rem]">
             {isLoading ? (
                 <div>
                 </div>
