@@ -23,10 +23,10 @@ export async function socialSignUp(accessToken: any) {
   }
 }
 
-export async function signUp(formData: any) {
+export async function signUp(formData: any, authToken: string) {
   try {
     const response = await axios.post(
-      `${backendUrl}/api/member/signup`,
+      `${backendUrl}/api/member/signup?authToken=${authToken}`,
       formData
     );
     console.log(response.data);
@@ -35,6 +35,7 @@ export async function signUp(formData: any) {
     throw new Error(`Error during signup: ${error}`);
   }
 }
+
 
 export async function checkSocial(memberId: string) {
   try {
