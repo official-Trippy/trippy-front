@@ -49,9 +49,11 @@ const LoginForm = () => {
         Cookies.set("role", response.result.role);
 
         Swal.fire({
-          icon: 'info',
+          icon: 'error',
           title: '기존에 회원가입을 \n완료하지 않았습니다.',
           text: '블로그 설정 페이지로 이동합니다.',
+          confirmButtonText: '확인',
+          confirmButtonColor: '#FB3463', 
         }).then(() => {
           router.push("/blogRegister");
         });
@@ -68,7 +70,7 @@ const LoginForm = () => {
   };
 
   return (
-    <div className="w-[66%] mx-auto mt-[15rem]">
+    <div className="mx-auto">
       <form onSubmit={handleSubmit} className="flex flex-col items-center">
         <Image src={LogoMain} alt="Logo" />
         <div className="flex flex-col mt-[6rem]">

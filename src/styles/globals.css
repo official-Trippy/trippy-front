@@ -51,7 +51,7 @@ body {
 .sign-up-info {
   color: #292929;
   font-family: Pretendard;
-  font-size: 20px;
+  font-size: 14px;
   font-weight: 600;
   line-height: normal;
 }
@@ -59,7 +59,6 @@ body {
 @media (prefers-color-scheme: dark) {
   .sign-up-info {
     color: black;
-    /* 다크 모드에서의 텍스트 색상 */
   }
 }
 
@@ -106,7 +105,7 @@ body {
 
 .favorite-btn-font {
   font-family: Pretendard;
-  font-size: 18px;
+  font-size: 1rem;
   font-style: normal;
   font-weight: 400;
   line-height: normal;
@@ -114,9 +113,7 @@ body {
 
 .favorite-btn-inactive {
   display: flex;
-  width: 126px;
-  height: 63px;
-  padding: 12px 30px;
+  padding: 12px 10px;
   justify-content: center;
   align-items: center;
   border-radius: 12.081px;
@@ -126,9 +123,7 @@ body {
 
 .favorite-btn-active {
   display: flex;
-  width: 126px;
-  height: 63px;
-  padding: 12px 30px;
+  padding: 12px 10px;
   justify-content: center;
   align-items: center;
   border-radius: 12.081px;
@@ -138,9 +133,6 @@ body {
 
 .custom-label {
   display: flex;
-  width: 220px;
-  height: 60px;
-  padding: 20px 50px 20px 50px;
   justify-content: center;
   align-items: center;
   flex-shrink: 0;
@@ -148,7 +140,7 @@ body {
   background: var(--4, #f5f5f5);
   cursor: pointer;
   color: black;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: bold;
   text-align: center;
   text-transform: uppercase;
@@ -168,7 +160,7 @@ body {
 .sign-up-complete {
   color: #fb3463;
   font-family: Pretendard;
-  font-size: 36px;
+  font-size: 20px;
   font-style: normal;
   font-weight: 600;
   line-height: normal;

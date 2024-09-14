@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from '@/app/api/axios';
 import { useUserStore } from "@/store/useUserStore";
 import { useFollowingStore } from "@/store/useFollowingStore";
 

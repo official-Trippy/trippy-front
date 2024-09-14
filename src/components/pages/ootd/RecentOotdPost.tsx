@@ -13,6 +13,7 @@ import CommentIcon1 from '../../../../public/empty_comment_default.svg';
 import { fetchLikedPosts } from '@/services/ootd.ts/ootdComments';
 import HeartIcon from '../../../../public/icon_heart.svg';
 import CustomSelect from './CustomSelect';
+import { useUserStore } from '@/store/useUserStore';
 
 const PAGE_SIZE = 12;
 
@@ -84,13 +85,16 @@ const RecentOotdPost: React.FC = () => {
   const [likedPosts, setLikedPosts] = useState<number[]>([]);  
   const router = useRouter();
 
+  const { userInfo } = useUserStore();
+  const isGuest = userInfo?.role === 'GUEST';
+
   useEffect(() => {
     if (typeof window !== 'undefined') { 
       const savedTab = sessionStorage.getItem('tab');
       if (savedTab) {
         setTab(savedTab as 'ALL' | 'FOLLOWING');
       } else {
-        setTab(accessToken ? 'FOLLOWING' : 'ALL');
+        setTab(accessToken && !isGuest ? 'FOLLOWING' : 'ALL');
       }
     }
   }, [accessToken]);
@@ -170,15 +174,17 @@ const RecentOotdPost: React.FC = () => {
   }
 
   return (
-    <div className='w-[66%] mx-auto py-[5rem]'>
+    <div className='w-[90%] sm-700:w-[66%]  mx-auto pt-[5rem] mb-[90px]'>
       <div>
-        {accessToken ? (
-          <h1 className='font-bold text-[2rem]'>
-            {memberData?.result.nickName}님, 최근 업로드 된 OOTD를 만나보세요
-          </h1>
-        ) : (
-          <h1 className='font-bold text-[2rem]'>트리피인들의 다양한 스타일을 만나보세요</h1>
-        )}
+      {accessToken ? (
+                        isGuest ? ( 
+                            <h1 className='font-bold text-[2rem]'>트리피의 인기 게시글을 만나보세요</h1>
+                        ) : ( 
+                            <h1 className='font-bold text-[2rem]'>{memberData?.result.nickName}님을 위해 준비한 맞춤 추천 포스트</h1>
+                        )
+                    ) : ( 
+                        <h1 className='font-bold text-[2rem]'>트리피의 인기 게시글을 만나보세요</h1>
+                    )}
       </div>
       <div className='flex text-[1.6rem] py-16'>
         <span

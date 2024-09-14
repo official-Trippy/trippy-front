@@ -196,14 +196,17 @@ const Password = () => {
   
 
   return (
-    <div className="flex flex-col items-center justify-center w-[66%] mx-auto mt-[19rem]">
-      <Image src={LogoMain} alt="Logo" className="w-[16.4rem] mx-auto" />
+    <div className="min-h-[100dvh] flex flex-col justify-between flex-col-reverse sm:flex-col sm:justify-center items-center w-full">
+        <div className="w-[90%] max-w-[400px] mx-auto">
+      <Image src={LogoMain} alt="Logo" className="mx-auto mt-[2rem]" />
+      </div>
+      <div className="w-[90%] max-w-[400px] mx-auto">
       {!showPasswordFields && (
-        <><div className="flex flex-col mt-[6rem]">
+        <div className='mx-auto sm:h-[438px] flex flex-col justify-center'>
           <div className="text-center text-zinc-800 text-4xl font-semibold font-['Pretendard']">비밀번호 재설정</div>
           <div className="text-center text-neutral-400 text-2xl text-base font-normal font-['Pretendard'] mt-[1rem]">트리피에 등록한 이메일을 입력해주세요.</div>
-        </div><div
-          className={`flex w-full px-4 py-2 mt-[2.5rem] mb-2 h-[6rem] rounded-xl border ${isInputFocused ? "border-[#FB3463]" : "border-gray-300"} focus:border-[#FB3463] focus:outline-none`}
+        <div
+          className={`flex w-full px-4 py-2 mt-[2rem] mb-2 h-[4rem] rounded-xl border  ${isInputFocused ? "border-[#FB3463]" : "border-gray-300"} focus:border-[#FB3463] focus:outline-none`}
           style={{ background: "var(--4, #F5F5F5)" }}
         >
             <input
@@ -214,7 +217,7 @@ const Password = () => {
               onChange={handleEmailChange}
               placeholder="Trippy@trip.com"
               className="flex-1 border-gray-300 focus:border-[#FB3463] focus:outline-none"
-              style={{ background: "var(--4, #F5F5F5)", fontSize: "1.5rem" }}
+              style={{ background: "var(--4, #F5F5F5)", fontSize: "1.2rem" }}
               disabled={isCodeVerified} />
             {!isCodeVerified && (
               <button
@@ -223,37 +226,37 @@ const Password = () => {
                 disabled={!emailValid || duplicateMessage !== "해당 이메일로 가입된 기록이 있습니다. 인증을 진행해주세요." || isCodeVerified}
                 className={`${duplicateMessage === "해당 이메일로 가입된 기록이 있습니다. 인증을 진행해주세요."
                   ? "bg-black text-white hover:bg-gray-900 focus:outline-none focus:bg-gray-900"
-                  : "bg-gray-400 text-white cursor-not-allowed"} w-[8.6rem] h-[3.5rem] my-auto rounded-lg`}
-                style={{ fontSize: "1.6rem" }}
+                  : "bg-gray-400 text-white cursor-not-allowed"} w-[8.6rem] h-[2.8rem] my-auto rounded-lg`}
+                style={{ fontSize: "1.2rem" }}
               >
                 {(verificationClicked ? "재전송" : "인증하기")}
               </button>
             )}
-          </div><div className="h-[1.7rem] w-full">
+          </div>
+          <div className="h-[1.7rem] w-[90%] max-w-[800px]">
             {emailErrorMessage && (
               <p className="text-red-500">{emailErrorMessage}</p>
             )}
             {duplicateMessage && (
-              <p className={`text-${duplicateMessage.includes("존재합니다") ? "red" : "green"}-500`}>
+              <p className={`text-${duplicateMessage.includes("없습니다.") ? "red" : "green"}-500`}>
                 {duplicateMessage}
               </p>
             )}
           </div>
           {verificationClicked && (
-            <div className="w-full">
+            <><div className="">
               <div className="flex w-full">
                 <label htmlFor="verificationCode" className="sign-up-info block mt-[6rem]">
                   인증 코드
                 </label>
                 {!isCodeVerified && (
-                  <div className="text-[1.5rem] mt-auto ml-[1rem] text-red-500">
+                  <div className="mt-auto ml-[1rem] text-red-500">
                     {timer > 0 ? `${Math.floor(timer / 60)}:${timer % 60 < 10 ? `0${timer % 60}` : timer % 60}` : "인증 코드가 만료되었습니다."}
                   </div>
                 )}
               </div>
               <div
-                className={`flex w-full px-4 py-2 mt-[2.5rem] mb-2 h-[6rem] rounded-xl border ${isCodeFocused ? "border-[#FB3463]" : "border-gray-300"
-                  } focus:border-[#FB3463] focus:outline-none`}
+                className={`flex w-full px-4 py-2 mt-[2rem] mb-2 h-[4rem] rounded-xl border  ${isCodeFocused ? "border-[#FB3463]" : "border-gray-300"} focus:border-[#FB3463] focus:outline-none`}
                 style={{ background: "var(--4, #F5F5F5)" }}
               >
                 <input
@@ -265,18 +268,16 @@ const Password = () => {
                   onChange={handleValidNumberChange}
                   placeholder="인증 코드를 입력하세요"
                   className="flex-1 border-gray-300 focus:border-[#FB3463] focus:outline-none"
-                  style={{ background: "var(--4, #F5F5F5)", fontSize: "1.5rem" }}
-                  disabled={isCodeVerified}
-                />
+                  style={{ background: "var(--4, #F5F5F5)", fontSize: "1.2rem" }}
+                  disabled={isCodeVerified} />
                 <button
                   type="button"
                   onClick={handleCodeVerification}
                   disabled={isVerificationButtonDisabled}
                   className={`${isVerificationButtonDisabled
                     ? "bg-gray-400 text-white cursor-not-allowed"
-                    : "bg-black text-white hover:bg-gray-900 focus:outline-none focus:bg-gray-900"
-                    } w-[8.6rem] h-[3.5rem] my-auto rounded-lg`}
-                  style={{ fontSize: "1.6rem" }}
+                    : "bg-black text-white hover:bg-gray-900 focus:outline-none focus:bg-gray-900"} w-[8.6rem] h-[2.8rem]  my-auto rounded-lg`}
+                  style={{ fontSize: "1.2rem" }}
                 >
                   {codeMessage === '인증이 완료되었습니다.' ? '인증 완료' : '확인하기'}
                 </button>
@@ -284,17 +285,20 @@ const Password = () => {
               <div className={`text-${codeMessage.includes('완료') ? 'green' : 'red'}-500 mt-2`}>
                 {codeMessage}
               </div>
-            </div>
+            </div></>
           )}
-        </>
+       </div>
       )}
+
+
+
       {showPasswordFields && (
         <><div className="flex flex-col mt-[6rem]">
           <div className="text-center text-zinc-800 text-4xl font-semibold font-['Pretendard']">비밀번호 재설정</div>
           <div className="text-center text-neutral-400 text-2xl text-base font-normal font-['Pretendard'] mt-[1rem]">비밀번호는 8~14자리의 영어, 숫자, 특수 기호를 포함해야 합니다.</div>
         </div>
           <motion.div
-            className='w-full'
+            className='w-full max-w-[400px]'
             initial={{ opacity: 0, translateX: -90 }}
             transition={{
               duration: 0.4,
@@ -315,8 +319,8 @@ const Password = () => {
                 value={password}
                 onChange={handlePasswordChange}
                 placeholder="영어, 숫자, 특수 기호를 포함한 8~14자리"
-                className="w-full px-4 py-2 mt-[2.5rem] mb-2 h-[6rem] rounded-xl border border-gray-300 focus:border-[#FB3463] focus:outline-none"
-                style={{ background: "var(--4, #F5F5F5)", fontSize: "1.5rem" }} />
+                className="w-full px-4 py-2 mt-[2rem] mb-2 h-[4rem] rounded-xl border border-gray-300 focus:border-[#FB3463] focus:outline-none"
+                style={{ background: "var(--4, #F5F5F5)", fontSize: "1.2rem" }} />
               <div className="h-[1.7rem]">
                 {passwordErrorMessage && (
                   <p className="text-red-500">{passwordErrorMessage}</p>
@@ -326,7 +330,7 @@ const Password = () => {
                 )}
               </div>
             </div>
-            <div className="mt-[6rem] w-full">
+            <div className="mt-[2rem] w-full">
               <label htmlFor="confirmPassword" className="sign-up-info block">
                 비밀번호 확인
               </label>
@@ -336,8 +340,8 @@ const Password = () => {
                 value={confirmPassword}
                 onChange={handleConfirmPasswordChange}
                 placeholder="영어, 숫자, 특수 기호를 포함한 8~14자리"
-                className="w-full px-4 py-2  mt-[2.5rem] mb-2 h-[6rem] rounded-xl border border-gray-300 focus:border-[#FB3463] focus:outline-none"
-                style={{ background: "var(--4, #F5F5F5)", fontSize: "1.5rem" }}
+                className="w-full px-4 py-2 mt-[2rem] mb-2 h-[4rem] rounded-xl border border-gray-300 focus:border-[#FB3463] focus:outline-none"
+                style={{ background: "var(--4, #F5F5F5)", fontSize: "1.2rem" }}
               />
               <div className="h-[1.7rem]">
                 {confirmPassword && !passwordMatch && (
@@ -348,15 +352,33 @@ const Password = () => {
                 )}
               </div>
             </div>
+            </motion.div>
+        </>
+      )}
+      </div>
+      <div className="w-[90%] max-w-[400px] mx-auto">
+      {showPasswordFields && (
+      <motion.div
+            className='w-full max-w-[400px]'
+            initial={{ opacity: 0, translateX: -90 }}
+            transition={{
+              duration: 0.4,
+              ease: 'easeInOut',
+              delay: 0.3
+            }}
+            animate={{
+              opacity: 1,
+              translateX: 0
+            }}>
             <div className="text-center">
               <button
                 type="submit"
-                className={`mx-auto mt-32 mb-32 w-[22rem] h-[6rem] bg-btn-color text-white py-2 rounded-lg focus:outline-none ${!passwordValid ||
+                className={`mx-auto w-full h-[44px] mt-[2rem] mb-[2rem] bg-btn-color text-white py-2 rounded-xl focus:outline-none ${!passwordValid ||
                     !passwordMatch
                     ? "cursor-not-allowed bg-gray-400 hover:bg-gray-400"
                     : ""
                   }`}
-                style={{ fontSize: "2rem" }}
+                style={{ fontSize: "1.2rem" }}
                 disabled={
                   !passwordValid ||
                   !passwordMatch}
@@ -365,8 +387,9 @@ const Password = () => {
                 비밀번호 변경
               </button>
             </div>
-          </motion.div></>
-      )}
+          </motion.div>
+           )}
+          </div>
     </div>
   );
 };

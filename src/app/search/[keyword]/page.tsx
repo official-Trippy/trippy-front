@@ -6,7 +6,7 @@ import Header from "@/components/shared/header/Header";
 import PostList from "@/components/search/postList";
 import Keywords from "@/components/search/Keywords";
 import PopularSearches from "@/components/search/popularSearches";
-import axios from "axios";
+import axios from '@/app/api/axios';
 import { useRouter } from "next/navigation";
 import SortingBar from "@/components/search/sortingBar";
 import PostAllCard from "@/components/search/postAllCard";
@@ -121,7 +121,7 @@ const SearchPage = () => {
   console.log(selectedPostType);
 
   return (
-    <div className="w-full min-h-screen bg-white">
+    <div className="w-full min-h-[100dvh] bg-white">
       <Header />
       <div className="mx-auto mt-8 px-10 w-[66%] mx-auto">
         <h1 className="text-4xl font-semibold mb-6">

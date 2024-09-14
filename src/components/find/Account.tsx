@@ -54,69 +54,81 @@ const Account = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center w-[66%] mx-auto mt-[19rem]">
-      <Image src={LogoMain} alt="Logo" className="w-[16.4rem] mx-auto" />
-      <div className="flex flex-col mt-[6rem]">
-        <div className="text-center text-zinc-800 text-4xl font-semibold font-['Pretendard']">계정 찾기</div>
-        <div className="text-center text-neutral-400 text-2xl text-base font-normal font-['Pretendard'] mt-[1rem]">
-          {!accountFound && !badRequest && "계정에 등록된 닉네임을 입력해주세요."}
-          {accountFound && '해당 닉네임으로 가입한 이메일 정보입니다.'}
-          {accountFound && (
-            <>
-              <div className="text-center text-black text-xl font-bold font-['Pretendard'] mt-[8.4rem]" style={{ fontSize: "1.6rem" }}>{maskedEmail}</div>
-            </>
-          )}
-          {badRequest && (
-            <>
-              <div className="text-center text-black text-xl font-bold font-['Pretendard'] mt-[8.4rem]" style={{ fontSize: "1.6rem" }}>가입된 이력이 없습니다.</div>
-            </>
-          )}
-
-        </div>
+    <div className="min-h-[100dvh] flex flex-col justify-between flex-col-reverse sm:flex-col sm:justify-center items-center w-full">
+       <div className="w-[90%] max-w-[400px] mx-auto">
+      <Image src={LogoMain} alt="Logo" className="mx-auto mt-[2rem]" />
       </div>
-      <div className="mt-[6rem] w-full flex flex-col">
+      <div className="w-[90%] max-w-[400px] mx-auto sm:h-[438px] flex flex-col justify-between">
+  <div className="flex flex-col sm:h-[400px] justify-center">
+    <div className="text-center text-zinc-800 text-4xl font-semibold font-['Pretendard']">
+      계정 찾기
+    </div>
+    <div className="h-[90px]">
+    <div className="text-center text-neutral-400 text-2xl text-base font-normal font-['Pretendard'] mt-[1rem] h-[20px]">
+      {!accountFound && !badRequest && "계정에 등록된 닉네임을 입력해주세요."}
+      {accountFound && '해당 닉네임으로 가입한 이메일 정보입니다.'}
+    </div>
+    <div>
+    <div className="text-center text-neutral-400 text-2xl text-base font-normal font-['Pretendard'] mt-[2rem] mb-2">
+      {accountFound && (
+        <div className="text-center text-black text-xl font-bold font-['Pretendard']" style={{ fontSize: "1.2rem" }}>
+          {maskedEmail}
+        </div>
+      )}
+      {badRequest && (
+        <div className="text-center text-black text-xl font-bold font-['Pretendard']" style={{ fontSize: "1.2rem" }}>
+          가입된 이력이 없습니다.
+        </div>
+          )}
+        </div>
+
+      {!accountFound && !badRequest && (
+        <input
+          type="text"
+          placeholder="가입 시 입력했던 닉네임을 입력해주세요."
+          value={nickname}
+          onChange={handleNicknameChange}
+          className={`w-full px-4 py-2 h-[4rem] rounded-xl border border-gray-300 focus:border-[#FB3463] focus:outline-none ${isNicknameValid() ? "bg-white" : "bg-gray-100"}`}
+          style={{ fontSize: "1.2rem" }}
+        />
+      )}
+      </div>
+      </div>
+        </div>
+        </div>
+        <div className="w-[90%] max-w-[400px] mx-auto">
         {!accountFound && !badRequest && (
-          <>
-            <input
-              type="text"
-              placeholder="가입 시 입력했던 닉네임을 입력해주세요."
-              value={nickname}
-              onChange={handleNicknameChange}
-              className={`w-full px-4 py-2 mt-[2.5rem] mb-2 h-[6rem] rounded-xl border border-gray-300 focus:border-[#FB3463] focus:outline-none ${isNicknameValid() ? "bg-white" : "bg-gray-100"}`}
-              style={{ fontSize: "1.5rem" }}
-            />
             <button
               onClick={handleFindAccount}
-              className={`mx-auto mt-[8rem] mb-[10rem] w-[22rem] h-[6rem] text-white py-2 rounded-2xl focus:outline-none text-center ${isNextButtonDisabled() ? "cursor-not-allowed bg-gray-400 hover:bg-gray-400" : "bg-btn-color hover:bg-[#FB3463]"}`}
-              style={{ fontSize: "1.6rem" }}
+              className={`mx-auto w-full h-[44px] mt-[2rem] mb-[2rem] bg-btn-color text-white py-2 rounded-xl ${isNextButtonDisabled() ? "cursor-not-allowed bg-gray-400 hover:bg-gray-400" : "bg-btn-color hover:bg-[#FB3463]"}`}
+              style={{ fontSize: "1.2rem" }}
               disabled={isNextButtonDisabled()}
             >
               다음
             </button>
-          </>
-        )}
-        {badRequest && (
+            )}
+             {badRequest && (
           <button
             onClick={handleTryAgain}
-            className={`mx-auto mt-[8rem] mb-[10rem] w-[22rem] h-[6rem] text-white py-2 rounded-2xl focus:outline-none text-center bg-gray-400 hover:bg-gray-500`}
-            style={{ fontSize: "1.6rem" }}
+            className={`mx-auto w-full h-[44px] mt-[2rem] mb-[2rem] bg-btn-color text-white py-2 rounded-xl bg-gray-400 hover:bg-gray-500`}
+            style={{ fontSize: "1.2rem" }}
           >
             다시 시도하기
           </button>
         )}
-        {!badRequest && accountFound && (
+             {!badRequest && accountFound && (
           <Link href='/login'>
-            <div className="flex">
+            <div className="w-full">
               <button
-                className={`mx-auto mt-[8rem] mb-[10rem] w-[22rem] h-[6rem] text-white py-2 rounded-2xl focus:outline-none text-center bg-btn-color hover:bg-[#FB3463]`}
-                style={{ fontSize: "1.6rem" }}
+                className={`mx-auto w-full h-[44px] mt-[2rem] mb-[2rem] bg-btn-color text-white py-2 rounded-xl bg-btn-color hover:bg-[#FB3463]`}
+                style={{ fontSize: "1.2rem" }}
               >
                 로그인 하러가기
               </button>
             </div>
           </Link>
         )}
-      </div>
+          </div>
     </div>
   );
 };

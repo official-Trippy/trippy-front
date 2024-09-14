@@ -4,7 +4,7 @@ import { showFollows, showFollowings } from "@/services/follow";
 import { useUserStore } from "@/store/useUserStore";
 import { unfollow } from "@/services/follow";
 import { ACCESS_TOKEN } from "@/constants/general";
-import axios from "axios";
+import axios from '@/app/api/axios';
 
 const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 const FollowList: React.FC<{

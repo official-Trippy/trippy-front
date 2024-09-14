@@ -10,6 +10,7 @@ import Script from "next/script";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 
 import NotificationComponent from "@/components/notification/notificationComponent";
+import MobileFooter from "@/components/shared/mobile/MobileFooter";
 
 const inter = Inter({ subsets: ["latin"] });
 const queryClient = new QueryClient();
@@ -45,6 +46,7 @@ export default function RootLayout({
             <NotificationComponent />
             {/* <FallingContainer /> */}
             {children}
+            <MobileFooter />
           </GoogleOAuthProvider>
         </QueryClientProvider>
       </body>
