@@ -54,12 +54,13 @@ const Account = () => {
   };
 
   return (
-    <div className="min-h-[100dvh] flex flex-col justify-between flex-col-reverse sm:flex-col sm:justify-center items-center w-full">
+    <div className="min-h-[calc(100dvh-75px)] sm-700:min-h-[100vh] flex flex-col justify-between flex-col-reverse sm:flex-col sm:justify-center items-center w-full">
+      <div className="w-[100%] max-w-[400px] mx-auto">
        <div className="w-[90%] max-w-[400px] mx-auto">
-      <Image src={LogoMain} alt="Logo" className="mx-auto mt-[2rem]" />
+       <Image src={LogoMain} alt="Logo" className="mx-auto mt-[2rem]" width={135} height={34} />
       </div>
-      <div className="w-[90%] max-w-[400px] mx-auto sm:h-[438px] flex flex-col justify-between">
-  <div className="flex flex-col sm:h-[400px] justify-center">
+      <div className="w-[100%] max-w-[400px] mx-auto sm:h-[438px] flex flex-col justify-between">
+  <div className="flex flex-col mt-[200px] sm:h-[400px] sm:mt-0 justify-center">
     <div className="text-center text-zinc-800 text-4xl font-semibold font-['Pretendard']">
       계정 찾기
     </div>
@@ -94,6 +95,7 @@ const Account = () => {
       )}
       </div>
       </div>
+        </div>
         </div>
         </div>
         <div className="w-[90%] max-w-[400px] mx-auto">

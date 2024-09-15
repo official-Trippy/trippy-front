@@ -207,7 +207,7 @@ const SignUpForm = () => {
   }, [timer, verificationClicked]);
 
   return (
-    <form onSubmit={handleSubmit} className="min-h-[100dvh] flex flex-col justify-between flex-col-reverse sm:flex-col sm:justify-center items-center w-full">
+    <form onSubmit={handleSubmit} className="min-h-[calc(100dvh-60px)] flex flex-col justify-between flex-col-reverse mb-[60px] sm:flex-col sm-700:min-h-[100vh] sm-700:justify-center sm-700:mb-0 items-center w-full">
       <div className="w-[90%] max-w-[400px] mx-auto">
       <Image src={LogoMain} alt="Logo" className="mx-auto mt-[2rem]" width={135} height={34} />
       </div>
@@ -394,7 +394,7 @@ const SignUpForm = () => {
         </label>
       </div>
       </div>
-      <div className="w-[90%] max-w-[400px] mx-auto mb-[100px]">
+      <div className="w-[90%] max-w-[400px] mx-auto mt-auto sm-700:mt-0">
       <div className="text-center">
               <button
                 type="submit"

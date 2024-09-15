@@ -121,7 +121,7 @@ const SearchPage = () => {
   console.log(selectedPostType);
 
   return (
-    <div className="w-full min-h-[100dvh] bg-white">
+    <div className="w-full min-h-[calc(100dvh-75px)] sm-700:min-h-[100vh] bg-white">
       <Header />
       <div className="mx-auto mt-8 px-10 w-[66%] mx-auto">
         <h1 className="text-4xl font-semibold mb-6">

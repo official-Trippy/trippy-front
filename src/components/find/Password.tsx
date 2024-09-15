@@ -196,9 +196,9 @@ const Password = () => {
   
 
   return (
-    <div className="min-h-[100dvh] flex flex-col justify-between flex-col-reverse sm:flex-col sm:justify-center items-center w-full">
+    <div className="min-h-[calc(100dvh-75px)] sm-700:min-h-[100vh] flex flex-col justify-between flex-col-reverse sm:flex-col sm:justify-center items-center w-full">
         <div className="w-[90%] max-w-[400px] mx-auto">
-      <Image src={LogoMain} alt="Logo" className="mx-auto mt-[2rem]" />
+        <Image src={LogoMain} alt="Logo" className="mx-auto mt-[2rem]" width={135} height={34} />
       </div>
       <div className="w-[90%] max-w-[400px] mx-auto">
       {!showPasswordFields && (
