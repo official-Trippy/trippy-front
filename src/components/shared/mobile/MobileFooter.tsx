@@ -5,14 +5,14 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import Cookies from 'js-cookie';
 import { useUserStore } from '@/store/useUserStore';
-import HomeIcon from '../../../../public/mobile_home_active.svg';
-import HomeActiveIcon from '../../../../public/mobile_home_inactive.svg';
-import OotdIcon from '../../../../public/mobile_ootd_active.svg';
-import OotdActiveIcon from '../../../../public/mobile_ootd_inactive.svg';
+import HomeIcon from '../../../../public/mobile_home_inactive.svg';
+import HomeActiveIcon from '../../../../public/mobile_home_active.svg';
+import OotdIcon from '../../../../public/mobile_ootd_inactive.svg';
+import OotdActiveIcon from '../../../../public/mobile_ootd_active.svg';
 import EditorIcon from '../../../../public/mobile_editor_inactive.svg';
-import EditorActiveIcon from '../../../../public/mobile_editor_inactive.svg';
+import EditorActiveIcon from '../../../../public/mobile_editor_active.svg';
 import MyIcon from '../../../../public/mobile_my_inactive.svg';
-import MyActiveIcon from '../../../../public/mobile_my_inactive.svg';
+import MyActiveIcon from '../../../../public/mobile_my_active.svg';
 
 const MobileFooter = () => {
   const router = useRouter();
@@ -59,15 +59,15 @@ const MobileFooter = () => {
 
   return (
     <>
-      <div className="sm-700:hidden z-[9999] fixed bottom-0 pt-[14px] pb-[18px] px-[6px] flex items-center bg-black border-t border-gray100 bg-white w-full">
+      <div className="sm-700:hidden z-[9999] fixed bottom-0 py-[10px] flex items-center bg-black border-t border-gray100 bg-white w-full">
         <div
           onClick={() => router.push('/')}
           className="flex-1 flex flex-col gap-1 items-center">
           <div>
             <Image
-              src={pathname === '/' ? HomeIcon : HomeActiveIcon}
+              src={pathname === '/' ? HomeActiveIcon : HomeIcon}
               alt="홈"
-              width={40}
+              width={24}
               height={40}
             />
           </div>
@@ -77,9 +77,9 @@ const MobileFooter = () => {
           className="flex-1 flex flex-col gap-1 items-center">
           <div>
             <Image
-              src={pathname.includes('/ootd') ? OotdIcon : OotdActiveIcon}
+              src={pathname.includes('/ootd') ? OotdActiveIcon : OotdIcon}
               alt="OOTD"
-              width={40}
+              width={24}
               height={40}
             />
           </div>
@@ -89,9 +89,9 @@ const MobileFooter = () => {
           className="flex-1 flex flex-col gap-1 items-center">
           <div>
             <Image
-              src={pathname.includes('/write') ? EditorIcon : EditorActiveIcon}
+              src={pathname.includes('/write') || pathname.includes('/post') ? EditorActiveIcon : EditorIcon}
               alt="글쓰기"
-              width={40}
+              width={24}
               height={40}
             />
           </div>
@@ -101,9 +101,9 @@ const MobileFooter = () => {
           className="flex-1 flex flex-col gap-1 items-center">
           <div>
             <Image
-              src={pathname.includes('/mypage') ? MyIcon : MyActiveIcon}
+              src={pathname.includes('/mypage') ? MyActiveIcon : MyIcon}
               alt="마이페이지"
-              width={40}
+              width={24}
               height={40}
             />
           </div>

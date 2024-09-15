@@ -251,7 +251,7 @@ const RecentOotdPost: React.FC = () => {
           </div>
         ))}
       </div>
-      <div className='flex justify-center mt-4'>
+      <div className='flex justify-center'>
         {[...Array(totalPages)].map((_, index) => (
           <button
             key={index}
