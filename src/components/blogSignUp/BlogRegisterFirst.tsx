@@ -312,7 +312,7 @@ const BlogRegisterFirst = () => {
                 !nickNameError.includes("사용 가능") ||
                 !blogNameError.includes("사용 가능") ||
                 !imageUploaded
-                  ? "cursor-not-allowed bg-gray-400 hover:bg-gray-400"
+                  ? "cursor-not-allowed bg-[#cfcfcf] hover:bg-[#cfcfcf]"
                   : ""
               }`}
               onClick={handleSubmit}

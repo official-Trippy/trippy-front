@@ -241,7 +241,7 @@ const SignUpForm = () => {
             }
             className={`${duplicateMessage === "사용 가능한 이메일입니다."
               ? "bg-black text-white hover:bg-gray-900 focus:outline-none focus:bg-gray-900"
-              : "bg-gray-400 text-white cursor-not-allowed"
+              : "bg-[#cfcfcf] text-white cursor-not-allowed"
               } w-[8.6rem] h-[2.8rem] my-auto rounded-lg`}
             style={{ fontSize: "1.2rem" }}
           >
@@ -294,7 +294,7 @@ const SignUpForm = () => {
               onClick={handleCodeVerification}
               disabled={isVerificationButtonDisabled}
               className={`${isVerificationButtonDisabled
-                ? "bg-gray-400 text-white cursor-not-allowed"
+                ? "bg-[#cfcfcf] text-white cursor-not-allowed"
                 : "bg-black text-white hover:bg-gray-900 focus:outline-none focus:bg-gray-900"
                 } w-[8.6rem] h-[3.5rem] my-auto rounded-lg`}
               style={{ fontSize: "1.3rem" }}
@@ -403,7 +403,7 @@ const SignUpForm = () => {
                   !passwordMatch ||
                   !agreementChecked ||
                   !isCodeVerified
-                  ? "cursor-not-allowed bg-gray-400 hover:bg-gray-400"
+                  ? "cursor-not-allowed bg-[#cfcfcf] hover:bg-[#cfcfcf]"
                   : ""
                   }`}
                 style={{ fontSize: "1.2rem" }}

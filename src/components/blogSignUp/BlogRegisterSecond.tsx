@@ -74,7 +74,7 @@ const BlogRegisterSecond = () => {
           <Link href="/blogRegister3">
             <button
               type="submit"
-              className={`mx-auto w-full ${isButtonActive ? "bg-btn-color" : "bg-gray-400"
+              className={`mx-auto w-full ${isButtonActive ? "bg-btn-color" : "bg-[#cfcfcf]"
                 } mt-[2rem] mb-[2rem] items-center h-[44px] text-white rounded-xl focus:outline-none`}
               onClick={handleSubmit}
               style={{ fontSize: "1.2rem" }}

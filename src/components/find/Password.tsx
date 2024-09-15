@@ -202,7 +202,7 @@ const Password = () => {
       </div>
       <div className="w-[90%] max-w-[400px] mx-auto">
       {!showPasswordFields && (
-        <div className='mx-auto sm:h-[438px] flex flex-col justify-center'>
+        <div className='w-[100%] max-w-[400px] mx-auto flex flex-col h-[300px] mt-[100px]'>
           <div className="text-center text-zinc-800 text-4xl font-semibold font-['Pretendard']">비밀번호 재설정</div>
           <div className="text-center text-neutral-400 text-2xl text-base font-normal font-['Pretendard'] mt-[1rem]">트리피에 등록한 이메일을 입력해주세요.</div>
         <div
