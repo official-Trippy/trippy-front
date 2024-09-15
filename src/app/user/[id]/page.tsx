@@ -102,7 +102,7 @@ const UserPage = ({ params }: { params: { id: string } }) => {
   return (
     <>
       <Header />
-      <div className="relative w-full h-[300px]">
+      <div className="relative w-full h-[200px] sm-700:h-[300px]">
         <Image
           src={backgroundImg}
           alt="Background"
@@ -264,7 +264,7 @@ const UserPage = ({ params }: { params: { id: string } }) => {
               </div>
             </div>
           </div>
-          <div className="w-full mx-auto mt-4">
+          <div className="w-full mx-auto mt-8">
           <div className="w-[90%] mx-auto">
             {activeTab === TABS.TICKET && (
               <UserTicket

@@ -119,7 +119,7 @@ const MyOotd: React.FC<MyOotdProps> = ({ userInfo }) => {
           </div>
         ))}
       </div>
-      <div className="flex justify-center my-16">
+      <div className="flex justify-center mt-8">
         {Array.from({ length: totalPages }, (_, index) => (
           <button
             key={index}

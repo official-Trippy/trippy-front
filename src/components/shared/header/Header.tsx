@@ -56,8 +56,8 @@ const Header = () => {
   return (
     <header className="relative">
       {/* Desktop Layout */}
-      <div className="hidden mt-[20px] mb-[20px] sm-700:flex sm-700:justify-between sm-700:items-center sm-700:w-[82%] sm-700:mx-auto sm-700:relative">
-        <div className="flex items-center gap-6">
+      <div className="hidden mt-[20px] mb-[20px] sm-700:flex sm-700:justify-between sm-700:items-center sm-700:w-[90%] sm-700:mx-auto sm-700:relative">
+        <div className="flex items-center gap-10">
           <div className="flex-shrink-0">
             <Link href="/">
               <Image

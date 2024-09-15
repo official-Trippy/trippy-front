@@ -346,7 +346,7 @@ const renderComments = (comments: Comment[], depth = 0) => {
     const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
 
     return (
-      <div className='w-full bg-white rounded-lg shadow-md py-4'>
+      <div className='w-full bg-white rounded-lg shadow-md py-4 mt-8'>
         <div className="grid grid-cols-3 gap-4">
           {paginatedLikes.map((like, index) => (
             <div key={index} className='my-4 like-section p-4'>
@@ -385,8 +385,8 @@ const renderComments = (comments: Comment[], depth = 0) => {
 
   if (!accessToken) {
     return (
-      <div className="max-w-6xl w-full mx-auto">
-        <div className="flex items-center pb-4">
+      <div className="w-[90%] sm-700:w-full sm-700:max-w-6xl mx-auto sm-700:px-4">
+        <div className="flex items-center pt-12">
           <button className="flex items-center" onClick={handleLikeClick}>
             <Image
               src={
