@@ -176,7 +176,7 @@ const BlogRegisterFirst = () => {
   
 
   return (
-    <div className="min-h-[100dvh] flex flex-col justify-between flex-col-reverse sm:flex-col sm:justify-center items-center w-full">
+    <div className="min-h-[calc(100dvh-60px)] flex flex-col justify-between flex-col-reverse mb-[60px] sm:flex-col sm-700:min-h-[100vh] sm-700:justify-center sm-700:mb-0 items-center w-full">
       <div className="w-[90%] max-w-[400px] mx-auto">
       <div className="w-full flex justify-center mt-[20px]">
       <Image src={BlogStep1} alt="Logo" className="w-[30rem]"  />
@@ -304,7 +304,7 @@ const BlogRegisterFirst = () => {
           </div>
           </div>
           </div>
-          <div className="w-[90%] max-w-[400px] mx-auto mb-[90px]">
+          <div className="w-[90%] max-w-[400px] mx-auto mt-auto sm-700:mt-0">
           <div className="text-center">
           <button
               type="submit"
@@ -312,7 +312,7 @@ const BlogRegisterFirst = () => {
                 !nickNameError.includes("사용 가능") ||
                 !blogNameError.includes("사용 가능") ||
                 !imageUploaded
-                  ? "cursor-not-allowed bg-gray-400 hover:bg-gray-400"
+                  ? "cursor-not-allowed bg-[#cfcfcf] hover:bg-[#cfcfcf]"
                   : ""
               }`}
               onClick={handleSubmit}

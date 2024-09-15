@@ -196,13 +196,13 @@ const Password = () => {
   
 
   return (
-    <div className="min-h-[100dvh] flex flex-col justify-between flex-col-reverse sm:flex-col sm:justify-center items-center w-full">
+    <div className="min-h-[calc(100dvh-75px)] sm-700:min-h-[100vh] flex flex-col justify-between flex-col-reverse sm:flex-col sm:justify-center items-center w-full">
         <div className="w-[90%] max-w-[400px] mx-auto">
-      <Image src={LogoMain} alt="Logo" className="mx-auto mt-[2rem]" />
+        <Image src={LogoMain} alt="Logo" className="mx-auto mt-[2rem]" width={135} height={34} />
       </div>
       <div className="w-[90%] max-w-[400px] mx-auto">
       {!showPasswordFields && (
-        <div className='mx-auto sm:h-[438px] flex flex-col justify-center'>
+        <div className='w-[100%] max-w-[400px] mx-auto flex flex-col h-[300px] mt-[100px]'>
           <div className="text-center text-zinc-800 text-4xl font-semibold font-['Pretendard']">비밀번호 재설정</div>
           <div className="text-center text-neutral-400 text-2xl text-base font-normal font-['Pretendard'] mt-[1rem]">트리피에 등록한 이메일을 입력해주세요.</div>
         <div
@@ -225,7 +225,7 @@ const Password = () => {
                 onClick={handleResendVerification}
                 disabled={!emailValid || duplicateMessage !== "해당 이메일로 가입된 기록이 있습니다. 인증을 진행해주세요." || isCodeVerified}
                 className={`${duplicateMessage === "해당 이메일로 가입된 기록이 있습니다. 인증을 진행해주세요."
-                  ? "bg-black text-white hover:bg-gray-900 focus:outline-none focus:bg-gray-900"
+                  ? "bg-white text-[#fa3463] font-bold focus:outline-none"
                   : "bg-gray-400 text-white cursor-not-allowed"} w-[8.6rem] h-[2.8rem] my-auto rounded-lg`}
                 style={{ fontSize: "1.2rem" }}
               >
@@ -276,7 +276,7 @@ const Password = () => {
                   disabled={isVerificationButtonDisabled}
                   className={`${isVerificationButtonDisabled
                     ? "bg-gray-400 text-white cursor-not-allowed"
-                    : "bg-black text-white hover:bg-gray-900 focus:outline-none focus:bg-gray-900"} w-[8.6rem] h-[2.8rem]  my-auto rounded-lg`}
+                    : "bg-white text-[#fa3463] font-bold focus:outline-none"} w-[8.6rem] h-[2.8rem]  my-auto rounded-lg`}
                   style={{ fontSize: "1.2rem" }}
                 >
                   {codeMessage === '인증이 완료되었습니다.' ? '인증 완료' : '확인하기'}
@@ -373,10 +373,10 @@ const Password = () => {
             <div className="text-center">
               <button
                 type="submit"
-                className={`mx-auto w-full h-[44px] mt-[2rem] mb-[2rem] bg-btn-color text-white py-2 rounded-xl focus:outline-none ${!passwordValid ||
+                className={`mx-auto w-full h-[44px] mt-[2rem] mb-[2rem] text-white py-2 rounded-xl focus:outline-none ${!passwordValid ||
                     !passwordMatch
-                    ? "cursor-not-allowed bg-gray-400 hover:bg-gray-400"
-                    : ""
+                    ? "cursor-not-allowed bg-[#cfcfcf]"
+                    : "bg-btn-color"
                   }`}
                 style={{ fontSize: "1.2rem" }}
                 disabled={

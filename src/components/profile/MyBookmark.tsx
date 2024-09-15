@@ -50,7 +50,7 @@ const MyBookmark = () => {
   const renderPagination = (totalCount: number, currentPage: number) => {
     const totalPages = Math.ceil(totalCount / PAGE_SIZE);
     return (
-      <div className="flex justify-center my-16">
+      <div className="flex justify-center mt-8">
         {Array.from({ length: totalPages }, (_, index) => (
           <button
             key={index}

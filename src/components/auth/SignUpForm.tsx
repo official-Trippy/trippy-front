@@ -207,7 +207,7 @@ const SignUpForm = () => {
   }, [timer, verificationClicked]);
 
   return (
-    <form onSubmit={handleSubmit} className="min-h-[100dvh] flex flex-col justify-between flex-col-reverse sm:flex-col sm:justify-center items-center w-full">
+    <form onSubmit={handleSubmit} className="min-h-[calc(100dvh-60px)] flex flex-col justify-between flex-col-reverse mb-[60px] sm:flex-col sm-700:min-h-[100vh] sm-700:justify-center sm-700:mb-0 items-center w-full">
       <div className="w-[90%] max-w-[400px] mx-auto">
       <Image src={LogoMain} alt="Logo" className="mx-auto mt-[2rem]" width={135} height={34} />
       </div>
@@ -240,8 +240,8 @@ const SignUpForm = () => {
               !emailValid || duplicateMessage !== "사용 가능한 이메일입니다." || isCodeVerified
             }
             className={`${duplicateMessage === "사용 가능한 이메일입니다."
-              ? "bg-black text-white hover:bg-gray-900 focus:outline-none focus:bg-gray-900"
-              : "bg-gray-400 text-white cursor-not-allowed"
+              ? "bg-white text-[#fa3463] font-bold focus:outline-none"
+              : "bg-[#cfcfcf] text-white cursor-not-allowed"
               } w-[8.6rem] h-[2.8rem] my-auto rounded-lg`}
             style={{ fontSize: "1.2rem" }}
           >
@@ -294,10 +294,10 @@ const SignUpForm = () => {
               onClick={handleCodeVerification}
               disabled={isVerificationButtonDisabled}
               className={`${isVerificationButtonDisabled
-                ? "bg-gray-400 text-white cursor-not-allowed"
-                : "bg-black text-white hover:bg-gray-900 focus:outline-none focus:bg-gray-900"
-                } w-[8.6rem] h-[3.5rem] my-auto rounded-lg`}
-              style={{ fontSize: "1.3rem" }}
+                ? "bg-[#cfcfcf] text-white cursor-not-allowed"
+                : "bg-white text-[#fa3463] font-bold focus:outline-none"
+                } w-[8.6rem] h-[2.8rem] my-auto rounded-lg`}
+              style={{ fontSize: "1.2rem" }}
             >
               {codeMessage === '인증이 완료되었습니다.' ? '인증 완료' : '확인하기'}
             </button>
@@ -394,17 +394,17 @@ const SignUpForm = () => {
         </label>
       </div>
       </div>
-      <div className="w-[90%] max-w-[400px] mx-auto mb-[100px]">
+      <div className="w-[90%] max-w-[400px] mx-auto mt-auto sm-700:mt-0">
       <div className="text-center">
               <button
                 type="submit"
-                className={`mx-auto w-full h-[44px] mt-[4rem] mb-[2rem] bg-btn-color text-white py-2 rounded-lg focus:outline-none ${!verificationClicked ||
+                className={`mx-auto w-full h-[44px] mt-[4rem] mb-[2rem] text-white py-2 rounded-lg focus:outline-none ${!verificationClicked ||
                   !passwordValid ||
                   !passwordMatch ||
                   !agreementChecked ||
                   !isCodeVerified
-                  ? "cursor-not-allowed bg-gray-400 hover:bg-gray-400"
-                  : ""
+                  ? "cursor-not-allowed bg-[#cfcfcf] hover:bg-[#cfcfcf]"
+                  : "bg-btn-color"
                   }`}
                 style={{ fontSize: "1.2rem" }}
                 disabled={

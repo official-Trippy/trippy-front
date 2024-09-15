@@ -251,12 +251,12 @@ const RecentOotdPost: React.FC = () => {
           </div>
         ))}
       </div>
-      <div className='flex justify-center mt-4'>
+      <div className='flex justify-center'>
         {[...Array(totalPages)].map((_, index) => (
           <button
             key={index}
             onClick={() => handlePageClick(index)}
-            className={`mx-2 py-16 px-3  ${
+            className={`mx-2 pt-8 px-3  ${
               page === index ? 'text-[#fa3463] font-semibold' : 'text-[#cfcfcf] font-normal'
             }`}
           >
