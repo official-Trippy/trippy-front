@@ -89,7 +89,7 @@ const Account = () => {
           placeholder="가입 시 입력했던 닉네임을 입력해주세요."
           value={nickname}
           onChange={handleNicknameChange}
-          className={`w-full px-4 py-2 h-[4rem] rounded-xl focus:border-[#FB3463] focus:outline-none ${isNicknameValid() ? "bg-white" : "bg-gray-100"}`}
+          className={`w-full px-4 py-2 h-[4rem] rounded-xl focus:border-[#FB3463] focus:outline-none ${isNicknameValid() ? "bg-gray-100" : "bg-gray-100"}`}
           style={{ fontSize: "1.2rem" }}
         />
       )}

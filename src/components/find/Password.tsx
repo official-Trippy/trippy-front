@@ -225,7 +225,7 @@ const Password = () => {
                 onClick={handleResendVerification}
                 disabled={!emailValid || duplicateMessage !== "해당 이메일로 가입된 기록이 있습니다. 인증을 진행해주세요." || isCodeVerified}
                 className={`${duplicateMessage === "해당 이메일로 가입된 기록이 있습니다. 인증을 진행해주세요."
-                  ? "bg-black text-white hover:bg-gray-900 focus:outline-none focus:bg-gray-900"
+                  ? "bg-white text-[#fa3463] font-bold focus:outline-none"
                   : "bg-gray-400 text-white cursor-not-allowed"} w-[8.6rem] h-[2.8rem] my-auto rounded-lg`}
                 style={{ fontSize: "1.2rem" }}
               >
@@ -276,7 +276,7 @@ const Password = () => {
                   disabled={isVerificationButtonDisabled}
                   className={`${isVerificationButtonDisabled
                     ? "bg-gray-400 text-white cursor-not-allowed"
-                    : "bg-black text-white hover:bg-gray-900 focus:outline-none focus:bg-gray-900"} w-[8.6rem] h-[2.8rem]  my-auto rounded-lg`}
+                    : "bg-white text-[#fa3463] font-bold focus:outline-none"} w-[8.6rem] h-[2.8rem]  my-auto rounded-lg`}
                   style={{ fontSize: "1.2rem" }}
                 >
                   {codeMessage === '인증이 완료되었습니다.' ? '인증 완료' : '확인하기'}
@@ -373,10 +373,10 @@ const Password = () => {
             <div className="text-center">
               <button
                 type="submit"
-                className={`mx-auto w-full h-[44px] mt-[2rem] mb-[2rem] bg-btn-color text-white py-2 rounded-xl focus:outline-none ${!passwordValid ||
+                className={`mx-auto w-full h-[44px] mt-[2rem] mb-[2rem] text-white py-2 rounded-xl focus:outline-none ${!passwordValid ||
                     !passwordMatch
-                    ? "cursor-not-allowed bg-gray-400 hover:bg-gray-400"
-                    : ""
+                    ? "cursor-not-allowed bg-[#cfcfcf]"
+                    : "bg-btn-color"
                   }`}
                 style={{ fontSize: "1.2rem" }}
                 disabled={

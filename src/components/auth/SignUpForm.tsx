@@ -240,7 +240,7 @@ const SignUpForm = () => {
               !emailValid || duplicateMessage !== "사용 가능한 이메일입니다." || isCodeVerified
             }
             className={`${duplicateMessage === "사용 가능한 이메일입니다."
-              ? "bg-black text-white hover:bg-gray-900 focus:outline-none focus:bg-gray-900"
+              ? "bg-white text-[#fa3463] font-bold focus:outline-none"
               : "bg-[#cfcfcf] text-white cursor-not-allowed"
               } w-[8.6rem] h-[2.8rem] my-auto rounded-lg`}
             style={{ fontSize: "1.2rem" }}
@@ -295,9 +295,9 @@ const SignUpForm = () => {
               disabled={isVerificationButtonDisabled}
               className={`${isVerificationButtonDisabled
                 ? "bg-[#cfcfcf] text-white cursor-not-allowed"
-                : "bg-black text-white hover:bg-gray-900 focus:outline-none focus:bg-gray-900"
-                } w-[8.6rem] h-[3.5rem] my-auto rounded-lg`}
-              style={{ fontSize: "1.3rem" }}
+                : "bg-white text-[#fa3463] font-bold focus:outline-none"
+                } w-[8.6rem] h-[2.8rem] my-auto rounded-lg`}
+              style={{ fontSize: "1.2rem" }}
             >
               {codeMessage === '인증이 완료되었습니다.' ? '인증 완료' : '확인하기'}
             </button>
@@ -398,13 +398,13 @@ const SignUpForm = () => {
       <div className="text-center">
               <button
                 type="submit"
-                className={`mx-auto w-full h-[44px] mt-[4rem] mb-[2rem] bg-btn-color text-white py-2 rounded-lg focus:outline-none ${!verificationClicked ||
+                className={`mx-auto w-full h-[44px] mt-[4rem] mb-[2rem] text-white py-2 rounded-lg focus:outline-none ${!verificationClicked ||
                   !passwordValid ||
                   !passwordMatch ||
                   !agreementChecked ||
                   !isCodeVerified
                   ? "cursor-not-allowed bg-[#cfcfcf] hover:bg-[#cfcfcf]"
-                  : ""
+                  : "bg-btn-color"
                   }`}
                 style={{ fontSize: "1.2rem" }}
                 disabled={
