@@ -265,7 +265,7 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
                     <span>{postData?.result.member.blogName}의 블로그</span>
                     {memberDatas?.result.blogName === postData?.result.member.blogName && (
                         <div className="flex ml-auto gap-[1rem]">
-                            <Image src={menubars} alt="" onClick={() => { setIsOpenMenu(!isOpenMenu) }} />
+                            <Image className="cursor-pointer" src={menubars} alt="" onClick={() => { setIsOpenMenu(!isOpenMenu) }} />
                             {isOpenMenu && (
                                 <div className="absolute bg-white shadow-md rounded-md mt-[3rem] -ml-[6rem] p-2 animate-dropdown z-20" style={{ opacity: 0, transform: 'translateY(-10px)' }}> {/* 스타일 추가 */}
                                     <span className="cursor-pointer block hover:bg-gray-200" onClick={editBoardEdit}>수정하기</span>
