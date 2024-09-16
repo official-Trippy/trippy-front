@@ -36,8 +36,8 @@ const UserMobileProfle: React.FC<UserProfileProps> = ({
   console.log(targetMemberId);
   console.log(userMemberId);
 
-  if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>Error loading data</div>;
+  if (isLoading) return <div></div>;
+  if (error) return <div></div>;
   if (!data) return null;
 
   const {
@@ -71,7 +71,7 @@ const UserMobileProfle: React.FC<UserProfileProps> = ({
       </div>
       <h1 className="text-2xl text-white font-bold">{nickName}</h1>
       <span className="text-xl text-white text-gray-600 mt-[2px]">{blogIntroduce}</span>
-      <div className="ml-auto flex items-center mt-[10px] mr-[50px]">
+      <div className="flex items-center mt-[10px]">
         {targetMemberId &&
           userMemberId && ( 
             <FollowButton

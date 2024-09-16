@@ -203,7 +203,7 @@ const RecentOotdPost: React.FC = () => {
           <CustomSelect orderType={orderType} onOrderTypeChange={handleOrderTypeChange} />
         </div>
       </div>
-      <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+      <div className="grid grid-cols-2 sm-700:grid-cols-3 lg:grid-cols-4 gap-8">
         {ootdList.map((item) => (
           <div key={item.post.id} className="flex flex-col overflow-hidden cursor-pointer" onClick={() => handleOotdItemClick(item.post.id)}>
             {item.post.images.length > 0 && (
