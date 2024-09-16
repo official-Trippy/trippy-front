@@ -56,7 +56,7 @@ const Header = () => {
   return (
     <header className="relative">
       {/* Desktop Layout */}
-      <div className="hidden mt-[20px] mb-[20px] sm-700:flex sm-700:justify-between sm-700:items-center sm-700:w-[90%] sm-700:mx-auto sm-700:relative">
+      <div className="hidden mt-[20px] mb-[20px] sm-700:flex sm-700:justify-between sm-700:items-center sm-700:w-[66%] sm-700:mx-auto sm-700:relative">
         <div className="flex items-center gap-10">
           <div className="flex-shrink-0">
             <Link href="/">
@@ -87,10 +87,19 @@ const Header = () => {
           </div>
         </div>
 
-        <div className="flex items-center flex-grow">
-          <div className="ml-auto flex-grow max-w-[600px] min-w-[200px]">
+        <div className="flex items-center flex-grow max-w-[90%]">
+          <div className="hidden md-850:flex mx-auto w-full">
             <SearchBar />
           </div>
+          <div className="ml-auto mr-4 md-850:hidden">
+          <Image
+            src={searchIconMobile}
+            alt="Search"
+            width={24}
+            height={24}
+            className="cursor-pointer"
+            />
+        </div>
           {!loading && !isGuest && (
             <>
               {userInfo && accessToken ? (

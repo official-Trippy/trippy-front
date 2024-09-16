@@ -65,7 +65,7 @@ const MyOotd: React.FC<MyOotdProps> = ({ userInfo }) => {
 
   return (
     <div className="h-full">
-      <div className="grid grid-cols-3 gap-12">
+      <div className="grid grid-cols-2 md-1000:grid-cols-3 gap-12">
         {ootdList.map((item) => (
           <div key={item.ootd.id} className="flex-1 cursor-pointer" onClick={() => handleOotdItemClick(item.post.id)}>
             {item.post.images.length > 0 && (

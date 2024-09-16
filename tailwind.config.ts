@@ -16,7 +16,8 @@ const config: Config = {
       screens: {
         'md': '800px',
         'sm-700': '700px',  
-        'md-850': '850px'
+        'md-850': '850px',
+        'md-1000': '1000px'
       },
       colors: {
         'btn-color': '#FB3463',

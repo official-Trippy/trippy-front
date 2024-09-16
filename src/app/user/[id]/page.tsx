@@ -102,7 +102,7 @@ const UserPage = ({ params }: { params: { id: string } }) => {
   return (
     <>
       <Header />
-      <div className="relative w-full h-[200px] sm-700:h-[300px]">
+      <div className="relative w-full h-[240px]">
         <Image
           src={backgroundImg}
           alt="Background"
@@ -110,15 +110,15 @@ const UserPage = ({ params }: { params: { id: string } }) => {
           objectFit="cover"
         />
       </div>
-      <div className="hidden sm-700:flex w-[75%] mx-auto p-4">
+      <div className="hidden sm-700:flex w-[66%] mx-auto p-4">
         <div className="w-[250px] mb-4">
           <UserProfile memberId={decodedId} setActiveTab={setActiveTab} />
         </div>
         <div className="w-[100%] ml-[50px]">
-        <h1 className="absolute ml-[20px] text-left top-[320px] text-white text-4xl font-bold">
+        <h1 className="absolute ml-[20px] text-left top-[260px] text-white text-4xl font-bold">
           {userData && userData.blogName}
         </h1>
-        <div className="absolute ml-[20px] text-left top-[350px] text-white text-xl font-normal font-['Pretendard']">
+        <div className="absolute ml-[20px] text-left top-[290px] text-white text-xl font-normal font-['Pretendard']">
           {userData && userData.blogIntroduce}
         </div>
           <div className="flex justify-between mb-4 ml-4 text-2xl">
@@ -152,7 +152,7 @@ const UserPage = ({ params }: { params: { id: string } }) => {
                 </span>
                  <span className="text-[#fa3463] ml-1">{userOotdCount}</span>
               </button>
-              <button
+              {/* <button
                 className={`px-8 py-2 rounded-[999px] justify-center items-center ${
                   activeTab === TABS.BADGE
                     ? "bg-[#ffe3ea] border-2 border-[#fa3463]"
@@ -165,7 +165,7 @@ const UserPage = ({ params }: { params: { id: string } }) => {
                 >
                   뱃지
                 </span>
-              </button>
+              </button> */}
               {/* <button
                 className={`px-8 py-2 rounded-[999px] justify-center items-center ${
                   activeTab === TABS.BOOKMARK
@@ -247,7 +247,7 @@ const UserPage = ({ params }: { params: { id: string } }) => {
                 </span>
                  <span className="text-[#fa3463] ml-1">{userOotdCount}</span>
               </button>
-              <button
+              {/* <button
                 className={`px-8 py-2 rounded-[999px] justify-center items-center ${
                   activeTab === TABS.BADGE
                     ? "bg-[#ffe3ea] border-2 border-[#fa3463]"
@@ -260,7 +260,7 @@ const UserPage = ({ params }: { params: { id: string } }) => {
                 >
                   뱃지
                 </span>
-              </button>
+              </button> */}
               </div>
             </div>
           </div>

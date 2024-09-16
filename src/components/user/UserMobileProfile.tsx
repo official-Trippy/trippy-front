@@ -36,8 +36,8 @@ const UserMobileProfle: React.FC<UserProfileProps> = ({
   console.log(targetMemberId);
   console.log(userMemberId);
 
-  if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>Error loading data</div>;
+  if (isLoading) return <div></div>;
+  if (error) return <div></div>;
   if (!data) return null;
 
   const {
@@ -53,7 +53,7 @@ const UserMobileProfle: React.FC<UserProfileProps> = ({
   return (
 <div className="w-full mx-auto flex flex-col items-center relative z-[9999]">
   <div className="relative">
-    <div className="absolute top-[-200px] left-1/2 transform -translate-x-1/2 w-[200px] h-[200px] px-8 py-4 flex flex-col items-center">
+    <div className="absolute top-[-240px] left-1/2 transform -translate-x-1/2 w-[200px] h-[200px] px-8 py-4 flex flex-col items-center">
     <h1 className="text-4xl text-white font-bold mt-2">{blogName}</h1>
       <div className="relative mt-4 mb-4">
         <Image
@@ -71,6 +71,15 @@ const UserMobileProfle: React.FC<UserProfileProps> = ({
       </div>
       <h1 className="text-2xl text-white font-bold">{nickName}</h1>
       <span className="text-xl text-white text-gray-600 mt-[2px]">{blogIntroduce}</span>
+      <div className="flex items-center mt-[10px]">
+        {targetMemberId &&
+          userMemberId && ( 
+            <FollowButton
+              postMemberId={targetMemberId}
+              userMemberId={userMemberId}
+            />
+          )}
+      </div>
       <div className="flex px-4 gap-12 text-center mt-2">
         <div className="flex flex-col flex-1">
           <span
@@ -90,16 +99,6 @@ const UserMobileProfle: React.FC<UserProfileProps> = ({
           </span>
           <span className="text-white"> {followingCnt}</span>
         </div>
-      </div>
-
-      <div className="ml-auto flex items-center mt-[10px] mr-[50px]">
-        {targetMemberId &&
-          userMemberId && ( 
-            <FollowButton
-              postMemberId={targetMemberId}
-              userMemberId={userMemberId}
-            />
-          )}
       </div>
     </div>
   </div>
