@@ -110,7 +110,7 @@ const UserPage = ({ params }: { params: { id: string } }) => {
           objectFit="cover"
         />
       </div>
-      <div className="hidden sm-700:flex w-[75%] mx-auto p-4">
+      <div className="hidden sm-700:flex w-[66%] mx-auto p-4">
         <div className="w-[250px] mb-4">
           <UserProfile memberId={decodedId} setActiveTab={setActiveTab} />
         </div>
@@ -152,7 +152,7 @@ const UserPage = ({ params }: { params: { id: string } }) => {
                 </span>
                  <span className="text-[#fa3463] ml-1">{userOotdCount}</span>
               </button>
-              <button
+              {/* <button
                 className={`px-8 py-2 rounded-[999px] justify-center items-center ${
                   activeTab === TABS.BADGE
                     ? "bg-[#ffe3ea] border-2 border-[#fa3463]"
@@ -165,7 +165,7 @@ const UserPage = ({ params }: { params: { id: string } }) => {
                 >
                   뱃지
                 </span>
-              </button>
+              </button> */}
               {/* <button
                 className={`px-8 py-2 rounded-[999px] justify-center items-center ${
                   activeTab === TABS.BOOKMARK

@@ -10,7 +10,7 @@ import HeartIcon from '../../../public/icon_heart.svg';
 import Cookies from "js-cookie";
 import { fetchLikedPosts } from "@/services/ootd.ts/ootdComments";
 
-const PAGE_SIZE = 9;
+const PAGE_SIZE = 12;
 
 interface UserOotdProps {
   memberId: string;
