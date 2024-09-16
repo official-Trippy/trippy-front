@@ -102,7 +102,7 @@ const UserPage = ({ params }: { params: { id: string } }) => {
   return (
     <>
       <Header />
-      <div className="relative w-full h-[200px] sm-700:h-[300px]">
+      <div className="relative w-full h-[240px]">
         <Image
           src={backgroundImg}
           alt="Background"
@@ -115,10 +115,10 @@ const UserPage = ({ params }: { params: { id: string } }) => {
           <UserProfile memberId={decodedId} setActiveTab={setActiveTab} />
         </div>
         <div className="w-[100%] ml-[50px]">
-        <h1 className="absolute ml-[20px] text-left top-[320px] text-white text-4xl font-bold">
+        <h1 className="absolute ml-[20px] text-left top-[260px] text-white text-4xl font-bold">
           {userData && userData.blogName}
         </h1>
-        <div className="absolute ml-[20px] text-left top-[350px] text-white text-xl font-normal font-['Pretendard']">
+        <div className="absolute ml-[20px] text-left top-[290px] text-white text-xl font-normal font-['Pretendard']">
           {userData && userData.blogIntroduce}
         </div>
           <div className="flex justify-between mb-4 ml-4 text-2xl">
