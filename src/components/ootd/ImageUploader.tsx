@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useState } from 'react';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
@@ -9,16 +9,16 @@ import { uploadImage } from '@/services/blog';
 import { UploadedImage } from '@/types/ootd';
 import Image from 'next/image';
 import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
-import LeftArrowIcon from '../../../public/left-arrow.svg'; 
-import RightArrowIcon from '../../../public/right-arrow.svg'; 
+import LeftArrowIcon from '../../../public/left-arrow.svg';
+import RightArrowIcon from '../../../public/right-arrow.svg';
 
 interface ImageUploaderProps {
   onImagesChange: (images: UploadedImage[]) => void;
-  initialImages?: UploadedImage[]; // 초기 이미지 리스트를 받을 수 있도록 추가
+  initialImages?: UploadedImage[];
 }
 
 const ImageUploader: React.FC<ImageUploaderProps> = ({ onImagesChange, initialImages = [] }) => {
-  const [images, setImages] = useState<UploadedImage[]>(initialImages); 
+  const [images, setImages] = useState<UploadedImage[]>(initialImages);
   const [isUploading, setIsUploading] = useState(false);
 
   const handleImageUpload = async (event: ChangeEvent<HTMLInputElement>) => {
@@ -42,6 +42,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onImagesChange, initialIm
   const handleDeleteImage = (index: number) => {
     const newImages = images.filter((_, i) => i !== index);
     setImages(newImages);
+    // Notify parent component about image deletion
     onImagesChange(newImages);
   };
 
@@ -53,6 +54,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onImagesChange, initialIm
     newImages.splice(result.destination.index, 0, reorderedImage);
 
     setImages(newImages);
+    // Notify parent component about image reordering
     onImagesChange(newImages);
   };
 

@@ -1,15 +1,19 @@
 'use client';
 
-import React, { useState, useEffect, useRef, useTransition } from 'react';
+import React, { useState, useEffect, useTransition, useRef } from 'react';
 import Cookies from 'js-cookie';
 import { useQuery } from 'react-query';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { OotdGetResponse } from '@/types/ootd';
-import { fetchAllOotdPostCount, fetchAllOotdPosts } from '@/services/ootd.ts/ootdGet';
+import { fetchAllOotdPostCount, fetchAllOotdPosts, fetchFollowOotdPosts, fetchOotdFollowPostCount } from '@/services/ootd.ts/ootdGet';
 import { MemberInfo } from '@/services/auth';
 import EmptyHeartIcon from '../../../../public/empty_heart_default.svg';
 import CommentIcon1 from '../../../../public/empty_comment_default.svg';
+import { fetchLikedPosts } from '@/services/ootd.ts/ootdComments';
+import HeartIcon from '../../../../public/icon_heart.svg';
+import CustomSelect from './CustomSelect';
+import { useUserStore } from '@/store/useUserStore';
 
 const PAGE_SIZE = 12;
 
@@ -55,12 +59,14 @@ const TagContainer: React.FC<TagContainerProps> = ({ item }) => {
 
   return (
     <div className="mt-4">
-      <h2 className="text-[1.2rem] font-medium text-[#6B6B6B]">{item.post.body}</h2>
-      <div className="flex flex-wrap mt-4 gap-2" ref={containerRef}>
+      <div className="text-[#6b6b6b] text-xl font-normal font-['Pretendard'] text-ellipsis overflow-hidden whitespace-nowrap">
+        {item.post.body}
+      </div>
+      <div className="tag-container mt-2" ref={containerRef}>
         {visibleTags.map((tag, index) => (
           <span
             key={index}
-            className="px-4 py-1 bg-neutral-100 rounded-3xl text-xl justify-center items-center gap-2.5 inline-flex text-[#9d9d9d]"
+            className="tag-item px-4 py-1 bg-neutral-100 rounded-3xl text-xl justify-center items-center gap-2.5 inline-flex text-[#9d9d9d]"
           >
             {tag}
           </span>
@@ -74,36 +80,72 @@ const RecentOotdPost: React.FC = () => {
   const accessToken = Cookies.get('accessToken');
   const [page, setPage] = useState(0);
   const [orderType, setOrderType] = useState('LATEST');
-  const [tab, setTab] = useState<'ALL' | 'FOLLOWING'>(accessToken ? 'FOLLOWING' : 'ALL');
+  const [tab, setTab] = useState<'ALL' | 'FOLLOWING' | null>(null); 
   const [isPending, startTransition] = useTransition();
+  const [likedPosts, setLikedPosts] = useState<number[]>([]);  
   const router = useRouter();
 
+  const { userInfo } = useUserStore();
+  const isGuest = userInfo?.role === 'GUEST';
+
   useEffect(() => {
-    startTransition(() => {
-      setTab(accessToken ? 'FOLLOWING' : 'ALL');
-    });
+    if (typeof window !== 'undefined') { 
+      const savedTab = sessionStorage.getItem('tab');
+      if (savedTab) {
+        setTab(savedTab as 'ALL' | 'FOLLOWING');
+      } else {
+        setTab(accessToken && !isGuest ? 'FOLLOWING' : 'ALL');
+      }
+    }
   }, [accessToken]);
 
-  const { data: memberData, isLoading: memberLoading } = useQuery({
+  useEffect(() => {
+    if (typeof window !== 'undefined') { 
+      if (tab) {
+        sessionStorage.setItem('tab', tab);
+      }
+    }
+  }, [tab]);
+  useEffect(() => {
+    if (accessToken) {
+      fetchLikedPosts().then(setLikedPosts);  
+    }
+  }, [accessToken]);
+
+  const isTabInitialized = tab !== null;
+
+  const { data: memberData } = useQuery({
     queryKey: ['member', accessToken],
     queryFn: () => MemberInfo(accessToken),
-    onError: (error) => {
-      console.error('Error fetching member data:', error);
-    }
+    enabled: !!accessToken,
   });
 
-  const { data: totalCount, isLoading: isCountLoading, isError: isCountError } = useQuery<number>(
-    'ootdPostCount',
-    fetchAllOotdPostCount
-  );
-
-  const { data, isLoading, isError } = useQuery<OotdGetResponse>(
-    ['ootdPosts', page, orderType, tab],
-    () => fetchAllOotdPosts(page, PAGE_SIZE, orderType), 
+  const { data: totalCount, isLoading: isCountLoading } = useQuery<number>(
+    ['ootdPostCount', tab],
+    () => (tab === 'ALL' ? fetchAllOotdPostCount() : fetchOotdFollowPostCount()),
     {
-      enabled: tab === 'ALL' && totalCount !== undefined 
+      enabled: isTabInitialized,
     }
   );
+
+  const { data: allPostsData, isLoading: isAllPostsLoading } = useQuery<OotdGetResponse>(
+    ['ootdPosts', page, orderType],
+    () => fetchAllOotdPosts(page, PAGE_SIZE, orderType),
+    {
+      enabled: tab === 'ALL' && isTabInitialized,
+    }
+  );
+
+  const { data: followingPostsData, isLoading: isFollowingPostsLoading } = useQuery<OotdGetResponse>(
+    ['followingOotdPosts', page, orderType],
+    () => fetchFollowOotdPosts(page, PAGE_SIZE, orderType),
+    {
+      enabled: tab === 'FOLLOWING' && isTabInitialized,
+    }
+  );
+
+  const ootdList = tab === 'ALL' ? allPostsData?.result || [] : followingPostsData?.result || [];
+  const isLoading = isCountLoading || (tab === 'ALL' ? isAllPostsLoading : isFollowingPostsLoading);
 
   const totalPages = totalCount ? Math.ceil(totalCount / PAGE_SIZE) : 0;
 
@@ -115,8 +157,8 @@ const RecentOotdPost: React.FC = () => {
     router.push(`/ootd/${id}`);
   };
 
-  const handleOrderTypeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setOrderType(event.target.value);
+  const handleOrderTypeChange = (value: string) => {
+    setOrderType(value);
     setPage(0);
   };
 
@@ -127,26 +169,22 @@ const RecentOotdPost: React.FC = () => {
     });
   };
 
-  if (isCountLoading || (tab === 'ALL' && isLoading && isPending)) {
+  if (!isTabInitialized) {
     return <div></div>;
   }
 
-  if ((tab === 'ALL' && (isCountError || isError)) || (tab === 'FOLLOWING' && isCountError)) {
-    return <div>Error fetching data</div>;
-  }
-
-  const ootdList = tab === 'ALL' ? data?.result || [] : [];
-
   return (
-    <div className='w-[66%] mx-auto py-[5rem]'>
+    <div className='w-[90%] sm-700:w-[66%]  mx-auto pt-[5rem] mb-[90px]'>
       <div>
-        {accessToken ? (
-          <h1 className='font-bold text-[2rem]'>
-            {memberData?.result.nickName}님, 최근 업로드 된 OOTD를 만나보세요
-          </h1>
-        ) : (
-          <h1 className='font-bold text-[2rem]'>트리피인들의 다양한 스타일을 만나보세요</h1>
-        )}
+      {accessToken ? (
+                        isGuest ? ( 
+                            <h1 className='font-bold text-[2rem]'>트리피의 인기 게시글을 만나보세요</h1>
+                        ) : ( 
+                            <h1 className='font-bold text-[2rem]'>{memberData?.result.nickName}님을 위해 준비한 맞춤 추천 포스트</h1>
+                        )
+                    ) : ( 
+                        <h1 className='font-bold text-[2rem]'>트리피의 인기 게시글을 만나보세요</h1>
+                    )}
       </div>
       <div className='flex text-[1.6rem] py-16'>
         <span
@@ -161,81 +199,71 @@ const RecentOotdPost: React.FC = () => {
         >
           팔로잉
         </span>
-        <select
-          className='flex w-[8rem] h-[3rem] ml-auto font-medium selectshadow'
-          value={orderType}
-          onChange={handleOrderTypeChange}
-        >
-          <option value="LATEST">최신순</option>
-          <option value="LIKE">인기순</option>
-          <option value="VIEW">조회순</option>
-        </select>
+        <div className='ml-auto'>
+          <CustomSelect orderType={orderType} onOrderTypeChange={handleOrderTypeChange} />
+        </div>
       </div>
-      {tab === 'ALL' && (
-        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-          {ootdList.map((item) => (
-            <div key={item.post.id} className="flex flex-col overflow-hidden cursor-pointer" onClick={() => handleOotdItemClick(item.post.id)}>
-              {item.post.images.length > 0 && (
-                <div className="relative w-full" style={{ aspectRatio: '303 / 381' }}>
-                  <Image
-                    className="absolute top-0 left-0 w-full h-full object-cover rounded-xl"
-                    src={item.post.images[0].accessUri}
-                    alt="OOTD"
-                    layout="fill"
-                  />
-                </div>
-              )}
-              <div className="py-8">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center">
-                    <div className="relative w-[24px] h-[24px]">
-                      <Image
-                        src={item.member.profileUrl}
-                        alt="Profile"
-                        layout="fill"
-                        objectFit="cover"
-                        className="rounded-full" />
-                    </div>
-                    <span className="text-[#6B6B6B] ml-[5px]">{item.member.nickName}</span>
-                  </div>
-                  <div className="flex items-center mt-2">
-                    <Image
-                      src={EmptyHeartIcon}
-                      alt="좋아요"
-                      width={20}
-                      height={18}
-                    />
-                    <span className="mx-2 text-[#cfcfcf]"> {item.post.likeCount}</span>
-                    <Image
-                      src={CommentIcon1}
-                      alt="댓글"
-                      width={18}
-                      height={18}
-                    />
-                    <span className="mx-2 text-[#cfcfcf]"> {item.post.commentCount}</span>
-                  </div>
-                </div>
-                <TagContainer item={item} />
+      <div className="grid grid-cols-2 sm-700:grid-cols-3 lg:grid-cols-4 gap-8">
+        {ootdList.map((item) => (
+          <div key={item.post.id} className="flex flex-col overflow-hidden cursor-pointer" onClick={() => handleOotdItemClick(item.post.id)}>
+            {item.post.images.length > 0 && (
+              <div className="relative w-full" style={{ aspectRatio: '303 / 381' }}>
+                <Image
+                  className="absolute top-0 left-0 w-full h-full object-cover rounded-xl"
+                  src={item.post.images[0].accessUri}
+                  alt="OOTD"
+                  layout="fill"
+                />
               </div>
+            )}
+            <div className="py-8">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center">
+                  <div className="relative w-[24px] h-[24px]">
+                    <Image
+                      src={item.member.profileUrl}
+                      alt="Profile"
+                      layout="fill"
+                      objectFit="cover"
+                      className="rounded-full" />
+                  </div>
+                  <span className="text-[#6B6B6B] ml-[5px]">{item.member.nickName}</span>
+                </div>
+                <div className="flex items-center mt-2">
+                <Image
+                    src={likedPosts.includes(item.post.id) ? HeartIcon : EmptyHeartIcon} 
+                    alt="좋아요"
+                    width={20}
+                    height={18}
+                  />
+                  <span className="mx-2 text-[#cfcfcf]"> {item.post.likeCount}</span>
+                  <Image
+                    src={CommentIcon1}
+                    alt="댓글"
+                    width={18}
+                    height={18}
+                  />
+                  <span className="mx-2 text-[#cfcfcf]"> {item.post.commentCount}</span>
+                </div>
+              </div>
+              <TagContainer item={item} />
             </div>
-          ))}
-        </div>
-      )}
-      {tab === 'ALL' && totalPages > 1 && (
-        <div className='flex justify-center mt-4'>
-          {[...Array(totalPages)].map((_, index) => (
-            <button
-              key={index}
-              className={`mx-2 py-16 px-3  ${
-                page === index ? 'text-[#fa3463] font-semibold' : 'text-[#cfcfcf] font-normal'
-              }`}
-              onClick={() => handlePageClick(index)}
-            >
-              {index + 1}
-            </button>
-          ))}
-        </div>
-      )}
+          </div>
+        ))}
+      </div>
+      <div className='flex justify-center'>
+        {[...Array(totalPages)].map((_, index) => (
+          <button
+            key={index}
+            onClick={() => handlePageClick(index)}
+            className={`mx-2 pt-8 px-3  ${
+              page === index ? 'text-[#fa3463] font-semibold' : 'text-[#cfcfcf] font-normal'
+            }`}
+          >
+            {index + 1}
+          </button>
+        ))}
+      </div>
     </div>
   );
 };

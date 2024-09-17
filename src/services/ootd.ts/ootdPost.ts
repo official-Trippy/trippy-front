@@ -1,5 +1,5 @@
 import { OotdRequest, PostRequest, PostResponse } from '@/types/ootd';
-import axios from 'axios';
+import axios from '@/app/api/axios';
 
 const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 

@@ -106,7 +106,13 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
   );
 
   const replyMutation = useMutation(
-    ({ content, parentId }: { content: string, parentId: number }) => createReply(postId, content, parentId),
+    ({ content, parentId, mentionMemberId, mentionMemberNickName, mentionCommentId }: { 
+        content: string, 
+        parentId: number, 
+        mentionMemberId: string, 
+        mentionMemberNickName: string, 
+        mentionCommentId: number 
+      }) => createReply(postId, content, parentId, mentionMemberId, mentionMemberNickName, mentionCommentId), 
     {
       onSuccess: () => {
         refetch();
@@ -117,6 +123,8 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
       },
     }
   );
+  
+  
 
   const likeMutation = useMutation(
     () => likePost(postId),
@@ -154,16 +162,70 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
     }
   };
 
-  const handleReplySubmit = () => {
-    if (replyComment.trim() && replyTo !== null) {
-      const formattedReply = `@${replyToNickname} ${replyComment}`;
-      replyMutation.mutate({ content: formattedReply, parentId: replyTo });
-    }
-  };
+  useEffect(() => {
+    console.log('댓글 데이터:', comments);
+  }, [comments]);
+
+    // 재귀적으로 commentId에 해당하는 댓글을 찾는 함수
+    const findCommentById = (comments: Comment[], commentId: number): Comment | undefined => {
+      for (const comment of comments) {
+        if (comment.id === commentId) {
+          return comment;
+        }
+    
+        // children에 대댓글이 있다면, 대댓글에서도 검색
+        if (comment.children && comment.children.length > 0) {
+          const found = findCommentById(comment.children, commentId);
+          if (found) return found;
+        }
+      }
+    
+      // 찾지 못하면 undefined 반환
+      return undefined;
+    };
+    
+
+    const handleReplySubmit = () => {
+      console.log('클릭은됨');
+      if (replyComment.trim() && replyTo !== null) {
+        const currentReplyTarget = findCommentById(comments, replyTo); // 재귀 함수로 댓글 찾기
+        console.log(replyTo);
+        console.log(currentReplyTarget);
+    
+        if (!currentReplyTarget) {
+          console.log('댓글을 찾을 수 없습니다.');
+          return;
+        }
+    
+        const mentionCommentId = replyTo;  // 대댓글의 ID
+        const mentionMemberId = currentReplyTarget.member?.memberId || ''; // 대댓글 작성자의 ID
+        const mentionMemberNickName = currentReplyTarget.member?.nickName || ''; // 대댓글 작성자의 닉네임
+    
+        // 대댓글의 parentId는 원본 댓글의 ID가 되어야 함
+        const parentId = currentReplyTarget.parentId || replyTo; 
+    
+        const formattedReply = `@${mentionMemberNickName} ${replyComment}`;
+    
+        // API 요청 전송
+        replyMutation.mutate({
+          content: formattedReply,
+          parentId,  // 원본 댓글의 ID
+          mentionMemberId,  // 대댓글 작성자의 ID
+          mentionMemberNickName,  // 대댓글 작성자의 닉네임
+          mentionCommentId,  // 대댓글 ID
+        });
+      } else {
+        console.log('댓글 내용을 입력해주세요.');
+      }
+    };
+    
+  
 
   const handleReplyClick = (commentId: number, nickName: string) => {
     setReplyTo(commentId);
     setReplyToNickname(nickName);
+
+    console.log(commentId);
   };
 
   const handleLikeClick = () => {
@@ -188,13 +250,14 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
     router.push('/login');
   };
 
-const renderComments = (comments: Comment[], depth = 0, isChild = false) => {
+const renderComments = (comments: Comment[], depth = 0) => {
   return comments.map((comment) => (
-    <div key={comment.id} className={`${isChild ? 'p-4' : ''}`}>
+    <div key={comment.id} className={`comment ${depth === 0 ? 'px-4' : ''}`}>
+      {/* 댓글 표시 */}
       <div className='comment-section p-4 rounded-lg'>
         <div className='flex flex-row items-center'>
           {comment.member?.profileUrl && (
-            <div className="relative w-[32px] h-[32px]">
+            <div className="relative w-[28px] h-[28px]">
               <Image 
                 src={comment.member.profileUrl} 
                 alt="사용자 프로필" 
@@ -204,17 +267,12 @@ const renderComments = (comments: Comment[], depth = 0, isChild = false) => {
               />
             </div>
           )}
-          <div className="text-[#292929] text-sm font-semibold font-['Pretendard'] ml-[5px]">
+          <div className="text-[#292929] text-sm font-semibold ml-[5px]">
             {comment.member?.nickName}
           </div>
         </div>
         <div className="ml-[3.7rem] items-center">
-          <div
-            dangerouslySetInnerHTML={{
-              __html: comment.content
-                .replace(`@${replyToNickname}`, `<span class="highlighted-text">@${replyToNickname}</span>`)
-            }}
-          />
+          <div>{comment.content}</div>
           <div className='flex flex-row my-2'>
             <div className="text-gray-600">{formatTime(comment.createDateTime)}</div>
             <div>&nbsp;&nbsp;|&nbsp;&nbsp;</div>
@@ -224,16 +282,13 @@ const renderComments = (comments: Comment[], depth = 0, isChild = false) => {
           </div>
         </div>
       </div>
-      {comment.children.length > 0 && (
-        <div className={depth === 0 ? "my-4 ml-12 mr-4 bg-neutral-100 rounded-lg" : ""}>
-          {renderComments(comment.children, depth + 1)}
-        </div>
-      )}
+
+      {/* 답글쓰기 입력창, 해당 댓글 아래에 표시되도록 설정 */}
       {replyTo === comment.id && (
-        <div className="flex flex-col p-4 mt-2 bg-white rounded-lg shadow-md">
+        <div className={`flex flex-col p-4 mt-2 bg-white rounded-lg shadow-md ${depth === 0 ? 'mx-4 sm-700:mx-12' : ''}`}>
           <div className='flex flex-row items-center flex-1'>
             {userInfo?.profileImageUrl && (
-              <div className="relative w-[32px] h-[32px]">
+              <div className="relative w-[28px] h-[28px]">
                 <Image
                   src={userInfo.profileImageUrl}
                   alt="사용자 프로필"
@@ -243,29 +298,38 @@ const renderComments = (comments: Comment[], depth = 0, isChild = false) => {
                 />
               </div>
             )}
-            <div className="text-[#292929] font-semibold ml-[5px]">{userInfo?.nickName}</div>
+            <div className="text-[#292929] font-semibold ml-[8px]">{userInfo?.nickName}</div>
           </div>
-          <div className='flex-1 flex'>
-            <input
-              type="text"
-              className="w-[80%] max-w-[570px] mt-2 p-2 rounded-l flex-1"
-              value={replyComment}
-              onChange={(e) => setReplyComment(e.target.value)}
-              placeholder={`@${replyToNickname || ''}에게 답글쓰기`}
-              style={{ color: replyComment.startsWith(`@${replyToNickname}`) ? '#ffb9ca' : 'inherit' }}
-            />
-            <button
-              onClick={handleReplySubmit}
-              className="ml-auto mt-auto mb-[2px] px-8 py-1 bg-neutral-100 rounded-lg justify-center items-center inline-flex text-center text-zinc-800 text-base font-semibold font-['Pretendard']"
-            >
-              입력
-            </button>
-          </div>
+          <div className='flex-1 flex gap-2'>
+          <input
+            type="text"
+            className="mt-2 p-2 rounded-l flex-1"
+            value={replyComment}
+            onChange={(e) => setReplyComment(e.target.value)}
+            placeholder={`@${replyToNickname || ''}에게 답글쓰기`}
+          />
+          <button
+            onClick={handleReplySubmit}
+            className={`ml-auto mt-auto mb-[2px] px-8 py-1 rounded-lg justify-center items-center inline-flex text-center text-base font-semibold ${replyComment.trim() ? 'bg-[#fa3463] text-white' : 'bg-neutral-100 text-zinc-800'}`}
+            disabled={!replyComment.trim()} 
+          >
+            입력
+          </button>
+        </div>
+
+        </div>
+      )}
+
+      {/* 대댓글이 있는 경우 */}
+      {comment.children.length > 0 && (
+        <div className="mr-4 ml-4 sm-700:ml-12 sm-700:mr-12 my-4 bg-neutral-100 rounded-lg">
+          {renderComments(comment.children, depth + 1)}
         </div>
       )}
     </div>
   ));
 };
+
 
 
 
@@ -282,7 +346,7 @@ const renderComments = (comments: Comment[], depth = 0, isChild = false) => {
     const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
 
     return (
-      <div className='w-full bg-white rounded-lg shadow-md py-4'>
+      <div className='w-full bg-white rounded-lg shadow-md py-4 mt-8'>
         <div className="grid grid-cols-3 gap-4">
           {paginatedLikes.map((like, index) => (
             <div key={index} className='my-4 like-section p-4'>
@@ -321,8 +385,8 @@ const renderComments = (comments: Comment[], depth = 0, isChild = false) => {
 
   if (!accessToken) {
     return (
-      <div className="max-w-6xl w-full mx-auto">
-        <div className="flex items-center pb-4">
+      <div className="w-[90%] sm-700:w-full sm-700:max-w-6xl mx-auto sm-700:px-4">
+        <div className="flex items-center pt-12">
           <button className="flex items-center" onClick={handleLikeClick}>
             <Image
               src={
@@ -372,8 +436,8 @@ const renderComments = (comments: Comment[], depth = 0, isChild = false) => {
   }
 
   return (
-    <div className="max-w-6xl w-full mx-auto">
-      <div className="flex items-center pb-4">
+    <div className="w-[90%] sm-700:w-full sm-700:max-w-6xl mx-auto sm-700:px-4">
+      <div className="flex items-center pt-12">
         <button className="flex items-center" onClick={handleLikeClick}>
           <Image
             src={
@@ -400,12 +464,12 @@ const renderComments = (comments: Comment[], depth = 0, isChild = false) => {
       </div>
       {showComments && (
         <>
-          <div className="comment-section w-full p-4 bg-white rounded-lg shadow-md flex items-center 4 mt-16">
+          <div className="comment-section w-full p-4 bg-white rounded-lg shadow flex items-center mt-8">
             <div className='w-[90%] flex flex-col'>
               <div className='w-full flex-1'>
                 <div className='flex flex-row items-center'>
                   {userInfo?.profileImageUrl &&  (
-                    <><div className="relative w-[32px] h-[32px]">
+                    <><div className="relative w-[28px] h-[28px]">
                       <Image
                         src={userInfo.profileImageUrl}
                         alt="사용자"
@@ -414,13 +478,13 @@ const renderComments = (comments: Comment[], depth = 0, isChild = false) => {
                         className="rounded-full" />
                     </div></>
                   )}
-                  <div className="text-[#292929] font-semibold ml-[5px]">{userInfo?.nickName}</div>
+                  <div className="text-[#292929] font-semibold ml-[8px]">{userInfo?.nickName}</div>
                 </div>
               </div>
-              <div className="w-[100%] flex-1 ml-1">
+              <div className="flex-1 ml-12">
                 <input
                   type="text"
-                  className="mt-2 p-2 rounded w-full"
+                  className="mt-2 p-2 rounded w-[97%] sm-700:w-full focus:outline-normal"
                   value={newComment}
                   onChange={(e) => setNewComment(e.target.value)}
                   placeholder="블로그가 훈훈해지는 댓글 부탁드립니다."
@@ -429,22 +493,25 @@ const renderComments = (comments: Comment[], depth = 0, isChild = false) => {
             </div>
             <button
               onClick={handleCommentSubmit}
-              className="ml-auto mt-auto mb-[2px] px-8 py-1 bg-neutral-100 rounded-lg justify-center items-center inline-flex text-center text-zinc-800 text-base font-semibold font-['Pretendard']"
+              className={`flex-shrink-0 ml-auto mt-auto mb-[2px] px-8 py-1 rounded-lg justify-center items-center inline-flex text-center text-base font-semibold font-['Pretendard'] ${newComment.trim() ? 'bg-[#fa3463] text-white' : 'bg-neutral-100 text-zinc-800'}`}
+              disabled={!newComment.trim()}
             >
               입력
             </button>
           </div>
-          <div className="comment-section w-full bg-white rounded-lg shadow-md items-center mt-16">
-            {isLoading ? (
-              <div></div>
+          <div
+          className={`comment-section w-full bg-white rounded-lg shadow-md items-center mt-16 ${comments.length > 0 ? 'pb-4' : ''}`}
+        >
+          {isLoading ? (
+            <div></div>
+          ) : (
+            comments.length === 0 ? (
+              <div className='pb-0'></div>
             ) : (
-              comments.length === 0 ? (
-                <div></div>
-              ) : (
-                renderComments(comments)
-              )
-            )}
-          </div>
+              renderComments(comments)
+            )
+          )}
+        </div>
         </>
       )}
       {showLikes && (

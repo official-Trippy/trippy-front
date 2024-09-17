@@ -10,9 +10,10 @@ import UserBadge from "@/components/user/UserBadge";
 import UserBookmark from "@/components/user/UserBookmark";
 import Image from "next/image";
 import backgroundImg from "../../../../public/DefaultBackground.svg";
-import { fetchUserProfile } from "@/services/ootd.ts/ootdGet";
+import { fetchUserProfile, getUserTotalOotdCount } from "@/services/ootd.ts/ootdGet";
 import FollowList from "@/components/profile/FollowList";
 import { getUserTotalBoardCount } from "@/services/board/get/getBoard";
+import UserMobileProfile from "@/components/user/UserMobileProfile";
 
 const TABS = {
   TICKET: "TICKET",
@@ -25,16 +26,21 @@ const TABS = {
 
 const UserPage = ({ params }: { params: { id: string } }) => {
   const { id } = params;
-  const [activeTab, setActiveTab] = useState(TABS.TICKET);
+  const decodedId = decodeURIComponent(params.id);
+  const [activeTab, setActiveTab] = useState(() => {
+    if (typeof window !== 'undefined') { 
+      const savedTab = sessionStorage.getItem(`activeTab_${decodedId}`);
+      return savedTab ? savedTab : TABS.TICKET;
+    }
+    return TABS.TICKET; 
+  });
+
   const [userMeberId, setUserMemberId] = useState("");
 
-  // Function to extract the user ID from the URL
   useEffect(() => {
     const extractUserId = () => {
       const currentUrl = window.location.href;
-
       const urlObj = new URL(currentUrl);
-
       const pathname = urlObj.pathname;
       const pathSegments = pathname.split("/");
       const userId = pathSegments[pathSegments.length - 1];
@@ -43,50 +49,60 @@ const UserPage = ({ params }: { params: { id: string } }) => {
 
     extractUserId();
   }, []);
-  console.log(userMeberId);
 
   const { data, error, isLoading, refetch } = useQuery({
-    queryKey: ["userProfile", id],
-    queryFn: () => fetchUserProfile(id),
+    queryKey: ["userProfile", decodedId],
+    queryFn: () => fetchUserProfile(decodedId),
     onError: (error) => {
       console.error(error);
     },
   });
 
+  console.log('유저아이디', decodedId);
+  console.log('데이터', data);
+
   const emailData = data && data.result.email;
+
   const { data: userBoardCount } = useQuery({
-    queryKey: ["userBoardCount", emailData],
-    queryFn: () => getUserTotalBoardCount(emailData),
+    queryKey: ["userBoardCount", decodedId],
+    queryFn: () => getUserTotalBoardCount(decodedId),
     enabled: !!data,
   });
-  console.log(data);
-  console.log(userBoardCount);
 
-  console.log(id);
+  const { data: userOotdCount } = useQuery({
+    queryKey: ["userOotdCount", decodedId],
+    queryFn: () => getUserTotalOotdCount(decodedId),
+    enabled: !!data,
+  });
+
+
   useEffect(() => {
-    if (id) {
+    if (decodedId) {
       refetch();
     }
-  }, [id, refetch]);
+  }, [decodedId, refetch]);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') { 
+      sessionStorage.setItem(`activeTab_${decodedId}`, activeTab);
+    }
+  }, [activeTab, id]);;
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return null;
   }
 
   if (error) {
-    return <div>Error</div>;
+    return null;
   }
 
   const userData = data && data.result;
-
-  console.log("userData: ", userData);
   const memberEmail = userData?.email;
-  console.log(memberEmail);
 
   return (
     <>
       <Header />
-      <div className="relative w-full h-[300px]">
+      <div className="relative w-full h-[240px]">
         <Image
           src={backgroundImg}
           alt="Background"
@@ -94,16 +110,17 @@ const UserPage = ({ params }: { params: { id: string } }) => {
           objectFit="cover"
         />
       </div>
-      <div className="w-[66%] mx-auto">
-        <h1 className="w-[80%] absolute ml-auto text-right top-[320px] text-white text-4xl font-bold">
-          {userData && userData.blogName}
-        </h1>
-      </div>
-      <div className="w-[66%] mx-auto flex p-4">
+      <div className="hidden sm-700:flex w-[66%] mx-auto p-4">
         <div className="w-[250px] mb-4">
-          <UserProfile memberId={id} setActiveTab={setActiveTab} />
+          <UserProfile memberId={decodedId} setActiveTab={setActiveTab} />
         </div>
         <div className="w-[100%] ml-[50px]">
+        <h1 className="absolute ml-[20px] text-left top-[260px] text-white text-4xl font-bold">
+          {userData && userData.blogName}
+        </h1>
+        <div className="absolute ml-[20px] text-left top-[290px] text-white text-xl font-normal font-['Pretendard']">
+          {userData && userData.blogIntroduce}
+        </div>
           <div className="flex justify-between mb-4 ml-4 text-2xl">
             <div className="flex space-x-4">
               <button
@@ -133,8 +150,9 @@ const UserPage = ({ params }: { params: { id: string } }) => {
                 >
                   OOTD
                 </span>
+                 <span className="text-[#fa3463] ml-1">{userOotdCount}</span>
               </button>
-              <button
+              {/* <button
                 className={`px-8 py-2 rounded-[999px] justify-center items-center ${
                   activeTab === TABS.BADGE
                     ? "bg-[#ffe3ea] border-2 border-[#fa3463]"
@@ -147,8 +165,8 @@ const UserPage = ({ params }: { params: { id: string } }) => {
                 >
                   뱃지
                 </span>
-              </button>
-              <button
+              </button> */}
+              {/* <button
                 className={`px-8 py-2 rounded-[999px] justify-center items-center ${
                   activeTab === TABS.BOOKMARK
                     ? "bg-[#ffe3ea] border-2 border-[#fa3463]"
@@ -163,9 +181,8 @@ const UserPage = ({ params }: { params: { id: string } }) => {
                 >
                   북마크
                 </span>
-              </button>
+              </button> */}
             </div>
-            <div className="flex space-x-4"></div>
           </div>
           <hr className="mb-4 w-full h-[1px]" />
 
@@ -173,10 +190,10 @@ const UserPage = ({ params }: { params: { id: string } }) => {
             {activeTab === TABS.TICKET && (
               <UserTicket
                 userBoardCount={userBoardCount}
-                memberEmail={memberEmail}
+                memberEmail={decodedId}
               />
             )}
-            {activeTab === TABS.OOTD && <UserOotd memberId={id} />}
+            {activeTab === TABS.OOTD && <UserOotd memberId={decodedId} />}
             {activeTab === TABS.BADGE && <UserBadge />}
             {activeTab === TABS.BOOKMARK && <UserBookmark />}
             {activeTab === TABS.FOLLOWER && (
@@ -187,6 +204,85 @@ const UserPage = ({ params }: { params: { id: string } }) => {
             )}
           </div>
         </div>
+      </div>
+
+      <div className="w-full mx-auto mb-[90px] sm-700:hidden">
+        <div className="relative z-[9999]">
+          <div className="absolute top-[-300px] left-1/2 transform -translate-x-1/2 w-[200px] h-[300px] px-8 py-4 flex flex-col items-center">
+            <h1 className="text-white text-4xl font-bold mt-[20px]">
+              {userData && userData.blogName}
+            </h1>
+          </div>
+        </div>
+        <UserMobileProfile memberId={decodedId} setActiveTab={setActiveTab}/>
+        <div className="flex w-[100%] justify-center my-4 text-2xl gap-10">
+            <div className="flex flex-col space-x-4">
+              <div className="flex flex-row gap-10">
+              <button
+                className={`px-8 py-2 rounded-[999px] justify-center items-center ${
+                  activeTab === TABS.TICKET
+                    ? "bg-[#ffe3ea] border-2 border-[#fa3463]"
+                    : "border border-[#cfcfcf]"
+                }`}
+                onClick={() => setActiveTab(TABS.TICKET)}
+              >
+                <span
+                  className={activeTab === TABS.TICKET ? "text-[#fa3463]" : ""}
+                >
+                  티켓
+                </span>
+              </button>
+              <button
+                className={`px-8 py-2 rounded-[999px] justify-center items-center ${
+                  activeTab === TABS.OOTD
+                    ? "bg-[#ffe3ea] border-2 border-[#fa3463]"
+                    : "border border-[#cfcfcf]"
+                }`}
+                onClick={() => setActiveTab(TABS.OOTD)}
+              >
+                <span
+                  className={activeTab === TABS.OOTD ? "text-[#fa3463]" : ""}
+                >
+                  OOTD
+                </span>
+                 <span className="text-[#fa3463] ml-1">{userOotdCount}</span>
+              </button>
+              {/* <button
+                className={`px-8 py-2 rounded-[999px] justify-center items-center ${
+                  activeTab === TABS.BADGE
+                    ? "bg-[#ffe3ea] border-2 border-[#fa3463]"
+                    : "border border-[#cfcfcf]"
+                }`}
+                onClick={() => setActiveTab(TABS.BADGE)}
+              >
+                <span
+                  className={activeTab === TABS.BADGE ? "text-[#fa3463]" : ""}
+                >
+                  뱃지
+                </span>
+              </button> */}
+              </div>
+            </div>
+          </div>
+          <div className="w-full mx-auto mt-8">
+          <div className="w-[90%] mx-auto">
+            {activeTab === TABS.TICKET && (
+              <UserTicket
+                userBoardCount={userBoardCount}
+                memberEmail={decodedId}
+              />
+            )}
+            {activeTab === TABS.OOTD && <UserOotd memberId={decodedId} />}
+            {activeTab === TABS.BADGE && <UserBadge />}
+            {activeTab === TABS.BOOKMARK && <UserBookmark />}
+            {activeTab === TABS.FOLLOWER && (
+              <FollowList memberId={userMeberId} type="follower" />
+            )}
+            {activeTab === TABS.FOLLOWING && (
+              <FollowList memberId={userMeberId} type="following" />
+            )}
+          </div>
+          </div>
       </div>
     </>
   );

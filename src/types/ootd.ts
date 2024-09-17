@@ -5,6 +5,7 @@ export interface Image {
   };
   
 export interface PostRequest {
+    memberId: any;
     title: string;
     body: string;
     postType: string;
@@ -140,6 +141,7 @@ export interface PostRequest {
         tags: string[];
         likeCount: number;
         commentCount: number;
+        bookmarkCount: number;
       };
     };
   };
@@ -158,19 +160,21 @@ export interface PostRequest {
 
   export interface Comment {
     id: number;
-    parentId: number;
     content: string;
-    status: string;
-    depth: number;
-    createDateTime: string;
     member: {
       memberId: string;
       nickName: string;
       profileUrl: string;
     };
-    children: Comment[];
+    parentId: number | null;
+    children: Comment[]; // 대댓글
+    createDateTime: string;
+    depth: number;
+    mentionCommentId: number | null;
+    mentionMemberId: string | null;
+    mentionMemberNickName: string | null;
+    status: string;
   }
-  
   export interface LikeResponse {
     isSuccess: boolean;
     code: string;

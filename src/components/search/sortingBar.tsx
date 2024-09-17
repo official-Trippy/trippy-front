@@ -1,13 +1,16 @@
+
 import React from "react";
 
 interface SortingBarProps {
   selectedSearchType: string;
   onSelectSearchType: (searchType: string) => void;
+
   selectedSortOrder: string;
   onSelectSortOrder: (sortOrder: string) => void;
 }
 
 const SortingBar: React.FC<SortingBarProps> = ({
+
   selectedSearchType,
   onSelectSearchType,
   selectedSortOrder,
@@ -18,6 +21,7 @@ const SortingBar: React.FC<SortingBarProps> = ({
     { label: "OOTD", value: "OOTD" },
     { label: "사용자 이름", value: "NICKNAME" },
     { label: "블로그 이름", value: "BLOG" },
+
   ];
 
   const sortOrders = [
@@ -28,12 +32,14 @@ const SortingBar: React.FC<SortingBarProps> = ({
   return (
     <div className="flex justify-between items-center mb-4 mr-[0px] mb-[50px] mt-[30px] w-[789px]">
       <div className="flex space-x-4">
+
         {searchTypes.map((type) => (
           <button
             key={type.value}
             onClick={() => onSelectSearchType(type.value)}
             className={`px-4 py-2 rounded ${
               selectedSearchType === type.value
+
                 ? "bg-[#FB3463] text-white"
                 : "bg-white text-gray-700"
             } hover:bg-gray-200 transition`}

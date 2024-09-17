@@ -3,7 +3,9 @@ import Link from "next/link";
 
 interface PostCardProps {
   posts: {
+
     post?: {
+
       images: { accessUri: string }[];
       title: string;
       body: string;
@@ -13,6 +15,7 @@ interface PostCardProps {
       viewCount: number;
       id: number;
     };
+
     ootd?: {
       images: { accessUri: string }[];
       description: string;
@@ -30,11 +33,14 @@ interface PostCardProps {
     profileImgUrl: { accessUri2: string }[];
   }[];
   selectedSearchType: string;
+
 }
 
 const PostAllCard: React.FC<PostCardProps> = ({
   posts = [],
+
   selectedSearchType,
+
 }) => {
   if (!Array.isArray(posts) || posts.length === 0) {
     return <p>No posts available</p>;
@@ -45,9 +51,11 @@ const PostAllCard: React.FC<PostCardProps> = ({
     return text.substring(0, maxLength) + "...";
   };
 
+
   return (
     <div className="flex flex-col items-stretch gap-[25.012px] h-174px w-789px">
       {posts.map((post, index) => {
+
         const {
           post: postDetails,
           ootd: ootdDetails,
@@ -71,6 +79,7 @@ const PostAllCard: React.FC<PostCardProps> = ({
           linkPath = `/user/${memberId}`;
         }
 
+
         return (
           <Link
             href={linkPath} // 동적 링크 경로 사용
@@ -80,6 +89,7 @@ const PostAllCard: React.FC<PostCardProps> = ({
             <div className="flex justify-center items-start p-6 bg-white rounded-lg shadow-md mb-6 h-[174px] w-[789px]">
               {/* Image */}
               <div className="w-1/3 pr-6 flex-shrink-0 h-full">
+
                 {selectedSearchType === "OOTD" ? (
                   <img
                     src={
@@ -193,6 +203,7 @@ const PostAllCard: React.FC<PostCardProps> = ({
                     </div>
                   </>
                 )}
+
               </div>
             </div>
           </Link>

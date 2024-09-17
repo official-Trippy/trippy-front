@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from '@/app/api/axios';
 import { useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { CustomSession } from "@/types/auth";

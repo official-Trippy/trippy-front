@@ -5,9 +5,11 @@ import { useParams } from "next/navigation";
 import Header from "@/components/shared/header/Header";
 import Keywords from "@/components/search/Keywords";
 import PopularSearches from "@/components/search/popularSearches";
+
 import axios from "axios";
 import SortingBar from "@/components/search/sortingBar";
 // import PostAllCard from "@/components/search/PostAllCard";
+
 import { useQuery } from "react-query";
 import PostAllCard from "@/components/search/postAllCard";
 
@@ -94,11 +96,14 @@ const SearchPage = () => {
 
   const count = posts.length;
 
+
   return (
-    <div className="w-full min-h-screen bg-white">
+    <div className="w-full min-h-[calc(100dvh-75px)] sm-700:min-h-[100vh] bg-white">
       <Header />
+
       <div className="w-[68%] mx-auto mt-8 px-10">
         {/* 검색 결과 제목 */}
+
         <h1 className="text-4xl font-semibold mb-6">
           <span className="text-[#FB3463]">{RealKeyword}</span>에 대한{" "}
           <span className="text-[#FB3463]"> {count}</span>건의 검색 결과입니다.
@@ -123,6 +128,7 @@ const SearchPage = () => {
                   posts={posts}
                   selectedSearchType={selectedSearchType}
                 />
+
               </div>
             ) : (
               <div className="flex-grow max-w-[790px]">
