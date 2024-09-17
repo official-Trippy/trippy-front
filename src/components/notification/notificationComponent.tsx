@@ -8,22 +8,20 @@ const NotificationComponent = () => {
 
   // Determine content based on states
   const renderContent = () => {
-    if (loading) {
-      return <div className="p-4 text-gray-700">Loading notifications...</div>;
-    }
+    // if (loading) {
+    //   return <div className="p-4 text-gray-700">알림 기능 연결중</div>;
+    // }
 
-    if (error) {
-      return <div className="p-4 text-red-500">{error}</div>;
-    }
+    // if (error) {
+    //   return <div className="p-4 text-red-500">{error}</div>;
+    // }
 
-    if (notifications.length === 0) {
-      return (
-        <div className="p-4 text-gray-700">There is no notification yet</div>
-      );
-    }
+    // if (notifications.length === 0) {
+    //   return <div className="p-4 text-gray-700"></div>;
+    // }
 
     return (
-      <div className="p-4">
+      <div className="p-4 ">
         {notifications.map((notification) => (
           <div
             key={notification.notifyId}
@@ -43,11 +41,11 @@ const NotificationComponent = () => {
               <div>
                 <p className="text-black">
                   {notification.notificationType === "LIKE" &&
-                    `${notification.senderNickName} liked your post`}
+                    `${notification.senderNickName}님이 회원님의 게시물에 좋아요를 눌렀습니다.`}
                   {notification.notificationType === "COMMENT" &&
-                    `${notification.senderNickName} left a comment on your post`}
+                    `${notification.senderNickName}님이 회원님의 게시물에 댓글을 달았습니다.`}
                   {notification.notificationType === "FOLLOW" &&
-                    `${notification.senderNickName} followed you`}
+                    `${notification.senderNickName}님이 회원님을 팔로우했습니다.`}
                 </p>
                 {notification.content && (
                   <p className="text-gray-600 text-sm">
@@ -61,7 +59,7 @@ const NotificationComponent = () => {
           </div>
         ))}
         <Link href="/notifications">
-          <button className="text-blue-500">More</button>
+          <button className="text-blue-500">전체 알림보기</button>
         </Link>
       </div>
     );
