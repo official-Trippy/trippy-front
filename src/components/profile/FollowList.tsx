@@ -4,7 +4,8 @@ import { showFollows, showFollowings } from "@/services/follow";
 import { useUserStore } from "@/store/useUserStore";
 import { unfollow } from "@/services/follow";
 import { ACCESS_TOKEN } from "@/constants/general";
-import axios from '@/app/api/axios';
+import axios from "@/app/api/axios";
+import Swal from "sweetalert2";
 
 const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 const FollowList: React.FC<{
@@ -13,6 +14,7 @@ const FollowList: React.FC<{
 }> = ({ memberId, type }) => {
   const [isAvailable, setIsAvailable] = useState<boolean | null>(null);
   const [availabilityMessage, setAvailabilityMessage] = useState<string>("");
+  const [userData, setUserData] = useState<any[]>([]); // 팔로우/팔로잉 데이터를 관리하는 state 추가
 
   const currentUser = useUserStore((state) => state.userInfo);
   const currentUserId = currentUser?.memberId;
@@ -28,7 +30,7 @@ const FollowList: React.FC<{
             },
           }
         );
-        const { available, message, status } = response.data.result;
+        const { available, message } = response.data.result;
         setIsAvailable(available);
         setAvailabilityMessage(message);
         console.log("data!!!!", response.data.result);
@@ -48,17 +50,16 @@ const FollowList: React.FC<{
         ? () => showFollows(memberId, ACCESS_TOKEN)
         : () => showFollowings(memberId, ACCESS_TOKEN),
 
+    onSuccess: (data) => {
+      setUserData(
+        type === "follower" ? data.result.followers : data.result.followings
+      ); // 초기 팔로워/팔로잉 데이터를 state에 저장
+    },
+
     onError: (error) => {
       console.error(error);
     },
   });
-
-  const followInfo = useUserStore((state) => state.userInfo);
-  // console.log(followInfo.followingCnt);
-  // console.log(followInfo);
-
-  // const userFollowingCnt = data.result.followingCnt;
-  // const userFollowCnt = data.result.followCnt;
 
   if (isLoading) return null;
   if (error)
@@ -73,8 +74,49 @@ const FollowList: React.FC<{
     );
   }
 
-  const userData =
-    type === "follower" ? data.result.followers : data.result.followings;
+  // const handleUnfollow = async (userId: string) => {
+  //   try {
+  //     await unfollow(userId);
+  //     // 언팔로우 성공 시 해당 유저를 목록에서 제거
+  //     setUserData((prevData) =>
+  //       prevData.filter((user) => user.memberId !== userId)
+  //     );
+  //     console.log("Unfollow", userId);
+  //   } catch (error) {
+  //     console.error("Error unfollowing:", error);
+  //   }
+  // };
+
+  const handleAlert = async (userId: string) => {
+    const result = await Swal.fire({
+      title: "정말로 팔로우를 취소하시겠습니까?",
+      text: "팔로우를 취소하면 사용자의 비공개 게시물을 볼 수 없습니다.",
+      icon: "warning",
+      showCancelButton: true, // 취소 버튼 추가
+      confirmButtonColor: "#FB3463",
+      cancelButtonColor: "#6B6B6B",
+      confirmButtonText: "네, 팔로우 취소할래요",
+      cancelButtonText: "취소",
+    });
+
+    if (result.isConfirmed) {
+      try {
+        await unfollow(userId);
+        // 언팔로우 성공 시 해당 유저를 목록에서 제거
+        setUserData((prevData) =>
+          prevData.filter((user) => user.memberId !== userId)
+        );
+        Swal.fire(
+          "팔로우 취소",
+          "상대방에게 알림이 가지는 않습니다.",
+          "success"
+        );
+      } catch (error) {
+        console.error("Error unfollowing:", error);
+        Swal.fire("실패", "팔로우 취소 중 문제가 발생했습니다.", "error");
+      }
+    }
+  };
 
   return (
     <div>
@@ -111,10 +153,7 @@ const FollowList: React.FC<{
                 {currentUserId === memberId && (
                   <button
                     className="bg-red-500 text-white px-4 py-2 rounded rounded-lg"
-                    onClick={() => {
-                      unfollow(user.memberId);
-                      console.log("Unfollow", user.idx);
-                    }}
+                    onClick={() => handleAlert(user.memberId)}
                   >
                     {type === "follower" ? "팔로우 삭제" : "팔로우 취소"}
                   </button>

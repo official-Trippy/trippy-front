@@ -8,8 +8,6 @@ import PopularSearches from "@/components/search/popularSearches";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import SortingBar from "@/components/search/sortingBar";
-import PostAllCard from "@/components/search/postAllCard";
-import SortingBar from "@/components/search/sortingBar";
 // import PostAllCard from "@/components/search/PostAllCard";
 import { useQuery } from "react-query";
 import PostAllCard from "@/components/search/postAllCard";
