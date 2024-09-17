@@ -1,24 +1,23 @@
-// components/SortingBar.tsx
-
 import React from "react";
 
 interface SortingBarProps {
-  selectedPostType: string;
-  onSelectPostType: (postType: string) => void;
+  selectedSearchType: string;
+  onSelectSearchType: (searchType: string) => void;
   selectedSortOrder: string;
   onSelectSortOrder: (sortOrder: string) => void;
 }
 
 const SortingBar: React.FC<SortingBarProps> = ({
-  selectedPostType,
-  onSelectPostType,
+  selectedSearchType,
+  onSelectSearchType,
   selectedSortOrder,
   onSelectSortOrder,
 }) => {
-  const postTypes = [
+  const searchTypes = [
     { label: "게시글", value: "POST" },
     { label: "OOTD", value: "OOTD" },
-    { label: "사용자 닉네임", value: "NICKNAME" },
+    { label: "사용자 이름", value: "NICKNAME" },
+    { label: "블로그 이름", value: "BLOG" },
   ];
 
   const sortOrders = [
@@ -27,14 +26,14 @@ const SortingBar: React.FC<SortingBarProps> = ({
   ];
 
   return (
-    <div className="flex justify-between items-center mb-4 mr-[520px] mb-[50px] mt-[30px]">
+    <div className="flex justify-between items-center mb-4 mr-[0px] mb-[50px] mt-[30px] w-[789px]">
       <div className="flex space-x-4">
-        {postTypes.map((type) => (
+        {searchTypes.map((type) => (
           <button
             key={type.value}
-            onClick={() => onSelectPostType(type.value)}
+            onClick={() => onSelectSearchType(type.value)}
             className={`px-4 py-2 rounded ${
-              selectedPostType === type.value
+              selectedSearchType === type.value
                 ? "bg-[#FB3463] text-white"
                 : "bg-white text-gray-700"
             } hover:bg-gray-200 transition`}

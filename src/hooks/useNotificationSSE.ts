@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import axios from "axios";
 
 interface Notification {
   notifyId: number;
@@ -17,25 +18,42 @@ export const useNotificationSSE = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const eventSource = new EventSource(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/notify/subscribe`
-    );
+    // 토큰을 localStorage 혹은 다른 방식으로 가져온다고 가정
+    let accessToken = "";
 
-    eventSource.onmessage = (event) => {
-      const newNotification: Notification = JSON.parse(event.data);
-      setNotifications((prev) => [newNotification, ...prev]);
-      setLoading(false); // Stop loading when data is received
-    };
+    // axios로 먼저 구독 요청 (토큰 포함)
+    axios
+      .get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/notify/subscribe`, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      })
+      .then((response) => {
+        // 구독 성공 후 EventSource 시작
+        const eventSource = new EventSource(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/notify/subscribe?token=${accessToken}`
+        );
 
-    eventSource.onerror = (err) => {
-      setError("서버와의 연결에 오류가 있습니다.");
-      setLoading(false); // Stop loading when an error occurs
-      eventSource.close();
-    };
+        eventSource.onmessage = (event) => {
+          const newNotification: Notification = JSON.parse(event.data);
+          setNotifications((prev) => [newNotification, ...prev]);
+          setLoading(false); // Stop loading when data is received
+        };
 
-    return () => {
-      eventSource.close();
-    };
+        eventSource.onerror = (err) => {
+          setError("error");
+          setLoading(false); // Stop loading when an error occurs
+          eventSource.close();
+        };
+
+        return () => {
+          eventSource.close();
+        };
+      })
+      .catch((error) => {
+        setError("Subscription failed");
+        setLoading(false);
+      });
   }, []);
 
   return { notifications, error, loading };
