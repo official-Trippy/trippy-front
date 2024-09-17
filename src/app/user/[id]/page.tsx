@@ -10,7 +10,10 @@ import UserBadge from "@/components/user/UserBadge";
 import UserBookmark from "@/components/user/UserBookmark";
 import Image from "next/image";
 import backgroundImg from "../../../../public/DefaultBackground.svg";
-import { fetchUserProfile, getUserTotalOotdCount } from "@/services/ootd.ts/ootdGet";
+import {
+  fetchUserProfile,
+  getUserTotalOotdCount,
+} from "@/services/ootd.ts/ootdGet";
 import FollowList from "@/components/profile/FollowList";
 import { getUserTotalBoardCount } from "@/services/board/get/getBoard";
 import UserMobileProfile from "@/components/user/UserMobileProfile";
@@ -27,12 +30,13 @@ const TABS = {
 const UserPage = ({ params }: { params: { id: string } }) => {
   const { id } = params;
   const decodedId = decodeURIComponent(params.id);
+  console.log("id param", decodedId);
   const [activeTab, setActiveTab] = useState(() => {
-    if (typeof window !== 'undefined') { 
+    if (typeof window !== "undefined") {
       const savedTab = sessionStorage.getItem(`activeTab_${decodedId}`);
       return savedTab ? savedTab : TABS.TICKET;
     }
-    return TABS.TICKET; 
+    return TABS.TICKET;
   });
 
   const [userMeberId, setUserMemberId] = useState("");
@@ -58,8 +62,8 @@ const UserPage = ({ params }: { params: { id: string } }) => {
     },
   });
 
-  console.log('유저아이디', decodedId);
-  console.log('데이터', data);
+  console.log("유저아이디", decodedId);
+  console.log("데이터", data);
 
   const emailData = data && data.result.email;
 
@@ -75,7 +79,6 @@ const UserPage = ({ params }: { params: { id: string } }) => {
     enabled: !!data,
   });
 
-
   useEffect(() => {
     if (decodedId) {
       refetch();
@@ -83,10 +86,10 @@ const UserPage = ({ params }: { params: { id: string } }) => {
   }, [decodedId, refetch]);
 
   useEffect(() => {
-    if (typeof window !== 'undefined') { 
+    if (typeof window !== "undefined") {
       sessionStorage.setItem(`activeTab_${decodedId}`, activeTab);
     }
-  }, [activeTab, id]);;
+  }, [activeTab, id]);
 
   if (isLoading) {
     return null;
@@ -115,12 +118,12 @@ const UserPage = ({ params }: { params: { id: string } }) => {
           <UserProfile memberId={decodedId} setActiveTab={setActiveTab} />
         </div>
         <div className="w-[100%] ml-[50px]">
-        <h1 className="absolute ml-[20px] text-left top-[260px] text-white text-4xl font-bold">
-          {userData && userData.blogName}
-        </h1>
-        <div className="absolute ml-[20px] text-left top-[290px] text-white text-xl font-normal font-['Pretendard']">
-          {userData && userData.blogIntroduce}
-        </div>
+          <h1 className="absolute ml-[20px] text-left top-[260px] text-white text-4xl font-bold">
+            {userData && userData.blogName}
+          </h1>
+          <div className="absolute ml-[20px] text-left top-[290px] text-white text-xl font-normal font-['Pretendard']">
+            {userData && userData.blogIntroduce}
+          </div>
           <div className="flex justify-between mb-4 ml-4 text-2xl">
             <div className="flex space-x-4">
               <button
@@ -150,7 +153,7 @@ const UserPage = ({ params }: { params: { id: string } }) => {
                 >
                   OOTD
                 </span>
-                 <span className="text-[#fa3463] ml-1">{userOotdCount}</span>
+                <span className="text-[#fa3463] ml-1">{userOotdCount}</span>
               </button>
               {/* <button
                 className={`px-8 py-2 rounded-[999px] justify-center items-center ${
@@ -214,10 +217,10 @@ const UserPage = ({ params }: { params: { id: string } }) => {
             </h1>
           </div>
         </div>
-        <UserMobileProfile memberId={decodedId} setActiveTab={setActiveTab}/>
+        <UserMobileProfile memberId={decodedId} setActiveTab={setActiveTab} />
         <div className="flex w-[100%] justify-center my-4 text-2xl gap-10">
-            <div className="flex flex-col space-x-4">
-              <div className="flex flex-row gap-10">
+          <div className="flex flex-col space-x-4">
+            <div className="flex flex-row gap-10">
               <button
                 className={`px-8 py-2 rounded-[999px] justify-center items-center ${
                   activeTab === TABS.TICKET
@@ -245,7 +248,7 @@ const UserPage = ({ params }: { params: { id: string } }) => {
                 >
                   OOTD
                 </span>
-                 <span className="text-[#fa3463] ml-1">{userOotdCount}</span>
+                <span className="text-[#fa3463] ml-1">{userOotdCount}</span>
               </button>
               {/* <button
                 className={`px-8 py-2 rounded-[999px] justify-center items-center ${
@@ -261,10 +264,10 @@ const UserPage = ({ params }: { params: { id: string } }) => {
                   뱃지
                 </span>
               </button> */}
-              </div>
             </div>
           </div>
-          <div className="w-full mx-auto mt-8">
+        </div>
+        <div className="w-full mx-auto mt-8">
           <div className="w-[90%] mx-auto">
             {activeTab === TABS.TICKET && (
               <UserTicket
@@ -282,7 +285,7 @@ const UserPage = ({ params }: { params: { id: string } }) => {
               <FollowList memberId={userMeberId} type="following" />
             )}
           </div>
-          </div>
+        </div>
       </div>
     </>
   );
