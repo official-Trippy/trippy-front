@@ -66,7 +66,15 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onImagesChange, initialIm
       currentSlide !== slideCount - 1 && (
         <div
           className={`${className} custom-arrow`}
-          style={{ ...style, display: 'block', right: '10px', zIndex: 1000 }}
+          style={{
+            ...style,
+            display: 'block',
+            position: 'absolute', // 부모 요소 기준으로 절대 배치
+            right: '5px',
+            top: '33%', // 세로 중앙에 배치
+            transform: 'translateY(-50%)', // 세로 중앙 정렬
+            zIndex: 1000,
+          }}
           onClick={onClick}
         >
           <Image src={RightArrowIcon} alt="Next" width={24} height={24} />
@@ -74,14 +82,22 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onImagesChange, initialIm
       )
     );
   };
-
+  
   const SamplePrevArrow = (props: any) => {
     const { className, style, onClick, currentSlide } = props;
     return (
       currentSlide !== 0 && (
         <div
           className={`${className} custom-arrow`}
-          style={{ ...style, display: 'block', left: '10px', zIndex: 1000 }}
+          style={{
+            ...style,
+            display: 'block',
+            position: 'absolute', // 부모 요소 기준으로 절대 배치
+            left: '3px',
+            top: '33%', // 세로 중앙에 배치
+            transform: 'translateY(-50%)', // 세로 중앙 정렬
+            zIndex: 1000,
+          }}
           onClick={onClick}
         >
           <Image src={LeftArrowIcon} alt="Previous" width={24} height={24} />
@@ -89,7 +105,8 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onImagesChange, initialIm
       )
     );
   };
-
+  
+  
   const settings = {
     dots: true,
     infinite: displayImages.length > 1,
@@ -161,15 +178,15 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onImagesChange, initialIm
           <Droppable droppableId="droppable-images" direction="horizontal">
             {(provided) => (
               <div
-          className={`flex w-full mx-auto mt-4 p-[2%] ${
-            displayImages.length === 0 ? '' : 'rounded-lg border border-[#cfcfcf]'
-          }`}
-          {...provided.droppableProps}
-          ref={provided.innerRef}
-          style={{
-            maxWidth: '460px', // 부모 컨테이너 최대 너비
-          }}
-        >
+                className={`flex w-full mx-auto mt-4 p-[2%] ${
+                  displayImages.length === 0 ? '' : 'rounded-lg border border-[#cfcfcf]'
+                }`}
+                {...provided.droppableProps}
+                ref={provided.innerRef}
+                style={{
+                  maxWidth: '460px', // 부모 컨테이너 최대 너비
+                }}
+              >
           {images.map((image, index) => (
             <Draggable key={image.accessUri} draggableId={image.accessUri} index={index}>
               {(provided) => (
