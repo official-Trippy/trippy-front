@@ -15,6 +15,22 @@ import { getCoordinatesFromAddress } from '@/constants/geocode';
 import ImageChanger from '@/components/ootd/ImageChanger';
 import Header from '@/components//shared/header/Header';
 
+const weatherOptions = [
+  { value: 'rain', label: '비' },
+  { value: 'snow', label: '눈' },
+  { value: 'mostly_cloudy', label: '구름많음' },
+  { value: 'cloudy', label: '흐림' },
+  { value: 'sunny', label: '맑음' },
+  { value: 'unknown', label: '기억 안남' },
+];
+
+
+const temperatureOptions = Array.from({ length: 71 }, (_, i) => i - 20).map(temp => ({
+  value: temp === -100 ? 'unknown' : temp.toString(),
+  label: temp === -100 ? '기억 안남' : `${temp}°C`,
+}));
+
+
 const EditOotd: React.FC = () => {
   const router = useRouter();
   const { id } = useParams<{ id: string }>();
@@ -130,17 +146,66 @@ const EditOotd: React.FC = () => {
       onSuccess: (data) => {
         setWeather(data.result);
       },
-      onError: () => {
-        Swal.fire({
-          icon: 'error',
-          title: '날씨 정보를 불러올 수 없습니다.',
-          text: '날씨와 온도를 직접 선택해주세요.',
-          confirmButtonText: '확인',
-          confirmButtonColor: '#FB3463',
-        });
+      onError: async (error) => {
+        console.error('Error fetching weather:', error);
+
+        // 클라이언트에서만 실행되도록 useEffect 사용
+        if (typeof window !== 'undefined') {
+          Swal.fire({
+            icon: 'error',
+            title: '날씨 정보를 불러올 수 없습니다.',
+            text: '날씨와 온도를 직접 선택해주세요.',
+            confirmButtonText: '확인',
+            confirmButtonColor: '#FB3463',
+            allowOutsideClick: false,
+            preConfirm: async () => {
+              // 요소에 접근하려면 useEffect 안에서 지정합니다
+              return new Promise<void>((resolve) => {
+                Swal.fire({
+                  title: '날씨와 온도를 선택하세요',
+                  html: `
+                    <label for="weather-select">날씨 상태:</label>
+                    <select id="weather-select" class="swal2-input">
+                      ${weatherOptions.map(option => `<option value="${option.value}">${option.label}</option>`).join('')}
+                    </select>
+                    <label for="temperature-select" style="margin-top: 1em;">온도:</label>
+                    <select id="temperature-select" class="swal2-input">
+                      ${temperatureOptions.map(option => `<option value="${option.value}">${option.label}</option>`).join('')}
+                    </select>
+                  `,
+                  confirmButtonText: '확인',
+                  confirmButtonColor: '#FB3463',
+                  cancelButtonText: '취소',
+                  showCancelButton: true,
+                  allowOutsideClick: false,
+                  preConfirm: () => {
+                    const weatherSelect = document.getElementById('weather-select') as HTMLSelectElement;
+                    const temperatureSelect = document.getElementById('temperature-select') as HTMLSelectElement;
+                    return {
+                      weather: weatherSelect.value,
+                      temperature: temperatureSelect.value,
+                    };
+                  },
+                }).then((result) => {
+                  if (result.isConfirmed) {
+                    const selected = result.value;
+                    if (selected) {
+                      setWeather({
+                        status: selected.weather,
+                        avgTemp: selected.temperature === 'unknown' ? '정보 없음' : selected.temperature,
+                      });
+                    }
+                    resolve();
+                  }
+                });
+              });
+            },
+          });
+        }
       },
     }
   );
+
 
   const handleFetchWeather = () => {
     if (latitude === null || longitude === null || !date) {
