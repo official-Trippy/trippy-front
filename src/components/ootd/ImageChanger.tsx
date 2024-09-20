@@ -112,8 +112,8 @@ const ImageChanger: React.FC<ImageChangerProps> = ({ onImagesChange, initialImag
   };
 
   return (
-    <div className='w-[420px]'>
-      <div className="relative mx-auto ml-[10px]">
+    <div className=''>
+      <div className="relative mx-auto">
         <input
           type="file"
           onChange={handleImageUpload}
@@ -122,21 +122,19 @@ const ImageChanger: React.FC<ImageChangerProps> = ({ onImagesChange, initialImag
         />
         <div
           onClick={() => displayImages.length === 0 && document.getElementById('image-change-input')?.click()}
-          className="relative cursor-pointer overflow-hidden bg-cover bg-center"
+          className="relative cursor-pointer overflow-hidden bg-cover bg-center mx-auto"
           style={{
             backgroundImage: displayImages.length > 0 ? 'none' : `url(${OotdDefault.src})`,
-            width: '400px',
-            height: '400px',
+            maxWidth: '460px',
+            aspectRatio: '1 / 1', // 1:1 비율 유지
           }}
         >
           {!isUploading && displayImages.length === 0 && (
             <div className="flex items-center justify-center w-full h-full">
-              <Image
+               <img
                 src={OotdDefault.src}
                 alt="Default Image"
-                className="object-cover"
-                width={400}
-                height={400}
+                className="object-cover w-full h-full"  
               />
             </div>
           )}
@@ -160,9 +158,8 @@ const ImageChanger: React.FC<ImageChangerProps> = ({ onImagesChange, initialImag
                       src={image}
                       alt={`Slide ${index}`}
                       className="d-block w-full h-full object-cover rounded-lg"
-                      width={400}
-                      height={400}
-                      style={{ objectFit: 'cover', width: '400px', height: '400px' }}
+                      width={200}
+                      height={200}
                     />
                   </div>
                 </div>
@@ -173,41 +170,55 @@ const ImageChanger: React.FC<ImageChangerProps> = ({ onImagesChange, initialImag
         <DragDropContext onDragEnd={onDragEnd}>
           <Droppable droppableId="droppable-images" direction="horizontal">
             {(provided) => (
-              <div
-                className={`flex w-[400px] mt-4 p-[10px] ${
+                <div
+                className={`flex w-full mx-auto mt-4 p-[2%] ${
                   displayImages.length === 0 ? '' : 'rounded-lg border border-[#cfcfcf]'
                 }`}
                 {...provided.droppableProps}
                 ref={provided.innerRef}
+                style={{
+                  maxWidth: '460px', // 부모 컨테이너 최대 너비
+                }}
               >
                 {images.map((image, index) => (
                   <Draggable key={image.accessUri} draggableId={image.accessUri} index={index}>
                     {(provided) => (
                       <div
-                        className={`relative ${index === images.length - 1 ? '' : 'mr-[5px]'}`}
+                        className={`relative ${index === images.length - 1 ? '' : 'mr-[2%]'}`}
                         ref={provided.innerRef}
                         {...provided.draggableProps}
                         {...provided.dragHandleProps}
-                        style={{ width: '72px', height: '72px' }}
+                        style={{
+                          width: '18%', // 사진 하나의 크기를 컨테이너의 너비 대비 18%로 설정 (최대 5개가 배치됨)
+                          paddingBottom: '18%', // 가로세로 비율 1:1 유지
+                          position: 'relative',
+                        }}
                       >
-                        <Image
+                       <img
                           src={image.accessUri}
                           alt={`Uploaded Image ${index}`}
                           className="object-cover rounded-lg"
-                          width={72}
-                          height={72}
-                          style={{ objectFit: 'cover', width: '72px', height: '72px' }}
+                          style={{
+                            width: '100%',
+                            height: '100%',
+                            position: 'absolute',
+                            top: 0,
+                            left: 0,
+                            objectFit: 'cover',
+                          }}
                         />
                         <div
                           onClick={() => handleDeleteImage(index)}
                           className="absolute top-0 right-0 rounded-full cursor-pointer"
                         >
-                          <Image
+                           <img
                             src={OOtdDeleteImage.src}
                             alt="Delete Image"
-                            width={20}
-                            height={20}
-                            style={{ objectFit: 'cover', width: '20px', height: '20px' }}
+                            style={{
+                              width: '20px',
+                              height: '20px',
+                              objectFit: 'cover',
+                            }}
                           />
                         </div>
                       </div>
@@ -215,16 +226,26 @@ const ImageChanger: React.FC<ImageChangerProps> = ({ onImagesChange, initialImag
                   </Draggable>
                 ))}
                 {images.length > 0 && (
-                  <div
-                    onClick={() => document.getElementById('image-change-input')?.click()}
-                    className="flex items-center justify-center w-[72px] h-[72px] cursor-pointer"
-                  >
-                    <Image
+                   <div
+                      onClick={() => document.getElementById('image-change-input')?.click()}
+                      className="flex justify-center items-center cursor-pointer ml-[2%]"
+                      style={{
+                        width: '18%', // 새로운 이미지 추가 버튼도 같은 크기
+                        paddingBottom: '18%', // 가로세로 비율 1:1
+                        position: 'relative',
+                      }}
+                    >
+                    <img
                       src={OotdAddImage.src}
                       alt="Add Image"
-                      width={72}
-                      height={72}
-                      style={{ objectFit: 'cover', width: '72px', height: '72px' }}
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        objectFit: 'cover',
+                      }}
                     />
                   </div>
                 )}

@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
-import ImageUploader from '@/components/ootd/ImageUploader';
 import PostInput from '@/components/ootd/PostInput';
 import LocationInput from '@/components/ootd/LocationInput';
 import DateInput from '@/components/ootd/DateInput';
@@ -14,6 +13,7 @@ import { getWeatherStatusInKorean } from '@/constants/weatherTransition';
 import { fetchWeather } from '@/services/ootd.ts/weather';
 import { getCoordinatesFromAddress } from '@/constants/geocode';
 import ImageChanger from '@/components/ootd/ImageChanger';
+import Header from '@/components//shared/header/Header';
 
 const EditOotd: React.FC = () => {
   const router = useRouter();
@@ -113,6 +113,15 @@ const EditOotd: React.FC = () => {
       handleFetchWeather();
     }
   }, [hasChanges, latitude, longitude, date]);
+
+  // useEffect(() => {
+  //   if (data && data.isSuccess) {
+  //     const postData = data.result.post;
+  //     if (postData) {
+  //       setImages(postData.images); // 상태 업데이트
+  //     }
+  //   }
+  // }, [data]);
 
   const weatherMutation = useMutation(
     (variables: { latitude: number; longitude: number; date: string }) =>
@@ -270,7 +279,7 @@ const EditOotd: React.FC = () => {
   }
 
   return (
-    <div className="w-full max-w-screen-lg mx-auto px-4 py-8">
+    <><Header /><div className="min-h-[calc(100dvh-60px)] mb-[60px] w-[90%] py-16 sm-700:w-[66%] sm-700:min-h-screen sm-700:mb-0 mx-auto">
       <div className="w-full flex justify-end mb-[20px]">
         <button
           onClick={handleUpdatePost}
@@ -286,25 +295,22 @@ const EditOotd: React.FC = () => {
             onPostChange={setPost}
             onTagsChange={setTags}
             tags={tags}
-            initialPost={post}
-          />
+            initialPost={post} />
           <div className="space-y-4">
             <LocationInput
               onLocationChange={handleLocationChange}
-              selectedLocationName={location}
-            />
+              selectedLocationName={location} />
             <DateInput
               onDateChange={handleDateChange}
-              initialDate={date}
-            />
+              initialDate={date} />
             {weather ? (
               <div className="w-full bg-neutral-100 rounded-lg flex justify-center items-center py-4 text-neutral-500 text-lg">
                 <div>
                   {weather.avgTemp === '정보 없음'
                     ? '정보 없음'
                     : `${weather.avgTemp}°C, ${getWeatherStatusInKorean(
-                        weather.status
-                      )}`}
+                      weather.status
+                    )}`}
                 </div>
               </div>
             ) : (
@@ -318,7 +324,7 @@ const EditOotd: React.FC = () => {
           </div>
         </div>
       </div>
-    </div>
+    </div></>
   );
 };
 
