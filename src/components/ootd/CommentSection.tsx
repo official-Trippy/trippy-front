@@ -186,7 +186,6 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
     
 
     const handleReplySubmit = () => {
-      console.log('클릭은됨');
       if (replyComment.trim() && replyTo !== null) {
         const currentReplyTarget = findCommentById(comments, replyTo); // 재귀 함수로 댓글 찾기
         console.log(replyTo);
@@ -222,10 +221,15 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
   
 
   const handleReplyClick = (commentId: number, nickName: string) => {
-    setReplyTo(commentId);
-    setReplyToNickname(nickName);
-
-    console.log(commentId);
+    if (replyTo === commentId) {
+      // 이미 열린 상태면 닫음 (취소)
+      setReplyTo(null);
+      setReplyToNickname(null);
+    } else {
+      // 답글 입력 레이아웃 열기
+      setReplyTo(commentId);
+      setReplyToNickname(nickName);
+    }
   };
 
   const handleLikeClick = () => {
@@ -277,7 +281,7 @@ const renderComments = (comments: Comment[], depth = 0) => {
             <div className="text-gray-600">{formatTime(comment.createDateTime)}</div>
             <div>&nbsp;&nbsp;|&nbsp;&nbsp;</div>
             <button onClick={() => handleReplyClick(comment.id, comment.member?.nickName || '')} className="text-gray-500">
-              답글쓰기
+            {replyTo === comment.id ? '답글취소' : '답글쓰기'}
             </button>
           </div>
         </div>
@@ -385,7 +389,7 @@ const renderComments = (comments: Comment[], depth = 0) => {
 
   if (!accessToken) {
     return (
-      <div className="w-[90%] sm-700:w-full sm-700:max-w-6xl mx-auto sm-700:px-4">
+      <div className="w-[90%] sm-700:w-[66%] sm-700:max-w-7xl mx-auto">
         <div className="flex items-center pt-12">
           <button className="flex items-center" onClick={handleLikeClick}>
             <Image
@@ -436,7 +440,7 @@ const renderComments = (comments: Comment[], depth = 0) => {
   }
 
   return (
-    <div className="w-[90%] sm-700:w-full sm-700:max-w-6xl mx-auto sm-700:px-4">
+    <div className="w-[90%] sm-700:w-[66%] sm-700:max-w-7xl mx-auto">
       <div className="flex items-center pt-12">
         <button className="flex items-center" onClick={handleLikeClick}>
           <Image
