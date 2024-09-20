@@ -266,7 +266,7 @@ const PostOotd: React.FC = () => {
   };
 
   return (
-    <div className="w-full max-w-screen-lg mx-auto px-4 py-8">
+    <div className="w-[90%] py-16 sm-700:w-[66%] mx-auto">
       <div className="w-full flex justify-end mb-[20px]">
         <button
           className="bg-neutral-100 rounded-lg flex justify-center items-center px-10 py-2 text-black text-lg mr-[10px]"

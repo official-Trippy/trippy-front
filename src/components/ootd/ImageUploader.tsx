@@ -102,31 +102,29 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onImagesChange, initialIm
   };
 
   return (
-    <div className='w-[420px]'>
-      <div className="relative mx-auto ml-[10px]">
+    <div className=''>
+      <div className="relative mx-auto">
         <input
           type="file"
           onChange={handleImageUpload}
           style={{ display: 'none' }}
           id="image-upload-input"
         />
-        <div
-          onClick={() => displayImages.length === 0 && document.getElementById('image-upload-input')?.click()}
-          className="relative cursor-pointer overflow-hidden bg-cover bg-center"
-          style={{
-            backgroundImage: displayImages.length > 0 ? 'none' : `url(${OotdDefault.src})`,
-            width: '400px',
-            height: '400px',
-          }}
-        >
+          <div
+            onClick={() => displayImages.length === 0 && document.getElementById('image-upload-input')?.click()}
+            className="relative cursor-pointer overflow-hidden bg-cover bg-center mx-auto"
+            style={{
+              backgroundImage: displayImages.length > 0 ? 'none' : `url(${OotdDefault.src})`,
+              maxWidth: '460px',
+              aspectRatio: '1 / 1', // 1:1 비율 유지
+            }}
+          >
           {!isUploading && displayImages.length === 0 && (
             <div className="flex items-center justify-center w-full h-full">
-              <Image
+              <img
                 src={OotdDefault.src}
                 alt="Default Image"
-                className="object-cover"
-                width={400}
-                height={400}
+                className="object-cover w-full h-full"  
               />
             </div>
           )}
@@ -135,9 +133,9 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onImagesChange, initialIm
               <Image
                 src={displayImages[0]}
                 alt="Uploaded Image"
-                className="w-full h-full object-cover rounded-lg"
-                width={400}
-                height={400}
+                className="object-cover w-full h-full rounded-lg"  
+                width={200}
+                height={200}
               />
             </div>
           )}
@@ -145,14 +143,13 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onImagesChange, initialIm
             <Slider {...settings}>
               {displayImages.map((image, index) => (
                 <div key={index}>
-                  <div className="relative w-full h-full">
+                  <div className="relative w-full h-full rounded-lg">
                     <Image
                       src={image}
                       alt={`Slide ${index}`}
-                      className="d-block w-full h-full object-cover rounded-lg"
-                      width={400}
-                      height={400}
-                      style={{ objectFit: 'cover', width: '400px', height: '400px' }}
+                      className="w-full h-auto object-cover rounded-lg"
+                      width={200}
+                      height={200}
                     />
                   </div>
                 </div>
@@ -164,65 +161,90 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onImagesChange, initialIm
           <Droppable droppableId="droppable-images" direction="horizontal">
             {(provided) => (
               <div
-                className={`flex w-[400px] mt-4 p-[10px] ${
-                  displayImages.length === 0 ? '' : 'rounded-lg border border-[#cfcfcf]'
-                }`}
-                {...provided.droppableProps}
-                ref={provided.innerRef}
-              >
-                {images.map((image, index) => (
-                  <Draggable key={image.accessUri} draggableId={image.accessUri} index={index}>
-                    {(provided) => (
-                      <div
-                        className={`relative ${index === images.length - 1 ? '' : 'mr-[5px]'}`}
-                        ref={provided.innerRef}
-                        {...provided.draggableProps}
-                        {...provided.dragHandleProps}
-                        style={{ width: '72px', height: '72px' }}
-                      >
-                        <Image
-                          src={image.accessUri}
-                          alt={`Uploaded Image ${index}`}
-                          className="object-cover rounded-lg"
-                          width={72}
-                          height={72}
-                          style={{ objectFit: 'cover', width: '72px', height: '72px' }}
-                        />
-                        <div
-                          onClick={() => handleDeleteImage(index)}
-                          className="absolute top-0 right-0 rounded-full cursor-pointer"
-                        >
-                          <Image
-                            src={OOtdDeleteImage.src}
-                            alt="Delete Image"
-                            width={20}
-                            height={20}
-                            style={{ objectFit: 'cover', width: '20px', height: '20px' }}
-                          />
-                        </div>
-                      </div>
-                    )}
-                  </Draggable>
-                ))}
-                {images.length > 0 && images.length < 5 && (
+          className={`flex w-full mx-auto mt-4 p-[2%] ${
+            displayImages.length === 0 ? '' : 'rounded-lg border border-[#cfcfcf]'
+          }`}
+          {...provided.droppableProps}
+          ref={provided.innerRef}
+          style={{
+            maxWidth: '460px', // 부모 컨테이너 최대 너비
+          }}
+        >
+          {images.map((image, index) => (
+            <Draggable key={image.accessUri} draggableId={image.accessUri} index={index}>
+              {(provided) => (
+                <div
+                  className={`relative ${index === images.length - 1 ? '' : 'mr-[2%]'}`}
+                  ref={provided.innerRef}
+                  {...provided.draggableProps}
+                  {...provided.dragHandleProps}
+                  style={{
+                    width: '18%', // 사진 하나의 크기를 컨테이너의 너비 대비 18%로 설정 (최대 5개가 배치됨)
+                    paddingBottom: '18%', // 가로세로 비율 1:1 유지
+                    position: 'relative',
+                  }}
+                >
+                  <img
+                    src={image.accessUri}
+                    alt={`Uploaded Image ${index}`}
+                    className="object-cover rounded-lg"
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      position: 'absolute',
+                      top: 0,
+                      left: 0,
+                      objectFit: 'cover',
+                    }}
+                  />
                   <div
-                    onClick={() => document.getElementById('image-upload-input')?.click()}
-                    className="w-[72px] h-[72px] ml-[5px] flex justify-center items-center cursor-pointer"
+                    onClick={() => handleDeleteImage(index)}
+                    className="absolute top-0 right-0 rounded-full cursor-pointer"
                   >
-                    <Image
-                      src={OotdAddImage.src}
-                      alt="Add Image"
-                      width={72}
-                      height={72}
-                      style={{ objectFit: 'cover' }}
+                    <img
+                      src={OOtdDeleteImage.src}
+                      alt="Delete Image"
+                      style={{
+                        width: '20px',
+                        height: '20px',
+                        objectFit: 'cover',
+                      }}
                     />
                   </div>
-                )}
-                {provided.placeholder}
-              </div>
-            )}
-          </Droppable>
-        </DragDropContext>
+                </div>
+              )}
+            </Draggable>
+          ))}
+          {images.length > 0 && images.length < 5 && (
+            <div
+              onClick={() => document.getElementById('image-upload-input')?.click()}
+              className="flex justify-center items-center cursor-pointer ml-[2%]"
+              style={{
+                width: '18%', // 새로운 이미지 추가 버튼도 같은 크기
+                paddingBottom: '18%', // 가로세로 비율 1:1
+                position: 'relative',
+              }}
+            >
+              <img
+                src={OotdAddImage.src}
+                alt="Add Image"
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  objectFit: 'cover',
+                }}
+              />
+            </div>
+          )}
+          {provided.placeholder}
+        </div>
+      )}
+  </Droppable>
+</DragDropContext>
+
       </div>
     </div>
   );
