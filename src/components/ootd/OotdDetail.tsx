@@ -19,7 +19,7 @@ import { useRouter } from "next/navigation";
 import FollowButton from "../followControl/followButton";
 import Cookies from "js-cookie";
 import Swal from "sweetalert2";
-import CabapIcon from "../../../public/icon_cabap.svg";
+import CabapIcon from "../../../public/cabap.svg";
 import BookmarkIcon from "../../../public/icon_bookmark.svg";
 import BookmarkedIcon from "../../../public/bookmark-fill.svg";
 import { addBookmark, deleteBookmark, fetchIsBookmarked } from "@/services/bookmark/bookmark";
@@ -200,107 +200,84 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
     <>
       <div className="w-[90%] sm-700:w-[66%] sm-700:max-w-6xl mx-auto">
         <div className="w-full mx-auto">
-          <div className="py-12 flex items-center">
-            <div className="flex items-center mr-auto">
-            <div className="relative w-[55px] h-[55px]">
-                <Image
-                  src={ootdItem.member.profileUrl}
-                  alt="사용자 프로필"
-                  layout="fill"
-                  objectFit="cover"
-                  className="rounded-full cursor-pointer"
-                  onClick={handleProfileClick}
-                />
-              </div>
-              <div className="ml-4">
-                <span className="block font-bold text-[16px] ml-[2px] cursor-pointer" onClick={handleProfileClick}>
-                  {ootdItem.member.nickName}
-                </span>
-                <div className="flex items-center gap-2 whitespace-nowrap overflow-hidden text-ellipsis">
-                <Image
-                  width={16}
-                  height={16}
-                  src={LocationIcon}
-                  alt="location"
-                />
-                <span className="block text-gray-600 overflow-hidden text-ellipsis">
-                  {ootdItem.post.location}
-                </span>
-              </div>
-              <div className="flex items-center gap-2 whitespace-nowrap overflow-hidden text-ellipsis">
-                <Image
-                  width={16}
-                  height={16}
-                  src={WeatherIcon}
-                  alt="weather"
-                />
-                <span className="block text-gray-600 overflow-hidden text-ellipsis">
-                  {ootdItem.ootd.date}{" "}|{" "}
-                </span>
-                <span className="block text-gray-600 overflow-hidden text-ellipsis">
-                  {getWeatherStatusInKorean(ootdItem.ootd.weatherStatus)}, {ootdItem.ootd.weatherTemp}°C
-                </span>
-              </div>
+        <div className="py-12 flex items-center justify-between">
+  {/* 왼쪽 사용자 정보 및 location/weather 부분 */}
+  <div className="flex items-center flex-shrink min-w-0 mr-auto">
+    <div className="relative w-[55px] h-[55px] flex-shrink-0">
+      <Image
+        src={ootdItem.member.profileUrl}
+        alt="사용자 프로필"
+        layout="fill"
+        objectFit="cover"
+        className="rounded-full cursor-pointer"
+        onClick={handleProfileClick}
+      />
+    </div>
+    <div className="ml-4 min-w-0">
+      <span
+        className="block font-bold text-[16px] ml-[2px] cursor-pointer truncate"
+        onClick={handleProfileClick}
+      >
+        {ootdItem.member.nickName}
+      </span>
+      <div className="flex items-center gap-2 whitespace-nowrap overflow-hidden text-ellipsis">
+        <Image width={16} height={16} src={LocationIcon} alt="location" />
+        <span className="block text-gray-600 truncate">{ootdItem.post.location}</span>
+      </div>
+      <div className="flex items-center gap-2 whitespace-nowrap overflow-hidden text-ellipsis">
+        <Image width={16} height={16} src={WeatherIcon} alt="weather" />
+        <span className="block text-gray-600 truncate">
+          {ootdItem.ootd.date} |{" "}
+          {getWeatherStatusInKorean(ootdItem.ootd.weatherStatus)}, {ootdItem.ootd.weatherTemp}°C
+        </span>
+      </div>
+    </div>
+  </div>
 
-              </div>
+  {/* 오른쪽 팔로우 버튼 및 아이콘들 */}
+  <div className="flex items-center space-x-2 sm-700:space-x-8">
+    <FollowButton postMemberId={data.result.member.memberId} userMemberId={userMemberId} />
+    {/* 북마크 및 메뉴 아이콘 */}
+    <div className="min-w-[35px] flex items-center">
+      <Image
+        src={isBookmarked ? BookmarkedIcon : BookmarkIcon}
+        alt="bookmark"
+        width={24}
+        height={24}
+        className="cursor-pointer"
+        onClick={handleBookmarkClick}
+      />
+      <div className="text-[#9d9d9d] min-w-[10px] text-center">
+        {data.result.post.bookmarkCount}
+      </div>
+    </div>
+
+    {userMemberId === data.result.member.memberId && (
+      <div className="relative">
+        <Image
+          src={CabapIcon}
+          alt="cabap"
+          width={3.5}
+          height={30}
+          onClick={handleCabapIconClick}
+          className="cursor-pointer"
+        />
+        {isMenuOpen && (
+          <div className="absolute top-full right-0 mt-4 w-32 bg-white rounded shadow-lg z-10">
+            <div className="py-2 px-4 text-[#ff4f4f] hover:bg-gray-100 cursor-pointer text-center" onClick={handleDeleteClick}>
+              삭제
             </div>
-            <div className="flex items-center">
-            <div className="w-[80px] flex items-center space-x-2 ml-auto">
-              <FollowButton
-                postMemberId={data.result.member.memberId}
-                userMemberId={userMemberId}
-              />
-              <i className="far fa-bookmark text-xl"></i>
-              <i className="fas fa-ellipsis-h text-xl"></i>
+            <hr />
+            <div className="py-2 px-4 text-black hover:bg-gray-100 cursor-pointer text-center" onClick={() => router.push(`/edit/${id}`)}>
+              수정
             </div>
-            <div className="hidden sm-700:flex items-center my-auto ml-4">
-              <Image
-                src={isBookmarked ? BookmarkedIcon : BookmarkIcon}
-                alt="bookmark"
-                width={24}
-                height={24}
-                className="cursor-pointer mr-2"
-                onClick={handleBookmarkClick}
-              />
-              <div className="text-[#9d9d9d] min-w-[10px] text-center">
-                {data.result.post.bookmarkCount}
-              </div>
-            </div>
-            {userMemberId === data.result.member.memberId && (
-              <div className="relative my-auto flex justify-end">
-                <div className="relative mt-[2px] ml-4">
-                  <Image
-                    src={CabapIcon}
-                    alt="cabap"
-                    width={36}
-                    height={36}
-                    onClick={handleCabapIconClick}
-                    className="cursor-pointer"
-                  />
-                  {isMenuOpen && (
-                    <div className="w-[100px] absolute top-full right-4 mt-4 w-32 bg-white rounded shadow-lg z-10">
-                      <div
-                        className="py-6 px-8 text-[#ff4f4f] hover:bg-gray-100 cursor-pointer text-center"
-                        onClick={handleDeleteClick}
-                      >
-                        삭제
-                      </div>
-                      <hr/>
-                      <div
-                        className="py-6 px-8 text-black hover:bg-gray-100 cursor-pointer text-center"
-                        onClick={() => {
-                          router.push(`/edit/${id}`);
-                        }}
-                      >
-                        수정
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </div>
-            )}
           </div>
-          </div>
+        )}
+      </div>
+    )}
+  </div>
+</div>
+
           <div className="relative">
           <Slider {...settings}>
             {ootdItem.post.images.map((image, index) => (
