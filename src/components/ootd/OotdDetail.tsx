@@ -198,7 +198,7 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
 
   return (
     <>
-      <div className="w-[90%] sm-700:w-[66%] sm-700:max-w-6xl mx-auto">
+      <div className="w-[90%] sm-700:w-[66%] sm-700:max-w-7xl mx-auto">
         <div className="w-full mx-auto">
         <div className="py-12 flex items-center justify-between">
   {/* 왼쪽 사용자 정보 및 location/weather 부분 */}

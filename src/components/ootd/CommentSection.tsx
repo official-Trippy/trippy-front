@@ -389,7 +389,7 @@ const renderComments = (comments: Comment[], depth = 0) => {
 
   if (!accessToken) {
     return (
-      <div className="w-[90%] sm-700:w-[66%] sm-700:max-w-6xl mx-auto">
+      <div className="w-[90%] sm-700:w-[66%] sm-700:max-w-7xl mx-auto">
         <div className="flex items-center pt-12">
           <button className="flex items-center" onClick={handleLikeClick}>
             <Image
@@ -440,7 +440,7 @@ const renderComments = (comments: Comment[], depth = 0) => {
   }
 
   return (
-    <div className="w-[90%] sm-700:w-[66%] sm-700:max-w-6xl mx-auto">
+    <div className="w-[90%] sm-700:w-[66%] sm-700:max-w-7xl mx-auto">
       <div className="flex items-center pt-12">
         <button className="flex items-center" onClick={handleLikeClick}>
           <Image
