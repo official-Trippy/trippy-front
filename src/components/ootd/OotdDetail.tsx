@@ -23,6 +23,7 @@ import CabapIcon from "../../../public/icon_cabap.svg";
 import BookmarkIcon from "../../../public/icon_bookmark.svg";
 import BookmarkedIcon from "../../../public/bookmark-fill.svg";
 import { addBookmark, deleteBookmark, fetchIsBookmarked } from "@/services/bookmark/bookmark";
+import WeatherIcon from "../../../public/weatherIcon.svg";
 
 interface OotdDetailProps {
   id: number;
@@ -197,11 +198,11 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
 
   return (
     <>
-      <div className="w-[90%] sm-700:w-full sm-700:max-w-6xl mx-auto sm-700:p-4">
+      <div className="w-[90%] sm-700:w-[66%] sm-700:max-w-6xl mx-auto">
         <div className="w-full mx-auto">
           <div className="py-12 flex items-center">
-            <div className="flex items-center">
-            <div className="relative w-[50px] h-[50px]">
+            <div className="flex items-center mr-auto">
+            <div className="relative w-[55px] h-[55px]">
                 <Image
                   src={ootdItem.member.profileUrl}
                   alt="사용자 프로필"
@@ -211,27 +212,40 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
                   onClick={handleProfileClick}
                 />
               </div>
-              <div className="h-[48px] ml-4">
-                <span className="block font-bold text-[20px] ml-[2px] cursor-pointer" onClick={handleProfileClick}>
+              <div className="ml-4">
+                <span className="block font-bold text-[16px] ml-[2px] cursor-pointer" onClick={handleProfileClick}>
                   {ootdItem.member.nickName}
                 </span>
-                <div className="flex items-center gap-2">
-                  <Image
-                    width={16}
-                    height={16}
-                    src={LocationIcon}
-                    alt="location"
-                  />
-                  <span className="block text-gray-600 mt-[2px]">
-                    {ootdItem.post.location} |{" "}
-                    {getWeatherStatusInKorean(ootdItem.ootd.weatherStatus)},{" "}
-                    {ootdItem.ootd.weatherTemp}°C
-                  </span>
-                </div>
+                <div className="flex items-center gap-2 whitespace-nowrap overflow-hidden text-ellipsis">
+                <Image
+                  width={16}
+                  height={16}
+                  src={LocationIcon}
+                  alt="location"
+                />
+                <span className="block text-gray-600 overflow-hidden text-ellipsis">
+                  {ootdItem.post.location}
+                </span>
+              </div>
+              <div className="flex items-center gap-2 whitespace-nowrap overflow-hidden text-ellipsis">
+                <Image
+                  width={16}
+                  height={16}
+                  src={WeatherIcon}
+                  alt="weather"
+                />
+                <span className="block text-gray-600 overflow-hidden text-ellipsis">
+                  {ootdItem.ootd.date}{" "}|{" "}
+                </span>
+                <span className="block text-gray-600 overflow-hidden text-ellipsis">
+                  {getWeatherStatusInKorean(ootdItem.ootd.weatherStatus)}, {ootdItem.ootd.weatherTemp}°C
+                </span>
+              </div>
+
               </div>
             </div>
-            <div className="ml-auto flex items-center">
-            <div className="flex items-center space-x-2 ml-auto">
+            <div className="flex items-center">
+            <div className="w-[80px] flex items-center space-x-2 ml-auto">
               <FollowButton
                 postMemberId={data.result.member.memberId}
                 userMemberId={userMemberId}

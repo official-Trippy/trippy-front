@@ -206,19 +206,7 @@ const RecentOotdPost: React.FC = () => {
       <div className="grid grid-cols-2 sm-700:grid-cols-3 lg:grid-cols-4 gap-8">
         {ootdList.map((item) => (
           <div key={item.post.id} className="flex flex-col overflow-hidden cursor-pointer" onClick={() => handleOotdItemClick(item.post.id)}>
-            {item.post.images.length > 0 && (
-              <div className="relative w-full" style={{ aspectRatio: '303 / 381' }}>
-                <Image
-                  className="absolute top-0 left-0 w-full h-full object-cover rounded-xl"
-                  src={item.post.images[0].accessUri}
-                  alt="OOTD"
-                  layout="fill"
-                />
-              </div>
-            )}
-            <div className="py-8">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center">
+             <div className="flex items-center pb-4">
                   <div className="relative w-[24px] h-[24px]">
                     <Image
                       src={item.member.profileUrl}
@@ -229,6 +217,29 @@ const RecentOotdPost: React.FC = () => {
                   </div>
                   <span className="text-[#6B6B6B] ml-[5px]">{item.member.nickName}</span>
                 </div>
+            {item.post.images.length > 0 && (
+              <div className="relative w-full" style={{ aspectRatio: '303 / 381' }}>
+                <Image
+                  className="absolute top-0 left-0 w-full h-full object-cover rounded-xl"
+                  src={item.post.images[0].accessUri}
+                  alt="OOTD"
+                  layout="fill"
+                />
+              </div>
+            )}
+            <div className="py-4">
+              <div className="flex items-center justify-end">
+                {/* <div className="flex items-center">
+                  <div className="relative w-[24px] h-[24px]">
+                    <Image
+                      src={item.member.profileUrl}
+                      alt="Profile"
+                      layout="fill"
+                      objectFit="cover"
+                      className="rounded-full" />
+                  </div>
+                  <span className="text-[#6B6B6B] ml-[5px]">{item.member.nickName}</span>
+                </div> */}
                 <div className="flex items-center mt-2">
                 <Image
                     src={likedPosts.includes(item.post.id) ? HeartIcon : EmptyHeartIcon} 
