@@ -23,7 +23,7 @@ import CabapIcon from "../../../public/cabap.svg";
 import BookmarkIcon from "../../../public/icon_bookmark.svg";
 import BookmarkedIcon from "../../../public/bookmark-fill.svg";
 import { addBookmark, deleteBookmark, fetchIsBookmarked } from "@/services/bookmark/bookmark";
-import WeatherIcon from "../../../public/weatherIcon.svg";
+import WeatherIcon from "../../../public/WeatherIcon.svg";
 
 interface OotdDetailProps {
   id: number;
