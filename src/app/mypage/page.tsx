@@ -90,7 +90,7 @@ const MyPage = () => {
       <Header />
       <div className="relative w-full h-[240px]">
         <Image
-          src={backgroundImg}
+          src={userData?.blogTitleImgUrl || backgroundImg}
           alt="Background"
           layout="fill"
           objectFit="cover"

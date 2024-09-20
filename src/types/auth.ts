@@ -67,8 +67,8 @@ export interface UpdateMemberInfoRequest {
   blogName: string;
   blogIntroduce: string;
   koreanInterestedTypes: string[];
-  profileImage: { accessUri: string; authenticateId: string; imgUrl: string; } | undefined;
-  blogImage: { accessUri: string; authenticateId: string; imgUrl: string; } | undefined;
+  profileImage: { accessUri: string; authenticateId: string; imgUrl: string; };
+  blogImage: { accessUri: string; authenticateId: string; imgUrl: string; };
   likeAlert: boolean;
   commentAlert: boolean;
   ticketScope: "public" | "private" | "protected";
