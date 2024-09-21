@@ -32,7 +32,9 @@ import { useFollowingStore } from "@/store/useFollowingStore";
 import { doFollow, unfollow } from "@/services/follow";
 import FollowButton from "@/components/followControl/followButton";
 import { colorTicket } from "@/types/board";
-import DefaultImage from '../../../../public/defaultImage.svg';
+import deleteBoard from "@/services/board/delete/deleteBoard";
+import Swal from "sweetalert2";
+import menubars from "@/dummy/menubars.svg"
 
 export default function BoardPage({ params }: { params: { boardId: number } }) {
   const accessToken = Cookies.get("accessToken");
@@ -42,7 +44,11 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
   const [replyComment, setReplyComment] = useState("");
   const { userInfo, loading, fetchUserInfo } = useUserStore();
   const [replyId, setReplyId] = useState(0);
-  const [isReplyOpen, setIsReplyOpen] = useState(false);
+  const [replymemId, setReplyMemId] = useState('');
+  const [replyNickname, setReplyNickname] = useState('');
+  const [isReplyOpen, setIsReplyOpen] = useState(true);
+  const [isOpenMenu, setIsOpenMenu] = useState(false);
+  const [parentIds, setParentIds] = useState(0);
 
   const { data: postData, refetch: postRefetch } = useQuery({
     queryKey: ["postData"],
@@ -57,6 +63,10 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
   const [replyOpen, setReplyOpen] = useState(
     Array(postCommentData?.result.length).fill(false)
   );
+  const [rreplyOpen, setRreplyOpen] = useState(
+    Array(postCommentData?.result.length).fill(false)
+  );
+  console.log(replyOpen, postCommentData)
 
   const { data: postLikeData, refetch: LikeRefetch } = useQuery({
     queryKey: ["postLikeData"],
@@ -148,14 +158,14 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
     }
   };
 
-  console.log(postData, userInfo);
+  console.log(postData, userInfo)
 
   const LikeHandler = async () => {
     try {
       await postBoardLike(Number(params.boardId));
       LikeRefetch();
       postRefetch();
-    } catch (e) {}
+    } catch (e) { }
   };
 
   const LikeDeleteHandler = async () => {
@@ -163,7 +173,7 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
       await deleteLike(Number(params.boardId));
       LikeRefetch();
       postRefetch();
-    } catch (e) {}
+    } catch (e) { }
   };
 
   const commentHandler = async () => {
@@ -178,15 +188,17 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
       setComment("");
       commentRefetch();
       postRefetch();
-    } catch (e) {}
+    } catch (e) { }
   };
-
-  const commentReplyHandler = async () => {
+  const commentReplyHandler = async (replymemIds: string, replyNicknames: string, mentionCommentIds: number) => {
     const commentData = {
       postId: Number(params.boardId),
       content: replyComment,
       status: "PUBLIC",
-      parentId: replyId,
+      parentId: parentIds,
+      mentionMemberId: replymemIds,
+      mentionMemberNickName: replyNicknames,
+      mentionCommentId: mentionCommentIds
     };
     try {
       console.log(commentData);
@@ -195,7 +207,7 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
       setReplyOpen(Array(postCommentData?.result.length).fill(false));
       commentRefetch();
       postRefetch();
-    } catch (e) {}
+    } catch (e) { }
   };
 
   const toggleReply = (index: number) => {
@@ -204,18 +216,24 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
     setReplyOpen(updatedReplyOpen);
   };
 
-  if (!postData || !postCommentData) {
+  const toggleRreply = (index: number) => {
+    const updatedRreplyOpen = [...rreplyOpen];
+    updatedRreplyOpen[index] = !updatedRreplyOpen[index]; // 해당 인덱스의 상태 토글
+    setRreplyOpen(updatedRreplyOpen);
+  };
+
+  if (!postData) {
     return <div>Loading...</div>; // 데이터가 로딩 중일 때
   }
 
   const replaceImagesInBody = (body: any, images: any) => {
     const parser = new DOMParser();
-    const doc = parser.parseFromString(body, "text/html");
-    const imgTags = doc.querySelectorAll("img");
+    const doc = parser.parseFromString(body, 'text/html');
+    const imgTags = doc.querySelectorAll('img');
 
     imgTags.forEach((imgTag, index) => {
       if (images[index]) {
-        const newImage = document.createElement("div"); // 새로운 div로 대체
+        const newImage = document.createElement('div'); // 새로운 div로 대체
         newImage.innerHTML = `<Image class="max-w-[60rem] max-h-[60rem]" src="${images[index].accessUri}" alt="" width="900" height="900" />`;
         imgTag.replaceWith(newImage);
       }
@@ -224,19 +242,54 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
     return doc.body.innerHTML; // 변환된 HTML 반환
   };
 
+  const deleteBoardHandler = async () => {
+    await deleteBoard(params.boardId)
+    Swal.fire({
+      icon: 'success',
+      title: '정상적으로 삭제되었습니다.',
+      confirmButtonText: '확인',
+      confirmButtonColor: '#FB3463',
+      customClass: {
+        popup: 'swal-custom-popup',
+        icon: 'swal-custom-icon'
+      }
+    }).then((result) => {
+      if (result.isConfirmed) {
+        router.push('/');
+      }
+    });
+  }
+
+  const editBoardEdit = () => {
+    router.push(`/edits/${params.boardId}`)
+  }
+
+  const loginEdit = () => {
+    router.push(`/login`)
+  }
+
   const images = postData?.result.post.images || [];
-  const bodyWithImages = replaceImagesInBody(
-    postData?.result.post.body,
-    images
-  );
+  const bodyWithImages = replaceImagesInBody(postData?.result.post.body, images);
 
   console.log(postData);
   return (
     <div>
       <Header />
       <div className="w-[66%] mx-auto">
-        <div className="mt-[8rem] text-[#6B6B6B] font-semibold text-[2rem]">
+        <div className="flex mt-[8rem] text-[#6B6B6B] font-semibold text-[2rem]">
           <span>{postData?.result.member.blogName}의 블로그</span>
+          {memberDatas?.result.blogName === postData?.result.member.blogName && (
+            <div className="flex ml-auto gap-[1rem]">
+              <Image className="cursor-pointer" src={menubars} alt="" onClick={() => { setIsOpenMenu(!isOpenMenu) }} />
+              {isOpenMenu && (
+                <div className="absolute bg-white shadow-md rounded-md mt-[3rem] -ml-[6rem] p-2 animate-dropdown z-20" style={{ opacity: 0, transform: 'translateY(-10px)' }}> {/* 스타일 추가 */}
+                  <span className="cursor-pointer block hover:bg-gray-200" onClick={editBoardEdit}>수정하기</span>
+                  <span className="cursor-pointer block hover:bg-gray-200" onClick={deleteBoardHandler}>삭제</span>
+                </div>
+              )}
+
+            </div>
+          )}
         </div>
         <div className="flex items-center mt-[5rem]">
           <h1 className="text-[3.6rem] font-bold">
@@ -245,12 +298,12 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
         </div>
         <div className="w-full h-[32rem] border border-[#D9D9D9] rounded-[1rem] flex mt-[2rem]">
           <div
-            className={`w-[15.4rem] h-full ${colorTicket[postData.result.ticket.ticketColor] ? `bg-[${colorTicket[postData.result.ticket.ticketColor]}]` : ""} rounded-l-[1rem]`}
+            className={`w-[15.4rem] h-full ${colorTicket[postData.result.ticket.ticketColor] ? `bg-[${colorTicket[postData.result.ticket.ticketColor]}]` : ''} rounded-l-[1rem]`}
           ></div>
           <div className="w-full mt-[5rem] relative">
             <div className="flex justify-center">
               <div>
-                <h1 className="text-[6rem] font-extrabold font-akira">KOR</h1>
+                <h1 className="text-[6rem] font-extrabold font-akira">{postData?.result.ticket.departureCode}</h1>
                 <div className="w-[16rem] h-[3.6rem] pl-[2rem] rounded-[0.8rem] flex">
                   <span className="text-[#9D9D9D] text-[2.4rem] font-semibold">
                     {postData?.result.ticket.departure}
@@ -261,7 +314,7 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
                 <Image className="" src={air} alt="비행기" />
               </div>
               <div className="ml-[5rem]">
-                <h1 className="text-[6rem] font-extrabold font-akira">KOR</h1>
+                <h1 className="text-[6rem] font-extrabold font-akira">{postData?.result.ticket.destinationCode}</h1>
                 <div className="w-[16rem] h-[3.6rem] pl-[2rem] rounded-[0.8rem] flex">
                   <span className="text-[#9D9D9D] text-[2.4rem] font-semibold">
                     {postData?.result.ticket.destination}
@@ -272,10 +325,7 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
             <div className="w-[95%] border-2 border-dashed border-[#CFCFCF] my-[4rem] mx-auto relative z-0" />
             <div
               className={`flex justify-center text-[1.4rem] font-extrabold text-[#55FBAF] font-akira`}
-              style={{
-                color:
-                  colorTicket[postData?.result.ticket.ticketColor] || "inherit",
-              }}
+              style={{ color: colorTicket[postData?.result.ticket.ticketColor] || 'inherit' }}
             >
               <span className="w-[16rem]">PASSENGER</span>
               <span className="w-[25rem]">DATE</span>
@@ -295,7 +345,7 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
             </div>
           </div>
           <div
-            className={`w-[60rem] h-full ${colorTicket[postData.result.ticket.ticketColor] ? `bg-[${colorTicket[postData.result.ticket.ticketColor]}]` : ""}  rounded-r-[1rem] ml-auto`}
+            className={`w-[60rem] h-full ${colorTicket[postData.result.ticket.ticketColor] ? `bg-[${colorTicket[postData.result.ticket.ticketColor]}]` : ''}  rounded-r-[1rem] ml-auto`}
           >
             <div className="absolute">
               <div className="relative bg-white w-[4rem] h-[4rem] rounded-full -mt-[2rem] -ml-[2rem]"></div>
@@ -304,7 +354,7 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
             <label className="w-full h-full flex" htmlFor="input-file">
               <div className="flex flex-col m-auto">
                 <Image
-                  className="w-[23rem] h-[26rem] rounded-[1rem]"
+                  className="w-[23rem] h-[26rem] rounded-[1rem] object-cover"
                   src={postData?.result.ticket.image.accessUri}
                   alt=""
                   width={230}
@@ -354,10 +404,17 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
                             height={900}
                         />
                     ))} */}
-          <span
-            className="text-[1.6rem] font-medium"
-            dangerouslySetInnerHTML={{ __html: bodyWithImages }}
-          />
+          <span className="text-[1.6rem] font-medium" dangerouslySetInnerHTML={{ __html: bodyWithImages }} />
+        </div>
+        <div className="flex flex-wrap">
+          {postData?.result.post.tags.map((tagData: string, index: number) => (
+            <span
+              key={index}
+              className="w-fit px-[0.8rem] py-[0.4rem] mt-[1.2rem] mr-[0.5rem] bg-[#F5F5F5] text-[1.3rem] text-[#9d9d9d] rounded-[1.6rem]"
+            >
+              {tagData}
+            </span>
+          ))}
         </div>
         {/* 댓글기능 */}
         <div className="w-full h-[7.5rem] mt-[8rem] flex items-center">
@@ -426,184 +483,217 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
             />
           )}
         </div>
-        <div className="mb-[10rem]">
-          {isReplyOpen && (
-            <div>
-              {userInfo && (
-                <div className="w-full h-[9.3rem] shadowall pl-[1.7rem] pt-[1.4rem] flex">
-                  <div className="w-full">
-                    <div className="flex items-center">
-                      <Image
-                        className="flex items-center"
-                        src={memberDatas?.result.profileImageUrl || DefaultImage}
-                        alt=""
-                        width={28}
-                        height={28}
+        {accessToken ? (
+          <div className="mb-[10rem]">
+            {isReplyOpen && (
+              <div>
+                {userInfo && (
+                  <div className="w-full h-[9.3rem] shadowall pl-[1.7rem] pt-[1.4rem] flex">
+                    <div className="w-full">
+                      <div className="flex items-center">
+                        <Image
+                          className="flex items-center"
+                          src={memberDatas?.result.profileImageUrl}
+                          alt=""
+                          width={28}
+                          height={28}
+                        />
+                        <span className="ml-[1.4rem] text-[1.8rem] font-semibold flex items-center">
+                          {memberDatas?.result.nickName}
+                        </span>
+                      </div>
+                      <input
+                        className="w-full outline-none ml-[4.5rem] text-[1.4rem] font-normal"
+                        type="text"
+                        value={comment}
+                        onChange={(e) => setComment(e.target.value)}
+                        placeholder="블로그가 훈훈해지는 댓글 부탁드립니다."
                       />
-                      <span className="ml-[1.4rem] text-[1.8rem] font-semibold flex items-center">
-                        {memberDatas?.result.nickName}
-                      </span>
                     </div>
-                    <input
-                      className="w-full outline-none ml-[4.5rem] text-[1.4rem] font-normal"
-                      type="text"
-                      value={comment}
-                      onChange={(e) => setComment(e.target.value)}
-                      placeholder="블로그가 훈훈해지는 댓글 부탁드립니다."
-                    />
+                    <button
+                      className="hover:bg-[#292929] hover:text-white bg-[#F5F5F5] text-[#292929] rounded-[0.8rem] text-[1.6rem] font-semibold w-[8.6rem] h-[3.5rem] flex ml-auto mr-[1.4rem] items-center justify-center"
+                      onClick={commentHandler}
+                    >
+                      입력
+                    </button>
                   </div>
-                  <button
-                    className="bg-[#F5F5F5] rounded-[0.8rem] text-[1.6rem] font-semibold w-[8.6rem] h-[3.5rem] flex ml-auto mr-[1.4rem] items-center justify-center"
-                    onClick={commentHandler}
-                  >
-                    입력
-                  </button>
-                </div>
-              )}
+                )}
 
-              <div
-                className={`w-full h-full shadowall pl-[4.7rem] py-[1.4rem] my-[3.5rem] flex flex-col`}
-              >
-                {postCommentData?.result &&
-                  Object.entries(postCommentData.result).map(
-                    ([key, coData]: [string, any], index: number) => {
-                      const createDateTime = new Date(coData.createDateTime);
-                      const formattedDateTime = `${createDateTime.getFullYear()}.${String(createDateTime.getMonth() + 1).padStart(2, "0")}.${String(createDateTime.getDate()).padStart(2, "0")} ${String(createDateTime.getHours()).padStart(2, "0")}:${String(createDateTime.getMinutes()).padStart(2, "0")}`;
+                <div
+                  className={`w-full h-full shadowall px-[4.7rem] py-[1.4rem] my-[3.5rem] flex flex-col`}
+                >
+                  {postCommentData?.result &&
+                    Object.entries(postCommentData.result).map(
+                      ([key, coData]: [string, any], index: number) => {
+                        const createDateTime = new Date(coData.createDateTime);
+                        const formattedDateTime = `${createDateTime.getFullYear()}.${String(createDateTime.getMonth() + 1).padStart(2, "0")}.${String(createDateTime.getDate()).padStart(2, "0")} ${String(createDateTime.getHours()).padStart(2, "0")}:${String(createDateTime.getMinutes()).padStart(2, "0")}`;
 
-                      console.log(coData);
-                      return (
-                        <div className="mb-[2.5rem]" key={key}>
-                          <div className={`py-[2rem] mr-[2rem]`}>
-                            <div className="flex items-center">
-                              <Image
-                                className="flex items-center"
-                                src={coData.member.profileUrl}
-                                alt=""
-                                width={28}
-                                height={28}
-                              />
-                              <span className="ml-[1.4rem] text-[1.8rem] font-semibold flex items-center">
-                                {coData.member.nickName}
-                              </span>
-                            </div>
-                            <span className="text-[1.4rem] font-normal ml-[4.4rem] text-[#292929]">
-                              {coData.content}
-                            </span>
-                            <div className="flex ml-[4.5rem] text-[1.2rem] text-[#9D9D9D] items-center">
-                              <span>{formattedDateTime}</span>
-                              <hr className="mx-[1rem] h-[1rem] w-[0.1rem] bg-[#9D9D9D]" />
-                              {replyOpen[index] ? (
-                                <span
-                                  className="cursor-pointer"
-                                  onClick={() => toggleReply(index)}
-                                >
-                                  답글취소
-                                </span>
-                              ) : (
-                                <span
-                                  className="cursor-pointer"
-                                  onClick={() => {
-                                    toggleReply(index);
-                                    setReplyId(coData.id);
-                                  }}
-                                >
-                                  답글달기
-                                </span>
-                              )}
-                            </div>
-                          </div>
-                          {coData?.children.map((childData: any) => {
-                            const createDateTime = new Date(
-                              childData.createDateTime
-                            );
-                            const formattedDateTimes = `${createDateTime.getFullYear()}.${String(createDateTime.getMonth() + 1).padStart(2, "0")}.${String(createDateTime.getDate()).padStart(2, "0")} ${String(createDateTime.getHours()).padStart(2, "0")}:${String(createDateTime.getMinutes()).padStart(2, "0")}`;
-
-                            return (
-                              <div
-                                className={`bg-[#F5F5F5] w-[90%] py-[2rem] px-[1.6rem] mx-[5rem] rounded-[0.8rem]`}
-                              >
-                                <div className="flex items-center">
-                                  <Image
-                                    className="flex items-center"
-                                    src={childData.member.profileUrl}
-                                    alt=""
-                                    width={28}
-                                    height={28}
-                                  />
-                                  <span className="ml-[1.4rem] text-[1.8rem] font-semibold flex items-center">
-                                    {childData.member.nickName}
-                                  </span>
-                                </div>
-                                <span className="text-[1.4rem] font-normal ml-[4.4rem] text-[#292929]">
-                                  {childData.content}
-                                </span>
-                                <div className="flex ml-[4.5rem] text-[1.2rem] text-[#9D9D9D] items-center">
-                                  <span>{formattedDateTimes}</span>
-                                  <hr className="mx-[1rem] h-[1rem] w-[0.1rem] bg-[#9D9D9D]" />
-                                  {replyOpen[index] ? (
-                                    <span
-                                      className="cursor-pointer"
-                                      onClick={() => toggleReply(index)}
-                                    >
-                                      답글취소
-                                    </span>
-                                  ) : (
-                                    <span
-                                      className="cursor-pointer"
-                                      onClick={() => {
-                                        toggleReply(index);
-                                        setReplyId(coData.id);
-                                      }}
-                                    >
-                                      답글달기
-                                    </span>
-                                  )}
-                                </div>
-                              </div>
-                            );
-                          })}
-
-                          {replyOpen[index] && userInfo && (
-                            <div className="w-[95%] h-[9.3rem] shadowall mt-[2rem] pl-[1.7rem] pt-[1.4rem] flex mx-auto border border-[#CFCFCF] rounded-[0.8rem]">
-                              <div className="w-full">
-                                <div className="flex items-center">
-                                  <Image
-                                    className="flex items-center"
-                                    src={memberDatas?.result.profileImageUrl || DefaultImage}
-                                    alt=""
-                                    width={28}
-                                    height={28}
-                                  />
-                                  <span className="ml-[1.4rem] text-[1.8rem] font-semibold flex items-center">
-                                    {memberDatas?.result.nickName}
-                                  </span>
-                                </div>
-                                <input
-                                  className="w-full outline-none ml-[4.5rem] text-[1.4rem] font-normal"
-                                  type="text"
-                                  value={replyComment}
-                                  onChange={(e) =>
-                                    setReplyComment(e.target.value)
-                                  }
-                                  placeholder="블로그가 훈훈해지는 댓글 부탁드립니다."
+                        console.log(coData);
+                        return (
+                          <div className="mb-[2.5rem]" key={key}>
+                            <div
+                              className={`py-[2rem] mr-[2rem]`}
+                            >
+                              <div className="flex items-center">
+                                <Image
+                                  className="flex items-center"
+                                  src={coData.member.profileUrl}
+                                  alt=""
+                                  width={28}
+                                  height={28}
                                 />
+                                <span className="ml-[1.4rem] text-[1.8rem] font-semibold flex items-center">
+                                  {coData.member.nickName}
+                                </span>
                               </div>
-                              <button
-                                className="bg-[#F5F5F5] rounded-[0.8rem] text-[1.6rem] font-semibold w-[8.6rem] h-[3.5rem] flex ml-auto mr-[1.4rem] items-center justify-center"
-                                onClick={commentReplyHandler}
-                              >
-                                입력
-                              </button>
+                              <span className="text-[1.4rem] font-normal ml-[4.4rem] text-[#292929]">
+                                {coData.content}
+                              </span>
+                              <div className="flex ml-[4.5rem] text-[1.2rem] text-[#9D9D9D] items-center">
+                                <span>{formattedDateTime}</span>
+                                <hr className="mx-[1rem] h-[1rem] w-[0.1rem] bg-[#9D9D9D]" />
+                                {replyOpen[index] ? (
+                                  <span
+                                    className="cursor-pointer"
+                                    onClick={() => toggleReply(index)}
+                                  >
+                                    답글취소
+                                  </span>
+                                ) : (
+                                  <span
+                                    className="cursor-pointer"
+                                    onClick={() => {
+                                      toggleReply(index);
+                                      setReplyId(coData.id);
+                                      setReplyNickname(coData.member.nickName);
+                                      setReplyMemId(coData.member.memberId)
+                                    }}
+                                  >
+                                    답글달기
+                                  </span>
+                                )}
+                              </div>
                             </div>
-                          )}
-                        </div>
-                      );
-                    }
-                  )}
+                            {coData?.children.map((childData: any, childIndex: number) => {
+                              const createDateTime = new Date(childData.createDateTime);
+                              const formattedDateTimes = `${createDateTime.getFullYear()}.${String(createDateTime.getMonth() + 1).padStart(2, "0")}.${String(createDateTime.getDate()).padStart(2, "0")} ${String(createDateTime.getHours()).padStart(2, "0")}:${String(createDateTime.getMinutes()).padStart(2, "0")}`;
+                              console.log(childData);
+                              return (
+                                <div className={`bg-[#F5F5F5] w-[95%] py-[2rem] px-[1.6rem] mx-[4rem] rounded-[0.8rem]`} key={childIndex}>
+                                  <div className="flex items-center">
+                                    <Image
+                                      className="flex items-center"
+                                      src={childData.member.profileUrl}
+                                      alt=""
+                                      width={28}
+                                      height={28}
+                                    />
+                                    <span className="ml-[1.4rem] text-[1.8rem] font-semibold flex items-center">
+                                      {childData.member.nickName}
+                                    </span>
+                                  </div>
+                                  <span className="text-[1.4rem] font-normal ml-[4.4rem] text-[#292929] mt-[1rem]">
+                                    <span className="text-[#FFBACA] text-[1.4rem] mr-[1rem]">
+                                      @{childData.mentionMemberNickName}
+                                    </span>
+                                    {childData.content}
+                                  </span>
+                                  <div className="flex ml-[4.5rem] text-[1.2rem] text-[#9D9D9D] items-center">
+                                    <span>{formattedDateTimes}</span>
+                                    <hr className="mx-[1rem] h-[1rem] w-[0.1rem] bg-[#9D9D9D]" />
+                                    <div>
+                                      {replyOpen[index] && rreplyOpen[childData.id] ? (
+                                        <span
+                                          className="cursor-pointer"
+                                          onClick={() => {
+                                            toggleReply(index);
+                                            toggleRreply(childData.id);
+                                          }}
+                                        >
+                                          답글취소
+                                        </span>
+                                      ) : (
+                                        <span
+                                          className="cursor-pointer"
+                                          onClick={() => {
+                                            toggleReply(index);
+                                            toggleRreply(childData.id);
+                                            setParentIds(childData.parentId)
+                                            setReplyId(childData.id);
+                                            setReplyNickname(childData.member.nickName);
+                                            setReplyMemId(childData.member.memberId);
+                                          }}
+                                        >
+                                          답글달기
+                                        </span>
+                                      )}
+                                      {/* 답글이 열렸을 때 추가적인 요소를 보여줄 수 있습니다 */}
+                                      {replyOpen[index] && (
+                                        <div className="reply-input">
+                                          {/* 답글 입력 폼이나 추가적인 내용을 여기에 추가할 수 있습니다 */}
+                                        </div>
+                                      )}
+                                    </div>
+                                  </div>
+                                </div>
+                              );
+                            })}
+
+                            {replyOpen[index] && userInfo && (
+                              <div className="w-[95%] h-[9.3rem] shadowall mt-[2rem] ml-[4rem] pl-[1.7rem] pt-[1.4rem] flex border border-[#CFCFCF] rounded-[0.8rem] relative">
+                                <div className="w-full">
+                                  <div className="flex items-center">
+                                    <Image
+                                      className="flex items-center"
+                                      src={memberDatas?.result.profileImageUrl}
+                                      alt=""
+                                      width={28}
+                                      height={28}
+                                    />
+                                    <span className="ml-[1.4rem] text-[1.8rem] font-semibold flex items-center">
+                                      {memberDatas?.result.nickName}
+                                    </span>
+                                  </div>
+                                  <div className="relative">
+                                    <span className="absolute text-[#FFBACA] text-[1.4rem]  ml-[4.5rem]">
+                                      @{replyNickname}
+                                    </span>
+                                    <input
+                                      className="w-[70%] outline-none ml-[10rem] text-[1.4rem] font-normal pl-[4.5rem]" // padding-left 추가
+                                      type="text"
+                                      value={replyComment}
+                                      onChange={(e) => setReplyComment(e.target.value)}
+                                      placeholder="에게 답글쓰기"
+                                    />
+                                  </div>
+                                </div>
+                                <button
+                                  className="hover:bg-[#292929] hover:text-white bg-[#F5F5F5] text-[#292929] rounded-[0.8rem] text-[1.6rem] font-semibold w-[8.6rem] h-[3.5rem] flex ml-auto mr-[1.4rem] items-center justify-center"
+                                  onClick={() => commentReplyHandler(replymemId, replyNickname, replyId)}
+                                >
+                                  입력
+                                </button>
+                              </div>
+                            )}
+
+
+                          </div>
+                        );
+                      }
+                    )}
+                </div>
               </div>
+            )}
+          </div>
+        ) : (
+          <div className="w-full h-[75rem] bg-[#F5F5F5]">
+            <div className="flex flex-col pt-[25rem]">
+              <span className="flex text-center mx-auto text-[3.2rem] font-medium">트리피 회원이면 댓글을 달 수 있어요</span>
+              <button className="flex text-center mx-auto bg-[#FB3463] text-[2.4rem] py-[1.5rem] px-[3rem] rounded-[0.8rem] text-white mt-[3rem]" onClick={loginEdit}>로그인 하러가기</button>
             </div>
-          )}
-        </div>
+          </div>
+        )}
+
       </div>
     </div>
   );

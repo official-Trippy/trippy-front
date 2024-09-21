@@ -9,7 +9,7 @@ interface editorProps {
 
 const inputAPI = process.env.INPUT_TEXT_API_KEY;
 
-const MyTinyMCEEditor = ({ postRequest, setPostRequest }: editorProps) => {
+const TextEditorEdits = ({ postRequest, setPostRequest }: editorProps) => {
 
 
     const handleEditorChange = (newContent: string) => {
@@ -80,4 +80,4 @@ const MyTinyMCEEditor = ({ postRequest, setPostRequest }: editorProps) => {
     );
 };
 
-export default MyTinyMCEEditor;
+export default TextEditorEdits;

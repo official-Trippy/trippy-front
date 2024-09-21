@@ -36,22 +36,22 @@ const MyTicket = ({ totalBoardCount }: ticketProps) => {
   console.log(myTicketData)
   return (
     <div>
-      <div className="grid grid-cols-4 gap-12">
+      <div className="grid grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-12">
         {myTicketData?.result.map((ticektDatas: any) => {
           console.log(colorTicket[ticektDatas.ticket.ticketColor])
           return (
             <div key={ticektDatas.ticket.id} className={`flex-1 cursor-pointer `} onClick={() => { handleBoardLink(ticektDatas.post.id) }} >
-              {ticektDatas.post.images.length > 0 && (
-                <div className={`relative w-full pb-[100%] rounded-[1rem] ${colorTicket[ticektDatas.ticket.ticketColor] ? `bg-[${colorTicket[ticektDatas.ticket.ticketColor]}]` : ''}`}> {/* 컨테이너를 정사각형으로 설정 */}
-                  <Image
-                    src={ticektDatas.post.images[0].accessUri}
-                    alt="OOTD"
-                    className="absolute inset-0 w-full h-full object-cover rounded-[1rem] p-[1.3rem]"
-                    width={200} // Width and height are for aspect ratio purposes
-                    height={200}
-                  />
-                </div>
-              )}
+              {/* {ticektDatas.post.images.length > 0 && ( */}
+              <div className={`relative w-full pb-[100%] rounded-[1rem] ${colorTicket[ticektDatas.ticket.ticketColor] ? `bg-[${colorTicket[ticektDatas.ticket.ticketColor]}]` : ''}`}> {/* 컨테이너를 정사각형으로 설정 */}
+                <Image
+                  src={ticektDatas?.ticket.image.accessUri}
+                  alt="OOTD"
+                  className="absolute inset-0 w-full h-full object-cover rounded-[1rem] p-[1.3rem]"
+                  width={200} // Width and height are for aspect ratio purposes
+                  height={200}
+                />
+              </div>
+              {/* )} */}
               <div className="font-normal font-['Pretendard'] shadowall rounded-[1rem] p-[1rem] flex">
                 <div className="mx-auto">
                   <div className="flex flex-col">
