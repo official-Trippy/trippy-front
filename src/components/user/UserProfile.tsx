@@ -82,7 +82,7 @@ const UserProfile: React.FC<UserProfileProps> = ({
           </div>
 
 
-          <div className="ml-auto flex items-center mt-[10px] mr-[50px]">
+          <div className="flex items-center mt-[10px]">
 
             {targetMemberId &&
               userMemberId && ( // Check both IDs are available
