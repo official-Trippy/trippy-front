@@ -24,6 +24,7 @@ import BookmarkIcon from "../../../public/icon_bookmark.svg";
 import BookmarkedIcon from "../../../public/bookmark-fill.svg";
 import { addBookmark, deleteBookmark, fetchIsBookmarked } from "@/services/bookmark/bookmark";
 import WeatherIcon from "../../../public/WeatherIcon.svg";
+import DefaultImage from "../../../public/defaultImage.svg";
 
 interface OotdDetailProps {
   id: number;
@@ -205,7 +206,7 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
   <div className="flex items-center flex-shrink min-w-0 mr-auto">
     <div className="relative w-[55px] h-[55px] flex-shrink-0">
       <Image
-        src={ootdItem.member.profileUrl}
+        src={ootdItem.member.profileUrl || DefaultImage}
         alt="사용자 프로필"
         layout="fill"
         objectFit="cover"

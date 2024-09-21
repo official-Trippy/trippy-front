@@ -6,6 +6,7 @@ import heartImg from "@/dummy/heart.svg";
 import moment from "@/dummy/moment.svg"
 import { useQuery } from 'react-query';
 import { getAllBoardCount, getFollowBoard } from '@/services/board/get/getBoard';
+import DefaultImage from '../../../../public/defaultImage.svg';
 
 interface HomeRecentProps {
     allPosts: number;
@@ -157,7 +158,7 @@ function RecentPost({ allPosts, setAllPosts, boardData, userInfo, boardRefetch, 
                                             </div>
                                             <div className="flex mt-[2rem]">
                                                 <div className="flex h-full text-[1.4rem] font-normal space-x-4 items-end mt-auto">
-                                                    <Image src={posts.member.profileUrl} width={24} height={24} alt="" />
+                                                    <Image src={posts.member.profileUrl || DefaultImage} width={24} height={24} alt="" />
                                                     <span className="">{posts.member.nickName}</span>
                                                     {/* <span className="">{formattedDate}</span> */}
                                                 </div>
@@ -223,7 +224,7 @@ function RecentPost({ allPosts, setAllPosts, boardData, userInfo, boardRefetch, 
                                         </div>
                                         <div className="flex mt-[2rem]">
                                             <div className="flex h-full text-[1.4rem] font-normal space-x-4 items-end mt-auto">
-                                                <Image src={posts.member.profileUrl} width={24} height={24} alt="" />
+                                                <Image src={posts.member.profileUrl || DefaultImage} width={24} height={24} alt="" />
                                                 <span className="">{posts.member.nickName}</span>
                                                 <span className="">{formattedDate}</span>
                                             </div>

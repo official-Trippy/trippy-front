@@ -5,6 +5,7 @@ import { MemberInfo } from "@/services/auth";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 import { doFollow } from "@/services/follow";
+import DefaultImage from "../../../public/defaultImage.svg";
 
 const TABS = {
   ALL: "ALL",
@@ -53,7 +54,7 @@ const UserInformation: React.FC<{ setActiveTab: (tab: string) => void }> = ({
         <div className="absolute top-[-150px] w-[200px] h-auto bg-white px-8 py-6 rounded-lg shadow-lg flex flex-col items-center">
           <div className="relative my-4">
             <Image
-              src={userData?.profileImageUrl}
+              src={userData?.profileImageUrl || DefaultImage}
               alt="Profile"
               width={80}
               height={80}

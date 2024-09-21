@@ -5,6 +5,7 @@ import { MemberInfo } from "@/services/auth";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 import { doFollow } from "@/services/follow";
+import DefaultImage from '../../../public/defaultImage.svg';
 
 const TABS = {
   ALL: "ALL",
@@ -54,7 +55,7 @@ const MyMobileProfile: React.FC<{ setActiveTab: (tab: string) => void }> = ({
         <h1 className="text-4xl text-white font-bold mt-2">{userData?.blogName}</h1>
           <div className="relative my-4">
             <Image
-              src={userData?.profileImageUrl}
+              src={userData?.profileImageUrl || DefaultImage}
               alt="Profile"
               width={80}
               height={80}

@@ -15,6 +15,7 @@ import UpIcon from '../../../public/icon_up.svg';
 import { Comment } from '@/types/ootd';
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
+import DefaultImage from '../../../public/defaultImage.svg';
 
 
 interface CommentSectionProps {
@@ -260,17 +261,15 @@ const renderComments = (comments: Comment[], depth = 0) => {
       {/* 댓글 표시 */}
       <div className='comment-section p-4 rounded-lg'>
         <div className='flex flex-row items-center'>
-          {comment.member?.profileUrl && (
             <div className="relative w-[28px] h-[28px]">
               <Image 
-                src={comment.member.profileUrl} 
+                src={comment.member.profileUrl || DefaultImage} 
                 alt="사용자 프로필" 
                 layout="fill" 
                 objectFit="cover" 
                 className="rounded-full" 
               />
             </div>
-          )}
           <div className="text-[#292929] text-sm font-semibold ml-[5px]">
             {comment.member?.nickName}
           </div>
@@ -291,17 +290,15 @@ const renderComments = (comments: Comment[], depth = 0) => {
       {replyTo === comment.id && (
         <div className={`flex flex-col p-4 mt-2 bg-white rounded-lg shadow-md ${depth === 0 ? 'mx-4 sm-700:mx-12' : ''}`}>
           <div className='flex flex-row items-center flex-1'>
-            {userInfo?.profileImageUrl && (
               <div className="relative w-[28px] h-[28px]">
                 <Image
-                  src={userInfo.profileImageUrl}
+                  src={userInfo.profileImageUrl || DefaultImage}
                   alt="사용자 프로필"
                   layout="fill"
                   objectFit="cover"
                   className="rounded-full"
                 />
               </div>
-            )}
             <div className="text-[#292929] font-semibold ml-[8px]">{userInfo?.nickName}</div>
           </div>
           <div className='flex-1 flex gap-2'>
@@ -357,7 +354,7 @@ const renderComments = (comments: Comment[], depth = 0) => {
               <div className="flex items-center justify-center py-2">
                 <div className="w-12 h-12 relative mr-4">
                   <Image
-                    src={like.profileUrl}
+                    src={like.profileUrl || DefaultImage}
                     alt="프로필 이미지"
                     layout="fill"
                     objectFit="cover"
@@ -472,16 +469,14 @@ const renderComments = (comments: Comment[], depth = 0) => {
             <div className='w-[90%] flex flex-col'>
               <div className='w-full flex-1'>
                 <div className='flex flex-row items-center'>
-                  {userInfo?.profileImageUrl &&  (
                     <><div className="relative w-[28px] h-[28px]">
                       <Image
-                        src={userInfo.profileImageUrl}
+                        src={userInfo.profileImageUrl || DefaultImage}
                         alt="사용자"
                         layout="fill"
                         objectFit="cover"
                         className="rounded-full" />
                     </div></>
-                  )}
                   <div className="text-[#292929] font-semibold ml-[8px]">{userInfo?.nickName}</div>
                 </div>
               </div>

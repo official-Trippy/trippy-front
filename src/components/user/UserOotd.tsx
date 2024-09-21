@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import HeartIcon from '../../../public/icon_heart.svg';
 import Cookies from "js-cookie";
 import { fetchLikedPosts } from "@/services/ootd.ts/ootdComments";
+import DefaultImage from '../../../public/defaultImage.svg';
 
 const PAGE_SIZE = 12;
 
@@ -85,7 +86,7 @@ const UserOotd: React.FC<UserOotdProps> = ({ memberId }) => {
             )}
             <div className="flex items-center my-4">
               <img
-                src={item.member.profileUrl}
+                src={item.member.profileUrl || DefaultImage}
                 alt="User Profile"
                 className="w-10 h-10 rounded-full mr-2"
               />
