@@ -76,7 +76,7 @@ export default function Home() {
       {/*추천 알고리즘 구현해야됨*/}
       <Recommend memberData={memberData} isLoading={isLoading}>
         <div className="flex mt-[4rem]">
-          <div className="grid grid-cols-2 lg:grid-cols-2 2xl:grid-cols-4 gap-x-[2rem] w-full">
+          <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-4 gap-x-[2rem] w-full">
             {boardData?.result.slice(0, visibleCards).map((posts: any, index: number) => {
               const createDateTime = new Date(posts.post.createDateTime);
               const formattedDateTime = `${createDateTime.getFullYear()}.${String(createDateTime.getMonth() + 1).padStart(2, '0')}.${String(createDateTime.getDate()).padStart(2, '0')} ${String(createDateTime.getHours()).padStart(2, '0')}:${String(createDateTime.getMinutes()).padStart(2, '0')}`;

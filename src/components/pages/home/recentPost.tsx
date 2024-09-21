@@ -100,7 +100,7 @@ function RecentPost({ allPosts, setAllPosts, boardData, userInfo, boardRefetch, 
 
 
     return (
-        <div className='w-[66%] mx-auto py-[5rem]'>
+        <div className='w-[90%] sm-700:w-[66%] mx-auto py-[5rem]'>
             <div>
                 <h1 className='font-bold text-[2rem]'>최신 포스트</h1>
                 <div className='flex text-[1.6rem] pt-[5rem] px-[1rem]'>
@@ -144,22 +144,28 @@ function RecentPost({ allPosts, setAllPosts, boardData, userInfo, boardRefetch, 
                                     <div className="flex w-full">
                                         <Image className="w-[17rem] h-[17rem] rounded-[0.8rem]" src={posts.ticket.image.accessUri} alt="" width={170} height={170} />
                                         <div className='flex flex-col w-full ml-[2.5rem]'>
-                                            <h1 className="text-[2rem] font-medium text-ellipsis overflow-hidden">{posts.post.title}</h1>
-                                            <span className="text-[1.6rem] mt-[0.4rem] h-[5rem] font-normal text-[#6B6B6B] text-ellipsis overflow-hidden">{bodyText}</span>
-                                            <div className="flex flex-wrap text-ellipsis overflow-hidden">
+                                            <h1 className="text-[2rem] font-medium text-ellipsis overflow-hidden theboki">{posts.post.title}</h1>
+                                            <span className="text-[1.6rem] mt-[0.4rem] h-[5rem] font-normal text-[#6B6B6B] text-ellipsis overflow-hidden theboki1">{bodyText}</span>
+                                            <div className="flex flex-wrap text-ellipsis overflow-hidden theboki">
                                                 {posts?.post.tags.map((tagData: string, index: number) => (
                                                     <span
                                                         key={index}
-                                                        className="w-fit px-[0.8rem] py-[0.4rem] mt-[1.2rem] mr-[0.5rem] bg-[#F5F5F5] text-[1.3rem] text-[#9d9d9d] rounded-[1.6rem] text-ellipsis overflow-hidden"
+                                                        className={`w-fit px-[0.8rem] py-[0.4rem] mt-[1.2rem] mr-[0.5rem] bg-[#F5F5F5] text-[1.3rem] text-[#9d9d9d] rounded-[1.6rem] text-ellipsis overflow-hidden ${index > 0 ? 'hidden xl:block' : ''}`}
                                                     >
                                                         {tagData}
                                                     </span>
                                                 ))}
                                             </div>
                                             <div className="flex mt-[2rem]">
-                                                <div className="flex h-full text-[1.4rem] font-normal space-x-4 items-end mt-auto">
-                                                    <Image src={posts.member.profileUrl || DefaultImage} width={24} height={24} alt="" />
-                                                    <span className="">{posts.member.nickName}</span>
+                                                <div className="flex h-full text-[1.4rem] font-normal space-x-4 items-end mt-auto xl:appearance-none">
+                                                    <Image
+                                                        src={posts.member.profileUrl || DefaultImage}
+                                                        width={24}
+                                                        height={24}
+                                                        alt=""
+                                                        className="hidden md:block" // 500px 이상에서만 보이도록 설정
+                                                    />
+                                                    <span className={`hidden md:block`}>{posts.member.nickName}</span>
                                                     {/* <span className="">{formattedDate}</span> */}
                                                 </div>
                                                 <div className="flex items-end text-[#9D9D9D] ml-auto">
