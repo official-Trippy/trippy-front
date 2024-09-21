@@ -32,6 +32,7 @@ import { useFollowingStore } from "@/store/useFollowingStore";
 import { doFollow, unfollow } from "@/services/follow";
 import FollowButton from "@/components/followControl/followButton";
 import { colorTicket } from "@/types/board";
+import DefaultImage from '../../../../public/defaultImage.svg';
 
 export default function BoardPage({ params }: { params: { boardId: number } }) {
   const accessToken = Cookies.get("accessToken");
@@ -434,7 +435,7 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
                     <div className="flex items-center">
                       <Image
                         className="flex items-center"
-                        src={memberDatas?.result.profileImageUrl}
+                        src={memberDatas?.result.profileImageUrl || DefaultImage}
                         alt=""
                         width={28}
                         height={28}
@@ -568,7 +569,7 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
                                 <div className="flex items-center">
                                   <Image
                                     className="flex items-center"
-                                    src={memberDatas?.result.profileImageUrl}
+                                    src={memberDatas?.result.profileImageUrl || DefaultImage}
                                     alt=""
                                     width={28}
                                     height={28}

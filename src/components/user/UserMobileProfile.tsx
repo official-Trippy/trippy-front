@@ -5,6 +5,7 @@ import { fetchUserProfile } from "@/services/ootd.ts/ootdGet";
 import { UserProfileResponse } from "@/types/ootd";
 import { useUserStore } from "@/store/useUserStore";
 import FollowButton from "../followControl/followButton";
+import DefaultImage from '../../../public/defaultImage.svg';
 
 const TABS = {
   FOLLOWER: "FOLLOWER",
@@ -57,7 +58,7 @@ const UserMobileProfle: React.FC<UserProfileProps> = ({
     <h1 className="text-4xl text-white font-bold mt-2">{blogName}</h1>
       <div className="relative mt-4 mb-4">
         <Image
-          src={profileImageUrl}
+          src={profileImageUrl || DefaultImage}
           alt="Profile"
           width={48}
           height={48}

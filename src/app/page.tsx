@@ -10,6 +10,7 @@ import Header from "@/components/shared/header/Header";
 import getBoard, { getTotalBoardCount } from "@/services/board/get/getBoard";
 import { useEffect, useState } from "react";
 import { useUserStore } from "@/store/useUserStore";
+import DefaultImage from '../../public/defaultImage.svg';
 
 
 const PAGE_SIZE = 10;
@@ -89,7 +90,7 @@ export default function Home() {
                   <div className="flex flex-col h-full">
                     <Image className="w-full h-[26rem] rounded-[1rem]" src={posts.ticket.image.accessUri} alt="" width={300} height={260} />
                     <div className="p-[1rem] flex">
-                      <Image src={posts.member.profileUrl} width={40} height={40} alt="" />
+                      <Image src={posts.member.profileUrl || DefaultImage} width={40} height={40} alt="" />
                       <div className="flex flex-col justify-center pl-[1rem] text-[1.4rem]">
                         <span className="font-bold">{posts.member.nickName}</span>
                         <span className="font-medium">{formattedDateTime}</span>

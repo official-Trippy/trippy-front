@@ -14,6 +14,7 @@ import { fetchLikedPosts } from '@/services/ootd.ts/ootdComments';
 import HeartIcon from '../../../../public/icon_heart.svg';
 import CustomSelect from './CustomSelect';
 import { useUserStore } from '@/store/useUserStore';
+import DefaultImage from '../../../../public/defaultImage.svg';
 
 const PAGE_SIZE = 12;
 
@@ -209,7 +210,7 @@ const RecentOotdPost: React.FC = () => {
              <div className="flex items-center pb-4">
                   <div className="relative w-[24px] h-[24px]">
                     <Image
-                      src={item.member.profileUrl}
+                      src={item.member.profileUrl || DefaultImage}
                       alt="Profile"
                       layout="fill"
                       objectFit="cover"

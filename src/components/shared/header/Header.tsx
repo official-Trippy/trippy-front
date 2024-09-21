@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import LogoHeader from "../../../../public/LogoHeader.svg";
 import AlertImg from "../../../../public/AlertImg.png";
-import Profile from "../../../../public/Profile.png";
+import DefaultImage from "../../../../public/defaultImage.svg";
 import searchIconMobile from "../../../../public/search_icon_mobile.svg"; // Mobile search icon
 import alertIconMobile from "../../../../public/alert_icon_mobile.svg";  // Mobile alert icon
 import UserModal from "@/components/userInfo/userModal";
@@ -131,7 +131,7 @@ const Header = () => {
                       >
                         <Image
                           className="my-auto"
-                          src={userInfo.profileImageUrl || Profile}
+                          src={userInfo.profileImageUrl || DefaultImage}
                           alt="profile"
                           width={32}
                           height={32}
