@@ -138,7 +138,7 @@ function RecentPost({ allPosts, setAllPosts, boardData, userInfo, boardRefetch, 
                             return (
                                 <Link
                                     href={`/board/${BoardId}`}
-                                    className="h-[20rem] shadowall rounded-[1rem] px-[1.6rem] py-[2rem] hover:-translate-y-4 duration-300 cursor-pointer"
+                                    className="h-[20rem] rounded-[1rem] px-[1.6rem] py-[2rem] cursor-pointer"
                                     key={index}
                                 >
                                     <div className="flex w-full">

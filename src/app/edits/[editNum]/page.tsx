@@ -24,7 +24,11 @@ import { useRouter } from 'next/navigation'
 import Swal from 'sweetalert2'
 import { colorTicket } from '@/types/board'
 import MyTinyMCEEditor from '@/components/testEditor/textEditor2'
+import { useQuery } from 'react-query'
+import { getPost } from '@/services/board/get/getBoard'
 import { getCountry, getCountry1 } from '@/services/board/get/getCountry'
+import editPost from '@/services/board/patch/editPost'
+import editTicket from '@/services/board/patch/editTicket'
 
 interface CountryResult {
     countryIsoAlp2: string;
@@ -35,8 +39,14 @@ interface ApiResponse {
     result: CountryResult;
 }
 
-function PostWrite() {
-    const [bgColor, setBgColor] = useState('#55FBAF');
+
+function PostEdit({ params }: { params: { editNum: number } }) {
+    const { data: postData, refetch: postRefetch } = useQuery({
+        queryKey: ["postData"],
+        queryFn: () => getPost(Number(params.editNum)),
+    });
+
+    const [bgColor, setBgColor] = useState(colorTicket[postData?.result.ticket.ticketColor]);
     const [thumbnailPreview, setThumbnailPreview] = useState<string | null>(null);
     const [isTransport, setIsTransport] = useState(false);
     const [isImageIdx, setIsImageIdx] = useState([
@@ -51,31 +61,26 @@ function PostWrite() {
         { imgsrc: bicycle1 },
         { imgsrc: car1 },
     ]);
-    const [passengerCount, setPassengerCount] = useState(0);
+    const [passengerCount, setPassengerCount] = useState(postData?.result.ticket.memberNum);
     const [startDate, setStartDate] = useState<Date | null>(null);
     const [endDate, setEndDate] = useState<Date | null>(null);
     const [dateOpen, setDateOpen] = useState(false);
-    const [title, setTitle] = useState('');
+    const [title, setTitle] = useState(postData?.result.post.title);
     const [body, setBody] = useState('');
     const [images, setImages] = useState<UploadedImage[]>([]);
     const [isImages, setIsImages] = useState<UploadedImage[]>([]);
     const router = useRouter();
-    const [inputValue1, setInputValue1] = useState('');
-    const [inputValue2, setInputValue2] = useState('');
-    const [suggestions1, setSuggestions1] = useState<string[]>([]);
-    const [suggestions2, setSuggestions2] = useState<string[]>([]);
-    const [selectedCountryCode, setSelectedCountryCode] = useState('');
-    const [selectedCountryCode2, setSelectedCountryCode2] = useState('');
+    const [inputValue1, setInputValue1] = useState(postData?.result.ticket.destination);
+    const [inputValue2, setInputValue2] = useState(postData?.result.ticket.departure);
     const [tags, setTags] = useState<string[]>([]);
     const [inputValue, setInputValue] = useState<string>('');
-    const [ticketColor, setTicketColor] = useState('Aquamarine')
+    const [ticketColor, setTicketColor] = useState(colorTicket[postData?.result.ticket.ticketColor])
     const [postRequests, setPostRequests] = useState({
-        body: '',
-        images: [] as string[], // 이미지 URL을 저장할 배열
+        body: postData?.result.post.body,
+        images: postData?.result.post.images as string[], // 이미지 URL을 저장할 배열
     });
     const [result, setResult] = useState<ApiResponse | null>(null);
     const [result1, setResult1] = useState<ApiResponse | null>(null);
-    const [transportStr, setTransportStr] = useState('')
 
     const formatDate = (date: Date | null) => {
         if (!date) return '';
@@ -119,7 +124,7 @@ function PostWrite() {
         setTicketColor(selectedColor);
     };
 
-    console.log()
+    console.log(ticketColor, bgColor)
 
 
     const selectTransport = (imgSrc: any) => {
@@ -139,33 +144,13 @@ function PostWrite() {
                 for (let i = 0; i < updatedState.length; i++) {
                     updatedState[i].index = i;
                 }
-
-                // 첫 번째 항목의 src에 따라 setTransportStr 설정
-                if (updatedState.length > 0) {
-                    const transportValue = updatedState[0].imgsrc.src; // updatedState의 첫 번째 값 사용
-
-                    if (transportValue.includes('bicycle')) {
-                        setTransportStr('Bicycle');
-                    } else if (transportValue.includes('air')) {
-                        setTransportStr('Airplane');
-                    } else if (transportValue.includes('train')) {
-                        setTransportStr('Train');
-                    } else if (transportValue.includes('bus')) {
-                        setTransportStr('Bus');
-                    } else if (transportValue.includes('car')) {
-                        setTransportStr('Car');
-                    }
-                } else {
-                    console.warn('No valid src found in updatedState[0]'); // 디버깅: src가 없을 경우 경고
-                }
             }
-            setIsTransport(false); // transport 상태를 false로 설정
+
+            setIsTransport(false);
 
             return updatedState;
         });
     };
-
-
 
     const handleImageUpload = async (event: ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
@@ -186,34 +171,36 @@ function PostWrite() {
         }
     };
 
+    console.log(postData)
 
     const displayImages = images.map(image => image.accessUri);
 
-    console.log(thumbnailPreview)
+    console.log(postData?.result.post.id)
     const addPost = async () => {
         const postRequest = {
+            id: postData?.result.post.id,
             title: title,
             body: postRequests.body,
             postType: 'POST',
             location: '24.12342,12.12344',
-            images: postRequests.images,
+            images: postRequests.images || postData?.result.post.images,
             tags: tags,
         }
         const ticketRequest = {
+            id: postData?.result.ticket.id,
             departure: inputValue1,
-            departureCode: result?.result.countryIsoAlp2,
             destination: inputValue2,
-            destinationCode: result1?.result.countryIsoAlp2,
-            image: images[0],
+            image: images[0] || postData?.result.ticket.image,
             memberNum: Number(passengerCount),
-            startDate: formatDates(startDate),
-            endDate: formatDates(endDate),
+            startDate: formatDates(startDate) || postData?.result.ticket.startDate,
+            endDate: formatDates(endDate) || postData?.result.ticket.endDate,
             ticketColor: ticketColor,
-            transport: transportStr
+            transport: 'Airplane'
         }
         try {
             console.log(postRequest, ticketRequest)
-            await postBoard(postRequest, ticketRequest);
+            await editPost(postRequest);
+            await editTicket(ticketRequest)
             Swal.fire({
                 icon: 'success',
                 title: 'TICKET 게시글을 올렸습니다.',
@@ -225,7 +212,7 @@ function PostWrite() {
                 }
             }).then((result) => {
                 if (result.isConfirmed) {
-                    router.push('/');
+                    router.push(`/board/${Number(params.editNum)}`);
                 }
             });
         } catch (e) {
@@ -233,7 +220,7 @@ function PostWrite() {
         }
     }
 
-    console.log(images)
+    console.log(startDate)
 
     // URL 객체 해제
     useEffect(() => {
@@ -251,7 +238,7 @@ function PostWrite() {
     };
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === 'Enter' && inputValue.trim() !== "") {
+        if (e.key === 'Enter' && inputValue.trim() !== '') {
             // 중복 태그 체크
             if (!tags.includes(inputValue.trim())) {
                 setTags([...tags, inputValue.trim()]);
@@ -272,7 +259,7 @@ function PostWrite() {
     }
 
 
-    console.log(transportStr)
+    console.log(postData)
     return (
         <div>
             <Header />
@@ -305,58 +292,12 @@ function PostWrite() {
                     <button className='ml-auto flex bg-[#FB3463] text-white text-[1.6rem] font-semibold rounded-[1rem] px-[2.5rem] py-[0.5rem]' onClick={addPost}>올리기</button>
                 </div>
                 <div className='w-full h-[32rem] border border-[#D9D9D9] rounded-[1rem] flex mx-auto mt-[2rem]'>
-                    <div className={`w-[15.4rem] h-full bg-[${bgColor}] rounded-l-[1rem]`}></div>
+                    <div className={`w-[15.4rem] h-full bg-[${bgColor}] rounded-l-[1rem]`}
+                        style={{ color: colorTicket[postData?.result.ticket.ticketColor] || 'inherit' }}></div>
                     <div className='w-full mt-[5rem] relative'>
                         <div className='flex justify-center'>
-                            <div>
-                                <h1 className='h-[10rem] text-[6rem] font-extrabold font-akira'>{result?.result.isoAlp3}</h1>
-                                <div className='w-[18rem] h-[3.6rem] px-[2rem] shadowall rounded-[0.8rem] flex'>
-                                    <input
-                                        className='w-[12rem] text-[1.6rem] outline-none'
-                                        type='text'
-                                        placeholder='검색 1'
-                                        value={inputValue1} // 첫 번째 입력 값 상태
-                                        onChange={(e) => setInputValue1(e.target.value)} // 입력 값 변경 시 핸들러
-                                        onKeyDown={(e) => {
-                                            if (e.key === 'Enter') {
-                                                searchCountry(inputValue1); // 엔터 키가 눌리면 함수 호출
-                                            }
-                                        }}
-                                    />
-                                    <button className='ml-auto' onClick={() => searchCountry(inputValue1)} >
-                                        <Image src={searchicon} alt='' />
-                                    </button>
-                                </div>
-                            </div>
-                            <div className='relative bg-white z-10 ml-[7%] mr-[10%]'>
-                                {
-                                    isTransport ? (
-                                        <div className='w-[6rem] h-[28rem] absolute z-10 bg-white shadowall rounded-[3rem] flex items-center justify-center mt-[2rem] flex-col space-y-9'>
-                                            {isImageIdx.slice(0, 5).map((item: any, index) => (
-                                                <Image
-                                                    key={index}
-                                                    className=""
-                                                    src={item.imgsrc}
-                                                    alt={`item ${index}`}
-                                                    onClick={() => {
-                                                        selectTransport(item.imgsrc);
-                                                    }
-                                                    }
-                                                />
-                                            ))}
-                                        </div>
-                                    ) : (
-                                        <div
-                                            className='w-[6rem] h-[6rem] absolute shadowall rounded-full flex items-center justify-center mt-[2rem]'
-                                            onClick={() => setIsTransport(true)}
-                                        >
-                                            <Image className='' src={isImageIdx[0].imgsrc} alt='비행기' />
-                                        </div>
-                                    )
-                                }
-                            </div>
                             <div className='ml-[5rem]'>
-                                <h1 className='h-[9rem] text-[6rem] font-extrabold font-akira'>{result1?.result.isoAlp3}</h1>
+                                <h1 className='h-[9rem] text-[6rem] font-extrabold font-akira'>{result1?.result.countryIsoAlp2 || postData?.result.ticket.departureCode}</h1>
                                 <div className='w-[18rem] h-[3.6rem] px-[2rem] shadowall rounded-[0.8rem] flex mt-4'>
                                     <input
                                         className='w-[12rem] text-[1.6rem] outline-none'
@@ -371,6 +312,50 @@ function PostWrite() {
                                         }}
                                     />
                                     <button className='ml-auto' onClick={() => searchCountry1(inputValue2)} >
+                                        <Image src={searchicon} alt='' />
+                                    </button>
+                                </div>
+                            </div>
+                            <div className='relative bg-white z-10 ml-[7%] mr-[10%]'>
+                                {
+                                    isTransport ? (
+                                        <div className='w-[6rem] h-[28rem] absolute z-10 bg-white shadowall rounded-[3rem] flex items-center justify-center mt-[2rem] flex-col space-y-9'>
+                                            {isImageIdx.slice(0, 5).map((item: any, index) => (
+                                                <Image
+                                                    key={index}
+                                                    className=""
+                                                    src={item.imgsrc}
+                                                    alt={`item ${index}`}
+                                                    onClick={() => selectTransport(item.imgsrc)}
+                                                />
+                                            ))}
+                                        </div>
+                                    ) : (
+                                        <div
+                                            className='w-[6rem] h-[6rem] absolute shadowall rounded-full flex items-center justify-center mt-[2rem]'
+                                            onClick={() => setIsTransport(true)}
+                                        >
+                                            <Image className='' src={isImageIdx[0].imgsrc} alt='비행기' />
+                                        </div>
+                                    )
+                                }
+                            </div>
+                            <div>
+                                <h1 className='h-[10rem] text-[6rem] font-extrabold font-akira'>{result?.result.countryIsoAlp2 || postData?.result.ticket.destinationCode}</h1>
+                                <div className='w-[18rem] h-[3.6rem] px-[2rem] shadowall rounded-[0.8rem] flex'>
+                                    <input
+                                        className='w-[12rem] text-[1.6rem] outline-none'
+                                        type='text'
+                                        placeholder='검색 1'
+                                        value={inputValue1} // 첫 번째 입력 값 상태
+                                        onChange={(e) => setInputValue1(e.target.value)} // 입력 값 변경 시 핸들러
+                                        onKeyDown={(e) => {
+                                            if (e.key === 'Enter') {
+                                                searchCountry(inputValue1); // 엔터 키가 눌리면 함수 호출
+                                            }
+                                        }}
+                                    />
+                                    <button className='ml-auto' onClick={() => searchCountry(inputValue1)} >
                                         <Image src={searchicon} alt='' />
                                     </button>
                                 </div>
@@ -408,29 +393,36 @@ function PostWrite() {
                             ) : (
                                 <div className='w-[25rem] flex items-center' onClick={() => setDateOpen(true)}>
                                     <Image src={date} alt='' />
-                                    {startDate && endDate && (
+                                    {startDate && endDate ? (
                                         <span>{formatDateRange()}</span>
+                                    ) : (
+                                        <span>{postData?.result.ticket.startDate} - {postData?.result.ticket.endDate}</span>
                                     )}
                                 </div>
                             )}
 
                             <div className='w-[8rem] flex text-[1.6rem]'>
                                 <button className='text-[#FB3463] flex text-[2rem]' onClick={handleDecrease}>-</button>
-                                <span className='mx-[1rem] mt-[0.5rem]'>{passengerCount}</span>
+                                <span className='mx-[1rem] mt-[0.5rem]'>{passengerCount || postData?.result.ticket.memberNum}</span>
                                 <button className='text-[#FB3463] flex text-[2rem]' onClick={handleIncrease}>+</button>
                             </div>
                         </div>
                     </div>
-                    <div className={`w-full max-w-[40rem] h-full bg-[${bgColor}] rounded-r-[1rem] flex ml-auto`}>
+                    <div className={`w-[60rem] h-full bg-[${bgColor}] rounded-r-[1rem] flex ml-auto`}>
                         <div className='absolute'>
                             <div className='relative bg-white w-[4rem] h-[4rem] rounded-full -mt-[2rem] -ml-[2rem]'></div>
                             <div className='relative bg-white w-[4rem] h-[4rem] rounded-full mt-[28rem] -ml-[2rem]'></div>
                         </div>
-                        <label className='w-full h-full flex cursor-pointer p-[2rem]' htmlFor='input-file'>
+                        <label className='w-full h-full flex cursor-pointer' htmlFor='input-file'>
                             {thumbnailPreview === null ? (
-                                <div className='flex flex-col justify-center m-auto w-full max-w-[30rem] h-full max-[25rem] rounded-[1rem] border-2 border-dashed border-white'>
-                                    <Image className='mx-auto' src={uploadImages} alt='' />
-                                    <span className='text-[1.4rem] font-bold text-white text-center'>대표사진을 등록해주세요</span>
+                                <div className="flex flex-col m-auto">
+                                    <Image
+                                        className="w-[23rem] h-[26rem] rounded-[1rem]"
+                                        src={postData?.result.ticket.image.accessUri}
+                                        alt=""
+                                        width={230}
+                                        height={260}
+                                    />
                                 </div>
                             ) : (
                                 <div className='flex flex-col m-auto'>
@@ -496,4 +488,4 @@ function PostWrite() {
     )
 }
 
-export default PostWrite;
+export default PostEdit;

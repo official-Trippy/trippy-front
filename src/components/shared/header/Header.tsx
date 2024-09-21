@@ -14,6 +14,7 @@ import { useRouter, usePathname } from "next/navigation";
 import Cookies from "js-cookie";
 import SearchBar from "@/components/search/searchBar";
 import NotificationComponent from "@/components/notification/notificationComponent"; // Import NotificationComponent
+import postwriteImg from "@/dummy/postwrite.svg"
 
 const Header = () => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -92,14 +93,14 @@ const Header = () => {
             <SearchBar />
           </div>
           <div className="ml-auto mr-4 md-850:hidden">
-          <Image
-            src={searchIconMobile}
-            alt="Search"
-            width={24}
-            height={24}
-            className="cursor-pointer"
+            <Image
+              src={searchIconMobile}
+              alt="Search"
+              width={24}
+              height={24}
+              className="cursor-pointer"
             />
-        </div>
+          </div>
           {!loading && !isGuest && (
             <>
               {userInfo && accessToken ? (
@@ -159,9 +160,44 @@ const Header = () => {
                       }}
                     />
                   </div>
+                  {isDropdownOpen && (
+                    <div
+                      className="absolute w-[31rem] mt-[1rem] ml-[1rem] top-[3.6rem] rounded-[0.8rem] bg-white shadowalltop rounded-lg animate-dropdown z-20"
+                      style={{ opacity: 0, transform: 'translateY(-10px)' }}
+                      onMouseEnter={() => setIsDropdownOpen(true)} // 드롭다운에 마우스가 올라가면 열려있도록 유지
+                      onMouseLeave={() => setIsDropdownOpen(false)}
+                    >
+                      <Link href="/post">
+                        <div className="px-[1.3rem] pt-[1.2rem] rounded-lg border-b border-white">
+                          <div className="hover:bg-gray-200 px-[1.3rem] py-[1.2rem]">
+                            <div className="flex items-start">
+                              <Image className="mr-[1.7rem] mt-[0.5rem]" src={postwriteImg} width={24} height={24} alt="" />
+                              <div>
+                                <h1 className="text-[1.6rem] font-medium text-black">블로그 티켓 글쓰기</h1>
+                                <span className="text-[1.4rem] font-normal text-[#9D9D9D]">여행에서 겪었던 이야기를 기록해 보세요.</span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </Link>
+                      <Link href="/write">
+                        <div className="px-[1.3rem] pb-[1.2rem] rounded-lg border-b border-white">
+                          <div className="hover:bg-gray-200 px-[1.3rem] py-[1.2rem]">
+                            <div className="flex items-start">
+                              <Image className="mr-[1.7rem] mt-[0.5rem]" src={postwriteImg} width={24} height={24} alt="" />
+                              <div>
+                                <h1 className="text-[1.6rem] font-medium text-black">OOTD 글쓰기</h1>
+                                <span className="text-[1.4rem] font-normal text-[#9D9D9D]">여행 중 나의 특별한 OOTD를 공유해보세요.</span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </Link>
+                    </div>
+                  )}
                   <button
-                    className="w-[8.6rem] bg-btn-color text-white px-7 py-2 rounded-lg"
-                    style={{ fontSize: "1.4rem" }}
+                    className="w-[8.6rem] h-[3.5rem] bg-btn-color text-white px-7 py-2 rounded-lg ml-4"
+                    style={{ fontSize: "1.6rem" }}
                     onMouseEnter={() => setIsDropdownOpen(true)}
                   >
                     글쓰기
@@ -195,36 +231,36 @@ const Header = () => {
           )}
         </div>
       </div>
-    
+
       {/* Mobile Layout */}
       <div className="flex mt-[20px] mb-[20px] sm-700:hidden sm-700:justify-between sm-700:items-center w-[90%] mx-auto">
-      <div className="flex-shrink-0">
-        <Link href="/">
+        <div className="flex-shrink-0">
+          <Link href="/">
+            <Image
+              src={LogoHeader}
+              alt="Logo"
+              className="w-[110px] h-[34px] object-contain"
+            />
+          </Link>
+        </div>
+        <div className="flex items-center gap-4 ml-auto">
           <Image
-            src={LogoHeader}
-            alt="Logo"
-            className="w-[110px] h-[34px] object-contain"
+            src={searchIconMobile}
+            alt="Search"
+            width={24}
+            height={24}
+            className="cursor-pointer"
           />
-        </Link>
+          <Image
+            src={alertIconMobile}
+            alt="Notifications"
+            width={24}
+            height={24}
+            onClick={handleNotificationsToggle}
+            className="cursor-pointer"
+          />
+        </div>
       </div>
-      <div className="flex items-center gap-4 ml-auto">
-        <Image
-          src={searchIconMobile}
-          alt="Search"
-          width={24}
-          height={24}
-          className="cursor-pointer"
-        />
-        <Image
-          src={alertIconMobile}
-          alt="Notifications"
-          width={24}
-          height={24}
-          onClick={handleNotificationsToggle}
-          className="cursor-pointer"
-        />
-      </div>
-    </div>
     </header>
   );
 };
