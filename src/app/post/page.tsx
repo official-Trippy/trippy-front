@@ -35,6 +35,11 @@ interface ApiResponse {
     result: CountryResult;
 }
 
+interface CountryResult {
+    // 기존 프로퍼티들...
+    isoAlp3?: string; // isoAlp3 프로퍼티 추가 (선택적)
+}
+
 function PostWrite() {
     const [bgColor, setBgColor] = useState('#55FBAF');
     const [thumbnailPreview, setThumbnailPreview] = useState<string | null>(null);

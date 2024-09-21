@@ -70,10 +70,10 @@ const MyTicket = ({ totalBoardCount }: ticketProps) => {
                   </div>
                 </div>
                 <div className="mx-auto border border-dashed border-[#CFCFCF]" />
-                <div className="flex flex-col text-[3.2rem] font-extrabold font-akira mx-auto">
-                  <span>KOR</span>
+                <div className="flex flex-col font-extrabold font-akira mx-auto">
+                  <span className="text-[3.2rem] sm:text-[2.8rem] md:text-[2.4rem] lg:text-[2rem] xl:text-[3.2rem]">{ticektDatas.ticket.departureCode}</span>
                   <Image className="mx-auto my-[1rem]" src={air} width={15} height={15} alt="air" />
-                  <span>KOR</span>
+                  <span className="text-[3.2rem] sm:text-[2.8rem] md:text-[2.4rem] lg:text-[2rem] xl:text-[3.2rem]">{ticektDatas.ticket.destinationCode}</span>
                 </div>
               </div>
 
