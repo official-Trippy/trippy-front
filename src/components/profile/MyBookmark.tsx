@@ -2,9 +2,9 @@ import React, { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import Image from "next/image";
 import { fetchBookmarkedOotd, fetchBookmarkCount } from "@/services/bookmark/bookmark";
-import EmptyHeartIcon from '../../../public/empty_heart_default.svg';
-import CommentIcon1 from '../../../public/empty_comment_default.svg';
-import HeartIcon from '../../../public/icon_heart.svg';
+import HeartIcon from '../../../public/heartedIcon.svg';
+import EmptyHeartIcon from '../../../public/heartIcon-default.svg';
+import CommentIcon1 from '../../../public/commentIcon-default.svg';
 import { fetchLikedPosts } from "@/services/ootd.ts/ootdComments";
 import Cookies from 'js-cookie';
 import { useRouter } from "next/navigation";
@@ -133,14 +133,14 @@ const MyBookmark = () => {
                           src={likedPosts.includes(item.post.id) ? HeartIcon : EmptyHeartIcon} 
                           alt="좋아요"
                           width={20}
-                          height={18}
+                          height={20}
                         />
                         <span className="mx-2 text-[#cfcfcf]">{item.post.likeCount}</span>
                         <Image
                           src={CommentIcon1}
                           alt="댓글"
-                          width={18}
-                          height={18}
+                          width={20}
+                          height={20}
                         />
                         <span className="mx-2 text-[#cfcfcf]">{item.post.commentCount}</span>
                       </div>

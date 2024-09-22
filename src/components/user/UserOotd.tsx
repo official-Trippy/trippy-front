@@ -2,11 +2,11 @@ import React, { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { fetchUserOotdPosts, getUserTotalOotdCount } from "@/services/ootd.ts/ootdGet";
 import { OotdGetResponse } from "@/types/ootd";
-import EmptyHeartIcon from '../../../public/empty_heart_default.svg';
-import CommentIcon1 from '../../../public/empty_comment_default.svg';
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import HeartIcon from '../../../public/icon_heart.svg';
+import HeartIcon from '../../../public/heartedIcon.svg';
+import EmptyHeartIcon from '../../../public/heartIcon-default.svg';
+import CommentIcon1 from '../../../public/commentIcon-default.svg';
 import Cookies from "js-cookie";
 import { fetchLikedPosts } from "@/services/ootd.ts/ootdComments";
 import DefaultImage from '../../../public/defaultImage.svg';
@@ -99,14 +99,14 @@ const UserOotd: React.FC<UserOotdProps> = ({ memberId }) => {
                 src={likedPosts.includes(item.post.id) ? HeartIcon : EmptyHeartIcon}
                 alt="좋아요"
                 width={20}
-                height={18}
+                height={20}
               />
               <span className="mx-2 text-[#cfcfcf]"> {item.post.likeCount}</span>
               <Image
                 src={CommentIcon1}
                 alt="댓글"
-                width={18}
-                height={18}
+                width={20}
+                height={20}
               />
               <span className="mx-2 text-[#cfcfcf]"> {item.post.commentCount}</span>
             </div>

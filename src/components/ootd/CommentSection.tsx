@@ -5,11 +5,11 @@ import { useUserStore } from '@/store/useUserStore';
 import { formatTime } from '@/constants/dateFotmat';
 import { FetchCommentsResponse, createComment, createReply, fetchComments } from '@/services/ootd.ts/ootdComments';
 import { checkIfLiked, likePost, unlikePost, likePostList } from '@/services/ootd.ts/ootdComments';
-import HeartIcon from '../../../public/icon_heart.svg';
-import EmptyHeartIcon from '../../../public/empty_heart_default.svg';
-import EmptyHeartIcon2 from '../../../public/empty_heart_open.svg';
-import CommentIcon from '../../../public/empty_comment_open.svg';
-import CommentIcon1 from '../../../public/empty_comment_default.svg';
+import HeartIcon from '../../../public/heartedIcon.svg';
+import EmptyHeartIcon from '../../../public/heartIcon-default.svg';
+import EmptyHeartIcon2 from '../../../public/heartIcon-fill.svg';
+import CommentIcon from '../../../public/commentIcon-fill.svg';
+import CommentIcon1 from '../../../public/commentIcon-default.svg';
 import DownIcon from '../../../public/arrow_down.svg';
 import UpIcon from '../../../public/icon_up.svg';
 import { Comment } from '@/types/ootd';
@@ -405,7 +405,7 @@ const renderComments = (comments: Comment[], depth = 0) => {
             <Image src={showLikes ? UpIcon : DownIcon} alt="펼치기/접기" width={24} height={24} />
           </button>
           <div className='flex items-center ml-[10px]'>
-            <Image src={showComments ? CommentIcon : CommentIcon1} alt="댓글" width={24} height={24} />
+            <Image src={showComments ? CommentIcon : CommentIcon1} alt="댓글" width={20} height={20} />
             <span className={`mx-2 ${showComments ? 'text-[#FB3463]' : ''}`}>{commentCount}</span>
             <button className="flex items-center" onClick={handleToggleComments}>
               <Image src={showComments ? UpIcon : DownIcon} alt="펼치기/접기" width={24} height={24} />
@@ -447,17 +447,17 @@ const renderComments = (comments: Comment[], depth = 0) => {
                 : (showLikes ? EmptyHeartIcon2 : EmptyHeartIcon)
             }
             alt={isLiked ? "좋아요" : "좋아요 취소"}
-            width={24}
-            height={24}
+            width={20}
+            height={20}
           />
-          <span className={`mx-2 ${showLikes ? 'text-[#FB3463]' : ''}`}>{likeCount}</span>
+          <span className={`min-w-[10px] mx-2 ${showLikes ? 'text-[#FB3463]' : ''}`}>{likeCount}</span>
         </button>
         <button className="flex items-center" onClick={handleToggleLikes}>
           <Image src={showLikes ? UpIcon : DownIcon} alt="펼치기/접기" width={24} height={24} />
         </button>
         <div className='flex items-center ml-[10px]'>
-          <Image src={showComments ? CommentIcon : CommentIcon1} alt="댓글" width={24} height={24} />
-          <span className={`mx-2 ${showComments ? 'text-[#FB3463]' : ''}`}>{commentCount}</span>
+          <Image src={showComments ? CommentIcon : CommentIcon1} alt="댓글" width={20} height={20} />
+          <span className={`min-w-[10px] mx-2 ${showComments ? 'text-[#FB3463]' : ''}`}>{commentCount}</span>
           <button className="flex items-center" onClick={handleToggleComments}>
             <Image src={showComments ? UpIcon : DownIcon} alt="펼치기/접기" width={24} height={24} />
           </button>
