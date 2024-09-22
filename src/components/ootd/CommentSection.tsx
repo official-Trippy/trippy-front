@@ -22,9 +22,10 @@ interface CommentSectionProps {
   postId: number;
   initialLikeCount: number;
   initialCommentCount: number;
+  memberId: string;
 }
 
-const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCount, initialCommentCount }) => {
+const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCount, initialCommentCount, memberId }) => {
   const userInfo = useUserStore((state) => state.userInfo);
   const [newComment, setNewComment] = useState('');
   const [replyComment, setReplyComment] = useState('');
@@ -36,6 +37,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
   const [showLikes, setShowLikes] = useState<boolean>(false);
   const [likeList, setLikeList] = useState<any[]>([]);
   const [isLoadingLikes, setIsLoadingLikes] = useState<boolean>(false);
+  const [ootdMemberId, setOotdMemberId] = useState(memberId);
 
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 18;
@@ -273,8 +275,11 @@ const renderComments = (comments: Comment[], depth = 0) => {
           <div className="text-[#292929] text-sm font-semibold ml-[5px]">
             {comment.member?.nickName}
           </div>
+          {ootdMemberId == comment.member.memberId && (
+            <div className='ml-[10px] bg-[#FFE3EA] text-xs text-[#FB3463] border border-[#FB3463] px-2 py-1 rounded-xl'>블로그 주인</div>
+          )}
         </div>
-        <div className="ml-[3.7rem] items-center">
+        <div className="ml-[3.7rem] items-center mr-0 sm-700:mr-[2rem]">
           <div>{comment.content}</div>
           <div className='flex flex-row my-2'>
             <div className="text-gray-600">{formatTime(comment.createDateTime)}</div>

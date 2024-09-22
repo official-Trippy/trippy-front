@@ -323,6 +323,7 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
             postId={id}
             initialLikeCount={ootdItem.post.likeCount}
             initialCommentCount={ootdItem.post.commentCount}
+            memberId={ootdItem.member.memberId}
           />
         </div>
       </div>
