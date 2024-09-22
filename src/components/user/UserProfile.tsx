@@ -67,7 +67,7 @@ const UserProfile: React.FC<UserProfileProps> = ({
               }}
             />
           </div>
-          <h1 className="text-4xl font-bold mt-[10px]">{nickName}</h1>
+          <h1 className="text-4xl font-bold mt-[10px] text-center">{nickName}</h1>
           <span className="text-xl text-gray-600 mt-[5px]">{email}</span>
           <div className="mt-[10px] flex px-4">
             <span className="text-base text-[#9d9d9d] cursor-pointer" onClick={() => setActiveTab(TABS.FOLLOWER)}>

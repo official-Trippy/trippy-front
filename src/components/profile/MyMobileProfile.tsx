@@ -52,8 +52,8 @@ const MyMobileProfile: React.FC<{ setActiveTab: (tab: string) => void }> = ({
             <Image
               src={userData?.profileImageUrl || DefaultImage}
               alt="Profile"
-              width={80}
-              height={80}
+              width={48}
+              height={48}
               className="rounded-full object-cover"
             />
           </div>

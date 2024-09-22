@@ -100,6 +100,23 @@ const MyBookmark = () => {
                       className="flex-1 cursor-pointer"
                       onClick={() => handlePostClick(item.post.id)} 
                     >
+                        <div className="flex items-center pb-4">
+                        <img
+                          src={item.member.profileUrl || DefaultImage}
+                          alt="User Profile"
+                          className="w-10 h-10 rounded-full mr-2"
+                        />
+                        <div className="flex-1 overflow-hidden">
+                          <div className="text-[#6b6b6b] text-xl font-normal font-['Pretendard'] overflow-hidden text-ellipsis whitespace-nowrap"
+                            style={{
+                              whiteSpace: 'nowrap', 
+                              overflow: 'hidden',   
+                              textOverflow: 'ellipsis'
+                            }}>
+                            {item.member.nickName}
+                          </div>
+                        </div>
+                      </div>
                       {item.post.images?.length > 0 && (
                         <div className="relative w-full pb-[100%]">
                           <Image
@@ -111,17 +128,7 @@ const MyBookmark = () => {
                           />
                         </div>
                       )}
-                      <div className="flex items-center my-4">
-                        <img
-                          src={item.member.profileUrl || DefaultImage}
-                          alt="User Profile"
-                          className="w-10 h-10 rounded-full mr-2"
-                        />
-                        <div className="flex-1">
-                          <div className="text-[#6b6b6b] text-xl font-normal">
-                            {item.member.nickName}
-                          </div>
-                        </div>
+                      <div className="flex items-center my-4 justify-end">
                         <Image
                           src={likedPosts.includes(item.post.id) ? HeartIcon : EmptyHeartIcon} 
                           alt="좋아요"

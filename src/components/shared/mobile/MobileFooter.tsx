@@ -91,7 +91,7 @@ const MobileFooter = () => {
             <Image
               src={pathname.includes('/write') || pathname.includes('/post') ? EditorActiveIcon : EditorIcon}
               alt="글쓰기"
-              width={24}
+              width={28}
               height={40}
             />
           </div>
