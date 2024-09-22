@@ -2,11 +2,11 @@ import React, { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { fetchUserOotdPosts, getUserTotalOotdCount } from "@/services/ootd.ts/ootdGet";
 import { OotdGetResponse } from "@/types/ootd";
-import EmptyHeartIcon from '../../../public/empty_heart_default.svg';
-import CommentIcon1 from '../../../public/empty_comment_default.svg';
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import HeartIcon from '../../../public/icon_heart.svg';
+import HeartIcon from '../../../public/heartedIcon.svg';
+import EmptyHeartIcon from '../../../public/heartIcon-default.svg';
+import CommentIcon1 from '../../../public/commentIcon-default.svg';
 import Cookies from "js-cookie";
 import { fetchLikedPosts } from "@/services/ootd.ts/ootdComments";
 import DefaultImage from '../../../public/defaultImage.svg';
@@ -73,6 +73,26 @@ const UserOotd: React.FC<UserOotdProps> = ({ memberId }) => {
             className="flex-1 cursor-pointer"
             onClick={() => handleOotdItemClick(item.post.id)}
           >
+            <div className="flex items-center pb-4">
+              <div className="relative w-[24px] h-[24px]">
+              <Image
+                src={item.member.profileUrl || DefaultImage}
+                alt="User Profile"
+                objectFit="cover"
+                layout="fill"
+                className="rounded-full mr-2"
+              />
+              </div>
+              <div className="ml-[5px] flex-1 overflow-hidden">
+                <div className="text-[#6b6b6b] text-xl font-normal font-['Pretendard'] overflow-hidden text-ellipsis whitespace-nowrap"  style={{
+                  whiteSpace: 'nowrap', 
+                  overflow: 'hidden',   
+                  textOverflow: 'ellipsis'
+                }}>
+                  {item.member.nickName}
+                </div>
+              </div>
+            </div>
             {item.post.images.length > 0 && (
               <div className="relative w-full pb-[100%]">
                 <Image
@@ -84,29 +104,19 @@ const UserOotd: React.FC<UserOotdProps> = ({ memberId }) => {
                 />
               </div>
             )}
-            <div className="flex items-center my-4">
-              <img
-                src={item.member.profileUrl || DefaultImage}
-                alt="User Profile"
-                className="w-10 h-10 rounded-full mr-2"
-              />
-              <div className="flex-1">
-                <div className="text-[#6b6b6b] text-xl font-normal font-['Pretendard']">
-                  {item.member.nickName}
-                </div>
-              </div>
+            <div className="flex items-center my-4 justify-end">
               <Image
                 src={likedPosts.includes(item.post.id) ? HeartIcon : EmptyHeartIcon}
                 alt="좋아요"
                 width={20}
-                height={18}
+                height={20}
               />
               <span className="mx-2 text-[#cfcfcf]"> {item.post.likeCount}</span>
               <Image
                 src={CommentIcon1}
                 alt="댓글"
-                width={18}
-                height={18}
+                width={20}
+                height={20}
               />
               <span className="mx-2 text-[#cfcfcf]"> {item.post.commentCount}</span>
             </div>

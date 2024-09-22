@@ -19,6 +19,7 @@ import UpIcon from '../../../public/arrow_up.svg';
 import DownIcon from '../../../public/arrow_down.svg';
 import Swal from "sweetalert2";
 import { AxiosError } from "axios";
+import DefaultImage from '../../../public/defaultImage.svg';
 
 const EditInfo = () => {
   const { userInfo, updateUserInfo } = useUserStore(); 

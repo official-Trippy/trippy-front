@@ -52,9 +52,15 @@ const MyMobileProfile: React.FC<{ setActiveTab: (tab: string) => void }> = ({
             <Image
               src={userData?.profileImageUrl || DefaultImage}
               alt="Profile"
-              width={80}
-              height={80}
+              width={48}
+              height={48}
               className="rounded-full object-cover"
+              style={{
+                width: "48px",
+                height: "48px",
+                objectFit: "cover",
+                borderRadius: "50%",
+              }}
             />
           </div>
           <h1 className="text-2xl text-white font-bold">{userData?.nickName}</h1>

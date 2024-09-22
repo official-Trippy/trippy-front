@@ -8,10 +8,10 @@ import { useRouter } from 'next/navigation';
 import { OotdGetResponse } from '@/types/ootd';
 import { fetchAllOotdPostCount, fetchAllOotdPosts, fetchFollowOotdPosts, fetchOotdFollowPostCount } from '@/services/ootd.ts/ootdGet';
 import { MemberInfo } from '@/services/auth';
-import EmptyHeartIcon from '../../../../public/empty_heart_default.svg';
-import CommentIcon1 from '../../../../public/empty_comment_default.svg';
+import HeartIcon from '../../../../public/heartedIcon.svg';
+import EmptyHeartIcon from '../../../../public/heartIcon-default.svg';
+import CommentIcon1 from '../../../../public/commentIcon-default.svg';
 import { fetchLikedPosts } from '@/services/ootd.ts/ootdComments';
-import HeartIcon from '../../../../public/icon_heart.svg';
 import CustomSelect from './CustomSelect';
 import { useUserStore } from '@/store/useUserStore';
 import DefaultImage from '../../../../public/defaultImage.svg';
@@ -206,7 +206,7 @@ const RecentOotdPost: React.FC = () => {
       </div>
       <div className="grid grid-cols-2 sm-700:grid-cols-3 lg:grid-cols-4 gap-8">
         {ootdList.map((item) => (
-          <div key={item.post.id} className="flex flex-col overflow-hidden cursor-pointer" onClick={() => handleOotdItemClick(item.post.id)}>
+          <div key={item.post.id} className="flex flex-col overflow-hidden cursor-pointer overflow-hidden text-ellipsis" onClick={() => handleOotdItemClick(item.post.id)}>
              <div className="flex items-center pb-4">
                   <div className="relative w-[24px] h-[24px]">
                     <Image
@@ -216,8 +216,14 @@ const RecentOotdPost: React.FC = () => {
                       objectFit="cover"
                       className="rounded-full" />
                   </div>
-                  <span className="text-[#6B6B6B] ml-[5px]">{item.member.nickName}</span>
+                  <div className="flex-1 overflow-hidden">
+                  <span className="text-[#6B6B6B] ml-[5px] overflow-hidden text-ellipsis whitespace-nowrap" style={{
+                  whiteSpace: 'nowrap', 
+                  overflow: 'hidden',   
+                  textOverflow: 'ellipsis'
+                }}>{item.member.nickName}</span>
                 </div>
+              </div>
             {item.post.images.length > 0 && (
               <div className="relative w-full" style={{ aspectRatio: '303 / 381' }}>
                 <Image
@@ -246,14 +252,14 @@ const RecentOotdPost: React.FC = () => {
                     src={likedPosts.includes(item.post.id) ? HeartIcon : EmptyHeartIcon} 
                     alt="좋아요"
                     width={20}
-                    height={18}
+                    height={20}
                   />
                   <span className="mx-2 text-[#cfcfcf]"> {item.post.likeCount}</span>
                   <Image
                     src={CommentIcon1}
                     alt="댓글"
-                    width={18}
-                    height={18}
+                    width={20}
+                    height={20}
                   />
                   <span className="mx-2 text-[#cfcfcf]"> {item.post.commentCount}</span>
                 </div>

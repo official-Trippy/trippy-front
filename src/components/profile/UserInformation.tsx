@@ -64,7 +64,7 @@ const UserInformation: React.FC<{ setActiveTab: (tab: string) => void }> = ({
               }}
             />
           </div>
-          <h1 className="text-4xl font-bold mt-[10px]">{userData?.nickName}</h1>
+          <h1 className="text-4xl font-bold mt-[10px] text-center">{userData?.nickName}</h1>
           <span
             style={{
               overflowWrap: 'break-word',

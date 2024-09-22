@@ -10,7 +10,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Image from "next/image";
 import { formatDate } from "@/constants/dateFotmat";
-import LocationIcon from "../../../public/icon_pin.png";
+import LocationIcon from "../../../public/Location.svg";
 import CommentSection from "./CommentSection";
 import LeftArrowIcon from "../../../public/left-arrow.svg";
 import RightArrowIcon from "../../../public/right-arrow.svg";
@@ -222,7 +222,9 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
         {ootdItem.member.nickName}
       </span>
       <div className="flex items-center gap-2 whitespace-nowrap overflow-hidden text-ellipsis">
+        <div className="ml-[0.33px]">
         <Image width={16} height={16} src={LocationIcon} alt="location" />
+        </div>
         <span className="block text-gray-600 truncate">{ootdItem.post.location}</span>
       </div>
       <div className="flex items-center gap-2 whitespace-nowrap overflow-hidden text-ellipsis">
@@ -321,6 +323,7 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
             postId={id}
             initialLikeCount={ootdItem.post.likeCount}
             initialCommentCount={ootdItem.post.commentCount}
+            memberId={ootdItem.member.memberId}
           />
         </div>
       </div>
