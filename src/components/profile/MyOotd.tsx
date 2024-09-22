@@ -70,12 +70,16 @@ const MyOotd: React.FC<MyOotdProps> = ({ userInfo }) => {
         {ootdList.map((item) => (
           <div key={item.ootd.id} className="flex-1 cursor-pointer overflow-hidden text-ellipsis" onClick={() => handleOotdItemClick(item.post.id)}>
           <div className="flex items-center pb-4">
-            <img
+          <div className="relative w-[24px] h-[24px]">
+            <Image
               src={userInfo?.profileImageUrl || DefaultImage}
               alt="User Profile"
-              className="w-10 h-10 rounded-full mr-2"
+              objectFit="cover"
+              layout="fill"
+              className="rounded-full mr-2"
             />
-            <div className="flex-1 overflow-hidden">
+            </div>
+            <div className="ml-[5px] flex-1 overflow-hidden">
               <div 
                 className="text-[#6b6b6b] text-xl font-normal font-['Pretendard'] overflow-hidden text-ellipsis whitespace-nowrap"
                 style={{
