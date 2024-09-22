@@ -3,7 +3,11 @@ import { colorTicket } from "@/types/board";
 import Image from "next/image";
 import React, { useState } from "react";
 import { useQuery } from "react-query";
-import air from '@/dummy/air.svg'
+import air from '@/dummy/mypage/air.svg'
+import bus from '@/dummy/mypage/bus.svg'
+import bycicle from '@/dummy/mypage/bycicle.svg'
+import car from '@/dummy/mypage/car.svg'
+import train from '@/dummy/mypage/train.svg'
 import { useRouter } from "next/navigation";
 interface ticketProps {
   totalBoardCount: number | undefined;
@@ -33,11 +37,31 @@ const MyTicket = ({ totalBoardCount }: ticketProps) => {
     }, 100)
   };
 
+
+
   console.log(myTicketData)
   return (
     <div>
       <div className="grid grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-12">
         {myTicketData?.result.map((ticektDatas: any) => {
+
+          const getTransportImage = () => {
+            switch (ticektDatas.ticket.transport) {
+              case 'Airplane':
+                return air;
+              case 'Car':
+                return car;
+              case 'Bus':
+                return bus;
+              case 'Bicycle':
+                return bycicle;
+              case 'Train':
+                return train;
+              default:
+                return null; // 기본값 또는 대체 이미지
+            }
+          };
+
           console.log(colorTicket[ticektDatas.ticket.ticketColor])
           return (
             <div key={ticektDatas.ticket.id} className={`flex-1 cursor-pointer `} onClick={() => { handleBoardLink(ticektDatas.post.id) }} >
@@ -72,7 +96,7 @@ const MyTicket = ({ totalBoardCount }: ticketProps) => {
                 <div className="mx-auto border border-dashed border-[#CFCFCF]" />
                 <div className="flex flex-col font-extrabold font-akira mx-auto">
                   <span className="text-[3.2rem] sm:text-[2.8rem] md:text-[2.4rem] lg:text-[2rem] xl:text-[3.2rem]">{ticektDatas.ticket.departureCode}</span>
-                  <Image className="mx-auto my-[1rem]" src={air} width={15} height={15} alt="air" />
+                  <Image className="mx-auto" src={getTransportImage()} width={15} height={15} alt="transport" />
                   <span className="text-[3.2rem] sm:text-[2.8rem] md:text-[2.4rem] lg:text-[2rem] xl:text-[3.2rem]">{ticektDatas.ticket.destinationCode}</span>
                 </div>
               </div>

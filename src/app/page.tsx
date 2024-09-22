@@ -14,7 +14,11 @@ import { colorTicket } from "@/types/board";
 import nonheartImg from "@/dummy/heartbin.svg"
 import heartImg from "@/dummy/heart.svg";
 import moment from "@/dummy/moment.svg"
-import busus from "@/dummy/bussssx.svg"
+import airG from "@/dummy/main/airG.svg"
+import busG from "@/dummy/main/busG.svg"
+import trainG from "@/dummy/main/trainG.svg"
+import bycicleG from "@/dummy/main/bycicleG.svg"
+import carG from "@/dummy/main/carG.svg"
 
 
 const PAGE_SIZE = 10;
@@ -88,6 +92,23 @@ export default function Home() {
               };
 
               const bodyText = getTextFromHtml(posts.post.body);
+
+              const getTransportImage = () => {
+                switch (posts.ticket.transport) {
+                  case 'Airplane':
+                    return airG;
+                  case 'Car':
+                    return carG;
+                  case 'Bus':
+                    return busG;
+                  case 'Bicycle':
+                    return bycicleG;
+                  case 'Train':
+                    return trainG;
+                  default:
+                    return null; // 기본값 또는 대체 이미지
+                }
+              };
               console.log()
               return (
                 <div className="h-[54rem] shadow-xl rounded-[1rem] mb-[2rem]" key={index}>
@@ -96,7 +117,7 @@ export default function Home() {
                     {posts.ticket.departureCode ? (
                       <div className="flex text-[3.2rem] font-extrabold font-akira mx-auto mt-[1rem]">
                         <span>{posts.ticket.departureCode}</span>
-                        <Image className="mx-[1rem]" src={busus} alt="air" />
+                        <Image className="mx-[1rem]" src={getTransportImage()} alt="transport" />
                         <span>{posts.ticket.destinationCode}</span>
                       </div>
                     ) : (
