@@ -275,7 +275,7 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
   return (
     <div>
       <Header />
-      <div className="w-[66%] mx-auto">
+      <div className="w-[50%] mx-auto">
         <div className="flex mt-[8rem] text-[#6B6B6B] font-semibold text-[2rem]">
           <span>{postData?.result.member.blogName}의 블로그</span>
           {memberDatas?.result.blogName === postData?.result.member.blogName && (
@@ -291,107 +291,111 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
             </div>
           )}
         </div>
-        <div className="flex items-center mt-[5rem]">
+        <div className="flex items-center mt-[2rem]">
           <h1 className="text-[3.6rem] font-bold">
             {postData?.result.post.title}
           </h1>
         </div>
-        <div className="w-full h-[32rem] border border-[#D9D9D9] rounded-[1rem] flex mt-[2rem]">
-          <div
-            className={`w-[15.4rem] h-full ${colorTicket[postData.result.ticket.ticketColor] ? `bg-[${colorTicket[postData.result.ticket.ticketColor]}]` : ''} rounded-l-[1rem]`}
-          ></div>
-          <div className="w-full mt-[5rem] relative">
-            <div className="flex justify-center">
-              <div>
-                <h1 className="text-[6rem] font-extrabold font-akira">{postData?.result.ticket.departureCode}</h1>
-                <div className="w-[16rem] h-[3.6rem] pl-[2rem] rounded-[0.8rem] flex">
-                  <span className="text-[#9D9D9D] text-[2.4rem] font-semibold">
-                    {postData?.result.ticket.departure}
-                  </span>
-                </div>
-              </div>
-              <div className="relative flex -mt-[3.5rem] bg-white z-10 ml-[10%] mr-[5%]">
-                <Image className="" src={air} alt="비행기" />
-              </div>
-              <div className="ml-[5rem]">
-                <h1 className="text-[6rem] font-extrabold font-akira">{postData?.result.ticket.destinationCode}</h1>
-                <div className="w-[16rem] h-[3.6rem] pl-[2rem] rounded-[0.8rem] flex">
-                  <span className="text-[#9D9D9D] text-[2.4rem] font-semibold">
-                    {postData?.result.ticket.destination}
-                  </span>
-                </div>
-              </div>
-            </div>
-            <div className="w-[95%] border-2 border-dashed border-[#CFCFCF] my-[4rem] mx-auto relative z-0" />
-            <div
-              className={`flex justify-center text-[1.4rem] font-extrabold text-[#55FBAF] font-akira`}
-              style={{ color: colorTicket[postData?.result.ticket.ticketColor] || 'inherit' }}
-            >
-              <span className="w-[16rem]">PASSENGER</span>
-              <span className="w-[25rem]">DATE</span>
-              <span className="w-[8rem]">GROUP</span>
-            </div>
-            <div
-              className={`flex justify-center text-[1.4rem] font-extrabold text-[#6B6B6B]`}
-            >
-              <span className="w-[16rem]">USERID</span>
-              <span className="w-[25rem]">
-                {postData?.result.ticket.startDate} ~{" "}
-                {postData?.result.ticket.endDate}
-              </span>
-              <span className="w-[8rem]">
-                {postData?.result.ticket.memberNum}
-              </span>
-            </div>
-          </div>
-          <div
-            className={`w-[60rem] h-full ${colorTicket[postData.result.ticket.ticketColor] ? `bg-[${colorTicket[postData.result.ticket.ticketColor]}]` : ''}  rounded-r-[1rem] ml-auto`}
-          >
-            <div className="absolute">
-              <div className="relative bg-white w-[4rem] h-[4rem] rounded-full -mt-[2rem] -ml-[2rem]"></div>
-              <div className="relative bg-white w-[4rem] h-[4rem] rounded-full mt-[28rem] -ml-[2rem]"></div>
-            </div>
-            <label className="w-full h-full flex" htmlFor="input-file">
-              <div className="flex flex-col m-auto">
-                <Image
-                  className="w-[23rem] h-[26rem] rounded-[1rem] object-cover"
-                  src={postData?.result.ticket.image.accessUri}
-                  alt=""
-                  width={230}
-                  height={260}
-                />
-              </div>
-            </label>
-          </div>
-        </div>
-        <div className="mt-[5rem] border-b border-[#CFCFCF] py-[2rem]">
-          <div className="flex w-full">
-            <Image
-              src={postData?.result.member.profileUrl}
-              alt=""
-              width={60}
-              height={60}
-              onClick={handleProfileClick}
-            />
-            <div className="flex flex-col text-[2rem] ml-[2rem]">
-              <span className="font-medium text-black">
-                {postData?.result.member.nickName}
-              </span>
-              <span className="text-[#9D9D9D] font-normal">
-                {formattedDate}
-              </span>
-            </div>
-            <div className="ml-auto flex items-center">
-              <FollowButton
-                postMemberId={postMemberId}
-                userMemberId={userMemberId}
+        <div className="mt-[4rem] py-[2rem] ">
+          <div className="flex mb-[3rem] items-center">
+            <div className="flex w-full h-[9rem] border-b border-[#CFCFCF] items-center]">
+              <Image
+                src={postData?.result.member.profileUrl}
+                className="w-[6rem] h-[6rem] rounded-[6rem]"
+                alt=""
+                width={60}
+                height={60}
+                onClick={handleProfileClick}
               />
-              <div className="ml-[4rem] flex">
-                <Image src={plused} alt="" />
-                <span className="text-[#9D9D9D] text-[1.6rem]">136</span>
+              <div className="flex flex-col text-[2rem] ml-[2rem]">
+                <span className="font-medium text-black">
+                  {postData?.result.member.nickName}
+                </span>
+                <span className="text-[#9D9D9D] font-normal">
+                  {formattedDate}
+                </span>
+              </div>
+              <div className="ml-auto flex items-center">
+                <FollowButton
+                  postMemberId={postMemberId}
+                  userMemberId={userMemberId}
+                />
+                <div className="ml-[4rem] flex">
+                  <Image src={plused} alt="" />
+                  <span className="text-[#9D9D9D] text-[1.6rem]">136</span>
+                </div>
               </div>
             </div>
           </div>
+          <div className="w-full h-[32rem] border border-[#D9D9D9] rounded-[1rem] flex mt-[5rem]">
+            <div
+              className={`w-[5rem] h-full ${colorTicket[postData.result.ticket.ticketColor] ? `bg-[${colorTicket[postData.result.ticket.ticketColor]}]` : ''} rounded-l-[1rem]`}
+            ></div>
+            <div className="w-full mt-[5rem] relative">
+              <div className="flex justify-center">
+                <div>
+                  <h1 className="text-[6rem] font-extrabold font-akira">{postData?.result.ticket.departureCode}</h1>
+                  <div className="w-[16rem] h-[3.6rem] pl-[2rem] rounded-[0.8rem] flex">
+                    <span className="text-[#9D9D9D] text-[2.4rem] font-semibold">
+                      {postData?.result.ticket.departure}
+                    </span>
+                  </div>
+                </div>
+                <div className="relative flex -mt-[3.5rem] bg-white z-10 mx-[5%]">
+                  <Image className="" src={air} alt="비행기" />
+                </div>
+                <div className="ml-[5rem]">
+                  <h1 className="text-[6rem] font-extrabold font-akira">{postData?.result.ticket.destinationCode}</h1>
+                  <div className="w-[16rem] h-[3.6rem] pl-[2rem] rounded-[0.8rem] flex">
+                    <span className="text-[#9D9D9D] text-[2.4rem] font-semibold">
+                      {postData?.result.ticket.destination}
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div className="w-[95%] border-2 border-dashed border-[#CFCFCF] my-[4rem] mx-auto relative z-0" />
+              <div
+                className={`flex justify-center text-[1.4rem] font-extrabold text-[#55FBAF] font-akira`}
+                style={{ color: colorTicket[postData?.result.ticket.ticketColor] || 'inherit' }}
+              >
+                <span className="w-[16rem]">PASSENGER</span>
+                <span className="w-[25rem]">DATE</span>
+                <span className="w-[8rem]">GROUP</span>
+              </div>
+              <div
+                className={`flex justify-center text-[1.4rem] font-extrabold text-[#6B6B6B]`}
+              >
+                <span className="w-[16rem]">USERID</span>
+                <span className="w-[25rem]">
+                  {postData?.result.ticket.startDate} ~{" "}
+                  {postData?.result.ticket.endDate}
+                </span>
+                <span className="w-[8rem]">
+                  {postData?.result.ticket.memberNum}
+                </span>
+              </div>
+            </div>
+            <div
+              className={`w-[28.5rem] h-full ${colorTicket[postData.result.ticket.ticketColor] ? `bg-[${colorTicket[postData.result.ticket.ticketColor]}]` : ''}  rounded-r-[1rem] ml-auto`}
+            >
+              <div className="absolute">
+                <div className="relative bg-white w-[4rem] h-[4rem] rounded-full -mt-[2rem] -ml-[2rem]"></div>
+                <div className="relative bg-white w-[4rem] h-[4rem] rounded-full mt-[28rem] -ml-[2rem]"></div>
+              </div>
+              <label className="w-full h-full flex" htmlFor="input-file">
+                <div className="flex flex-col m-auto">
+                  <Image
+                    className="w-[18rem] h-[26rem] rounded-[1rem] object-cover"
+                    src={postData?.result.ticket.image.accessUri}
+                    alt=""
+                    width={230}
+                    height={260}
+                  />
+                </div>
+              </label>
+            </div>
+          </div>
+
         </div>
         <div className="py-[5rem] min-h-[100rem] ">
           {/* {images.map((image, index) => (
