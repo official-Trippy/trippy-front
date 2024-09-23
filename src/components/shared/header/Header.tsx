@@ -14,6 +14,7 @@ import { useRouter, usePathname } from "next/navigation";
 import Cookies from "js-cookie";
 import SearchBar from "@/components/search/searchBar";
 import NotificationComponent from "@/components/notification/notificationComponent"; // Import NotificationComponent
+import { EventSourcePolyfill, NativeEventSource } from "event-source-polyfill";
 
 const Header = () => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -35,6 +36,33 @@ const Header = () => {
     };
     loadUserInfo();
   }, [fetchUserInfo]);
+
+  //수정 고려중
+  // useEffect(() => {
+  //   const EventSource = EventSourcePolyfill || NativeEventSource;
+  //   const eventSource = new EventSource(
+  //     `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/notify/subscribe`,
+  //     {
+  //       headers: {
+  //         Authorization: `Bearer ${accessToken}`,
+  //       },
+  //       heartbeatTimeout: 86400000,
+  //     }
+  //   );
+
+  //   eventSource.addEventListener("connect", (event: any) => {
+  //     const { data: receivedConnectData } = event;
+  //     console.log(receivedConnectData, "받아온 데이터임");
+  //     if (receivedConnectData === "SSE 연결이 완료되었습니다.") {
+  //       console.log("SSE CONNECTED");
+  //     } else {
+  //       console.log("연결 안됨요~~!!");
+  //     }
+  //   });
+  //   eventSource.addEventListener("message", (event) => {
+  //     console.log("Received message:", event.data);
+  //   });
+  // });
 
   const onClickLogin = () => {
     router.push("/login");
@@ -230,7 +258,7 @@ const Header = () => {
           <div className="fixed inset-0 z-50 bg-white flex flex-col items-center pt-8">
             {" "}
             {/* pt-8로 상단에 적당히 여백을 줌 */}
-            <div className="w-full max-w-[600px] flex justify-between items-center mb-4 px-4">
+            <div className="w-full max-w-[600px] flex justify-between items-center mb-4 px-4 py-2">
               <Image
                 src={LogoHeader}
                 alt="Logo"
