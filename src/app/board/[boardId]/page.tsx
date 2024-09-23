@@ -527,7 +527,7 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
             {isReplyOpen && (
               <div>
                 {userInfo && (
-                  <div className="w-full h-[9.3rem] shadowall pl-[1.7rem] pt-[1.4rem] flex">
+                  <div className="w-full h-[9.3rem] shadowall pl-[1.7rem] pt-[1.4rem] flex rounded-[0.8rem]">
                     <div className="w-full">
                       <div className="flex items-center">
                         <Image
@@ -559,7 +559,7 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
                 )}
 
                 <div
-                  className={`w-full h-full shadowall px-[4.7rem] py-[1.4rem] my-[3.5rem] flex flex-col`}
+                  className={`w-full h-full shadowall px-[4.7rem] py-[1.4rem] my-[3.5rem] flex flex-col rounded-[0.8rem]`}
                 >
                   {postCommentData?.result &&
                     Object.entries(postCommentData.result).map(
@@ -572,7 +572,7 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
                             <div className={`py-[2rem] mr-[2rem]`}>
                               <div className="flex items-center">
                                 <Image
-                                  className="flex items-center"
+                                  className="w-[2.8rem] h-[2.8rem] flex items-center rounded-full"
                                   src={coData.member.profileUrl}
                                   alt=""
                                   width={28}
@@ -604,7 +604,7 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
                                   <div className="w-full">
                                     <div className="flex items-center">
                                       <Image
-                                        className="flex items-center"
+                                        className="w-[2.8rem] h-[2.8rem] flex items-center rounded-full"
                                         src={memberDatas?.result.profileImageUrl}
                                         alt=""
                                         width={28}
@@ -644,7 +644,7 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
                                 <div className={`bg-[#F5F5F5] w-[95%] py-[2rem] px-[1.6rem] mx-[4rem] rounded-[0.8rem]`} key={childIndex}>
                                   <div className="flex items-center">
                                     <Image
-                                      className="flex items-center"
+                                      className="w-[2.8rem] h-[2.8rem] flex items-center rounded-full"
                                       src={childData.member.profileUrl}
                                       alt=""
                                       width={28}
