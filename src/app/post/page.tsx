@@ -206,9 +206,9 @@ function PostWrite() {
         }
         const ticketRequest = {
             departure: inputValue1,
-            departureCode: result?.result.countryIsoAlp2,
+            departureCode: result?.result.isoAlp3,
             destination: inputValue2,
-            destinationCode: result1?.result.countryIsoAlp2,
+            destinationCode: result1?.result.isoAlp3,
             image: images[0],
             memberNum: Number(passengerCount),
             startDate: formatDates(startDate),
