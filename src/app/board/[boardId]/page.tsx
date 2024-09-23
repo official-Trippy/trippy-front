@@ -35,6 +35,7 @@ import { colorTicket } from "@/types/board";
 import deleteBoard from "@/services/board/delete/deleteBoard";
 import Swal from "sweetalert2";
 import menubars from "@/dummy/menubars.svg"
+import deleteReply from "@/services/board/delete/deleteReply";
 
 export default function BoardPage({ params }: { params: { boardId: number } }) {
   const accessToken = Cookies.get("accessToken");
@@ -260,6 +261,24 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
     }).then((result) => {
       if (result.isConfirmed) {
         router.push('/');
+      }
+    });
+  }
+  console.log(userInfo)
+  const deleteReplyHandler = async (replyIdx: number) => {
+    await deleteReply(replyIdx)
+    Swal.fire({
+      icon: 'success',
+      title: '정상적으로 삭제되었습니다.',
+      confirmButtonText: '확인',
+      confirmButtonColor: '#FB3463',
+      customClass: {
+        popup: 'swal-custom-popup',
+        icon: 'swal-custom-icon'
+      }
+    }).then((result) => {
+      if (result.isConfirmed) {
+        commentRefetch();
       }
     });
   }
@@ -575,6 +594,10 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
                                 >
                                   {replyStates[index] ? '답글취소' : '답글달기'}
                                 </span>
+                                {userInfo?.memberId === coData.member.memberId && (
+                                  <span className="ml-[1rem] cursor-pointer" onClick={() => deleteReplyHandler(coData.id)}>삭제</span>
+                                )}
+
                               </div>
                               {replyStates[index] && (
                                 <div className="w-[95%] h-[9.3rem] shadowall mt-[2rem] ml-[4rem] pl-[1.7rem] pt-[1.4rem] flex border border-[#CFCFCF] rounded-[0.8rem] relative">
@@ -665,6 +688,9 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
                                         >
                                           답글달기
                                         </span>
+                                      )}
+                                      {userInfo?.memberId === childData.member.memberId && (
+                                        <span className="ml-[1rem] cursor-pointer" onClick={() => deleteReplyHandler(childData.id)}>삭제</span>
                                       )}
                                       {/* 답글이 열렸을 때 추가적인 요소를 보여줄 수 있습니다 */}
                                       {replyOpen[index] && (
