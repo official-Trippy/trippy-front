@@ -46,8 +46,10 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
 
   const handleEditClick = (comment: Comment) => {
     setEditCommentId(comment.id); // 수정할 댓글 ID 저장
-    setEditedComment(comment.content); // 기존 댓글 내용 저장
+    setEditedComment(comment.content); // 원래 댓글 내용 설정
+    setIsMenuOpen({ ...isMenuOpen, [comment.id]: false }); // 메뉴 닫기
   };
+
   const handleEditSubmit = () => {
     if (editedComment.trim() && editCommentId !== null) {
       // 수정 API 호출
@@ -339,11 +341,11 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
                 />
                 {isMenuOpen[comment.id] && (
                   <div className="absolute w-[60px] right-0 mt-1 bg-white rounded shadow-lg z-10">
-                    <div className="py-2 px-4 text-[#ff4f4f] hover:bg-gray-100 cursor-pointer text-center" onClick={() => handleDelete(comment.id)}>
+                    <div className="py-2 px-4 text-[#fa3463] hover:bg-gray-100 cursor-pointer text-center flex-shrink-0" onClick={() => handleDelete(comment.id)}>
                       삭제
                     </div>
                     <hr />
-                    <div className="py-2 px-4 text-black hover:bg-gray-100 cursor-pointer text-center" onClick={() => handleEditClick(comment)}>
+                    <div className="py-2 px-4 text-black hover:bg-gray-100 cursor-pointer text-center flex-shrink-0" onClick={() => handleEditClick(comment)}>
                       수정
                     </div>
                   </div>
@@ -351,20 +353,33 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
               </div>
             )}
           </div>
-          <div className="ml-[3.7rem] items-center mr-0 sm-700:mr-[2rem]">
+          <div className="ml-[3.7rem] items-center mr-0">
             {editCommentId === comment.id ? ( // 수정 중인 댓글이면
               <div>
-                <input
-                  type="text"
-                  value={editedComment}
-                  onChange={(e) => setEditedComment(e.target.value)} // 입력 값 업데이트
-                  className="border rounded p-1"
-                />
-                <button onClick={handleEditSubmit} className="ml-2">완료</button>
-                <button onClick={() => setEditCommentId(null)} className="ml-2">취소</button>
+              <div className='flex-1 flex gap-2'>
+              <input
+                type="text"
+                className="mt-2 p-2 rounded-lg flex-1  border border-[#cfcfcf]"
+                value={editedComment}
+                onChange={(e) => setEditedComment(e.target.value)} 
+                placeholder={`@${replyToNickname || ''}에게 답글쓰기`}
+              />
+              <button
+                onClick={handleEditSubmit}
+                className="ml-auto mt-auto mb-[2px] px-8 py-1 rounded-lg justify-center items-center inline-flex text-center text-base font-semibold bg-[#fa3463] text-white flex-shrink-0"
+              >
+                수정
+              </button>
+              <button
+                onClick={() => setEditCommentId(null)}
+                className="ml-auto mt-auto mb-[2px] px-8 py-1 rounded-lg justify-center items-center inline-flex text-center text-base font-semibold bg-[#6E7881] text-white flex-shrink-0"
+              >
+                취소
+              </button>
+            </div>
               </div>
             ) : (
-              <div>{comment.content}</div>
+              <div className='sm-700:mr-[2rem]'>{comment.content}</div>
             )}
             <div className='flex flex-row my-2'>
               <div className="text-gray-600">{formatTime(comment.createDateTime)}</div>
