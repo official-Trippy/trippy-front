@@ -349,8 +349,22 @@ const handleEditSubmit = () => {
       }
     }
   };
-  
-  
+
+  const handleProfileClick = (memberId: string | undefined) => {
+    if (!memberId) return; // memberId가 없으면 함수 종료
+    if (accessToken) {
+      if (memberId === userInfo?.memberId) {
+        router.push("/mypage");
+      } else {
+        router.push(`/user/${memberId}`);
+      }
+    } else {
+      router.push(`/user/${memberId}`);
+    }
+  };
+
+  console.log('댓글 데이터 구조:', commentData?.result)
+
 
   const renderComments = (comments: Comment[], depth = 0) => {
     return comments.map((comment) => (
@@ -364,10 +378,11 @@ const handleEditSubmit = () => {
                 alt="사용자 프로필" 
                 layout="fill" 
                 objectFit="cover" 
-                className="rounded-full" 
+                className="rounded-full cursor-pointer" 
+                onClick={() => handleProfileClick(comment.member?.memberId)}
               />
             </div>
-            <div className="text-[#292929] text-sm font-semibold ml-[5px]">
+            <div className="text-[#292929] text-sm font-semibold ml-[5px] cursor-pointer" onClick={() => handleProfileClick(comment.member?.memberId)}>
               {comment.member?.nickName}
             </div>
             {ootdMemberId === comment.member.memberId && (
