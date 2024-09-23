@@ -3,7 +3,7 @@ import { useQuery, useMutation } from 'react-query';
 import Image from 'next/image';
 import { useUserStore } from '@/store/useUserStore';
 import { formatTime } from '@/constants/dateFotmat';
-import { FetchCommentsResponse, createComment, createReply, fetchComments } from '@/services/ootd.ts/ootdComments';
+import { FetchCommentsResponse, createComment, createReply, deleteComment, fetchComments, updateComment } from '@/services/ootd.ts/ootdComments';
 import { checkIfLiked, likePost, unlikePost, likePostList } from '@/services/ootd.ts/ootdComments';
 import HeartIcon from '../../../public/heartedIcon.svg';
 import EmptyHeartIcon from '../../../public/heartIcon-default.svg';
@@ -16,6 +16,7 @@ import { Comment } from '@/types/ootd';
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 import DefaultImage from '../../../public/defaultImage.svg';
+import CabapIcon from "../../../public/cabap.svg";
 
 
 interface CommentSectionProps {
@@ -39,6 +40,36 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
   const [likeList, setLikeList] = useState<any[]>([]);
   const [isLoadingLikes, setIsLoadingLikes] = useState<boolean>(false);
   const [ootdMemberId, setOotdMemberId] = useState(memberId);
+  const [isMenuOpen, setIsMenuOpen] = useState<Record<number, boolean>>({});
+  const [editCommentId, setEditCommentId] = useState<number | null>(null);
+  const [editedComment, setEditedComment] = useState<string>('');
+
+  const handleEditClick = (comment: Comment) => {
+    setEditCommentId(comment.id); // 수정할 댓글 ID 저장
+    setEditedComment(comment.content); // 기존 댓글 내용 저장
+  };
+  const handleEditSubmit = () => {
+    if (editedComment.trim() && editCommentId !== null) {
+      // 수정 API 호출
+      editCommentMutation.mutate({
+        id: editCommentId,
+        content: editedComment,
+      });
+      setEditCommentId(null); // 수정 모드 종료
+      setEditedComment(''); // 입력란 비우기
+    }
+  };
+  
+  const editCommentMutation = useMutation(
+    ({ id, content }: { id: number; content: string }) => updateComment(id, content),
+    {
+      onSuccess: () => {
+        refetch(); // 댓글 목록 갱신
+        refetchPostDetail(); // 포스트 세부 정보 갱신
+      },
+    }
+  );
+    
 
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 18;
@@ -254,13 +285,33 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
   const handleLogin = () => {
     router.push('/login');
   };
+  
+  const handleCabapIconClick = (commentId: number) => {
+    setIsMenuOpen((prev) => ({
+      ...prev,
+      [commentId]: !prev[commentId], 
+    }));
+  };
 
-const renderComments = (comments: Comment[], depth = 0) => {
-  return comments.map((comment) => (
-    <div key={comment.id} className={`comment ${depth === 0 ? 'px-4' : ''}`}>
-      {/* 댓글 표시 */}
-      <div className='comment-section p-4 rounded-lg'>
-        <div className='flex flex-row items-center'>
+  const handleDelete = async (commentId: number) => {
+    const confirmed = window.confirm('정말 삭제하시겠습니까?');
+    if (confirmed) {
+      try {
+        await deleteComment(commentId); 
+   
+      } catch (error) {
+        console.error('댓글 삭제 실패:', error);
+      }
+    }
+  };
+  
+
+  const renderComments = (comments: Comment[], depth = 0) => {
+    return comments.map((comment) => (
+      <div key={comment.id} className={`comment ${depth === 0 ? 'px-4' : ''}`}>
+        {/* 댓글 표시 */}
+        <div className='comment-section p-4 rounded-lg'>
+          <div className='flex flex-row items-center'>
             <div className="relative w-[28px] h-[28px]">
               <Image 
                 src={comment.member.profileUrl || DefaultImage} 
@@ -270,29 +321,65 @@ const renderComments = (comments: Comment[], depth = 0) => {
                 className="rounded-full" 
               />
             </div>
-          <div className="text-[#292929] text-sm font-semibold ml-[5px]">
-            {comment.member?.nickName}
+            <div className="text-[#292929] text-sm font-semibold ml-[5px]">
+              {comment.member?.nickName}
+            </div>
+            {ootdMemberId === comment.member.memberId && (
+              <div className='ml-[10px] bg-[#FFE3EA] text-xs text-[#FB3463] border border-[#FB3463] px-2 py-1 rounded-xl'>블로그 주인</div>
+            )}
+            {userInfo.memberId === comment.member.memberId && (
+              <div className='relative ml-auto'>
+                <Image
+                  src={CabapIcon}
+                  alt="cabap"
+                  width={2}
+                  height={10}
+                  onClick={() => handleCabapIconClick(comment.id)}
+                  className="cursor-pointer"
+                />
+                {isMenuOpen[comment.id] && (
+                  <div className="absolute w-[60px] right-0 mt-1 bg-white rounded shadow-lg z-10">
+                    <div className="py-2 px-4 text-[#ff4f4f] hover:bg-gray-100 cursor-pointer text-center" onClick={() => handleDelete(comment.id)}>
+                      삭제
+                    </div>
+                    <hr />
+                    <div className="py-2 px-4 text-black hover:bg-gray-100 cursor-pointer text-center" onClick={() => handleEditClick(comment)}>
+                      수정
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
-          {ootdMemberId == comment.member.memberId && (
-            <div className='ml-[10px] bg-[#FFE3EA] text-xs text-[#FB3463] border border-[#FB3463] px-2 py-1 rounded-xl'>블로그 주인</div>
-          )}
-        </div>
-        <div className="ml-[3.7rem] items-center mr-0 sm-700:mr-[2rem]">
-          <div>{comment.content}</div>
-          <div className='flex flex-row my-2'>
-            <div className="text-gray-600">{formatTime(comment.createDateTime)}</div>
-            <div>&nbsp;&nbsp;|&nbsp;&nbsp;</div>
-            <button onClick={() => handleReplyClick(comment.id, comment.member?.nickName || '')} className="text-gray-500">
-            {replyTo === comment.id ? '답글취소' : '답글쓰기'}
-            </button>
+          <div className="ml-[3.7rem] items-center mr-0 sm-700:mr-[2rem]">
+            {editCommentId === comment.id ? ( // 수정 중인 댓글이면
+              <div>
+                <input
+                  type="text"
+                  value={editedComment}
+                  onChange={(e) => setEditedComment(e.target.value)} // 입력 값 업데이트
+                  className="border rounded p-1"
+                />
+                <button onClick={handleEditSubmit} className="ml-2">완료</button>
+                <button onClick={() => setEditCommentId(null)} className="ml-2">취소</button>
+              </div>
+            ) : (
+              <div>{comment.content}</div>
+            )}
+            <div className='flex flex-row my-2'>
+              <div className="text-gray-600">{formatTime(comment.createDateTime)}</div>
+              <div>&nbsp;&nbsp;|&nbsp;&nbsp;</div>
+              <button onClick={() => handleReplyClick(comment.id, comment.member?.nickName || '')} className="text-gray-500">
+                {replyTo === comment.id ? '답글취소' : '답글쓰기'}
+              </button>
+            </div>
           </div>
         </div>
-      </div>
-
-      {/* 답글쓰기 입력창, 해당 댓글 아래에 표시되도록 설정 */}
-      {replyTo === comment.id && (
-        <div className={`flex flex-col p-4 mt-2 bg-white rounded-lg shadow-md ${depth === 0 ? 'mx-4 sm-700:mx-12' : ''}`}>
-          <div className='flex flex-row items-center flex-1'>
+  
+        {/* 답글쓰기 입력창 */}
+        {replyTo === comment.id && (
+          <div className={`flex flex-col p-4 mt-2 bg-white rounded-lg shadow-md border border-[#cfcfcf] ${depth === 0 ? 'mx-4 sm-700:mx-12' : ''}`}>
+            <div className='flex flex-row items-center flex-1'>
               <div className="relative w-[28px] h-[28px]">
                 <Image
                   src={userInfo.profileImageUrl || DefaultImage}
@@ -302,38 +389,37 @@ const renderComments = (comments: Comment[], depth = 0) => {
                   className="rounded-full"
                 />
               </div>
-            <div className="text-[#292929] font-semibold ml-[8px]">{userInfo?.nickName}</div>
+              <div className="text-[#292929] font-semibold ml-[8px]">{userInfo?.nickName}</div>
+            </div>
+            <div className='flex-1 flex gap-2'>
+              <input
+                type="text"
+                className="mt-2 p-2 rounded-l flex-1"
+                value={replyComment}
+                onChange={(e) => setReplyComment(e.target.value)}
+                placeholder={`@${replyToNickname || ''}에게 답글쓰기`}
+              />
+              <button
+                onClick={handleReplySubmit}
+                className={`ml-auto mt-auto mb-[2px] px-8 py-1 rounded-lg justify-center items-center inline-flex text-center text-base font-semibold ${replyComment.trim() ? 'bg-[#fa3463] text-white' : 'bg-neutral-100 text-zinc-800'}`}
+                disabled={!replyComment.trim()} 
+              >
+                입력
+              </button>
+            </div>
           </div>
-          <div className='flex-1 flex gap-2'>
-          <input
-            type="text"
-            className="mt-2 p-2 rounded-l flex-1"
-            value={replyComment}
-            onChange={(e) => setReplyComment(e.target.value)}
-            placeholder={`@${replyToNickname || ''}에게 답글쓰기`}
-          />
-          <button
-            onClick={handleReplySubmit}
-            className={`ml-auto mt-auto mb-[2px] px-8 py-1 rounded-lg justify-center items-center inline-flex text-center text-base font-semibold ${replyComment.trim() ? 'bg-[#fa3463] text-white' : 'bg-neutral-100 text-zinc-800'}`}
-            disabled={!replyComment.trim()} 
-          >
-            입력
-          </button>
-        </div>
-
-        </div>
-      )}
-
-      {/* 대댓글이 있는 경우 */}
-      {comment.children.length > 0 && (
-        <div className="mr-4 ml-4 sm-700:ml-12 sm-700:mr-12 my-4 bg-neutral-100 rounded-lg">
-          {renderComments(comment.children, depth + 1)}
-        </div>
-      )}
-    </div>
-  ));
-};
-
+        )}
+  
+        {/* 대댓글이 있는 경우 */}
+        {comment.children.length > 0 && (
+          <div className="mr-4 ml-4 sm-700:ml-12 sm-700:mr-12 my-4 bg-neutral-100 rounded-lg">
+            {renderComments(comment.children, depth + 1)}
+          </div>
+        )}
+      </div>
+    ));
+  };
+  
 
 
 
@@ -483,7 +569,7 @@ const renderComments = (comments: Comment[], depth = 0) => {
                   <div className="text-[#292929] font-semibold ml-[8px]">{userInfo?.nickName}</div>
                 </div>
               </div>
-              <div className="flex-1 ml-12">
+              <div className="flex-1 ml-12 mr-1">
                 <input
                   type="text"
                   className="mt-2 p-2 rounded w-[97%] sm-700:w-full focus:outline-normal"
