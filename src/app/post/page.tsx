@@ -1,16 +1,6 @@
 "use client"
 import Header from '@/components/shared/header/Header'
 import React, { ChangeEvent, useEffect, useState } from 'react'
-import air from '@/dummy/air.svg'
-import train from '@/dummy/train.svg'
-import bus from '@/dummy/bus.svg'
-import bicycle from '@/dummy/bicycle.svg'
-import car from '@/dummy/car.svg'
-import air1 from '@/dummy/air1.svg'
-import train1 from '@/dummy/train1.svg'
-import bus1 from '@/dummy/bus1.svg'
-import bicycle1 from '@/dummy/bicycle1.svg'
-import car1 from '@/dummy/car1.svg'
 import Image from 'next/image'
 import searchicon from '@/dummy/search.svg'
 import uploadImages from "@/dummy/uploadfile.svg"
@@ -25,6 +15,7 @@ import Swal from 'sweetalert2'
 import { colorTicket } from '@/types/board'
 import MyTinyMCEEditor from '@/components/testEditor/textEditor2'
 import { getCountry, getCountry1 } from '@/services/board/get/getCountry'
+import { PostAirSVG, PostBusSVG, PostBycicleSVG, PostCarSVG, PostTrainSVG } from '@/components/transportsvg/post'
 
 interface CountryResult {
     countryIsoAlp2: string;
@@ -44,18 +35,6 @@ function PostWrite() {
     const [bgColor, setBgColor] = useState('#55FBAF');
     const [thumbnailPreview, setThumbnailPreview] = useState<string | null>(null);
     const [isTransport, setIsTransport] = useState(false);
-    const [isImageIdx, setIsImageIdx] = useState([
-        { imgsrc: air },
-        { imgsrc: train },
-        { imgsrc: bus },
-        { imgsrc: bicycle },
-        { imgsrc: car },
-        { imgsrc: air1 },
-        { imgsrc: train1 },
-        { imgsrc: bus1 },
-        { imgsrc: bicycle1 },
-        { imgsrc: car1 },
-    ]);
     const [passengerCount, setPassengerCount] = useState(0);
     const [startDate, setStartDate] = useState<Date | null>(null);
     const [endDate, setEndDate] = useState<Date | null>(null);
@@ -74,6 +53,7 @@ function PostWrite() {
     const [tags, setTags] = useState<string[]>([]);
     const [inputValue, setInputValue] = useState<string>('');
     const [ticketColor, setTicketColor] = useState('Aquamarine')
+    const [isImageIdx, setIsImageIdx] = useState<any[]>([]);
     const [postRequests, setPostRequests] = useState({
         body: '',
         images: [] as string[], // 이미지 URL을 저장할 배열
@@ -81,6 +61,16 @@ function PostWrite() {
     const [result, setResult] = useState<ApiResponse | null>(null);
     const [result1, setResult1] = useState<ApiResponse | null>(null);
     const [transportStr, setTransportStr] = useState('')
+
+    useEffect(() => {
+        setIsImageIdx([
+            { imgsrc: <PostAirSVG fillColor={colorTicket[ticketColor]} /> },
+            { imgsrc: <PostTrainSVG fillColor={colorTicket[ticketColor]} /> },
+            { imgsrc: <PostBusSVG fillColor={colorTicket[ticketColor]} /> },
+            { imgsrc: <PostBycicleSVG fillColor={colorTicket[ticketColor]} /> },
+            { imgsrc: <PostCarSVG fillColor={colorTicket[ticketColor]} /> },
+        ]);
+    }, [ticketColor]);
 
     const formatDate = (date: Date | null) => {
         if (!date) return '';
@@ -127,10 +117,10 @@ function PostWrite() {
     console.log()
 
 
-    const selectTransport = (imgSrc: any) => {
+    const selectTransport = (imgSrc: JSX.Element) => {
         setIsImageIdx((prevState) => {
             // 클릭한 항목의 인덱스를 찾기
-            const selectedIndex = prevState.findIndex((item) => item.imgsrc === imgSrc);
+            const selectedIndex = prevState.findIndex((item) => item.imgsrc.type === imgSrc.type && item.imgsrc.props.fillColor === imgSrc.props.fillColor);
 
             // 새로운 배열 생성
             const updatedState: any = [...prevState];
@@ -140,24 +130,19 @@ function PostWrite() {
                 const selectedItem = updatedState.splice(selectedIndex, 1)[0];
                 updatedState.unshift(selectedItem);
 
-                // 나머지 항목의 인덱스 업데이트
-                for (let i = 0; i < updatedState.length; i++) {
-                    updatedState[i].index = i;
-                }
-
                 // 첫 번째 항목의 src에 따라 setTransportStr 설정
                 if (updatedState.length > 0) {
-                    const transportValue = updatedState[0].imgsrc.src; // updatedState의 첫 번째 값 사용
+                    const transportValue = updatedState[0].imgsrc.type.name; // SVG 컴포넌트의 이름 사용
 
-                    if (transportValue.includes('bicycle')) {
+                    if (transportValue === 'PostBicycleSVG') {
                         setTransportStr('Bicycle');
-                    } else if (transportValue.includes('air')) {
+                    } else if (transportValue === 'PostAirSVG') {
                         setTransportStr('Airplane');
-                    } else if (transportValue.includes('train')) {
+                    } else if (transportValue === 'PostTrainSVG') {
                         setTransportStr('Train');
-                    } else if (transportValue.includes('bus')) {
+                    } else if (transportValue === 'PostBusSVG') {
                         setTransportStr('Bus');
-                    } else if (transportValue.includes('car')) {
+                    } else if (transportValue === 'PostCarSVG') {
                         setTransportStr('Car');
                     }
                 } else {
@@ -338,16 +323,9 @@ function PostWrite() {
                                     isTransport ? (
                                         <div className='w-[6rem] h-[28rem] absolute z-10 bg-white shadowall rounded-[3rem] flex items-center justify-center mt-[2rem] flex-col space-y-9'>
                                             {isImageIdx.slice(0, 5).map((item: any, index) => (
-                                                <Image
-                                                    key={index}
-                                                    className=""
-                                                    src={item.imgsrc}
-                                                    alt={`item ${index}`}
-                                                    onClick={() => {
-                                                        selectTransport(item.imgsrc);
-                                                    }
-                                                    }
-                                                />
+                                                <div key={index} onClick={() => selectTransport(item.imgsrc)}>
+                                                    {item.imgsrc}
+                                                </div>
                                             ))}
                                         </div>
                                     ) : (
@@ -355,7 +333,7 @@ function PostWrite() {
                                             className='w-[6rem] h-[6rem] absolute shadowall rounded-full flex items-center justify-center mt-[2rem]'
                                             onClick={() => setIsTransport(true)}
                                         >
-                                            <Image className='' src={isImageIdx[0].imgsrc} alt='비행기' />
+                                            {isImageIdx[0]?.imgsrc}
                                         </div>
                                     )
                                 }
