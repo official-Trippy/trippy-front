@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation } from 'react-query';
 import Image from 'next/image';
 import { useUserStore } from '@/store/useUserStore';
-import { formatTime } from '@/constants/dateFotmat';
+import { formatTime, formatTimetoDays } from '@/constants/dateFotmat';
 import { FetchCommentsResponse, createComment, createReply, deleteComment, fetchComments, updateComment } from '@/services/ootd.ts/ootdComments';
 import { checkIfLiked, likePost, unlikePost, likePostList } from '@/services/ootd.ts/ootdComments';
 import HeartIcon from '../../../public/heartedIcon.svg';
@@ -433,7 +433,7 @@ const handleEditSubmit = () => {
                     );
                   })}
                 </div><div className='flex flex-row my-2'>
-                    <div className="text-gray-600">{formatTime(comment.createDateTime)}</div>
+                    <div className="text-gray-600">{formatTimetoDays(comment.createDateTime)}</div>
                     <div>&nbsp;&nbsp;|&nbsp;&nbsp;</div>
                     <button onClick={() => handleReplyClick(comment.id, comment.member?.nickName || '')} className="text-gray-500">
                       {replyTo === comment.id ? '답글취소' : '답글쓰기'}
