@@ -36,6 +36,7 @@ import deleteBoard from "@/services/board/delete/deleteBoard";
 import Swal from "sweetalert2";
 import menubars from "@/dummy/menubars.svg"
 import deleteReply from "@/services/board/delete/deleteReply";
+import { PostAirSVG, PostBusSVG, PostBycicleSVG, PostCarSVG, PostTrainSVG } from "@/components/transportsvg/post";
 
 export default function BoardPage({ params }: { params: { boardId: number } }) {
   const accessToken = Cookies.get("accessToken");
@@ -307,6 +308,24 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
     setReplyMemId(memberId);
   };
   console.log(replyId);
+
+  const getTransportImage = (transport: string, ticketColor: any) => {
+    switch (transport) {
+      case 'Airplane':
+        return <PostAirSVG fillColor={colorTicket[ticketColor]} />;
+      case 'Car':
+        return <PostCarSVG fillColor={colorTicket[ticketColor]} />;
+      case 'Bus':
+        return <PostBusSVG fillColor={colorTicket[ticketColor]} />;
+      case 'Bicycle':
+        return <PostBycicleSVG fillColor={colorTicket[ticketColor]} />;
+      case 'Train':
+        return <PostTrainSVG fillColor={colorTicket[ticketColor]} />;
+      default:
+        return null; // 기본값 또는 대체 이미지
+    }
+  };
+
   return (
     <div>
       <Header />
@@ -376,10 +395,10 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
                     </span>
                   </div>
                 </div>
-                <div className="relative flex -mt-[3.5rem] bg-white z-10 mx-[5%]">
-                  <Image className="" src={air} alt="비행기" />
+                <div className="relative flex bg-white mt-[3rem] z-10 mx-[3%]">
+                  {getTransportImage(postData?.result.ticket.transport, postData?.result.ticket.ticketColor)}
                 </div>
-                <div className="ml-[5rem]">
+                <div className="">
                   <h1 className="text-[6rem] font-extrabold font-akira">{postData?.result.ticket.destinationCode}</h1>
                   <div className="w-[16rem] h-[3.6rem] pl-[2rem] rounded-[0.8rem] flex">
                     <span className="text-[#9D9D9D] text-[2.4rem] font-semibold">
