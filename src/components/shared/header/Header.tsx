@@ -7,7 +7,7 @@ import LogoHeader from "../../../../public/LogoHeader.svg";
 import AlertImg from "../../../../public/AlertImg.png";
 import Profile from "../../../../public/Profile.png";
 import searchIconMobile from "../../../../public/search_icon_mobile.svg"; // Mobile search icon
-import alertIconMobile from "../../../../public/alert_icon_mobile.svg";  // Mobile alert icon
+import alertIconMobile from "../../../../public/alert_icon_mobile.svg"; // Mobile alert icon
 import UserModal from "@/components/userInfo/userModal";
 import { useUserStore } from "@/store/useUserStore";
 import { useRouter, usePathname } from "next/navigation";
@@ -20,6 +20,7 @@ const Header = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isNotificationsVisible, setIsNotificationsVisible] = useState(false); // New state for notifications
   const [isLoading, setIsLoading] = useState(true);
+  const [searchModalVisible, setSearchModalVisible] = useState(false);
 
   const { userInfo, loading, fetchUserInfo } = useUserStore();
   const router = useRouter();
@@ -92,14 +93,14 @@ const Header = () => {
             <SearchBar />
           </div>
           <div className="ml-auto mr-4 md-850:hidden">
-          <Image
-            src={searchIconMobile}
-            alt="Search"
-            width={24}
-            height={24}
-            className="cursor-pointer"
+            <Image
+              src={searchIconMobile}
+              alt="Search"
+              width={24}
+              height={24}
+              className="cursor-pointer"
             />
-        </div>
+          </div>
           {!loading && !isGuest && (
             <>
               {userInfo && accessToken ? (
@@ -195,36 +196,59 @@ const Header = () => {
           )}
         </div>
       </div>
-    
+
       {/* Mobile Layout */}
       <div className="flex mt-[20px] mb-[20px] sm-700:hidden sm-700:justify-between sm-700:items-center w-[90%] mx-auto">
-      <div className="flex-shrink-0">
-        <Link href="/">
+        <div className="flex-shrink-0">
+          <Link href="/">
+            <Image
+              src={LogoHeader}
+              alt="Logo"
+              className="w-[110px] h-[34px] object-contain"
+            />
+          </Link>
+        </div>
+        <div className="flex items-center gap-4 ml-auto">
           <Image
-            src={LogoHeader}
-            alt="Logo"
-            className="w-[110px] h-[34px] object-contain"
+            src={searchIconMobile}
+            alt="Search"
+            width={24}
+            height={24}
+            className="cursor-pointer"
+            onClick={() => setSearchModalVisible(true)}
           />
-        </Link>
+          <Image
+            src={alertIconMobile}
+            alt="Notifications"
+            width={24}
+            height={24}
+            onClick={handleNotificationsToggle}
+            className="cursor-pointer"
+          />
+        </div>
+        {searchModalVisible && (
+          <div className="fixed inset-0 z-50 bg-white flex flex-col items-center pt-8">
+            {" "}
+            {/* pt-8로 상단에 적당히 여백을 줌 */}
+            <div className="w-full max-w-[600px] flex justify-between items-center mb-4 px-4">
+              <Image
+                src={LogoHeader}
+                alt="Logo"
+                className="w-[110px] h-[34px] object-contain"
+              />
+              <button
+                className="text-gray-600 px-6"
+                onClick={() => setSearchModalVisible(false)} // 닫기 버튼
+              >
+                닫기
+              </button>
+            </div>
+            <div className="w-full max-w-[600px] px-4">
+              <SearchBar />
+            </div>
+          </div>
+        )}
       </div>
-      <div className="flex items-center gap-4 ml-auto">
-        <Image
-          src={searchIconMobile}
-          alt="Search"
-          width={24}
-          height={24}
-          className="cursor-pointer"
-        />
-        <Image
-          src={alertIconMobile}
-          alt="Notifications"
-          width={24}
-          height={24}
-          onClick={handleNotificationsToggle}
-          className="cursor-pointer"
-        />
-      </div>
-    </div>
     </header>
   );
 };
