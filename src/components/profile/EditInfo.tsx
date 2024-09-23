@@ -79,6 +79,20 @@ const EditInfo = () => {
       setOotdScope(userInfo.ootdScope || "public");
       setBadgeScope(userInfo.badgeScope || "public");
       setFollowScope(userInfo.followScope || "public");
+    } else {
+      // userInfo가 null일 때 상태 초기화
+      setProfileImage(null);
+      setBlogImage(null);
+      setNickName('');
+      setBlogName('');
+      setBlogIntroduce('');
+      setSelectedInterests([]);
+      setLikeAlert(true);
+      setCommentAlert(true);
+      setTicketScope("public");
+      setOotdScope("public");
+      setBadgeScope("public");
+      setFollowScope("public");
     }
   }, [userInfo]);
 
@@ -320,7 +334,6 @@ const EditInfo = () => {
     console.log('Selected Interests:', selectedInterests);
   }, [selectedInterests]);
 
-  console.log(userInfo.data);
 
   useEffect(() => {
     if (userInfo) {
