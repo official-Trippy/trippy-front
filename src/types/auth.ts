@@ -67,8 +67,8 @@ export interface UpdateMemberInfoRequest {
   blogName: string;
   blogIntroduce: string;
   koreanInterestedTypes: string[];
-  profileImage: { accessUri: string; authenticateId: string; imgUrl: string; };
-  blogImage: { accessUri: string; authenticateId: string; imgUrl: string; };
+  profileImage?: { accessUri: string; authenticateId: string; imgUrl: string; } | null; // null을 허용
+  blogImage?: { accessUri: string; authenticateId: string; imgUrl: string; } | null; // null을 허용
   likeAlert: boolean;
   commentAlert: boolean;
   ticketScope: "public" | "private" | "protected";

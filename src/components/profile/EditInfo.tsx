@@ -22,7 +22,7 @@ import DefaultImage from '../../../public/defaultImage.svg';
 import { getByteLength } from "@/constants/getByteLength";
 
 const EditInfo = () => {
-  const { userInfo, updateUserInfo } = useUserStore(); 
+  const { updateUserInfo } = useUserStore(); // userInfo를 전역상태에서 가져오지 않고 API 호출로 처리
   const queryClient = useQueryClient();
   const inputFileRef = useRef<HTMLInputElement | null>(null);
 
@@ -36,67 +36,68 @@ const EditInfo = () => {
     accessUri: string;
     authenticateId: string;
     imgUrl: string;
-  } | null>(userInfo?.profileImage ?? null); // null 병합 연산자 사용
-  
+  } | null>(null); 
+
   const [blogImage, setBlogImage] = useState<{
     accessUri: string;
     authenticateId: string;
     imgUrl: string;
-  } | null>(userInfo?.blogImage ?? null);
+  } | null>(null); 
 
-
-  const [nickName, setNickName] = useState<string>(userInfo?.nickName || '');
+  const [nickName, setNickName] = useState<string>('');
   const [nickNameError, setNickNameError] = useState<string>('');
-  const [blogName, setBlogName] = useState<string>(userInfo?.blogName || '');
+  const [blogName, setBlogName] = useState<string>('');
   const [blogNameError, setBlogNameError] = useState<string>('');
-  const [blogIntroduce, setBlogIntroduce] = useState<string>(userInfo?.blogIntroduce || '');
+  const [blogIntroduce, setBlogIntroduce] = useState<string>('');
   const [blogIntroduceError, setBlogIntroduceError] = useState<string>('');
   const [imageBlogUploaded, setImageBlogUploaded] = useState(false);
   const [imageUploaded, setImageUploaded] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedInterests, setSelectedInterests] = useState<string[]>(userInfo?.koreanInterestedTypes || []);
+  const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
 
-  const [likeAlert, setLikeAlert] = useState(userInfo?.likeAlert || true);
-  const [commentAlert, setCommentAlert] = useState(userInfo?.commentAlert || true);
-  const [ticketScope, setTicketScope] = useState<"public" | "private" | "protected">(userInfo?.ticketScope || "public");
-  const [ootdScope, setOotdScope] = useState<"public" | "private" | "protected">(userInfo?.ootdScope || "public");
-  const [badgeScope, setBadgeScope] = useState<"public" | "private" | "protected">(userInfo?.badgeScope || "public");
-  const [followScope, setFollowScope] = useState<"public" | "private" | "protected">(userInfo?.followScope || "public");
+  const [likeAlert, setLikeAlert] = useState(true);
+  const [commentAlert, setCommentAlert] = useState(true);
+  const [ticketScope, setTicketScope] = useState<"public" | "private" | "protected">("public");
+  const [ootdScope, setOotdScope] = useState<"public" | "private" | "protected">("public");
+  const [badgeScope, setBadgeScope] = useState<"public" | "private" | "protected">("public");
+  const [followScope, setFollowScope] = useState<"public" | "private" | "protected">("public");
   const [tempSelectedInterests, setTempSelectedInterests] = useState<string[]>([]);
+
+  const [isProfileImageChanged, setIsProfileImageChanged] = useState(false);
+  const [isBlogImageChanged, setIsBlogImageChanged] = useState(false);
+
 
   const [warningMessage, setWarningMessage] = useState('');
 
-  useEffect(() => {
-    if (userInfo) {
-      setProfileImage(userInfo.profileImage || null);
-      setBlogImage(userInfo.blogImage || null);
-      setNickName(userInfo.nickName || '');
-      setBlogName(userInfo.blogName || '');
-      setBlogIntroduce(userInfo.blogIntroduce || '');
-      setSelectedInterests(userInfo.koreanInterestedTypes || []);
-      setLikeAlert(userInfo.likeAlert || true);
-      setCommentAlert(userInfo.commentAlert || true);
-      setTicketScope(userInfo.ticketScope || "public");
-      setOotdScope(userInfo.ootdScope || "public");
-      setBadgeScope(userInfo.badgeScope || "public");
-      setFollowScope(userInfo.followScope || "public");
-    } else {
-      // userInfo가 null일 때 상태 초기화
-      setProfileImage(null);
-      setBlogImage(null);
-      setNickName('');
-      setBlogName('');
-      setBlogIntroduce('');
-      setSelectedInterests([]);
-      setLikeAlert(true);
-      setCommentAlert(true);
-      setTicketScope("public");
-      setOotdScope("public");
-      setBadgeScope("public");
-      setFollowScope("public");
+  const fetchUserInfo = async () => {
+    try {
+      const data = await getMyInfo(); 
+      setProfileImage(data.profileImageUrl || null)
+      setBlogImage(data.blogTitleImgUrl || null);
+      setNickName(data.nickName || '');
+      setBlogName(data.blogName || '');
+      setBlogIntroduce(data.blogIntroduce || '');
+      setSelectedInterests(data.koreanInterestedTypes || []);
+      setLikeAlert(data.likeAlert || true);
+      setCommentAlert(data.commentAlert || true);
+      setTicketScope(data.ticketScope || "public");
+      setOotdScope(data.ootdScope || "public");
+      setBadgeScope(data.badgeScope || "public");
+      setFollowScope(data.followScope || "public");
+      updateUserInfo(data); // 전역 상태를 최신화
+    } catch (error) {
+      console.error('내 정보 조회 중 오류 발생:', error);
     }
-  }, [userInfo]);
+  };
 
+  useEffect(() => {
+    fetchUserInfo(); // 컴포넌트가 마운트될 때 유저 정보 불러옴
+  }, []);
+
+  console.log('유저 사진:', profileImage);
+  console.log('유저 블로그사진:', blogImage);
+  console.log('유저 닉네임:', nickName);
+  
 
   const router = useRouter();
 
@@ -199,6 +200,7 @@ const EditInfo = () => {
         const response = await uploadImage(file);
         setProfileImage(response.result);
         setImageUploaded(true);
+        setIsProfileImageChanged(true);
       } catch (error: unknown) {
         console.error("Image upload failed:", error);
   
@@ -257,6 +259,7 @@ const EditInfo = () => {
         const response = await uploadImage(file);
         setBlogImage(response.result);
         setImageBlogUploaded(true);
+        setIsBlogImageChanged(true);
       } catch (error: unknown) {
         console.error("Image upload failed:", error);
   
@@ -337,13 +340,6 @@ const EditInfo = () => {
   }, [selectedInterests]);
 
 
-  useEffect(() => {
-    if (userInfo) {
-      setLikeAlert(userInfo.likeAlert);
-      setCommentAlert(userInfo.commentAlert);
-    }
-  }, [userInfo]);
-
   const updateUserInfoMutation = useMutation(updateMemberInfo, {
     onSuccess: () => {
       queryClient.invalidateQueries('userInfo');
@@ -396,7 +392,7 @@ const EditInfo = () => {
   };
 
   const handleCloseModal = () => {
-    setTempSelectedInterests(userInfo.koreanInterestedTypes);
+    setTempSelectedInterests(tempSelectedInterests);
     setIsModalOpen(false);
   };
   
@@ -446,12 +442,13 @@ const EditInfo = () => {
 
   const handleSubmit = () => {
     const data: UpdateMemberInfoRequest = {
-      nickName: nickName || userInfo.nickName, 
-      blogName: blogName || userInfo.blogName, 
-      blogIntroduce: blogIntroduce || userInfo.blogIntroduce,
-      koreanInterestedTypes: selectedInterests || userInfo.koreanInterestedTypes,
-      profileImage: profileImage || userInfo.profileImage ,
-      blogImage: blogImage || userInfo.blogImage,
+      nickName, 
+      blogName, 
+      blogIntroduce,
+      koreanInterestedTypes: selectedInterests,
+      ...(isProfileImageChanged && { profileImage }), // 이미지가 수정된 경우에만 추가
+      ...(isBlogImageChanged && { blogImage }), // 이미지가 수정된 경우에만 추가
+  
       likeAlert,
       commentAlert,
       ticketScope,
@@ -459,31 +456,34 @@ const EditInfo = () => {
       badgeScope,
       followScope,
     };
-
+  
     console.log('Updated Data:', data); 
   
     updateUserInfoMutation.mutate(data);
-    updateUserInfo(data);
+    updateUserInfo(data); // 전역 상태를 업데이트
   };
+  
   
   return (
     <>
     <div className="relative w-full h-[240px]">
     {blogImage ? (
-                  <Image
-                    src={blogImage.accessUri}
-                    alt="Profile"
-                    layout="fill"
-                    objectFit="cover"
-                    className="z-0"  />
-                  ) : (
-                    <Image
-                    src={backgroundImg}
-                    alt="Background"
-                    layout="fill"
-                    objectFit="cover"
-                    className="z-0" />
-                  )}
+  <Image
+    src={(typeof blogImage === 'string' ? blogImage : blogImage?.accessUri) || backgroundImg}
+    alt="Background"
+    objectFit="cover"
+    layout="fill"  // 'fill'로 이미지 크기를 부모 요소에 맞게
+    className="z-0"
+  />
+) : (
+  <Image
+    src={backgroundImg}
+    alt="Backgrounded"
+    objectFit="cover"
+    layout="fill"  // 'fill'로 이미지 크기를 부모 요소에 맞게
+    className="z-0"
+  />
+)}
   <div className="absolute inset-0 flex flex-col items-center justify-center z-10">
   <input
         type="file"
@@ -510,7 +510,7 @@ const EditInfo = () => {
               <div className="rounded-full overflow-hidden w-[100px] h-[100px]">
                 {profileImage ? (
                   <Image
-                    src={profileImage.accessUri}
+                    src={(typeof profileImage === 'string' ? profileImage : profileImage?.accessUri) || backgroundImg}
                     alt="Profile"
                     className="object-cover w-full h-full"
                     width={100}
@@ -518,7 +518,7 @@ const EditInfo = () => {
                      />
                   ) : (
                     <Image
-                    src={userInfo?.profileImageUrl || DefaultImage}
+                    src={DefaultImage}
                     alt="Default Profile"
                     width={100}
                     height={100}
