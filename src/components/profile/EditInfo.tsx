@@ -36,13 +36,14 @@ const EditInfo = () => {
     accessUri: string;
     authenticateId: string;
     imgUrl: string;
-  } | null>(userInfo?.profileImage || null);
-
+  } | null>(userInfo?.profileImage ?? null); // null 병합 연산자 사용
+  
   const [blogImage, setBlogImage] = useState<{
     accessUri: string;
     authenticateId: string;
     imgUrl: string;
-  } | null>(userInfo?.blogImage || null);
+  } | null>(userInfo?.blogImage ?? null);
+
 
   const [nickName, setNickName] = useState<string>(userInfo?.nickName || '');
   const [nickNameError, setNickNameError] = useState<string>('');
