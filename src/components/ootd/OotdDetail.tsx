@@ -14,7 +14,6 @@ import LocationIcon from "../../../public/Location.svg";
 import CommentSection from "./CommentSection";
 import LeftArrowIcon from "../../../public/left-arrow.svg";
 import RightArrowIcon from "../../../public/right-arrow.svg";
-import { getWeatherStatusInKorean } from "@/constants/weatherTransition";
 import { useRouter } from "next/navigation";
 import FollowButton from "../followControl/followButton";
 import Cookies from "js-cookie";
@@ -25,6 +24,7 @@ import BookmarkedIcon from "../../../public/bookmark-fill.svg";
 import { addBookmark, deleteBookmark, fetchIsBookmarked } from "@/services/bookmark/bookmark";
 import WeatherIcon from "../../../public/WeatherIcon.svg";
 import DefaultImage from "../../../public/defaultImage.svg";
+import { getWeatherStatusInfo } from "@/constants/weatherTransition";
 
 interface OotdDetailProps {
   id: number;
@@ -146,6 +146,7 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
     }
   };
 
+
   if (isLoading) {
     return null;
   }
@@ -159,6 +160,8 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
   }
 
   const ootdItem = data.result;
+
+  const weatherInfo = getWeatherStatusInfo(ootdItem.ootd.weatherStatus);
 
 
   const SampleNextArrow = (props: any) => {
@@ -231,21 +234,21 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
                   <Image width={16} height={16} src={LocationIcon} alt="location" />
                 </div>
                 <div className="whitespace-nowrap overflow-hidden text-ellipsis">
-                  <span className="block text-gray-600 truncate">{ootdItem.post.location}</span>
+                  <span className="block text-[#9D9D9D] truncate">{ootdItem.post.location}</span>
                 </div>
               </div>
               <div className="flex items-center gap-2 whitespace-nowrap overflow-hidden text-ellipsis">
-                <Image width={16} height={16} src={WeatherIcon} alt="weather" />
-                <span className="block text-gray-600 truncate">
-                  {ootdItem.ootd.date} |{" "}
-                  {getWeatherStatusInKorean(ootdItem.ootd.weatherStatus)}, {ootdItem.ootd.weatherTemp}°C
+                <Image width={16} height={16} src={weatherInfo.icon} alt="weather" />
+                <span className="block text-[#9D9D9D] truncate">
+                {weatherInfo.label}, {ootdItem.ootd.weatherTemp}°C {' '} l {' '}
+                {formatDate(ootdItem.ootd.date)}.
                 </span>
               </div>
             </div>
           </div>
 
           {/* 오른쪽 팔로우 버튼 및 아이콘들 */}
-          <div className="flex items-center space-x-2 sm-700:space-x-8">
+          <div className="mt-auto flex items-center space-x-2 sm-700:space-x-8">
             <FollowButton postMemberId={data.result.member.memberId} userMemberId={userMemberId} />
             {/* 북마크 및 메뉴 아이콘 */}
             <div className="min-w-[35px] flex items-center">
