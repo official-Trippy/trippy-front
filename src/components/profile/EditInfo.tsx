@@ -6,7 +6,6 @@ import { checkBlogNameDuplicate, checkNickNameDuplicate, uploadImage } from "@/s
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import DefaultProfileImg from "../../../public/DefaultProfile.svg";
 import { useUserStore } from "@/store/useUserStore";
 import { blogInterests } from "@/constants/blogPreference";
 import { getMyInfo, updateMemberInfo } from "@/services/auth";
@@ -504,7 +503,7 @@ const EditInfo = () => {
                     className="rounded-full" />
                   ) : (
                     <Image
-                    src={userInfo?.profileImageUrl || DefaultProfileImg}
+                    src={userInfo?.profileImageUrl || DefaultImage}
                     alt="Default Profile"
                     layout="fill"
                     objectFit="cover"
