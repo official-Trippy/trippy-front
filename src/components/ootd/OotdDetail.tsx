@@ -248,10 +248,10 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
           </div>
 
           {/* 오른쪽 팔로우 버튼 및 아이콘들 */}
-          <div className="mt-auto flex items-center space-x-2 sm-700:space-x-8">
+          <div className="mt-auto flex items-center space-x-4 sm-700:space-x-8">
             <FollowButton postMemberId={data.result.member.memberId} userMemberId={userMemberId} />
             {/* 북마크 및 메뉴 아이콘 */}
-            <div className="min-w-[35px] flex items-center">
+            <div className="min-w-[35px] flex items-center mr-[10px]">
               <Image
                 src={isBookmarked ? BookmarkedIcon : BookmarkIcon}
                 alt="bookmark"
@@ -276,15 +276,16 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
                   className="cursor-pointer"
                 />
                 {isMenuOpen && (
-                  <div className="absolute top-full right-0 mt-4 w-32 bg-white rounded shadow-lg z-10">
-                    <div className="py-2 px-4 text-[#ff4f4f] hover:bg-gray-100 cursor-pointer text-center" onClick={handleDeleteClick}>
-                      삭제
-                    </div>
-                    <hr />
-                    <div className="py-2 px-4 text-black hover:bg-gray-100 cursor-pointer text-center" onClick={() => router.push(`/edit/${id}`)}>
-                      수정
-                    </div>
-                  </div>
+                 <div className="absolute top-full right-0 mt-4 w-32 bg-white rounded shadow-lg z-10">
+                 <div className="pb-2 pt-3 px-4 text-[#ff4f4f] cursor-pointer text-center" onClick={handleDeleteClick}>
+                   삭제
+                 </div>
+                 <div className="border-t border-gray-300 my-2" /> {/* 줄 추가 */}
+                 <div className="pb-3 pt-2 px-4 text-black cursor-pointer text-center" onClick={() => router.push(`/edit/${id}`)}>
+                   수정
+                 </div>
+               </div>
+               
                 )}
               </div>
             )}
