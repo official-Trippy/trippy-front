@@ -398,7 +398,7 @@ const handleEditSubmit = () => {
           </div>
           <div className="ml-[3.7rem] items-center mr-0">
             {editCommentId === comment.id ? ( // 수정 중인 댓글이면
-              <div>
+              <div className='flex flex-col'>
               <div className='flex-1 flex gap-2 mt-2 items-center'>
               <input
                 type="text"
@@ -407,38 +407,39 @@ const handleEditSubmit = () => {
                 onChange={(e) => setEditedComment(e.target.value)} 
                 placeholder={`@${replyToNickname || ''}에게 답글쓰기`}
               />
-              <button
+            </div>
+            <div className='flex justify-end gap-2 mt-2'>
+            <button
                 onClick={handleEditSubmit}
-                className="ml-auto mt-auto mb-[2px] px-8 py-1 rounded-lg justify-center items-center inline-flex text-center text-base font-semibold bg-[#fa3463] text-white flex-shrink-0"
+                className="mt-auto mb-[2px] px-8 py-1 rounded-lg justify-center items-center inline-flex text-center text-base font-semibold bg-[#fa3463] text-white flex-shrink-0"
               >
                 수정
               </button>
               <button
                 onClick={() => setEditCommentId(null)}
-                className="ml-auto mt-auto mb-[2px] px-8 py-1 rounded-lg justify-center items-center inline-flex text-center text-base font-semibold bg-[#6E7881] text-white flex-shrink-0"
+                className="mt-auto mb-[2px] px-8 py-1 rounded-lg justify-center items-center inline-flex text-center text-base font-semibold bg-[#6E7881] text-white flex-shrink-0"
               >
                 취소
               </button>
             </div>
               </div>
             ) : (
-              <div className='sm-700:mr-[2rem] break-words'>
-                {comment.content.split(' ').map((word) => {
-                  return word.startsWith('@') ? (
-                    <span key={word} className="text-[#FB3463]">{word} </span>
-                  ) : (
-                    `${word} `
-                  );
-                })}
-              </div>
+              <><div className='sm-700:mr-[2rem] break-words'>
+                  {comment.content.split(' ').map((word) => {
+                    return word.startsWith('@') ? (
+                      <span key={word} className="text-[#FB3463]">{word} </span>
+                    ) : (
+                      `${word} `
+                    );
+                  })}
+                </div><div className='flex flex-row my-2'>
+                    <div className="text-gray-600">{formatTime(comment.createDateTime)}</div>
+                    <div>&nbsp;&nbsp;|&nbsp;&nbsp;</div>
+                    <button onClick={() => handleReplyClick(comment.id, comment.member?.nickName || '')} className="text-gray-500">
+                      {replyTo === comment.id ? '답글취소' : '답글쓰기'}
+                    </button>
+                  </div></>
             )}
-            <div className='flex flex-row my-2'>
-              <div className="text-gray-600">{formatTime(comment.createDateTime)}</div>
-              <div>&nbsp;&nbsp;|&nbsp;&nbsp;</div>
-              <button onClick={() => handleReplyClick(comment.id, comment.member?.nickName || '')} className="text-gray-500">
-                {replyTo === comment.id ? '답글취소' : '답글쓰기'}
-              </button>
-            </div>
           </div>
         </div>
   
@@ -448,7 +449,7 @@ const handleEditSubmit = () => {
             <div className='flex flex-row items-center flex-1'>
               <div className="relative w-[28px] h-[28px]">
                 <Image
-                  src={userInfo.profileImageUrl || DefaultImage}
+                  src={userInfo?.profileImageUrl || DefaultImage}
                   alt="사용자 프로필"
                   layout="fill"
                   objectFit="cover"
@@ -626,7 +627,7 @@ const handleEditSubmit = () => {
                 <div className='flex flex-row items-center'>
                     <><div className="relative w-[28px] h-[28px]">
                       <Image
-                        src={userInfo.profileImageUrl || DefaultImage}
+                        src={userInfo?.profileImageUrl || DefaultImage}
                         alt="사용자"
                         layout="fill"
                         objectFit="cover"
