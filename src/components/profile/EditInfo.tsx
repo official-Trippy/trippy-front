@@ -19,6 +19,7 @@ import DownIcon from '../../../public/arrow_down.svg';
 import Swal from "sweetalert2";
 import { AxiosError } from "axios";
 import DefaultImage from '../../../public/defaultImage.svg';
+import { getByteLength } from "@/constants/getByteLength";
 
 const EditInfo = () => {
   const { userInfo, updateUserInfo } = useUserStore(); 
@@ -108,6 +109,10 @@ const EditInfo = () => {
 
   const handleNickName = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
+
+    const byteLength = getByteLength(value);
+    if (byteLength > 16) return;
+
     setNickName(value);
 
     if (checkSwearWords(value)) {
@@ -146,6 +151,10 @@ const EditInfo = () => {
 
   const handleBlogName = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
+
+    const byteLength = getByteLength(value);
+    if (byteLength > 30) return;
+
     setBlogName(value);
 
     if (checkSwearWords(value)) {

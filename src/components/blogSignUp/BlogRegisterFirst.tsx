@@ -13,6 +13,7 @@ import {
 } from "@/services/blog";
 import useUserInfo from "@/hooks/useUserInfo";
 import { swear_words_arr } from "@/constants/wearWordsArr";
+import { getByteLength } from "@/constants/getByteLength";
 
 const BlogRegisterFirst = () => {
   const [profileImage, setProfileImage] = useState<{
@@ -41,6 +42,9 @@ const BlogRegisterFirst = () => {
 
   const handleNickName = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
+    const byteLength = getByteLength(value);
+    if (byteLength > 16) return;
+
     setNickName(value);
 
     if (checkSwearWords(value)) {
@@ -80,11 +84,8 @@ const BlogRegisterFirst = () => {
   const handleBlogName = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
 
-    if (!value) {
-      setBlogNameError("");
-      setBlogName(value);
-      return;
-    }
+    const byteLength = getByteLength(value);
+    if (byteLength > 30) return;
 
     setBlogName(value);
 
