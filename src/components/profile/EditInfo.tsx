@@ -146,13 +146,6 @@ const EditInfo = () => {
 
   const handleBlogName = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-
-    if (!value) {
-      setBlogNameError("");
-      setBlogName(value);
-      return;
-    }
-
     setBlogName(value);
 
     if (checkSwearWords(value)) {
