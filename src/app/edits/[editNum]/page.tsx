@@ -39,6 +39,11 @@ interface ApiResponse {
     result: CountryResult;
 }
 
+interface CountryResult {
+    // 기존 프로퍼티들...
+    isoAlp3?: string; // isoAlp3 프로퍼티 추가 (선택적)
+}
+
 
 function PostEdit({ params }: { params: { editNum: number } }) {
     const { data: postData, refetch: postRefetch } = useQuery({
@@ -62,8 +67,10 @@ function PostEdit({ params }: { params: { editNum: number } }) {
         { imgsrc: car1 },
     ]);
     const [passengerCount, setPassengerCount] = useState(postData?.result.ticket.memberNum);
-    const [startDate, setStartDate] = useState<Date | null>(null);
-    const [endDate, setEndDate] = useState<Date | null>(null);
+    const [startDate, setStartDate] = useState<Date | null>(postData?.result.ticket.startDate);
+    const [endDate, setEndDate] = useState<Date | null>(postData?.result.ticket.endDate);
+    const [startDates, setStartDates] = useState<Date | null>(null);
+    const [endDates, setEndDates] = useState<Date | null>(null);
     const [dateOpen, setDateOpen] = useState(false);
     const [title, setTitle] = useState(postData?.result.post.title);
     const [body, setBody] = useState('');
@@ -81,15 +88,16 @@ function PostEdit({ params }: { params: { editNum: number } }) {
     });
     const [result, setResult] = useState<ApiResponse | null>(null);
     const [result1, setResult1] = useState<ApiResponse | null>(null);
+    const [transport, setTransport] = useState(postData?.result.ticket.transport)
 
-    const formatDate = (date: Date | null) => {
-        if (!date) return '';
-        return date.toLocaleDateString('ko-KR', {
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit',
-        });
-    };
+    // const formatDate = (date: Date | null) => {
+    //     if (!date) return '';
+    //     return date.toLocaleDateString('ko-KR', {
+    //         year: 'numeric',
+    //         month: '2-digit',
+    //         day: '2-digit',
+    //     });
+    // };
 
     function formatDates(date: any) {
         const year = date?.getFullYear();
@@ -100,8 +108,8 @@ function PostEdit({ params }: { params: { editNum: number } }) {
     }
 
     const formatDateRange = () => {
-        if (!startDate || !endDate) return '';
-        return `${formatDate(startDate)} ~ ${formatDate(endDate)}`;
+        if (!startDates || !endDates) return '';
+        return `${formatDates(startDates)} ~ ${formatDates(endDates)}`;
     };
 
 
@@ -152,6 +160,7 @@ function PostEdit({ params }: { params: { editNum: number } }) {
         });
     };
 
+
     const handleImageUpload = async (event: ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
         if (event.target.files && event.target.files.length > 0) {
@@ -187,16 +196,18 @@ function PostEdit({ params }: { params: { editNum: number } }) {
             tags: tags,
         }
         const ticketRequest = {
-            id: postData?.result.ticket.id,
+            id: postData?.result?.ticket?.id,
             departure: inputValue1,
+            departureCode: postData?.result?.ticket?.departureCode || (result?.result?.isoAlp3 || ''),
             destination: inputValue2,
-            image: images[0] || postData?.result.ticket.image,
+            destinationCode: postData?.result?.ticket?.destinationCode || (result1?.result?.isoAlp3 || ''),
+            image: images[0] || postData?.result?.ticket?.image,
             memberNum: Number(passengerCount),
-            startDate: formatDates(startDate) || postData?.result.ticket.startDate,
-            endDate: formatDates(endDate) || postData?.result.ticket.endDate,
+            startDate: startDates || startDate,
+            endDate: endDates || endDate,
             ticketColor: ticketColor,
-            transport: 'Airplane'
-        }
+            transport: transport
+        };
         try {
             console.log(postRequest, ticketRequest)
             await editPost(postRequest);
@@ -230,7 +241,7 @@ function PostEdit({ params }: { params: { editNum: number } }) {
             }
         };
     }, [thumbnailPreview]);
-    console.log(formatDates(startDate), formatDates(endDate))
+    // console.log(formatDates(startDate), formatDates(endDate))
 
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -259,7 +270,7 @@ function PostEdit({ params }: { params: { editNum: number } }) {
     }
 
 
-    console.log(postData)
+    console.log(result)
     return (
         <div>
             <Header />
@@ -297,7 +308,7 @@ function PostEdit({ params }: { params: { editNum: number } }) {
                     <div className='w-full mt-[5rem] relative'>
                         <div className='flex justify-center'>
                             <div className='ml-[5rem]'>
-                                <h1 className='h-[9rem] text-[6rem] font-extrabold font-akira'>{result1?.result.countryIsoAlp2 || postData?.result.ticket.departureCode}</h1>
+                                <h1 className='h-[9rem] text-[6rem] font-extrabold font-akira'>{result1?.result?.isoAlp3 || postData?.result?.ticket?.departureCode}</h1>
                                 <div className='w-[18rem] h-[3.6rem] px-[2rem] shadowall rounded-[0.8rem] flex mt-4'>
                                     <input
                                         className='w-[12rem] text-[1.6rem] outline-none'
@@ -341,7 +352,7 @@ function PostEdit({ params }: { params: { editNum: number } }) {
                                 }
                             </div>
                             <div>
-                                <h1 className='h-[10rem] text-[6rem] font-extrabold font-akira'>{result?.result.countryIsoAlp2 || postData?.result.ticket.destinationCode}</h1>
+                                <h1 className='h-[10rem] text-[6rem] font-extrabold font-akira'>{result?.result?.isoAlp3 || postData?.result?.ticket?.departureCode}</h1>
                                 <div className='w-[18rem] h-[3.6rem] px-[2rem] shadowall rounded-[0.8rem] flex'>
                                     <input
                                         className='w-[12rem] text-[1.6rem] outline-none'
@@ -374,17 +385,17 @@ function PostEdit({ params }: { params: { editNum: number } }) {
                             {dateOpen ? (
                                 <div className='w-[25rem]'>
                                     <DatePicker
-                                        selected={startDate || undefined}
+                                        selected={startDates || undefined}
                                         onChange={(dates) => {
                                             const [start, end] = dates;
-                                            setStartDate(start);
-                                            setEndDate(end);
+                                            setStartDates(start);
+                                            setEndDates(end);
                                             if (start && end) {
                                                 setDateOpen(false);
                                             }
                                         }}
-                                        startDate={startDate || undefined}
-                                        endDate={endDate || undefined}
+                                        startDate={startDates || undefined}
+                                        endDate={endDates || undefined}
                                         selectsRange
                                         inline
                                         dateFormat="yyyy. MM. dd"
@@ -393,7 +404,7 @@ function PostEdit({ params }: { params: { editNum: number } }) {
                             ) : (
                                 <div className='w-[25rem] flex items-center' onClick={() => setDateOpen(true)}>
                                     <Image src={date} alt='' />
-                                    {startDate && endDate ? (
+                                    {startDates && endDates ? (
                                         <span>{formatDateRange()}</span>
                                     ) : (
                                         <span>{postData?.result.ticket.startDate} - {postData?.result.ticket.endDate}</span>

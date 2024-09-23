@@ -19,6 +19,7 @@ import busG from "@/dummy/main/busG.svg"
 import trainG from "@/dummy/main/trainG.svg"
 import bycicleG from "@/dummy/main/bycicleG.svg"
 import carG from "@/dummy/main/carG.svg"
+import { AirSVG, BusSVG, BycicleSVG, CarSVG, TrainSVG } from "@/components/transportsvg/home";
 
 
 const PAGE_SIZE = 10;
@@ -93,18 +94,18 @@ export default function Home() {
 
               const bodyText = getTextFromHtml(posts.post.body);
 
-              const getTransportImage = () => {
-                switch (posts.ticket.transport) {
+              const getTransportImage = (transport: string, ticketColor: any) => {
+                switch (transport) {
                   case 'Airplane':
-                    return airG;
+                    return <AirSVG fillColor={colorTicket[ticketColor]} />;
                   case 'Car':
-                    return carG;
+                    return <CarSVG fillColor={colorTicket[ticketColor]} />;
                   case 'Bus':
-                    return busG;
+                    return <BusSVG fillColor={colorTicket[ticketColor]} />;
                   case 'Bicycle':
-                    return bycicleG;
+                    return <BycicleSVG fillColor={colorTicket[ticketColor]} />;
                   case 'Train':
-                    return trainG;
+                    return <TrainSVG fillColor={colorTicket[ticketColor]} />;
                   default:
                     return null; // 기본값 또는 대체 이미지
                 }
@@ -117,7 +118,9 @@ export default function Home() {
                     {posts.ticket.departureCode ? (
                       <div className="flex text-[3.2rem] font-extrabold font-akira mx-auto mt-[1rem]">
                         <span>{posts.ticket.departureCode}</span>
-                        <Image className="mx-[1rem]" src={getTransportImage()} alt="transport" />
+                        <div className="mx-[0.5rem] mt-[1.5rem]">
+                          {getTransportImage(posts.ticket.transport, posts.ticket.ticketColor)}
+                        </div>
                         <span>{posts.ticket.destinationCode}</span>
                       </div>
                     ) : (
@@ -125,7 +128,7 @@ export default function Home() {
                       </div>
                     )}
                     <div className="px-[1.7rem] flex-1">
-                      <h1 className="font-semibold text-[2.4rem]">{posts.post.title}</h1>
+                      <h1 className="font-semibold text-[2.4rem] theboki text-ellipsis overflow-hidden">{posts.post.title}</h1>
                       <span className="font-normal text-[2rem] text-[#6B6B6B] text-ellipsis overflow-hidden theboki">{bodyText}</span>
                     </div>
                     <div className="p-[1.7rem] flex">

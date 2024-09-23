@@ -9,6 +9,7 @@ import bycicle from '@/dummy/mypage/bycicle.svg'
 import car from '@/dummy/mypage/car.svg'
 import train from '@/dummy/mypage/train.svg'
 import { useRouter } from "next/navigation";
+import { MyAirSVG, MyBusSVG, MyBycicleSVG, MyCarSVG, MyTrainSVG } from "../transportsvg/mypage";
 interface ticketProps {
   totalBoardCount: number | undefined;
 }
@@ -45,18 +46,18 @@ const MyTicket = ({ totalBoardCount }: ticketProps) => {
       <div className="grid grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-12">
         {myTicketData?.result.map((ticektDatas: any) => {
 
-          const getTransportImage = () => {
-            switch (ticektDatas.ticket.transport) {
+          const getTransportImage = (transport: string, ticketColor: any) => {
+            switch (transport) {
               case 'Airplane':
-                return air;
+                return <MyAirSVG fillColor={colorTicket[ticketColor]} />;
               case 'Car':
-                return car;
+                return <MyCarSVG fillColor={colorTicket[ticketColor]} />;
               case 'Bus':
-                return bus;
+                return <MyBusSVG fillColor={colorTicket[ticketColor]} />;
               case 'Bicycle':
-                return bycicle;
+                return <MyBycicleSVG fillColor={colorTicket[ticketColor]} />;
               case 'Train':
-                return train;
+                return <MyTrainSVG fillColor={colorTicket[ticketColor]} />;
               default:
                 return null; // 기본값 또는 대체 이미지
             }
@@ -96,7 +97,9 @@ const MyTicket = ({ totalBoardCount }: ticketProps) => {
                 <div className="mx-auto border border-dashed border-[#CFCFCF]" />
                 <div className="flex flex-col font-extrabold font-akira mx-auto">
                   <span className="text-[3.2rem] sm:text-[2.8rem] md:text-[2.4rem] lg:text-[2rem] xl:text-[3.2rem]">{ticektDatas.ticket.departureCode}</span>
-                  <Image className="mx-auto" src={getTransportImage()} width={15} height={15} alt="transport" />
+                  <div className="mx-auto">
+                    {getTransportImage(ticektDatas.ticket.transport, ticektDatas.ticket.ticketColor)}
+                  </div>
                   <span className="text-[3.2rem] sm:text-[2.8rem] md:text-[2.4rem] lg:text-[2rem] xl:text-[3.2rem]">{ticektDatas.ticket.destinationCode}</span>
                 </div>
               </div>
