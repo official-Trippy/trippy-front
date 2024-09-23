@@ -49,6 +49,8 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
   const [isReplyOpen, setIsReplyOpen] = useState(true);
   const [isOpenMenu, setIsOpenMenu] = useState(false);
   const [parentIds, setParentIds] = useState(0);
+  const [soloReply, setSoloReply] = useState(false);
+  const [replyStates, setReplyStates] = useState<boolean[]>([]);
 
   const { data: postData, refetch: postRefetch } = useQuery({
     queryKey: ["postData"],
@@ -200,11 +202,13 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
       mentionMemberNickName: replyNicknames,
       mentionCommentId: mentionCommentIds
     };
+
     try {
       console.log(commentData);
       await postComments(commentData);
       setReplyComment("");
       setReplyOpen(Array(postCommentData?.result.length).fill(false));
+      setReplyStates(Array(postCommentData?.result.length).fill(false));
       commentRefetch();
       postRefetch();
     } catch (e) { }
@@ -271,7 +275,19 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
   const images = postData?.result.post.images || [];
   const bodyWithImages = replaceImagesInBody(postData?.result.post.body, images);
 
-  console.log(postData);
+
+  const handleReplyToggle = (index: number, id: number, nickName: string, memberId: string) => {
+    // 해당 인덱스의 답글 입력란 상태를 토글
+    setReplyStates((prev) => {
+      const newStates = [...prev];
+      newStates[index] = !newStates[index]; // 현재 상태를 반전
+      return newStates;
+    });
+    setParentIds(id)
+    setReplyNickname(nickName);
+    setReplyMemId(memberId);
+  };
+  console.log(replyId);
   return (
     <div>
       <Header />
@@ -530,14 +546,11 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
                     Object.entries(postCommentData.result).map(
                       ([key, coData]: [string, any], index: number) => {
                         const createDateTime = new Date(coData.createDateTime);
-                        const formattedDateTime = `${createDateTime.getFullYear()}.${String(createDateTime.getMonth() + 1).padStart(2, "0")}.${String(createDateTime.getDate()).padStart(2, "0")} ${String(createDateTime.getHours()).padStart(2, "0")}:${String(createDateTime.getMinutes()).padStart(2, "0")}`;
+                        const formattedDateTime = `${createDateTime.getFullYear()}.${String(createDateTime.getMonth() + 1).padStart(2, '0')}.${String(createDateTime.getDate()).padStart(2, '0')} ${String(createDateTime.getHours()).padStart(2, '0')}:${String(createDateTime.getMinutes()).padStart(2, '0')}`;
 
-                        console.log(coData);
                         return (
                           <div className="mb-[2.5rem]" key={key}>
-                            <div
-                              className={`py-[2rem] mr-[2rem]`}
-                            >
+                            <div className={`py-[2rem] mr-[2rem]`}>
                               <div className="flex items-center">
                                 <Image
                                   className="flex items-center"
@@ -556,27 +569,49 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
                               <div className="flex ml-[4.5rem] text-[1.2rem] text-[#9D9D9D] items-center">
                                 <span>{formattedDateTime}</span>
                                 <hr className="mx-[1rem] h-[1rem] w-[0.1rem] bg-[#9D9D9D]" />
-                                {replyOpen[index] ? (
-                                  <span
-                                    className="cursor-pointer"
-                                    onClick={() => toggleReply(index)}
-                                  >
-                                    답글취소
-                                  </span>
-                                ) : (
-                                  <span
-                                    className="cursor-pointer"
-                                    onClick={() => {
-                                      toggleReply(index);
-                                      setReplyId(coData.id);
-                                      setReplyNickname(coData.member.nickName);
-                                      setReplyMemId(coData.member.memberId)
-                                    }}
-                                  >
-                                    답글달기
-                                  </span>
-                                )}
+                                <span
+                                  className="cursor-pointer"
+                                  onClick={() => handleReplyToggle(index, coData.id, coData.member.nickName, coData.member.memberId)}
+                                >
+                                  {replyStates[index] ? '답글취소' : '답글달기'}
+                                </span>
                               </div>
+                              {replyStates[index] && (
+                                <div className="w-[95%] h-[9.3rem] shadowall mt-[2rem] ml-[4rem] pl-[1.7rem] pt-[1.4rem] flex border border-[#CFCFCF] rounded-[0.8rem] relative">
+                                  <div className="w-full">
+                                    <div className="flex items-center">
+                                      <Image
+                                        className="flex items-center"
+                                        src={memberDatas?.result.profileImageUrl}
+                                        alt=""
+                                        width={28}
+                                        height={28}
+                                      />
+                                      <span className="ml-[1.4rem] text-[1.8rem] font-semibold flex items-center">
+                                        {memberDatas?.result.nickName}
+                                      </span>
+                                    </div>
+                                    <div className="relative">
+                                      <span className="absolute text-[#FFBACA] text-[1.4rem] ml-[4.5rem]">
+                                        @{coData.member.nickName}
+                                      </span>
+                                      <input
+                                        className="w-[70%] outline-none ml-[10rem] text-[1.4rem] font-normal pl-[4.5rem]"
+                                        type="text"
+                                        placeholder="에게 답글쓰기"
+                                        value={replyComment}
+                                        onChange={(e) => setReplyComment(e.target.value)}
+                                      />
+                                    </div>
+                                  </div>
+                                  <button
+                                    className="hover:bg-[#292929] hover:text-white bg-[#F5F5F5] text-[#292929] rounded-[0.8rem] text-[1.6rem] font-semibold w-[8.6rem] h-[3.5rem] flex ml-auto mr-[1.4rem] items-center justify-center"
+                                    onClick={() => commentReplyHandler(replymemId, replyNickname, replyId)}
+                                  >
+                                    입력
+                                  </button>
+                                </div>
+                              )}
                             </div>
                             {coData?.children.map((childData: any, childIndex: number) => {
                               const createDateTime = new Date(childData.createDateTime);
