@@ -320,6 +320,8 @@ const EditInfo = () => {
     console.log('Selected Interests:', selectedInterests);
   }, [selectedInterests]);
 
+  console.log(userInfo.data);
+
   useEffect(() => {
     if (userInfo) {
       setLikeAlert(userInfo.likeAlert);
@@ -451,7 +453,7 @@ const EditInfo = () => {
   
   return (
     <>
-    <div className="relative w-full h-[300px]">
+    <div className="relative w-full h-[240px]">
     {blogImage ? (
                   <Image
                     src={blogImage.accessUri}

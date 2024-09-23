@@ -23,9 +23,10 @@ interface CommentSectionProps {
   initialLikeCount: number;
   initialCommentCount: number;
   memberId: string;
+  refetchPostDetail: () => Promise<any>;
 }
 
-const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCount, initialCommentCount, memberId }) => {
+const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCount, initialCommentCount, memberId, refetchPostDetail }) => {
   const userInfo = useUserStore((state) => state.userInfo);
   const [newComment, setNewComment] = useState('');
   const [replyComment, setReplyComment] = useState('');
@@ -103,6 +104,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
       onSuccess: () => {
         refetch();
         setCommentCount((prev) => prev + 1);
+        refetchPostDetail();
         setNewComment('');
       },
     }
@@ -134,13 +136,9 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
     {
       onSuccess: (data) => {
         if (data.isSuccess) {
-          setLikeCount((prevCount) => prevCount + 1);
-          setIsLiked(true);
-          setLikeList((prevList) => [...prevList, {
-            profileUrl: userInfo?.profileImageUrl,
-            nickName: userInfo?.nickName,
-            blogName: userInfo?.blogName
-          }]);
+          setIsLiked(true); // 좋아요 상태 변경
+          setLikeCount((prevCount) => prevCount + 1); // 좋아요 수 증가
+          refetchPostDetail(); // 상위 데이터 다시 불러오기
         }
       },
     }
@@ -151,9 +149,9 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
     {
       onSuccess: (data) => {
         if (data.isSuccess) {
-          setLikeCount((prevCount) => Math.max(prevCount - 1, 0));
-          setIsLiked(false);
-          setLikeList((prevList) => prevList.filter(like => like.nickName !== userInfo?.nickName));
+          setIsLiked(false); // 좋아요 취소 상태 변경
+          setLikeCount((prevCount) => Math.max(prevCount - 1, 0)); // 좋아요 수 감소
+          refetchPostDetail(); // 상위 데이터 다시 불러오기
         }
       },
     }
