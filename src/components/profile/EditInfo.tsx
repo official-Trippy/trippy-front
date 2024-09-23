@@ -502,7 +502,7 @@ const EditInfo = () => {
     <div className="text-white text-2xl font-semibold font-['Pretendard'] mt-[10px]">대표사진 추가</div>
     <div className="text-[#cfcfcf] text-base font-semibold font-['Pretendard'] mt-[5px]">최적치수 1926 x 240 px</div>
   </div>
-    </div><div className="w-[90%] mx-auto sm-700:max-w-[400px]">
+    </div><div className="w-[90%] mb-[100px] mx-auto sm-700:max-w-[400px] sm-700:mb-0">
         <div className="mt-[4rem]">
           <div className="">
             <div className="sign-up-info">프로필 사진</div>
