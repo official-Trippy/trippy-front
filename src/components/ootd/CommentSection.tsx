@@ -47,21 +47,33 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
 
   const handleEditClick = (comment: Comment) => {
     setEditCommentId(comment.id); // 수정할 댓글 ID 저장
-    setEditedComment(comment.content); // 원래 댓글 내용 설정
-  };
+    const contentWithoutMention = comment.content.split(' ').filter(word => !word.startsWith('@')).join(' ').trim();
+    setEditedComment(contentWithoutMention); // 멘션 제거한 원래 댓글 내용 설정
+    // 댓글의 멘션 사용자 이름을 replyToNickname에 설정
+    const mention = comment.content.split(' ').find(word => word.startsWith('@'));
+    if (mention) {
+        setReplyToNickname(mention.substring(1)); // '@'를 제거하고 설정
+    }
+};
 
-  const handleEditSubmit = () => {
+// 수정 제출 시 멘션 추가
+const handleEditSubmit = () => {
     setIsMenuOpen({});
     if (editedComment.trim() && editCommentId !== null) {
-      // 수정 API 호출
-      editCommentMutation.mutate({
-        id: editCommentId,
-        content: editedComment,
-      });
-      setEditCommentId(null); // 수정 모드 종료
-      setEditedComment(''); // 입력란 비우기
+        // replyToNickname이 없으면 기본값으로 설정하거나 예외처리
+        const mention = replyToNickname ? `@${replyToNickname}` : ''; // replyToNickname이 없으면 빈 문자열
+        const updatedContent = `${mention} ${editedComment}`.trim(); // 수정된 내용에 멘션 추가
+        // 수정 API 호출
+        editCommentMutation.mutate({
+            id: editCommentId,
+            content: updatedContent,
+        });
+        setEditCommentId(null); // 수정 모드 종료
+        setEditedComment(''); // 입력란 비우기
+        setReplyToNickname(''); // 멘션 초기화
     }
-  };
+};
+
   
   const editCommentMutation = useMutation(
     ({ id, content }: { id: number; content: string }) => updateComment(id, content),
@@ -257,17 +269,17 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
     
   
 
-  const handleReplyClick = (commentId: number, nickName: string) => {
-    if (replyTo === commentId) {
-      // 이미 열린 상태면 닫음 (취소)
-      setReplyTo(null);
-      setReplyToNickname(null);
-    } else {
-      // 답글 입력 레이아웃 열기
-      setReplyTo(commentId);
-      setReplyToNickname(nickName);
-    }
-  };
+    const handleReplyClick = (commentId: number, nickName: string) => {
+      if (replyTo === commentId) {
+        // 이미 열린 상태면 닫음 (취소)
+        setReplyTo(null);
+        setReplyToNickname(null);
+      } else {
+        // 답글 입력 레이아웃 열기
+        setReplyTo(commentId);
+        setReplyToNickname(nickName);
+      }
+    };
 
   const handleLikeClick = () => {
     if (isLiked) {
@@ -410,8 +422,15 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
             </div>
               </div>
             ) : (
-              <div className='sm-700:mr-[2rem] break-words'>{comment.content}</div>
-
+              <div className='sm-700:mr-[2rem] break-words'>
+                {comment.content.split(' ').map((word) => {
+                  return word.startsWith('@') ? (
+                    <span key={word} className="text-[#FB3463]">{word} </span>
+                  ) : (
+                    `${word} `
+                  );
+                })}
+              </div>
             )}
             <div className='flex flex-row my-2'>
               <div className="text-gray-600">{formatTime(comment.createDateTime)}</div>
