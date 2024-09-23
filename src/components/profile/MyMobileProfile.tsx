@@ -67,7 +67,7 @@ const MyMobileProfile: React.FC<{ setActiveTab: (tab: string) => void }> = ({
           <span className="text-xl text-white text-gray-600 mt-[2px]">{userData?.blogIntroduce}</span>
           <div className="flex items-center mt-[10px]">
             <button
-              className="bg-[#FB3463] text-white text-base px-[2rem] py-[0.5rem] rounded-lg"
+              className="bg-[#FB3463] text-white text-base font-semibold px-[2rem] py-[0.5rem] rounded-[8px]"
               onClick={() => router.push("/editProfile")}
             >
               내 정보 수정

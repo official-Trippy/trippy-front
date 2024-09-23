@@ -500,54 +500,53 @@ const EditInfo = () => {
     <div className="text-white text-2xl font-semibold font-['Pretendard'] mt-[10px]">대표사진 추가</div>
     <div className="text-[#cfcfcf] text-base font-semibold font-['Pretendard'] mt-[5px]">최적치수 1926 x 240 px</div>
   </div>
-    </div><div className="w-[66%] mx-auto">
-        <div className="mt-[8rem]">
-          <div className="mt-[6.82rem]">
+    </div><div className="w-[90%] mx-auto sm-700:max-w-[400px]">
+        <div className="mt-[4rem]">
+          <div className="">
             <div className="sign-up-info">프로필 사진</div>
-            <div className="mt-[4rem] flex items-center">
-              <div className="rounded-full overflow-hidden w-[16rem] h-[16rem]">
-              <div className="relative w-[160px] h-[160px]">
+            <div className="mt-[2rem] flex items-center">
+              <div className="rounded-full overflow-hidden w-[100px] h-[100px]">
                 {profileImage ? (
                   <Image
                     src={profileImage.accessUri}
                     alt="Profile"
-                    layout="fill"
-                    objectFit="cover"
-                    className="rounded-full" />
+                    className="object-cover w-full h-full"
+                    width={100}
+                    height={100}
+                     />
                   ) : (
                     <Image
                     src={userInfo?.profileImageUrl || DefaultImage}
                     alt="Default Profile"
-                    layout="fill"
-                    objectFit="cover"
-                    className="rounded-full" />
+                    width={100}
+                    height={100}
+                    className="object-cover w-full h-full"/>
                   )}
                 </div>
-              </div>
-              <div className="ml-4 flex flex-col">
+              <div className="ml-8 flex flex-col justify-center">
                 <input
                   type="file"
                   accept="image/*"
                   onChange={handleImageUpload}
                   className="hidden"
                   id="imageUpload" />
-                <label htmlFor="imageUpload" className="ml-[4rem] custom-label">
+                <label htmlFor="imageUpload" className="max-w-[200px] px-8 py-4 custom-label text-center">
                   프로필 사진 업로드
                 </label>
+                <div className="mt-[5px] h-[16px]">
                 {profileImage && (
-                  <div className="h-[1rem]">
                     <button
                       onClick={handleImageDelete}
-                      className="ml-[4rem] mt-[1.857rem] text-[1.4rem] text-gray-500 hover:text-gray-900"
+                      className="w-full mx-auto text-[1rem] text-gray-500 hover:text-gray-900"
                     >
                       이미지 삭제
                     </button>
-                  </div>
                 )}
+              </div>
               </div>
             </div>
             <div className="flex-col">
-              <div className="mt-[6rem]">
+              <div className="mt-[2rem]">
                 <label htmlFor="nickName" className="sign-up-info block">
                   닉네임
                 </label>
@@ -556,8 +555,8 @@ const EditInfo = () => {
                   value={nickName}
                   onChange={handleNickName}
                   placeholder="닉네임은 한글 2-8자, 영어 4-16자 이내로 입력 가능합니다."
-                  className="w-full px-4 py-2 mt-[2.5rem] mb-2 h-[6rem] rounded-xl border border-gray-300 focus:border-[#FB3463] focus:outline-none"
-                  style={{ background: "var(--4, #F5F5F5)", fontSize: "1.5rem" }} />
+                  className="w-full px-4 py-2 mt-[2rem] mb-2 h-[4rem] rounded-xl border border-gray-300 focus:border-[#FB3463] focus:outline-none"
+                  style={{ background: "var(--4, #F5F5F5)", fontSize: "1.2rem" }} />
                 {nickNameError && (
                   <p
                     className={`mt-2 ${nickNameError.includes("사용 가능한 닉네임입니다.")
@@ -569,7 +568,7 @@ const EditInfo = () => {
                 )}
               </div>
 
-              <div className="mt-[6rem]">
+              <div className="mt-[2rem]">
                 <label htmlFor="blogName" className="sign-up-info block">
                   블로그 이름
                 </label>
@@ -578,8 +577,8 @@ const EditInfo = () => {
                   value={blogName}
                   onChange={handleBlogName}
                   placeholder="블로그 이름은 한글 2-15자, 영어 4-30자 이내로 입력 가능합니다."
-                  className="w-full px-4 py-2 mt-[2.5rem] mb-2 h-[6rem] rounded-xl border border-gray-300 focus:border-[#FB3463] focus:outline-none"
-                  style={{ background: "var(--4, #F5F5F5)", fontSize: "1.5rem" }} />
+                  className="w-full px-4 py-2 mt-[2rem] mb-2 h-[4rem] rounded-xl border border-gray-300 focus:border-[#FB3463] focus:outline-none"
+                  style={{ background: "var(--4, #F5F5F5)", fontSize: "1.2rem" }} />
                 {blogNameError && (
                   <p
                     className={`mt-2 ${blogNameError.includes("사용 가능한 블로그 이름입니다.")
@@ -591,7 +590,7 @@ const EditInfo = () => {
                 )}
               </div>
 
-              <div className="mt-[6rem]">
+              <div className="mt-[2rem]">
                 <label htmlFor="blogIntroduce" className="sign-up-info block">
                   한 줄 소개(선택)
                 </label>
@@ -600,14 +599,14 @@ const EditInfo = () => {
                   value={blogIntroduce}
                   onChange={handleBlogIntroduce}
                   placeholder="50글자 이내로 소개글을 작성해보세요."
-                  className="w-full px-4 py-2 mt-[2.5rem] mb-2 h-[6rem] rounded-xl border border-gray-300 focus:border-[#FB3463] focus:outline-none"
-                  style={{ background: "var(--4, #F5F5F5)", fontSize: "1.5rem" }} />
+                  className="w-full px-4 py-2 mt-[2rem] mb-2 h-[4rem] rounded-xl border border-gray-300 focus:border-[#FB3463] focus:outline-none"
+                  style={{ background: "var(--4, #F5F5F5)", fontSize: "1.2rem" }} />
                 {blogIntroduceError && (
                   <p className="mt-2 text-red-500">{blogIntroduceError}</p>
                 )}
               </div>
 
-              <div className="mt-[6rem]">
+              <div className="mt-[3rem]">
                 <div className="flex">
                 <label htmlFor="interests" className="sign-up-info block">
                   관심 분야
@@ -621,11 +620,11 @@ const EditInfo = () => {
                   <Image src={RightIcon} alt="setting" width={8} height={14} />
                   </div>
                 </div>
-                <div className="mt-[2.5rem] flex flex-wrap">
+                <div className="mt-[2rem] flex flex-wrap">
                   {selectedInterests.map((interest, index) => (
                     <div
                       key={index}
-                      className="flex items-center px-4 py-3 mr-2 mb-2 rounded-[999px] bg-[#FB3463] text-white cursor-pointer"
+                      className="flex items-center px-6 py-2 mr-2 mb-2 rounded-[999px] bg-[#FB3463] text-white cursor-pointer"
                       onClick={() => handleInterestClick(interest)}
                     >
                       {interest}
@@ -634,9 +633,9 @@ const EditInfo = () => {
                 </div>
               </div>
 
-              <div className="mt-[6rem]">
-                <label className="sign-up-info block font-bold mb-6">알림 설정</label>
-                <div className="w-[70px] flex items-center mb-4">
+              <div className="mt-[3rem]">
+                <label className="sign-up-info block font-bold mb-[2rem]">알림 설정</label>
+                <div className="w-[70px] flex items-center">
                   <label htmlFor="likeAlert" className="mr-4 text-lg">좋아요</label>
                   <label className="relative inline-flex items-center cursor-pointer ml-auto">
                     <input
@@ -649,6 +648,7 @@ const EditInfo = () => {
                     <div className="w-11 h-6 bg-gray-200 rounded-xl peer-checked:bg-custom-pink peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:border-gray-300 after:border after:rounded-xl after:h-5 after:w-5 after:transition-transform after:duration-300"></div>
                   </label>
                 </div>
+                <div className="min-h-[6px]"></div>
                 <div className="w-[70px] flex items-center">
                   <label htmlFor="commentAlert" className="mr-4 text-lg">댓글</label>
                   <label className="relative inline-flex items-center cursor-pointer ml-auto">
@@ -664,10 +664,10 @@ const EditInfo = () => {
                 </div>
               </div>
 
-              <div className="mt-24">
+              <div className="mt-[3rem]">
                 <label className="block sign-up-info font-bold mb-6">공개범위 설정</label>
                 <div className="flex mb-8">
-                  <label className="block my-auto w-[150px] text-lg font-semibold">티켓</label>
+                  <label className="block my-auto w-[150px] text-lg">티켓</label>
                   <div className="relative">
                     <div
                       className={`w-40 rounded-lg shadow-lg text-[#6b6b6b] text-base focus:outline-none cursor-pointer ${
@@ -710,7 +710,7 @@ const EditInfo = () => {
                 </div>
 
                 <div className="flex mb-8">
-                  <label className="block my-auto w-[150px] text-lg font-semibold">OOTD</label>
+                  <label className="block my-auto w-[150px] text-lg">OOTD</label>
                   <div className="relative">
                   <div
                      className={`w-40 rounded-lg shadow-lg text-[#6b6b6b] text-base focus:outline-none cursor-pointer ${
@@ -753,8 +753,8 @@ const EditInfo = () => {
                 </div>
                 </div>
 
-                <div className="flex mb-8">
-                  <label className="block my-auto w-[150px] text-lg font-semibold">뱃지</label>
+                {/* <div className="flex mb-8">
+                  <label className="block my-auto w-[150px] text-lg">뱃지</label>
                   <div className="relative">
                   <div
                      className={`w-40 rounded-lg shadow-lg text-[#6b6b6b] text-base focus:outline-none cursor-pointer ${
@@ -795,10 +795,10 @@ const EditInfo = () => {
                     </div>
                   )}
                 </div>
-                </div>
+                </div> */}
 
               <div className="flex mb-8">
-                <label className="block my-auto w-[150px] text-lg font-semibold">팔로워 / 팔로잉</label>
+                <label className="block my-auto w-[150px] text-lg">팔로워 / 팔로잉</label>
                 <div className="relative">
                   <div
                      className={`w-40 rounded-lg shadow-lg text-[#6b6b6b] text-base focus:outline-none cursor-pointer ${
@@ -842,20 +842,21 @@ const EditInfo = () => {
               </div>
             </div>
             </div>
-
+            <div className="w-[90%] max-w-[400px] mx-auto mt-[50px]">
             <div className="text-center">
               <button
                 type="submit"
-                className={`mx-auto mt-32 mb-32 w-[22rem] h-[6rem] bg-btn-color text-white py-2 rounded-lg focus:outline-none ${nickNameError.includes("다시") ||
+                className={`mx-auto w-full sm-700:w-[150px] h-[44px] mt-[2rem] mb-[2rem] text-white py-2 rounded-xl flex justify-center items-center  ${nickNameError.includes("다시") ||
                     blogNameError.includes("다시")
-                    ? "cursor-not-allowed bg-gray-400 hover:bg-gray-400"
-                    : ""}`}
+                    ? "cursor-not-allowed bg-[#cfcfcf] hover:bg-[#cfcfcf]"
+                    : "bg-btn-color"}`}
                 onClick={handleSubmit}
-                style={{ fontSize: "2rem" }}
+                style={{ fontSize: "1.2rem" }}
                 disabled={nickNameError.includes("다시") || blogNameError.includes("다시")}
               >
-                완료
+                수정
               </button>
+            </div>
             </div>
           </div>
         </div>

@@ -221,11 +221,11 @@ const BlogRegisterFirst = () => {
               >
                 프로필 사진 업로드
               </label>
-              <div className="mt-[2px] h-[16px]">
+              <div className="mt-[5px] h-[16px]">
               {profileImage && (
                   <button
                     onClick={handleImageDelete}
-                    className="ml-[4rem] text-[1rem] text-gray-500 hover:text-gray-900"
+                    className="w-full mx-auto text-[1rem] text-gray-500 hover:text-gray-900"
                   >
                     이미지 삭제
                   </button>

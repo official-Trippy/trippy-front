@@ -96,7 +96,7 @@ const MyPage = () => {
           objectFit="cover"
         />
       </div>
-      <div className="hidden sm-700:flex w-[75%] mx-auto p-4">
+      <div className="hidden sm-700:flex w-[74%] mx-auto p-4">
         <div className="w-[250px] mb-4">
           <UserInformation setActiveTab={setActiveTab} />
         </div>
