@@ -17,6 +17,7 @@ import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 import DefaultImage from '../../../public/defaultImage.svg';
 import CabapIcon from "../../../public/cabap.svg";
+import Swal from 'sweetalert2';
 
 
 interface CommentSectionProps {
@@ -47,10 +48,10 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
   const handleEditClick = (comment: Comment) => {
     setEditCommentId(comment.id); // 수정할 댓글 ID 저장
     setEditedComment(comment.content); // 원래 댓글 내용 설정
-    setIsMenuOpen({ ...isMenuOpen, [comment.id]: false }); // 메뉴 닫기
   };
 
   const handleEditSubmit = () => {
+    setIsMenuOpen({});
     if (editedComment.trim() && editCommentId !== null) {
       // 수정 API 호출
       editCommentMutation.mutate({
@@ -193,6 +194,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
   const handleCommentSubmit = () => {
     if (newComment.trim()) {
       commentMutation.mutate(newComment);
+      setIsMenuOpen({});
     }
   };
 
@@ -247,6 +249,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
           mentionMemberNickName,  // 대댓글 작성자의 닉네임
           mentionCommentId,  // 대댓글 ID
         });
+        setIsMenuOpen({});
       } else {
         console.log('댓글 내용을 입력해주세요.');
       }
@@ -296,16 +299,45 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
   };
 
   const handleDelete = async (commentId: number) => {
-    const confirmed = window.confirm('정말 삭제하시겠습니까?');
-    if (confirmed) {
+    const result = await Swal.fire({
+      title: '정말 삭제하시겠습니까?',
+      icon: 'warning',
+      iconColor: '#FB3463',
+      showCancelButton: true,
+      confirmButtonText: '네',
+      cancelButtonText: '아니오',
+      confirmButtonColor: '#FB3463',
+      customClass: {
+        popup: 'swal-custom-popup',
+        icon: 'swal-custom-icon'
+      }
+    });
+  
+    if (result.isConfirmed) {
       try {
-        await deleteComment(commentId); 
-   
+        await deleteComment(commentId);
+        refetch();
+        await Swal.fire({
+          icon: 'success',
+          title: '댓글을 삭제하였습니다.',
+          confirmButtonText: '확인',
+          confirmButtonColor: '#FB3463',
+          customClass: {
+            popup: 'swal-custom-popup',
+            icon: 'swal-custom-icon'
+          }
+        });
       } catch (error) {
+        await Swal.fire(
+          '오류 발생',
+          '댓글 삭제 중 문제가 발생했습니다. 다시 시도해주세요.',
+          'error'
+        );
         console.error('댓글 삭제 실패:', error);
       }
     }
   };
+  
   
 
   const renderComments = (comments: Comment[], depth = 0) => {
@@ -330,14 +362,13 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
               <div className='ml-[10px] bg-[#FFE3EA] text-xs text-[#FB3463] border border-[#FB3463] px-2 py-1 rounded-xl'>블로그 주인</div>
             )}
             {userInfo.memberId === comment.member.memberId && (
-              <div className='relative ml-auto'>
+              <div className='relative ml-auto min-w-[10px] cursor-pointer'  onClick={() => handleCabapIconClick(comment.id)}>
                 <Image
                   src={CabapIcon}
                   alt="cabap"
                   width={2}
                   height={10}
-                  onClick={() => handleCabapIconClick(comment.id)}
-                  className="cursor-pointer"
+                  className="mx-auto cursor-pointer"
                 />
                 {isMenuOpen[comment.id] && (
                   <div className="absolute w-[60px] right-0 mt-1 bg-white rounded shadow-lg z-10">
@@ -356,10 +387,10 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
           <div className="ml-[3.7rem] items-center mr-0">
             {editCommentId === comment.id ? ( // 수정 중인 댓글이면
               <div>
-              <div className='flex-1 flex gap-2'>
+              <div className='flex-1 flex gap-2 mt-2 items-center'>
               <input
                 type="text"
-                className="mt-2 p-2 rounded-lg flex-1  border border-[#cfcfcf]"
+                className="p-2 rounded-lg flex-1  border border-[#cfcfcf]"
                 value={editedComment}
                 onChange={(e) => setEditedComment(e.target.value)} 
                 placeholder={`@${replyToNickname || ''}에게 답글쓰기`}
@@ -379,7 +410,8 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
             </div>
               </div>
             ) : (
-              <div className='sm-700:mr-[2rem]'>{comment.content}</div>
+              <div className='sm-700:mr-[2rem] break-words'>{comment.content}</div>
+
             )}
             <div className='flex flex-row my-2'>
               <div className="text-gray-600">{formatTime(comment.createDateTime)}</div>
@@ -406,10 +438,10 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
               </div>
               <div className="text-[#292929] font-semibold ml-[8px]">{userInfo?.nickName}</div>
             </div>
-            <div className='flex-1 flex gap-2'>
+            <div className='flex-1 flex gap-2 mt-2'>
               <input
                 type="text"
-                className="mt-2 p-2 rounded-l flex-1"
+                className="p-2 rounded-l flex-1"
                 value={replyComment}
                 onChange={(e) => setReplyComment(e.target.value)}
                 placeholder={`@${replyToNickname || ''}에게 답글쓰기`}
