@@ -383,7 +383,7 @@ const handleEditSubmit = () => {
                   className="mx-auto cursor-pointer"
                 />
                 {isMenuOpen[comment.id] && (
-                  <div className="absolute w-[60px] right-0 mt-1 bg-white rounded shadow-lg z-10">
+                  <div className="absolute w-[60px] right-[4px] mt-[10px] bg-white rounded shadow-lg z-10">
                     <div className="py-2 px-4 text-[#fa3463] hover:bg-gray-100 cursor-pointer text-center flex-shrink-0" onClick={() => handleDelete(comment.id)}>
                       삭제
                     </div>
