@@ -8,6 +8,7 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
         "gradient-conic":
@@ -35,9 +36,17 @@ const config: Config = {
             opacity: '0',
           },
         },
+        slideInout: {
+          '0%': { transform: 'translateX(-100%) translateY(0%)' },
+          '25%': { transform: 'translateX(0%) translateY(-10px)' }, // 왼쪽 끝에서 조금 위로
+          '50%': { transform: 'translateX(100vw) translateY(10px)' }, // 오른쪽 끝으로 이동하면서 아래로
+          '75%': { transform: 'translateX(0%) translateY(5px)' }, // 다시 돌아오면서 위로
+          '100%': { transform: 'translateX(-100%) translateY(0%)' }, // 원래 자리로 돌아오면서 약간 위로
+        },
       },
       animation: {
         fall: 'fall 3.5s linear infinite',
+        slideInout: 'slideInout 5s linear infinite', 
       },
       fontFamily: {
         akira: ['Akira Expanded', 'sans-serif'], // 기본 폰트를 지정합니다.

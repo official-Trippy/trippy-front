@@ -75,7 +75,7 @@ const BlogRegisterSecond = () => {
             <button
               type="submit"
               className={`mx-auto w-full ${isButtonActive ? "bg-btn-color" : "bg-[#cfcfcf]"
-                } mt-[2rem] mb-[2rem] items-center h-[44px] text-white rounded-xl focus:outline-none`}
+                } sm-700:w-[150px] h-[44px] mt-[2rem] mb-[2rem] text-white py-2 rounded-xl flex justify-center items-center`}
               onClick={handleSubmit}
               style={{ fontSize: "1.2rem" }}
               disabled={!isButtonActive}
