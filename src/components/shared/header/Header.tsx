@@ -89,10 +89,10 @@ const Header = () => {
         </div>
 
         <div className="flex items-center flex-grow max-w-[90%]">
-          <div className="hidden md-850:flex mx-auto w-full">
+          <div className="flex mx-auto w-full">
             <SearchBar />
           </div>
-          <div className="ml-auto mr-4 md-850:hidden">
+          {/* <div className="ml-auto mr-4 md-850:hidden">
             <Image
               src={searchIconMobile}
               alt="Search"
@@ -100,17 +100,17 @@ const Header = () => {
               height={24}
               className="cursor-pointer"
             />
-          </div>
+          </div> */}
           {!loading && !isGuest && (
             <>
               {userInfo && accessToken ? (
                 <div className="flex relative items-center gap-8">
-                  <div className="w-[20px] h-[20px] relative">
+                  <div className="w-[30px] h-[30px] relative">
                     <Image
-                      src={AlertImg}
+                      src={alertIconMobile}
                       alt="alert"
-                      width={20}
-                      height={20}
+                      width={30}
+                      height={30}
                       onClick={handleNotificationsToggle}
                       className="cursor-pointer"
                     />
@@ -196,8 +196,7 @@ const Header = () => {
                     </div>
                   )}
                   <button
-                    className="w-[8.6rem] h-[3.5rem] bg-btn-color text-white px-7 py-2 rounded-lg ml-4"
-                    style={{ fontSize: "1.6rem" }}
+                    className="w-[8.6rem] h-[32px] bg-btn-color text-white text-2xl rounded-[8px] ml-4 font-semibold"
                     onMouseEnter={() => setIsDropdownOpen(true)}
                   >
                     글쓰기
@@ -207,8 +206,7 @@ const Header = () => {
                 <div>
                   <Link href="/login">
                     <button
-                      className="w-[8.6rem] bg-btn-color text-white px-6 py-2 rounded-lg"
-                      style={{ fontSize: "1.6rem" }}
+                      className="w-[8.6rem] h-[32px] bg-btn-color text-white text-2xl rounded-[8px] font-semibold"
                     >
                       로그인
                     </button>
@@ -221,8 +219,7 @@ const Header = () => {
             <div>
               <Link href="/login">
                 <button
-                  className="w-[8.6rem] bg-btn-color text-white px-6 py-2 rounded-lg"
-                  style={{ fontSize: "1.6rem" }}
+                  className="w-[8.6rem] h-[32px] bg-btn-color text-white text-2xl rounded-[8px] font-semibold"
                 >
                   로그인
                 </button>

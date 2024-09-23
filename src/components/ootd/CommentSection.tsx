@@ -349,8 +349,22 @@ const handleEditSubmit = () => {
       }
     }
   };
-  
-  
+
+  const handleProfileClick = (memberId: string | undefined) => {
+    if (!memberId) return; // memberId가 없으면 함수 종료
+    if (accessToken) {
+      if (memberId === userInfo?.memberId) {
+        router.push("/mypage");
+      } else {
+        router.push(`/user/${memberId}`);
+      }
+    } else {
+      router.push(`/user/${memberId}`);
+    }
+  };
+
+  console.log('댓글 데이터 구조:', commentData?.result)
+
 
   const renderComments = (comments: Comment[], depth = 0) => {
     return comments.map((comment) => (
@@ -364,10 +378,11 @@ const handleEditSubmit = () => {
                 alt="사용자 프로필" 
                 layout="fill" 
                 objectFit="cover" 
-                className="rounded-full" 
+                className="rounded-full cursor-pointer" 
+                onClick={() => handleProfileClick(comment.member?.memberId)}
               />
             </div>
-            <div className="text-[#292929] text-sm font-semibold ml-[5px]">
+            <div className="text-[#292929] text-sm font-semibold ml-[5px] cursor-pointer" onClick={() => handleProfileClick(comment.member?.memberId)}>
               {comment.member?.nickName}
             </div>
             {ootdMemberId === comment.member.memberId && (
@@ -383,7 +398,7 @@ const handleEditSubmit = () => {
                   className="mx-auto cursor-pointer"
                 />
                 {isMenuOpen[comment.id] && (
-                  <div className="absolute w-[60px] right-[4px] mt-[10px] bg-white rounded shadow-lg z-10">
+                  <div className="absolute w-[60px] right-[4px] mt-[5px] bg-white rounded shadow-lg z-10">
                     <div className="py-2 px-4 text-[#fa3463] hover:bg-gray-100 cursor-pointer text-center flex-shrink-0" onClick={() => handleDelete(comment.id)}>
                       삭제
                     </div>

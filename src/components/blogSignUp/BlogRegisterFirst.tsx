@@ -308,7 +308,7 @@ const BlogRegisterFirst = () => {
           <div className="text-center">
           <button
               type="submit"
-              className={`mx-auto w-full h-[44px] mt-[2rem] mb-[2rem] bg-btn-color text-white py-2 rounded-xl focus:outline-none${
+              className={`mx-auto w-full sm-700:w-[150px] h-[44px] mt-[2rem] mb-[2rem] text-white py-2 rounded-xl flex justify-center items-center ${
                 !nickNameError.includes("사용 가능") ||
                 !blogNameError.includes("사용 가능") ||
                 !imageUploaded

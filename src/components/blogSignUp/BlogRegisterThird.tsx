@@ -5,6 +5,8 @@ import Image from "next/image";
 import useUserInfo from "@/hooks/useUserInfo";
 import BlogStep3 from "../../../public/BlogStep3.svg";
 import CheckIcon from "../../../public/CheckIcon.svg";
+import TrippyImage from "../../../public/TrippyImage.svg";
+import AirplaneIcon from "../../../public/TrippyAirplane.svg";
 import Link from "next/link";
 
 const BlogRegisterThird = () => {
@@ -18,7 +20,14 @@ const BlogRegisterThird = () => {
       </div>
       </div>
       <div className="w-[90%] max-w-[400px] mx-auto my-auto sm-700:my-0 sm-700:mt-[4rem]">
-      <Image src={CheckIcon} alt="checkLogo" className="mx-auto w-[80px] h-[80px]" />
+      <div className="absolute left-0 top-10 w-full">
+          <Image
+            src={AirplaneIcon}
+            alt="AirplaneIcon"
+            className="animate-slideInout"
+          />
+        </div>
+      <Image src={TrippyImage} alt="checkLogo" className="mx-auto" />
       <div className="sign-up-complete mt-[3.6rem] text-center">회원가입 완료</div>
       <div className="sign-up-complete2 mt-[3.9rem] text-center">
         <div>{userInfo.nickName}님의 회원가입이 완료되었습니다.</div>
@@ -28,10 +37,10 @@ const BlogRegisterThird = () => {
       <div className="w-[90%] max-w-[400px] mx-auto mt-auto sm-700:mt-0">
       <Link href='/'>
         <button
-          className="mx-auto w-full h-[44px] mt-[2rem] mb-[2rem] bg-btn-color text-white py-2 rounded-xl "
+          className="mx-auto w-full sm-700:w-[150px] h-[44px] mt-[2rem] mb-[2rem] text-white py-2 rounded-xl flex justify-center items-center bg-btn-color"
           style={{ fontSize: "1.2rem" }}
         >
-          다음
+          홈으로
         </button>
       </Link>
       </div>
