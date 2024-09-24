@@ -15,25 +15,9 @@ import { fetchLikedPosts } from '@/services/ootd.ts/ootdComments';
 import CustomSelect from './CustomSelect';
 import { useUserStore } from '@/store/useUserStore';
 import DefaultImage from '../../../../public/defaultImage.svg';
+import { TagContainerProps } from '@/types/tag';
 
 const PAGE_SIZE = 12;
-
-interface TagContainerProps {
-  item: {
-    post: {
-      id: number;
-      body: string;
-      tags: string[];
-      images: { accessUri: string }[];
-      likeCount: number;
-      commentCount: number;
-    };
-    member: {
-      profileUrl: string;
-      nickName: string;
-    };
-  };
-}
 
 const TagContainer: React.FC<TagContainerProps> = ({ item }) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
