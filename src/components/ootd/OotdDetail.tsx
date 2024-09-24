@@ -241,7 +241,7 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
                 <Image width={16} height={16} src={weatherInfo.icon} alt="weather" />
                 <span className="block text-[#9D9D9D] truncate">
                 {weatherInfo.label}, {ootdItem.ootd.weatherTemp}°C {' '} l {' '}
-                {formatDate(ootdItem.ootd.date)}.
+                {formatDate(ootdItem.ootd.date)}
                 </span>
               </div>
             </div>

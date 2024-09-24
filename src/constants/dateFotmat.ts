@@ -46,7 +46,7 @@ export const formatDate = (dateString: string) => {
       const day = String(commentDate.getDate()).padStart(2, '0');
       const hours = String(commentDate.getHours()).padStart(2, '0');
       const minutes = String(commentDate.getMinutes()).padStart(2, '0');
-      return `${year}/${month}/${day} ${hours}:${minutes}`;
+      return `${year}.${month}.${day} ${hours}:${minutes}`;
     }
   };
   

@@ -484,7 +484,7 @@ const EditInfo = () => {
     className="z-0"
   />
 )}
-  <div className="absolute inset-0 flex flex-col items-center justify-center z-10">
+  <div className="absolute inset-0 flex flex-col items-center justify-center z-10 ">
   <input
         type="file"
         accept="image/*"
@@ -492,15 +492,17 @@ const EditInfo = () => {
         style={{ display: 'none' }}  // input을 숨김
         onChange={handleBlogImageUpload}  // 파일이 선택되면 실행
       />
+    <div className="flex flex-col cursor-pointer justify-center items-center" onClick={handleImageUploadClick}>
     <Image 
       src={backgroundAddIcon}
       alt="Add Blog Image Icon" 
       width={50} 
       height={50} 
-      onClick={handleImageUploadClick}
+      className="cursor-pointer"
     />
-    <div className="text-white text-2xl font-semibold font-['Pretendard'] mt-[10px]">대표사진 추가</div>
-    <div className="text-[#cfcfcf] text-base font-semibold font-['Pretendard'] mt-[5px]">최적치수 1926 x 240 px</div>
+    <div className="text-white text-2xl font-semibold font-['Pretendard'] mt-[10px] cursor-pointer" onClick={handleImageUploadClick}>대표사진 추가</div>
+    <div className="text-[#cfcfcf] text-base font-semibold font-['Pretendard'] mt-[5px] cursor-pointer" onClick={handleImageUploadClick}>최적치수 1920 x 240 px</div>
+    </div>
   </div>
     </div><div className="w-[90%] mb-[100px] mx-auto sm-700:max-w-[400px] sm-700:mb-0">
         <div className="mt-[4rem]">
