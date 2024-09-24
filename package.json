@@ -41,6 +41,7 @@
     "sharp": "^0.33.5",
     "slick-carousel": "^1.8.1",
     "sweetalert2": "^11.10.8",
+    "swiper": "^11.1.14",
     "tailwindcss-animate": "^1.0.7",
     "zustand": "^4.5.2"
   },

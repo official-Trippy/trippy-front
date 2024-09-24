@@ -13,6 +13,8 @@ import CommentIcon1 from '../../../../public/commentIcon-default.svg';
 import DefaultImage from '../../../../public/defaultImage.svg';
 import { TagContainerProps } from '@/types/tag';
 import { useRouter } from 'next/navigation';
+import { Swiper, SwiperSlide, SwiperRef } from 'swiper/react';
+import 'swiper/swiper-bundle.css';
 
 const TagContainer: React.FC<TagContainerProps> = ({ item }) => {
     const containerRef = useRef<HTMLDivElement | null>(null);
@@ -61,6 +63,7 @@ const RecommendOotdPost = () => {
     const [likedPosts, setLikedPosts] = useState<number[]>([]);
     const router = useRouter();
     const scrollRef = useRef<HTMLDivElement | null>(null); // Ensure this is declared consistently at the top.
+    const swiperRef = useRef<SwiperRef | null>(null); 
 
     const { data, isLoading, error } = useQuery(['recommendOotdPost', selectedInterest], () => fetchRecommendOotdPost(selectedInterest), {
         keepPreviousData: true,
@@ -105,6 +108,34 @@ const RecommendOotdPost = () => {
     if (isLoading) return <div className="text-lg text-gray-600">Loading...</div>;
     if (error) return <div className="text-lg text-red-600">Error loading posts!</div>;
 
+     // Calculate how many items to display based on the window size
+     const getItemsPerSlide = () => {
+        if (window.innerWidth < 640) return 2; // For small screens
+        if (window.innerWidth < 768) return 3; // For medium screens
+        return 4; // For large screens
+    };
+
+    const itemsPerSlide = getItemsPerSlide();
+
+    // Split data into slides
+    const slides = [];
+    if (data?.result?.recommendOotdList) {
+        for (let i = 0; i < data.result.recommendOotdList.length; i += itemsPerSlide) {
+            slides.push(data.result.recommendOotdList.slice(i, i + itemsPerSlide));
+        }
+    }
+
+    const handleScrollOotd = (direction: string) => {
+        if (swiperRef.current) {
+            if (direction === 'left') {
+                swiperRef.current.swiper.slidePrev(); // 이전 슬라이드로 이동
+            } else {
+                swiperRef.current.swiper.slideNext(); // 다음 슬라이드로 이동
+            }
+        }
+    };
+
+
     return (
         <div className="w-[90%] sm-700:w-[66%] mx-auto pt-[5rem] mb-[90px]">
             <h1 className="text-2xl font-bold mb-4">
@@ -113,7 +144,7 @@ const RecommendOotdPost = () => {
 
             <div className="flex items-center mb-4">
                 <button 
-                    className="swiper-button-prev" 
+                    className="" 
                     onClick={() => handleScroll('left')}
                 >
                     ❮
@@ -139,17 +170,39 @@ const RecommendOotdPost = () => {
                 </div>
 
                 <button 
-                    className="swiper-button-next" 
+                    className="" 
                     onClick={() => handleScroll('right')}
                 >
                     ❯
                 </button>
             </div>
 
-            <div className="grid grid-cols-2 sm-700:grid-cols-3 lg:grid-cols-4 gap-8">
-                {data?.result?.recommendOotdList?.length > 0 ? (
-                    data.result.recommendOotdList.map((item: any) => (
-                        <div key={item.post.id} className="flex flex-col overflow-hidden cursor-pointer overflow-hidden text-ellipsis" onClick={() => handleOotdItemClick(item.post.id)}>
+            <Swiper
+            ref={swiperRef}
+            spaceBetween={20}
+            slidesPerView={4}
+            breakpoints={{
+                640: {
+                    slidesPerView: 2,
+                },
+                768: {
+                    slidesPerView: 3,
+                },
+                1024: {
+                    slidesPerView: 4,
+                },
+            }}
+        >
+             <button
+            className="swiper-button-prev"
+            onClick={() => handleScrollOotd('left')}
+        >
+            ❮
+        </button>
+            {data?.result?.recommendOotdList?.length > 0 ? (
+                data.result.recommendOotdList.map((item: any) => (
+                    <SwiperSlide key={item.post.id} className="flex flex-col cursor-pointer">
+                        <div onClick={() => handleOotdItemClick(item.post.id)}>
                             <div className="flex items-center pb-4">
                                 <div className="relative w-[24px] h-[24px]">
                                     <Image
@@ -200,11 +253,18 @@ const RecommendOotdPost = () => {
                                 <TagContainer item={item} />
                             </div>
                         </div>
-                    ))
-                ) : (
-                    <div className="text-lg text-gray-500">No posts available.</div>
-                )}
-            </div>
+                    </SwiperSlide>
+                ))
+            ) : (
+                <div className="text-lg text-gray-500">No posts available.</div>
+            )}
+             <button
+        className="swiper-button-next"
+        onClick={() => handleScrollOotd('right')}
+    >
+        ❯
+    </button>
+        </Swiper>
         </div>
     );
 };
