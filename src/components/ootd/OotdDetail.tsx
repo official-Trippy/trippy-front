@@ -234,14 +234,20 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
                   <Image width={16} height={16} src={LocationIcon} alt="location" />
                 </div>
                 <div className="whitespace-nowrap overflow-hidden text-ellipsis">
-                  <span className="block text-[#9D9D9D] truncate">{ootdItem.post.location}</span>
+                  <span className="block text-[#9D9D9D] truncate">{ootdItem.post.location  || '정보 없음'}</span>
                 </div>
               </div>
               <div className="flex items-center gap-2 whitespace-nowrap overflow-hidden text-ellipsis">
                 <Image width={16} height={16} src={weatherInfo.icon} alt="weather" />
                 <span className="block text-[#9D9D9D] truncate">
-                {weatherInfo.label}, {ootdItem.ootd.weatherTemp}°C {' '} l {' '}
-                {formatDate(ootdItem.ootd.date)}
+                {weatherInfo.label === '정보 없음' ? (
+                  '정보 없음'
+                ) : (
+                  <>
+                    {weatherInfo.label}, {ootdItem.ootd.weatherTemp}°C {' '} l {' '}
+                    {formatDate(ootdItem.ootd.date)}
+                  </>
+                )}
                 </span>
               </div>
             </div>
