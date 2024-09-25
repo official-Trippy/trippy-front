@@ -45,7 +45,7 @@ const TagContainer: React.FC<TagContainerProps> = ({ item }) => {
             <div className="text-[#6b6b6b] text-xl font-normal font-['Pretendard'] text-ellipsis overflow-hidden whitespace-nowrap">
                 {item.post.body}
             </div>
-            <div className="tag-container mt-2" ref={containerRef}>
+            <div className="tag-container" ref={containerRef}>
                 {visibleTags.map((tag, index) => (
                     <span
                         key={index}
@@ -162,7 +162,7 @@ const RecommendOotdPost = () => {
     return (
         <div className="relative w-[90%] sm-700:w-[66%] mx-auto pt-[5rem] mb-[90px] overflow-visible">
             <h1 className="text-2xl font-bold mb-4">
-                Recommended OOTD Posts for <span className="text-blue-500">{selectedInterest}</span>
+                트리피의 인기 스타일을 확인해보세요!
             </h1>
 
             <div className="flex items-center my-12 relative">
@@ -219,23 +219,22 @@ const RecommendOotdPost = () => {
                     }}
                 />
             </div>
-
-            <div className='relative h-[400px]'>
-                <Swiper
-                    ref={swiperRef}
-                    spaceBetween={20}
-                    slidesPerView={itemsPerSlide}
-                >
-                {itemsPerSlide < totalCount && (
+            {itemsPerSlide < totalCount && (
                     <Image
                         src={SwiperLeftButton}
                         alt="Previous"
                         width={60}
                         height={60}
                         onClick={() => handleScrollOotd('left')}
-                        className="absolute left-[0px] top-[42%] transform -translate-y-1/2 z-10"
+                        className="absolute left-[-30px] top-[60%] transform -translate-y-1/2 z-10"
                     />
                 )}
+                <div className='relative mx-auto'>
+                <Swiper
+                    ref={swiperRef}
+                    spaceBetween={20}
+                    slidesPerView={itemsPerSlide}
+                >
                     {data?.result?.recommendOotdList?.length > 0 ? (
                         data.result.recommendOotdList.map((item: any) => (
                             <SwiperSlide key={item.post.id} className="flex flex-col cursor-pointer relative">
@@ -251,7 +250,7 @@ const RecommendOotdPost = () => {
                                             />
                                         </div>
                                         <div className="flex-1 overflow-hidden">
-                                            <span className="text-[#6B6B6B] ml-[5px] overflow-hidden text-ellipsis whitespace-nowrap" style={{
+                                            <span className="text-[#292929] font-normal font-['Pretendard'] ml-[5px] overflow-hidden text-ellipsis whitespace-nowrap" style={{
                                                 whiteSpace: 'nowrap', 
                                                 overflow: 'hidden',   
                                                 textOverflow: 'ellipsis'
@@ -268,14 +267,19 @@ const RecommendOotdPost = () => {
                                             />
                                         </div>
                                     )}
-                                    <div className="py-4">
-                                        <div className="flex items-center justify-end">
+                                    <TagContainer item={item} />
+                                    <div className="pb-4">
+                                        <div className="flex items-center justify-start">
                                             <div className="flex items-center mt-2">
                                                 <Image
                                                     src={likedPosts.includes(item.post.id) ? HeartIcon : EmptyHeartIcon}
                                                     alt="좋아요"
                                                     width={20}
-                                                    height={20}
+                                                    height={10}
+                                                    style={{
+                                                        width: '20px',
+                                                        height: '18px',
+                                                    }}
                                                 />
                                                 <span className="mx-2 text-[#cfcfcf]"> {item.post.likeCount}</span>
                                                 <Image
@@ -283,11 +287,14 @@ const RecommendOotdPost = () => {
                                                     alt="댓글"
                                                     width={20}
                                                     height={20}
+                                                    style={{
+                                                        width: '20px',
+                                                        height: '18px',
+                                                    }}
                                                 />
                                                 <span className="mx-2 text-[#cfcfcf]"> {item.post.commentCount}</span>
                                             </div>
                                         </div>
-                                        <TagContainer item={item} />
                                     </div>
                                 </div>
                             </SwiperSlide>
@@ -302,19 +309,19 @@ const RecommendOotdPost = () => {
                         </div>
                     </div>
                 )}
-                  {itemsPerSlide < totalCount && (
+            </Swiper>
+            </div>
+            {itemsPerSlide < totalCount && (
                     <Image
                         src={SwiperRightButton}
                         alt="Next"
                         width={60}
                         height={60}
                         onClick={() => handleScrollOotd('right')}
-                        className="absolute right-[0px] top-[42%] transform -translate-y-1/2 z-10"
+                        className="absolute right-[-30px] top-[60%] transform -translate-y-1/2 z-10"
                     />
                     )}
-            </Swiper>
         </div>
-    </div>
 );
 }
 
