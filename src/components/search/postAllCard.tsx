@@ -12,9 +12,10 @@ interface PostCardProps {
       likeCount: number;
       viewCount: number;
       id: number;
+      email: string;
     };
     ootd?: {
-      images: { accessUri: string }[];
+      images: string;
       description: string;
       id: number;
     };
@@ -28,6 +29,7 @@ interface PostCardProps {
     memberId?: string;
     nickName?: string;
     profileImgUrl: { accessUri2: string }[];
+    email?: string;
   }[];
   selectedSearchType: string;
 }
@@ -71,29 +73,59 @@ const PostAllCard: React.FC<PostCardProps> = ({
           linkPath = `/user/${memberId}`;
         }
 
+        // blog 또는 nickname일 때 다른 스타일 적용
+        const isBlogOrNickname =
+          selectedSearchType === "BLOG" || selectedSearchType === "NICKNAME";
+
         return (
           <Link
             href={linkPath} // 동적 링크 경로 사용
             key={index}
             className="no-underline"
           >
-            <div className="flex justify-center items-start p-6 bg-white rounded-lg shadow-md mb-6 h-[174px] w-[789px]">
+            <div
+              className={`flex items-start sm:p-6 mb-6 ${
+                isBlogOrNickname
+                  ? "sm:w-[403px] sm:h-[72px] w-[326.231px] h-auto" // 모바일에서는 326.231px, 데스크탑에서는 403px로 적용
+                  : "sm:w-[789px] sm:h-[174px] w-[326.231px] h-[107px] sm:bg-white rounded-lg shadow-md"
+              } sm:flex `}
+            >
               {/* Image */}
-              <div className="w-1/3 pr-6 flex-shrink-0 h-full">
+              <div
+                className={`${
+                  isBlogOrNickname
+                    ? "w-[72px] h-[72px]"
+                    : "sm:w-1/3 sm:h-full w-[107px] h-[107px] pr-6"
+                } flex-shrink-0 ${isBlogOrNickname ? "rounded-full" : ""}`}
+              >
                 {selectedSearchType === "OOTD" ? (
                   <img
                     src={
-                      ootdDetails?.images[0]?.accessUri || "/placeholder.png"
+                      postDetails?.images[0]?.accessUri || "/placeholder.png"
                     }
                     alt="OOTD Image"
-                    className="w-full h-full object-cover rounded-lg"
+                    className={`object-cover ${
+                      isBlogOrNickname
+                        ? "rounded-full"
+                        : "rounded-lg w-full h-full"
+                    }`}
+                    style={
+                      isBlogOrNickname ? { width: "72px", height: "72px" } : {}
+                    }
                   />
                 ) : selectedSearchType === "BLOG" ||
                   selectedSearchType === "NICKNAME" ? (
                   <img
                     src={post.member?.profileUrl || "/placeholder.png"}
                     alt={blogName || "Blog Image"}
-                    className="w-full h-full object-cover rounded-lg"
+                    className={`object-cover ${
+                      isBlogOrNickname
+                        ? "rounded-full"
+                        : "rounded-lg sm:w-full sm:h-full w-[107px] h-[107px]"
+                    }`}
+                    style={
+                      isBlogOrNickname ? { width: "72px", height: "72px" } : {}
+                    }
                   />
                 ) : (
                   <img
@@ -107,40 +139,32 @@ const PostAllCard: React.FC<PostCardProps> = ({
               </div>
 
               {/* Post, OOTD, or Blog Details */}
-              <div className="w-2/3 ml-[20px] ">
+              <div
+                className={`ml-[20px] ${
+                  isBlogOrNickname ? "flex flex-col justify-center" : ""
+                }`}
+              >
                 {selectedSearchType === "BLOG" ? (
                   <>
-                    <h2 className="text-5xl font-semibold mb-3">
+                    <h2 className="text-[2.4rem] font-semibold pb-2 md:text-[1.7rem]">
                       {blogName || "Unnamed Blog"}
                     </h2>
-                    <p className="text-gray-800 mb-3 mt-3 text-2xl">
-                      {truncateText(
-                        blogIntroduction || "No introduction available",
-                        100
-                      )}
+
+                    <p className="text-[1rem] text-#9D9D9D pt-2">
+                      회원명: {member?.nickName || "Anonymous"}
                     </p>
-                    <div className="flex items-center space-x-6 justify-between mt-4">
-                      <p className="text-gray-800 font-semibold mt-20 text-2xl">
-                        회원명 : {member?.nickName || "Anonymous"}
-                      </p>
-                    </div>
                   </>
                 ) : selectedSearchType === "NICKNAME" ? (
                   <>
-                    <h2 className="text-5xl font-semibold mb-3">
+                    <h2 className="text-[2.4rem] font-semibold pb-2">
                       {member?.nickName || "데이터 실패"}
                     </h2>
-                    <p className="text-gray-800 mb-3 mt-3 text-2xl">
-                      {truncateText(
-                        blogIntroduction || "No introduction available",
-                        100
-                      )}
+
+                    <p className="text-[1rem] text-#9D9D9D pt-2">
+                      {blogIntroduction || "Unnamed Blog"}
                     </p>
-                    <h2 className="text-2xl font-semibold mb-3 mt-20 text-gray-800">
-                      블로그 이름 : {blogName || "Unnamed Blog"}
-                    </h2>
                   </>
-                ) : selectedSearchType === "ootd" ? (
+                ) : selectedSearchType === "OOTD" ? (
                   <>
                     <h2 className="text-3xl font-semibold mb-3">OOTD</h2>
                     <p className="text-gray-800 mb-3">
@@ -152,7 +176,7 @@ const PostAllCard: React.FC<PostCardProps> = ({
                   </>
                 ) : (
                   <>
-                    <h2 className="text-3xl font-semibold mb-3">
+                    <h2 className="sm:text-3xl font-semibold sm:mb-3 text-[1.7rem]">
                       {postDetails?.title || "Untitled"}
                     </h2>
                     <p className="text-gray-800 mb-3">
@@ -161,32 +185,33 @@ const PostAllCard: React.FC<PostCardProps> = ({
                         100
                       )}
                     </p>
-                    <div className="flex flex-wrap gap-2 mb-4 mt-[2rem]">
-                      {postDetails?.tags?.map((tag, tagIndex) => (
+                    <div className="flex flex-wrap gap-1 mb-4 sm:mt-[2rem]">
+                      {postDetails?.tags?.slice(0, 3).map((tag, tagIndex) => (
                         <span
                           key={tagIndex}
-                          className="bg-gray-200 text-gray-800 px-4 py-2 rounded-[50px] text-sm"
+                          className="bg-gray-200 text-gray-800 px-2 py-1 rounded-full sm:text-sm sm:px-4 sm:py-2 sm:gap-px text-xs" // 크기 조정
                         >
                           {tag}
                         </span>
                       ))}
                     </div>
+
                     <div className="flex items-center space-x-6 justify-between mt-4">
                       <div className="flex items-center space-x-2">
                         <img
                           src={member?.profileUrl || "/default-profile.png"}
                           alt={member?.nickName || "Profile"}
-                          className="w-[30px] h-[30px] rounded-full"
+                          className="sm:w-[30px] sm:h-[30px] w-[2rem] h-[2rem] rounded-full"
                         />
                         <p className="text-gray-800 font-semibold">
                           {member?.nickName || "Anonymous"}
                         </p>
                       </div>
                       <div className="flex space-x-4">
-                        <p className="text-gray-600 text-[1.5rem]">
+                        <p className="text-gray-600 text-[1rem] sm:text-[1.5rem]">
                           ❤️ {postDetails?.likeCount || 0}
                         </p>
-                        <p className="text-gray-600 text-[1.5rem]">
+                        <p className="text-gray-600 text-[1rem] sm:text-[1.5rem]">
                           💬 {postDetails?.viewCount || 0}
                         </p>
                       </div>
