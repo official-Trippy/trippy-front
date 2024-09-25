@@ -67,7 +67,7 @@ const RecommendOotdPost = () => {
     const [selectedInterest, setSelectedInterest] = useState(blogInterests[0]);
     const [likedPosts, setLikedPosts] = useState<number[]>([]);
     const [itemsPerSlide, setItemsPerSlide] = useState(4);
-    const [filteredInterests, setFilteredInterests] = useState(blogInterests); // 필터된 관심사를 저장할 상태
+    const [filteredInterests, setFilteredInterests] = useState(blogInterests);
     const router = useRouter();
     const scrollRef = useRef<HTMLDivElement | null>(null); 
     const swiperRef = useRef<SwiperRef | null>(null);
@@ -214,7 +214,7 @@ const RecommendOotdPost = () => {
                     ref={scrollRef}
                     onMouseDown={handleDrag}
                 >
-                    <div className="flex space-x-4 transition-transform duration-300 flex-shrink-0 mx-auto items-center justify-between">
+                    <div className="flex flex-col space-x-4 transition-transform duration-300 flex-shrink-0 mr-auto justify-between sm-700:flex-row sm-700:mx-auto sm-700:items-center">
                         <div className="flex space-x-4">
                             {filteredInterests.map(interest => (
                                 <button 
@@ -229,8 +229,8 @@ const RecommendOotdPost = () => {
                         </div>
 
                         {accessToken && ( 
-                            <div className='flex' onClick={handleGoEditPage}>
-                            <div className="ml-auto text-right text-[#9d9d9d]">관심 키워드 설정</div>
+                            <div className='flex mr-auto mt-[10px] sm-700:ml-auto sm-700:mt-0' onClick={handleGoEditPage}>
+                            <div className="text-right text-[#9d9d9d]">관심 키워드 설정</div>
                             <Image
                                 src={RightIcon}
                                 alt="keyword"
