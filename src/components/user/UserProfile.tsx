@@ -30,11 +30,13 @@ const UserProfile: React.FC<UserProfileProps> = ({
     }
   );
   const userInfo = useUserStore((state) => state.userInfo);
-
-  const targetMemberId = data?.result?.email; // Ensure safe navigation
+  console.log(data);
+  const targetMemberId = data?.result?.email;
+  console.log(" check", data); // Ensure safe navigation
   const userMemberId = userInfo?.memberId;
   console.log(targetMemberId);
   console.log(userMemberId);
+  console.log("받은 데이터", memberId);
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error loading data</div>;
@@ -70,27 +72,32 @@ const UserProfile: React.FC<UserProfileProps> = ({
           <h1 className="text-4xl font-bold mt-[10px] text-center">{nickName}</h1>
           <span className="text-xl text-gray-600 mt-[5px]">{email}</span>
           <div className="mt-[10px] flex px-4">
-            <span className="text-base text-[#9d9d9d] cursor-pointer" onClick={() => setActiveTab(TABS.FOLLOWER)}>
-              팔로워 
+            <span
+              className="text-base text-[#9d9d9d] cursor-pointer"
+              onClick={() => setActiveTab(TABS.FOLLOWER)}
+            >
+              팔로워
               <span className="text-[#6b6b6b]"> {followerCnt}</span>
             </span>
             <span className="text-base text-[#9d9d9d]">&ensp;|&ensp;</span>
-            <span className="text-base text-[#9d9d9d] cursor-pointer" onClick={() => setActiveTab(TABS.FOLLOWING)}>
-              팔로잉 
+            <span
+              className="text-base text-[#9d9d9d] cursor-pointer"
+              onClick={() => setActiveTab(TABS.FOLLOWING)}
+            >
+              팔로잉
               <span className="text-[#6b6b6b]"> {followingCnt}</span>
             </span>
           </div>
 
 
-          <div className="flex items-center mt-[10px]">
+          <div className="ml-auto flex items-center mt-[30px] mr-[50px]">
+            {targetMemberId && userMemberId && (
+              <FollowButton
+                postMemberId={memberId}
+                userMemberId={userMemberId}
+              />
+            )}
 
-            {targetMemberId &&
-              userMemberId && ( // Check both IDs are available
-                <FollowButton
-                  postMemberId={targetMemberId}
-                  userMemberId={userMemberId}
-                />
-              )}
           </div>
         </div>
       </div>

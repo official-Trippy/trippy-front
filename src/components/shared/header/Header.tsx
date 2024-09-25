@@ -7,20 +7,23 @@ import LogoHeader from "../../../../public/LogoHeader.svg";
 import AlertImg from "../../../../public/AlertImg.png";
 import DefaultImage from "../../../../public/defaultImage.svg";
 import searchIconMobile from "../../../../public/search_icon_mobile.svg"; // Mobile search icon
-import alertIconMobile from "../../../../public/alert_icon_mobile.svg";  // Mobile alert icon
+import alertIconMobile from "../../../../public/alert_icon_mobile.svg"; // Mobile alert icon
 import UserModal from "@/components/userInfo/userModal";
 import { useUserStore } from "@/store/useUserStore";
 import { useRouter, usePathname } from "next/navigation";
 import Cookies from "js-cookie";
 import SearchBar from "@/components/search/searchBar";
 import NotificationComponent from "@/components/notification/notificationComponent"; // Import NotificationComponent
+
 import postwriteImg from "@/dummy/postwrite.svg"
+
 
 const Header = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isNotificationsVisible, setIsNotificationsVisible] = useState(false); // New state for notifications
   const [isLoading, setIsLoading] = useState(true);
+  const [searchModalVisible, setSearchModalVisible] = useState(false);
 
   const { userInfo, loading, fetchUserInfo } = useUserStore();
   const router = useRouter();
@@ -35,6 +38,33 @@ const Header = () => {
     };
     loadUserInfo();
   }, [fetchUserInfo]);
+
+  //수정 고려중
+  // useEffect(() => {
+  //   const EventSource = EventSourcePolyfill || NativeEventSource;
+  //   const eventSource = new EventSource(
+  //     `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/notify/subscribe`,
+  //     {
+  //       headers: {
+  //         Authorization: `Bearer ${accessToken}`,
+  //       },
+  //       heartbeatTimeout: 86400000,
+  //     }
+  //   );
+
+  //   eventSource.addEventListener("connect", (event: any) => {
+  //     const { data: receivedConnectData } = event;
+  //     console.log(receivedConnectData, "받아온 데이터임");
+  //     if (receivedConnectData === "SSE 연결이 완료되었습니다.") {
+  //       console.log("SSE CONNECTED");
+  //     } else {
+  //       console.log("연결 안됨요~~!!");
+  //     }
+  //   });
+  //   eventSource.addEventListener("message", (event) => {
+  //     console.log("Received message:", event.data);
+  //   });
+  // });
 
   const onClickLogin = () => {
     router.push("/login");
@@ -92,7 +122,9 @@ const Header = () => {
           <div className="flex mx-auto w-full">
             <SearchBar />
           </div>
+
           {/* <div className="ml-auto mr-4 md-850:hidden">
+
             <Image
               src={searchIconMobile}
               alt="Search"
@@ -100,7 +132,9 @@ const Header = () => {
               height={24}
               className="cursor-pointer"
             />
+
           </div> */}
+
           {!loading && !isGuest && (
             <>
               {userInfo && accessToken ? (
@@ -241,12 +275,14 @@ const Header = () => {
           </Link>
         </div>
         <div className="flex items-center gap-4 ml-auto">
+
           <Image
             src={searchIconMobile}
             alt="Search"
             width={24}
             height={24}
             className="cursor-pointer"
+            onClick={() => setSearchModalVisible(true)}
           />
           <Image
             src={alertIconMobile}
@@ -257,6 +293,29 @@ const Header = () => {
             className="cursor-pointer"
           />
         </div>
+        {searchModalVisible && (
+          <div className="fixed inset-0 z-50 bg-white flex flex-col items-center pt-8">
+            {" "}
+            {/* pt-8로 상단에 적당히 여백을 줌 */}
+            <div className="w-full max-w-[600px] flex justify-between items-center mb-4 px-4 py-2">
+              <Image
+                src={LogoHeader}
+                alt="Logo"
+                className="w-[110px] h-[34px] object-contain"
+              />
+              <button
+                className="text-gray-600 px-6"
+                onClick={() => setSearchModalVisible(false)} // 닫기 버튼
+              >
+                닫기
+              </button>
+            </div>
+            <div className="w-full max-w-[600px] px-4">
+              <SearchBar />
+            </div>
+          </div>
+        )}
+
       </div>
     </header>
   );
