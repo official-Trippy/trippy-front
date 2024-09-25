@@ -15,6 +15,8 @@ import { TagContainerProps } from '@/types/tag';
 import { useRouter } from 'next/navigation';
 import { Swiper, SwiperSlide, SwiperRef } from 'swiper/react';
 import 'swiper/swiper-bundle.css';
+import SwiperLeftButton from '../../../../public/SwiperLeftBtn.svg';
+import SwiperRightButton from '../../../../public/SwiperRightBtn.svg';
 
 const TagContainer: React.FC<TagContainerProps> = ({ item }) => {
     const containerRef = useRef<HTMLDivElement | null>(null);
@@ -59,15 +61,17 @@ const TagContainer: React.FC<TagContainerProps> = ({ item }) => {
 
 const RecommendOotdPost = () => {
     const accessToken = Cookies.get('accessToken');
-    const [selectedInterest, setSelectedInterest] = useState(blogInterests[0]);
+    const [selectedInterest, setSelectedInterest] = useState(blogInterests[2]);
     const [likedPosts, setLikedPosts] = useState<number[]>([]);
     const router = useRouter();
-    const scrollRef = useRef<HTMLDivElement | null>(null); // Ensure this is declared consistently at the top.
+    const scrollRef = useRef<HTMLDivElement | null>(null); 
     const swiperRef = useRef<SwiperRef | null>(null); 
 
     const { data, isLoading, error } = useQuery(['recommendOotdPost', selectedInterest], () => fetchRecommendOotdPost(selectedInterest), {
         keepPreviousData: true,
     });
+
+    const totalCount = data?.result.totalCnt;
 
     useEffect(() => {
         if (accessToken) {
@@ -108,16 +112,16 @@ const RecommendOotdPost = () => {
     if (isLoading) return <div className="text-lg text-gray-600">Loading...</div>;
     if (error) return <div className="text-lg text-red-600">Error loading posts!</div>;
 
-     // Calculate how many items to display based on the window size
+  
      const getItemsPerSlide = () => {
-        if (window.innerWidth < 640) return 2; // For small screens
-        if (window.innerWidth < 768) return 3; // For medium screens
-        return 4; // For large screens
+        if (window.innerWidth < 640) return 2; 
+        if (window.innerWidth < 768) return 3; 
+        return 4;
     };
 
     const itemsPerSlide = getItemsPerSlide();
 
-    // Split data into slides
+
     const slides = [];
     if (data?.result?.recommendOotdList) {
         for (let i = 0; i < data.result.recommendOotdList.length; i += itemsPerSlide) {
@@ -128,145 +132,192 @@ const RecommendOotdPost = () => {
     const handleScrollOotd = (direction: string) => {
         if (swiperRef.current) {
             if (direction === 'left') {
-                swiperRef.current.swiper.slidePrev(); // 이전 슬라이드로 이동
+                swiperRef.current.swiper.slidePrev(); 
             } else {
-                swiperRef.current.swiper.slideNext(); // 다음 슬라이드로 이동
+                swiperRef.current.swiper.slideNext(); 
             }
         }
     };
 
 
     return (
-        <div className="w-[90%] sm-700:w-[66%] mx-auto pt-[5rem] mb-[90px]">
+        <div className="relative w-[90%] sm-700:w-[66%] mx-auto pt-[5rem] mb-[90px] overflow-visible">  
             <h1 className="text-2xl font-bold mb-4">
                 Recommended OOTD Posts for <span className="text-blue-500">{selectedInterest}</span>
             </h1>
-
-            <div className="flex items-center mb-4">
-                <button 
-                    className="" 
-                    onClick={() => handleScroll('left')}
-                >
-                    ❮
-                </button>
-
-                <div 
-                    className="overflow-hidden w-full cursor-pointer"
-                    ref={scrollRef}
-                    onMouseDown={handleDrag}
-                >
-                    <div className="flex space-x-2 transition-transform duration-300 flex-shrink-0">
-                        {blogInterests.map(interest => (
-                            <button 
-                                key={interest} 
-                                className={`flex items-center justify-center px-4 py-2 rounded-md text-sm font-medium border-2 transition duration-300 flex-shrink-0 
-                                            ${selectedInterest === interest ? 'border-red-600 text-red-600' : 'border-gray-400 text-gray-600 hover:bg-gray-200'}`} 
-                                onClick={() => setSelectedInterest(interest)}
-                            >
-                                {interest}
-                            </button>
-                        ))}
-                    </div>
-                </div>
-
-                <button 
-                    className="" 
-                    onClick={() => handleScroll('right')}
-                >
-                    ❯
-                </button>
-            </div>
-
-            <Swiper
-            ref={swiperRef}
-            spaceBetween={20}
-            slidesPerView={4}
-            breakpoints={{
-                640: {
-                    slidesPerView: 2,
-                },
-                768: {
-                    slidesPerView: 3,
-                },
-                1024: {
-                    slidesPerView: 4,
-                },
+    
+            <div className="flex items-center my-12 relative"> 
+        <Image
+            src={SwiperLeftButton}
+            alt="Previous"
+            width={25}
+            height={25}
+            onClick={() => handleScroll('left')}
+            style={{
+                width: '25px',
+                height: '25px',
+                position: 'absolute',
+                top: '50%',
+                transform: 'translateY(-50%)',
+                left: '-30px',
+                zIndex: 999,
             }}
+        />
+
+        <div 
+            className="overflow-hidden w-full cursor-pointer"
+            ref={scrollRef}
+            onMouseDown={handleDrag}
         >
-             <button
-            className="swiper-button-prev"
-            onClick={() => handleScrollOotd('left')}
-        >
-            ❮
-        </button>
-            {data?.result?.recommendOotdList?.length > 0 ? (
-                data.result.recommendOotdList.map((item: any) => (
-                    <SwiperSlide key={item.post.id} className="flex flex-col cursor-pointer">
-                        <div onClick={() => handleOotdItemClick(item.post.id)}>
-                            <div className="flex items-center pb-4">
-                                <div className="relative w-[24px] h-[24px]">
-                                    <Image
-                                        src={item.member.profileUrl || DefaultImage}
-                                        alt="Profile"
-                                        layout="fill"
-                                        objectFit="cover"
-                                        className="rounded-full" 
-                                    />
-                                </div>
-                                <div className="flex-1 overflow-hidden">
-                                    <span className="text-[#6B6B6B] ml-[5px] overflow-hidden text-ellipsis whitespace-nowrap" style={{
-                                        whiteSpace: 'nowrap', 
-                                        overflow: 'hidden',   
-                                        textOverflow: 'ellipsis'
-                                    }}>{item.member.nickName}</span>
-                                </div>
+            <div className="flex space-x-4 transition-transform duration-300 flex-shrink-0 mx-auto items-center">
+                {blogInterests.map(interest => (
+                    <button 
+                        key={interest} 
+                        className={`flex items-center justify-center px-6 py-2 rounded-[20px] text-[12px] font-medium border-[1px] transition duration-300 flex-shrink-0
+                                    ${selectedInterest === interest ? 'border border-[#FB3463] text-[#FB3463] bg-[#FFE3EA] text-bold' : 'border-[#CFCFCF] text-[#6B6B6B] hover:bg-gray-200'}`} 
+                        onClick={() => setSelectedInterest(interest)}
+                    >
+                        {interest}
+                    </button>
+                ))}
+            </div>
+        </div>
+
+        <Image
+            src={SwiperRightButton}
+            alt="Next"
+            width={25}
+            height={25}
+            onClick={() => handleScroll('right')}
+            style={{
+                width: '25px',
+                height: '25px',
+                position: 'absolute',
+                top: '50%', 
+                transform: 'translateY(-50%)',
+                right: '-30px',
+                zIndex: 999,
+            }}
+        />
+    </div>
+    
+    
+    <Swiper
+        ref={swiperRef}
+        spaceBetween={20}
+        slidesPerView={4}
+        breakpoints={{
+            640: {
+                slidesPerView: 2,
+            },
+            768: {
+                slidesPerView: 3,
+            },
+            1024: {
+                slidesPerView: 4,
+            },
+        }}
+    >
+        {data?.result?.recommendOotdList?.length > 0 ? (
+            data.result.recommendOotdList.map((item: any) => (
+                <SwiperSlide key={item.post.id} className="flex flex-col cursor-pointer">
+                    <div onClick={() => handleOotdItemClick(item.post.id)}>
+                        <div className="flex items-center pb-4">
+                            <div className="relative w-[24px] h-[24px]">
+                                <Image
+                                    src={item.member.profileUrl || DefaultImage}
+                                    alt="Profile"
+                                    layout="fill"
+                                    objectFit="cover"
+                                    className="rounded-full" 
+                                />
                             </div>
-                            {item.post.images.length > 0 && (
-                                <div className="relative w-full" style={{ aspectRatio: '303 / 381' }}>
-                                    <Image
-                                        className="absolute top-0 left-0 w-full h-full object-cover rounded-xl"
-                                        src={item.post.images[0].accessUri}
-                                        alt="OOTD"
-                                        layout="fill"
-                                    />
-                                </div>
-                            )}
-                            <div className="py-4">
-                                <div className="flex items-center justify-end">
-                                    <div className="flex items-center mt-2">
-                                        <Image
-                                            src={likedPosts.includes(item.post.id) ? HeartIcon : EmptyHeartIcon} 
-                                            alt="좋아요"
-                                            width={20}
-                                            height={20}
-                                        />
-                                        <span className="mx-2 text-[#cfcfcf]"> {item.post.likeCount}</span>
-                                        <Image
-                                            src={CommentIcon1}
-                                            alt="댓글"
-                                            width={20}
-                                            height={20}
-                                        />
-                                        <span className="mx-2 text-[#cfcfcf]"> {item.post.commentCount}</span>
-                                    </div>
-                                </div>
-                                <TagContainer item={item} />
+                            <div className="flex-1 overflow-hidden">
+                                <span className="text-[#6B6B6B] ml-[5px] overflow-hidden text-ellipsis whitespace-nowrap" style={{
+                                    whiteSpace: 'nowrap', 
+                                    overflow: 'hidden',   
+                                    textOverflow: 'ellipsis'
+                                }}>{item.member.nickName}</span>
                             </div>
                         </div>
-                    </SwiperSlide>
-                ))
-            ) : (
-                <div className="text-lg text-gray-500">No posts available.</div>
-            )}
-             <button
-        className="swiper-button-next"
-        onClick={() => handleScrollOotd('right')}
-    >
-        ❯
-    </button>
-        </Swiper>
-        </div>
+                        {item.post.images.length > 0 && (
+                            <div className="relative w-full" style={{ aspectRatio: '303 / 303' }}>
+                                <Image
+                                    className="absolute top-0 left-0 w-full h-full object-cover rounded-xl"
+                                    src={item.post.images[0].accessUri}
+                                    alt="OOTD"
+                                    layout="fill"
+                                />
+                            </div>
+                        )}
+                        <div className="py-4">
+                            <div className="flex items-center justify-end">
+                                <div className="flex items-center mt-2">
+                                    <Image
+                                        src={likedPosts.includes(item.post.id) ? HeartIcon : EmptyHeartIcon} 
+                                        alt="좋아요"
+                                        width={20}
+                                        height={20}
+                                    />
+                                    <span className="mx-2 text-[#cfcfcf]"> {item.post.likeCount}</span>
+                                    <Image
+                                        src={CommentIcon1}
+                                        alt="댓글"
+                                        width={20}
+                                        height={20}
+                                    />
+                                    <span className="mx-2 text-[#cfcfcf]"> {item.post.commentCount}</span>
+                                </div>
+                            </div>
+                            <TagContainer item={item} />
+                        </div>
+                    </div>
+                </SwiperSlide>
+            ))
+        ) : (
+            <div className="text-lg text-gray-500">No posts available.</div>
+        )}
+    </Swiper>
+    {itemsPerSlide < totalCount && (
+            <Image
+                src={SwiperLeftButton}
+                alt="Previous"
+                className="swiper-button-prev"
+                width={60}
+                height={60}
+                onClick={() => handleScrollOotd('left')}
+                style={{
+                    width: '50px',
+                    height: '50px',
+                    position: 'absolute',
+                    top: '62%',
+                    transform: 'translateY(-50%)',
+                    left: '-25px',
+                    zIndex: 999, 
+                }}
+            />
+        )}
+        {itemsPerSlide < totalCount && (
+            <Image
+                className="swiper-button-next"
+                src={SwiperRightButton}
+                alt="Next"
+                width={50}
+                height={50}
+                onClick={() => handleScrollOotd('right')}
+                style={{
+                    width: '50px',
+                    height: '50px',
+                    position: 'absolute',
+                    top: '62%',
+                    transform: 'translateY(-50%)',
+                    right: '-25px', 
+                    zIndex: 999, 
+                }}
+            />
+        )}
+    </div>
     );
-};
-
+}
+    
 export default RecommendOotdPost;
