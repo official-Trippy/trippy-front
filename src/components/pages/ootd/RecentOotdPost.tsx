@@ -161,7 +161,7 @@ const RecentOotdPost: React.FC = () => {
   return (
     <div className='w-[90%] sm-700:w-[66%]  mx-auto pt-[5rem] mb-[90px]'>
       <div>
-      {accessToken ? (
+      {/* {accessToken ? (
                         isGuest ? ( 
                             <h1 className='font-bold text-[2rem]'>트리피의 인기 게시글을 만나보세요</h1>
                         ) : ( 
@@ -169,9 +169,10 @@ const RecentOotdPost: React.FC = () => {
                         )
                     ) : ( 
                         <h1 className='font-bold text-[2rem]'>트리피의 인기 게시글을 만나보세요</h1>
-                    )}
+                    )} */}
+        <h1 className='font-bold text-[2rem]'>최근 업로드된 OOTD를 만나보세요</h1>
       </div>
-      <div className='flex text-[1.6rem] py-16'>
+      <div className='flex text-[1.6rem] py-12'>
         <span
           className={`pr-[1rem] cursor-pointer ${tab === 'ALL' ? 'font-bold text-[#fa3463]' : ''}`}
           onClick={() => handleTabChange('ALL')}

@@ -68,6 +68,7 @@ const RecommendOotdPost = () => {
     const [likedPosts, setLikedPosts] = useState<number[]>([]);
     const [itemsPerSlide, setItemsPerSlide] = useState(4);
     const [filteredInterests, setFilteredInterests] = useState(blogInterests);
+    const [userName, setUserName] = useState('');
     const router = useRouter();
     const scrollRef = useRef<HTMLDivElement | null>(null); 
     const swiperRef = useRef<SwiperRef | null>(null);
@@ -88,9 +89,11 @@ const RecommendOotdPost = () => {
     // 사용자 정보에서 관심사 가져오기
     const fetchUserInterests = async () => {
         try {
-            const userInfo = await getMyInfo(); // getMyInfo API 호출
+            const userInfo = await getMyInfo();
             console.log(userInfo);
             const userInterests = userInfo.koreanInterestedTypes || []; // 관심사 추출
+            const userName = userInfo.nickName;
+            setUserName(userName); 
             setFilteredInterests(blogInterests.filter(interest => userInterests.includes(interest))); // 관심사로 필터링
         } catch (error) {
             console.error('Error fetching user interests:', error);
@@ -186,9 +189,17 @@ const RecommendOotdPost = () => {
 
     return (
         <div className="relative w-[90%] sm-700:w-[66%] mx-auto pt-[5rem] overflow-visible">
+            {!accessToken && (    
             <h1 className="font-bold text-[2rem] mb-4">
                 관심분야에 따른 OOTD를 확인해보세요!
             </h1>
+            )}
+            {accessToken && (    
+            <h1 className="font-bold text-[2rem] mb-4">
+                {userName}님, 이런 스타일 어때요?
+            </h1>
+            )}
+
 
             <div className="flex items-center my-12 relative">
                 {!accessToken && (
