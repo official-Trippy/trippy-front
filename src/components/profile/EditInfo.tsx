@@ -385,7 +385,9 @@ const EditInfo = () => {
     if (tempSelectedInterests.length < 2) {
       setWarningMessage('관심분야를 2개 이상 선택해주세요!');
     } else {
-      setSelectedInterests(tempSelectedInterests);
+      // 선택한 관심분야를 blogInterests의 순서대로 정렬하여 저장
+      const sortedInterests = blogInterests.filter((interest) => tempSelectedInterests.includes(interest));
+      setSelectedInterests(sortedInterests);
       setIsModalOpen(false);
       setWarningMessage(''); 
     }
