@@ -11,6 +11,7 @@ import HeartIcon from '../../../../public/heartedIcon.svg';
 import EmptyHeartIcon from '../../../../public/heartIcon-default.svg';
 import CommentIcon1 from '../../../../public/commentIcon-default.svg';
 import DefaultImage from '../../../../public/defaultImage.svg';
+import RightIcon from '../../../../public/GoRightIcon.svg';
 import { TagContainerProps } from '@/types/tag';
 import { useRouter } from 'next/navigation';
 import { Swiper, SwiperSlide, SwiperRef } from 'swiper/react';
@@ -149,8 +150,18 @@ const RecommendOotdPost = () => {
     };
 
     const handleWriteBtnClick = () => {
-        router.push("/login");
+        if (!accessToken) {
+            router.push("/login");
+        }
+        else {
+            router.push('/write')
+        }
     };
+
+    const handleGoEditPage = () => {
+        router.push("/editProfile");
+    };
+
 
     if (isLoading) return <div className="text-lg text-gray-600">Loading...</div>;
     if (error) return <div className="text-lg text-red-600">Error loading posts!</div>;
@@ -174,12 +185,13 @@ const RecommendOotdPost = () => {
     };
 
     return (
-        <div className="relative w-[90%] sm-700:w-[66%] mx-auto pt-[5rem] mb-[90px] overflow-visible">
+        <div className="relative w-[90%] sm-700:w-[66%] mx-auto pt-[5rem] overflow-visible">
             <h1 className="font-bold text-[2rem] mb-4">
                 관심분야에 따른 OOTD를 확인해보세요!
             </h1>
 
             <div className="flex items-center my-12 relative">
+                {!accessToken && (
                 <Image
                     src={SwiperLeftButton}
                     alt="Previous"
@@ -196,26 +208,41 @@ const RecommendOotdPost = () => {
                         zIndex: 999,
                     }}
                 />
-
+                )}
                 <div 
                     className="overflow-hidden w-full cursor-pointer"
                     ref={scrollRef}
                     onMouseDown={handleDrag}
                 >
-                    <div className="flex space-x-4 transition-transform duration-300 flex-shrink-0 mx-auto items-center">
-                        {filteredInterests.map(interest => (
-                            <button 
-                                key={interest} 
-                                className={`flex items-center justify-center px-6 py-2 rounded-[20px] text-[12px] font-medium border-[1px] transition duration-300 flex-shrink-0
-                                            ${selectedInterest === interest ? 'border border-[#FB3463] text-[#FB3463] bg-[#FFE3EA] text-bold' : 'border-[#CFCFCF] text-[#6B6B6B] hover:bg-gray-200'}`} 
-                                onClick={() => setSelectedInterest(interest)}
-                            >
-                                {interest}
-                            </button>
-                        ))}
-                    </div>
-                </div>
+                    <div className="flex space-x-4 transition-transform duration-300 flex-shrink-0 mx-auto items-center justify-between">
+                        <div className="flex space-x-4">
+                            {filteredInterests.map(interest => (
+                                <button 
+                                    key={interest} 
+                                    className={`flex items-center justify-center px-6 py-2 rounded-[20px] text-[12px] font-medium border-[1px] transition duration-300 flex-shrink-0
+                                                ${selectedInterest === interest ? 'border border-[#FB3463] text-[#FB3463] bg-[#FFE3EA] text-bold' : 'border-[#CFCFCF] text-[#6B6B6B] hover:bg-gray-200'}`} 
+                                    onClick={() => setSelectedInterest(interest)}
+                                >
+                                    {interest}
+                                </button>
+                            ))}
+                        </div>
 
+                        {accessToken && ( 
+                            <div className='flex' onClick={handleGoEditPage}>
+                            <div className="ml-auto text-right text-[#9d9d9d]">관심 키워드 설정</div>
+                            <Image
+                                src={RightIcon}
+                                alt="keyword"
+                                width={14}
+                                height={14}
+                             />
+                            <div/> 
+                            </div>
+                        )}
+                </div>
+                </div>
+                {!accessToken && (          
                 <Image
                     src={SwiperRightButton}
                     alt="Next"
@@ -232,6 +259,7 @@ const RecommendOotdPost = () => {
                         zIndex: 999,
                     }}
                 />
+                )}
             </div>
             {itemsPerSlide < totalCount && (
                 <Image
@@ -243,7 +271,7 @@ const RecommendOotdPost = () => {
                     className="absolute left-[-30px] top-[60%] transform -translate-y-1/2 z-10"
                 />
             )}
-            <div className='relative mx-auto'>
+            <div className='relative mx-auto '>
                 <Swiper
                     ref={swiperRef}
                     spaceBetween={20}
@@ -314,11 +342,12 @@ const RecommendOotdPost = () => {
                             </SwiperSlide>
                         ))
                     ) : (
-                        <div className="h-[400px] flex flex-col text-[2rem] text-black my-auto items-center justify-center font-medium font-['Pretendard']">
+                        <div className="h-full flex flex-col text-[2rem] text-black my-auto items-center justify-center font-medium font-['Pretendard'] py-[50px]">
+                            
                             <div className='flex flex-row'>
                                 <span className="text-[#FB3463]">{selectedInterest} </span>{"\u00A0"}관련 OOTD가 없어요!
                             </div>
-                            <div className='bg-btn-color text-white text-2xl rounded-[8px] font-semibold mt-[20px] px-8 py-4' onClick={handleWriteBtnClick}>
+                            <div className='bg-btn-color text-white text-2xl rounded-[8px] font-semibold mt-[20px] px-8 py-4 cursor-pointer' onClick={handleWriteBtnClick}>
                                 OOTD 게시글 작성하러 가기
                             </div>
                         </div>
