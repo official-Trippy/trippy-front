@@ -171,9 +171,9 @@ const RecommendOotdPost = () => {
     };
 
 
-    if (isLoading) return <div className="text-lg text-gray-600">Loading...</div>;
-    if (error) return <div className="text-lg text-red-600">Error loading posts!</div>;
-
+    if (isLoading) return null;
+    if (error) return null;
+    
     // 데이터 슬라이드 생성
     const slides = [];
     if (data?.result?.recommendOotdList) {
