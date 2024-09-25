@@ -205,3 +205,19 @@ export const getUserTotalOotdCount = async (memberId: string): Promise<number> =
       throw error;
   }
 };
+
+export const fetchRecommendOotdPost = async (interestType: string) => {
+  try {
+    const response = await axios.get(`${backendUrl}/api/recommend/interest`, {
+      params: {
+        interestedType: interestType, // No need to encode here
+        postType: 'OOTD'
+      }
+    });
+    console.log('Received data:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error(`Error fetching OOTD posts for interest ${interestType}:`, error);
+    throw error;
+  }
+};

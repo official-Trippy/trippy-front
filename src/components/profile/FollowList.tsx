@@ -4,7 +4,7 @@ import { showFollows, showFollowings } from "@/services/follow";
 import { useUserStore } from "@/store/useUserStore";
 import { unfollow } from "@/services/follow";
 import { ACCESS_TOKEN } from "@/constants/general";
-
+import DefaultImage from '../../../public/defaultImage.svg';
 import axios from "@/app/api/axios";
 import Swal from "sweetalert2";
 

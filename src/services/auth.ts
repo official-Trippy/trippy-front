@@ -132,8 +132,7 @@ export async function confirmEmail(email: string, authNumber: string) {
 
 export async function getMyInfo() {
   try {
-    const response = await axios.get(
-      `${backendUrl}/api/member`);
+    const response = await axios.get(`${backendUrl}/api/member`);
     const data = response.data.result;
     console.log(data);
     return data;

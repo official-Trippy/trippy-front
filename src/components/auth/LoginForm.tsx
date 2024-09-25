@@ -8,12 +8,16 @@ import Link from "next/link";
 import Cookies from "js-cookie";
 import { Login } from "@/services/auth";
 import Swal from 'sweetalert2';
+import { useUserStore } from "@/store/useUserStore"; // 전역 상태 import
 
 const LoginForm = () => {
   const [memberId, setMemberId] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const router = useRouter();
+  
+  // 전역 상태에서 fetchUserInfo 호출하기 위해 상태 불러오기
+  const { fetchUserInfo } = useUserStore();
 
   useEffect(() => {
     checkLoginStatus();
@@ -58,8 +62,13 @@ const LoginForm = () => {
           router.push("/blogRegister");
         });
       } else if (role === "MEMBER" || role === "ADMIN") {
+        // accessToken과 refreshToken을 쿠키에 저장
         Cookies.set("accessToken", accessToken);
         Cookies.set("refreshToken", refreshToken);
+
+        // 전역 상태에 유저 정보 저장
+        await fetchUserInfo(); // 전역 상태에 유저 정보를 업데이트
+
         router.push("/");
       }
       router.refresh();

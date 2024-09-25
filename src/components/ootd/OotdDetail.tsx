@@ -14,7 +14,6 @@ import LocationIcon from "../../../public/Location.svg";
 import CommentSection from "./CommentSection";
 import LeftArrowIcon from "../../../public/left-arrow.svg";
 import RightArrowIcon from "../../../public/right-arrow.svg";
-import { getWeatherStatusInKorean } from "@/constants/weatherTransition";
 import { useRouter } from "next/navigation";
 import FollowButton from "../followControl/followButton";
 import Cookies from "js-cookie";
@@ -25,6 +24,7 @@ import BookmarkedIcon from "../../../public/bookmark-fill.svg";
 import { addBookmark, deleteBookmark, fetchIsBookmarked } from "@/services/bookmark/bookmark";
 import WeatherIcon from "../../../public/WeatherIcon.svg";
 import DefaultImage from "../../../public/defaultImage.svg";
+import { getWeatherStatusInfo } from "@/constants/weatherTransition";
 
 interface OotdDetailProps {
   id: number;
@@ -146,6 +146,7 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
     }
   };
 
+
   if (isLoading) {
     return null;
   }
@@ -159,6 +160,8 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
   }
 
   const ootdItem = data.result;
+
+  const weatherInfo = getWeatherStatusInfo(ootdItem.ootd.weatherStatus);
 
 
   const SampleNextArrow = (props: any) => {
@@ -231,24 +234,30 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
                   <Image width={16} height={16} src={LocationIcon} alt="location" />
                 </div>
                 <div className="whitespace-nowrap overflow-hidden text-ellipsis">
-                  <span className="block text-gray-600 truncate">{ootdItem.post.location}</span>
+                  <span className="block text-[#9D9D9D] truncate">{ootdItem.post.location  || '정보 없음'}</span>
                 </div>
               </div>
               <div className="flex items-center gap-2 whitespace-nowrap overflow-hidden text-ellipsis">
-                <Image width={16} height={16} src={WeatherIcon} alt="weather" />
-                <span className="block text-gray-600 truncate">
-                  {ootdItem.ootd.date} |{" "}
-                  {getWeatherStatusInKorean(ootdItem.ootd.weatherStatus)}, {ootdItem.ootd.weatherTemp}°C
+                <Image width={16} height={16} src={weatherInfo.icon} alt="weather" />
+                <span className="block text-[#9D9D9D] truncate">
+                {weatherInfo.label === '정보 없음' ? (
+                  '정보 없음'
+                ) : (
+                  <>
+                    {weatherInfo.label}, {ootdItem.ootd.weatherTemp}°C {' '} l {' '}
+                    {formatDate(ootdItem.ootd.date)}
+                  </>
+                )}
                 </span>
               </div>
             </div>
           </div>
 
           {/* 오른쪽 팔로우 버튼 및 아이콘들 */}
-          <div className="flex items-center space-x-2 sm-700:space-x-8">
+          <div className="mt-auto flex items-center space-x-4 sm-700:space-x-8">
             <FollowButton postMemberId={data.result.member.memberId} userMemberId={userMemberId} />
             {/* 북마크 및 메뉴 아이콘 */}
-            <div className="min-w-[35px] flex items-center">
+            <div className="min-w-[35px] flex items-center mr-[10px]">
               <Image
                 src={isBookmarked ? BookmarkedIcon : BookmarkIcon}
                 alt="bookmark"
@@ -273,15 +282,16 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
                   className="cursor-pointer"
                 />
                 {isMenuOpen && (
-                  <div className="absolute top-full right-0 mt-4 w-32 bg-white rounded shadow-lg z-10">
-                    <div className="py-2 px-4 text-[#ff4f4f] hover:bg-gray-100 cursor-pointer text-center" onClick={handleDeleteClick}>
-                      삭제
-                    </div>
-                    <hr />
-                    <div className="py-2 px-4 text-black hover:bg-gray-100 cursor-pointer text-center" onClick={() => router.push(`/edit/${id}`)}>
-                      수정
-                    </div>
-                  </div>
+                 <div className="absolute top-full right-0 mt-4 w-32 bg-white rounded shadow-lg z-10">
+                 <div className="pb-2 pt-3 px-4 text-[#ff4f4f] cursor-pointer text-center" onClick={handleDeleteClick}>
+                   삭제
+                 </div>
+                 <div className="border-t border-gray-300 my-2" /> {/* 줄 추가 */}
+                 <div className="pb-3 pt-2 px-4 text-black cursor-pointer text-center" onClick={() => router.push(`/edit/${id}`)}>
+                   수정
+                 </div>
+               </div>
+               
                 )}
               </div>
             )}

@@ -13,6 +13,7 @@ import {
 } from "@/services/blog";
 import useUserInfo from "@/hooks/useUserInfo";
 import { swear_words_arr } from "@/constants/wearWordsArr";
+import { getByteLength } from "@/constants/getByteLength";
 
 const BlogRegisterFirst = () => {
   const [profileImage, setProfileImage] = useState<{
@@ -41,6 +42,9 @@ const BlogRegisterFirst = () => {
 
   const handleNickName = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
+    const byteLength = getByteLength(value);
+    if (byteLength > 16) return;
+
     setNickName(value);
 
     if (checkSwearWords(value)) {
@@ -80,11 +84,8 @@ const BlogRegisterFirst = () => {
   const handleBlogName = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
 
-    if (!value) {
-      setBlogNameError("");
-      setBlogName(value);
-      return;
-    }
+    const byteLength = getByteLength(value);
+    if (byteLength > 30) return;
 
     setBlogName(value);
 
@@ -221,11 +222,11 @@ const BlogRegisterFirst = () => {
               >
                 프로필 사진 업로드
               </label>
-              <div className="mt-[2px] h-[16px]">
+              <div className="mt-[5px] h-[16px]">
               {profileImage && (
                   <button
                     onClick={handleImageDelete}
-                    className="ml-[4rem] text-[1rem] text-gray-500 hover:text-gray-900"
+                    className="w-full mx-auto text-[1rem] text-gray-500 hover:text-gray-900"
                   >
                     이미지 삭제
                   </button>

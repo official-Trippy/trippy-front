@@ -19,9 +19,10 @@ import DownIcon from '../../../public/arrow_down.svg';
 import Swal from "sweetalert2";
 import { AxiosError } from "axios";
 import DefaultImage from '../../../public/defaultImage.svg';
+import { getByteLength } from "@/constants/getByteLength";
 
 const EditInfo = () => {
-  const { userInfo, updateUserInfo } = useUserStore(); 
+  const { updateUserInfo } = useUserStore(); // userInfo를 전역상태에서 가져오지 않고 API 호출로 처리
   const queryClient = useQueryClient();
   const inputFileRef = useRef<HTMLInputElement | null>(null);
 
@@ -35,67 +36,68 @@ const EditInfo = () => {
     accessUri: string;
     authenticateId: string;
     imgUrl: string;
-  } | null>(userInfo?.profileImage ?? null); // null 병합 연산자 사용
-  
+  } | null>(null); 
+
   const [blogImage, setBlogImage] = useState<{
     accessUri: string;
     authenticateId: string;
     imgUrl: string;
-  } | null>(userInfo?.blogImage ?? null);
+  } | null>(null); 
 
-
-  const [nickName, setNickName] = useState<string>(userInfo?.nickName || '');
+  const [nickName, setNickName] = useState<string>('');
   const [nickNameError, setNickNameError] = useState<string>('');
-  const [blogName, setBlogName] = useState<string>(userInfo?.blogName || '');
+  const [blogName, setBlogName] = useState<string>('');
   const [blogNameError, setBlogNameError] = useState<string>('');
-  const [blogIntroduce, setBlogIntroduce] = useState<string>(userInfo?.blogIntroduce || '');
+  const [blogIntroduce, setBlogIntroduce] = useState<string>('');
   const [blogIntroduceError, setBlogIntroduceError] = useState<string>('');
   const [imageBlogUploaded, setImageBlogUploaded] = useState(false);
   const [imageUploaded, setImageUploaded] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedInterests, setSelectedInterests] = useState<string[]>(userInfo?.koreanInterestedTypes || []);
+  const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
 
-  const [likeAlert, setLikeAlert] = useState(userInfo?.likeAlert || true);
-  const [commentAlert, setCommentAlert] = useState(userInfo?.commentAlert || true);
-  const [ticketScope, setTicketScope] = useState<"public" | "private" | "protected">(userInfo?.ticketScope || "public");
-  const [ootdScope, setOotdScope] = useState<"public" | "private" | "protected">(userInfo?.ootdScope || "public");
-  const [badgeScope, setBadgeScope] = useState<"public" | "private" | "protected">(userInfo?.badgeScope || "public");
-  const [followScope, setFollowScope] = useState<"public" | "private" | "protected">(userInfo?.followScope || "public");
+  const [likeAlert, setLikeAlert] = useState(true);
+  const [commentAlert, setCommentAlert] = useState(true);
+  const [ticketScope, setTicketScope] = useState<"public" | "private" | "protected">("public");
+  const [ootdScope, setOotdScope] = useState<"public" | "private" | "protected">("public");
+  const [badgeScope, setBadgeScope] = useState<"public" | "private" | "protected">("public");
+  const [followScope, setFollowScope] = useState<"public" | "private" | "protected">("public");
   const [tempSelectedInterests, setTempSelectedInterests] = useState<string[]>([]);
+
+  const [isProfileImageChanged, setIsProfileImageChanged] = useState(false);
+  const [isBlogImageChanged, setIsBlogImageChanged] = useState(false);
+
 
   const [warningMessage, setWarningMessage] = useState('');
 
-  useEffect(() => {
-    if (userInfo) {
-      setProfileImage(userInfo.profileImage || null);
-      setBlogImage(userInfo.blogImage || null);
-      setNickName(userInfo.nickName || '');
-      setBlogName(userInfo.blogName || '');
-      setBlogIntroduce(userInfo.blogIntroduce || '');
-      setSelectedInterests(userInfo.koreanInterestedTypes || []);
-      setLikeAlert(userInfo.likeAlert || true);
-      setCommentAlert(userInfo.commentAlert || true);
-      setTicketScope(userInfo.ticketScope || "public");
-      setOotdScope(userInfo.ootdScope || "public");
-      setBadgeScope(userInfo.badgeScope || "public");
-      setFollowScope(userInfo.followScope || "public");
-    } else {
-      // userInfo가 null일 때 상태 초기화
-      setProfileImage(null);
-      setBlogImage(null);
-      setNickName('');
-      setBlogName('');
-      setBlogIntroduce('');
-      setSelectedInterests([]);
-      setLikeAlert(true);
-      setCommentAlert(true);
-      setTicketScope("public");
-      setOotdScope("public");
-      setBadgeScope("public");
-      setFollowScope("public");
+  const fetchUserInfo = async () => {
+    try {
+      const data = await getMyInfo(); 
+      setProfileImage(data.profileImageUrl || null)
+      setBlogImage(data.blogTitleImgUrl || null);
+      setNickName(data.nickName || '');
+      setBlogName(data.blogName || '');
+      setBlogIntroduce(data.blogIntroduce || '');
+      setSelectedInterests(data.koreanInterestedTypes || []);
+      setLikeAlert(data.likeAlert || true);
+      setCommentAlert(data.commentAlert || true);
+      setTicketScope(data.ticketScope || "public");
+      setOotdScope(data.ootdScope || "public");
+      setBadgeScope(data.badgeScope || "public");
+      setFollowScope(data.followScope || "public");
+      updateUserInfo(data); // 전역 상태를 최신화
+    } catch (error) {
+      console.error('내 정보 조회 중 오류 발생:', error);
     }
-  }, [userInfo]);
+  };
 
+  useEffect(() => {
+    fetchUserInfo(); // 컴포넌트가 마운트될 때 유저 정보 불러옴
+  }, []);
+
+  console.log('유저 사진:', profileImage);
+  console.log('유저 블로그사진:', blogImage);
+  console.log('유저 닉네임:', nickName);
+  
 
   const router = useRouter();
 
@@ -108,6 +110,10 @@ const EditInfo = () => {
 
   const handleNickName = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
+
+    const byteLength = getByteLength(value);
+    if (byteLength > 16) return;
+
     setNickName(value);
 
     if (checkSwearWords(value)) {
@@ -147,11 +153,8 @@ const EditInfo = () => {
   const handleBlogName = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
 
-    if (!value) {
-      setBlogNameError("");
-      setBlogName(value);
-      return;
-    }
+    const byteLength = getByteLength(value);
+    if (byteLength > 30) return;
 
     setBlogName(value);
 
@@ -197,6 +200,7 @@ const EditInfo = () => {
         const response = await uploadImage(file);
         setProfileImage(response.result);
         setImageUploaded(true);
+        setIsProfileImageChanged(true);
       } catch (error: unknown) {
         console.error("Image upload failed:", error);
   
@@ -255,6 +259,7 @@ const EditInfo = () => {
         const response = await uploadImage(file);
         setBlogImage(response.result);
         setImageBlogUploaded(true);
+        setIsBlogImageChanged(true);
       } catch (error: unknown) {
         console.error("Image upload failed:", error);
   
@@ -335,13 +340,6 @@ const EditInfo = () => {
   }, [selectedInterests]);
 
 
-  useEffect(() => {
-    if (userInfo) {
-      setLikeAlert(userInfo.likeAlert);
-      setCommentAlert(userInfo.commentAlert);
-    }
-  }, [userInfo]);
-
   const updateUserInfoMutation = useMutation(updateMemberInfo, {
     onSuccess: () => {
       queryClient.invalidateQueries('userInfo');
@@ -387,14 +385,16 @@ const EditInfo = () => {
     if (tempSelectedInterests.length < 2) {
       setWarningMessage('관심분야를 2개 이상 선택해주세요!');
     } else {
-      setSelectedInterests(tempSelectedInterests);
+      // 선택한 관심분야를 blogInterests의 순서대로 정렬하여 저장
+      const sortedInterests = blogInterests.filter((interest) => tempSelectedInterests.includes(interest));
+      setSelectedInterests(sortedInterests);
       setIsModalOpen(false);
       setWarningMessage(''); 
     }
   };
 
   const handleCloseModal = () => {
-    setTempSelectedInterests(userInfo.koreanInterestedTypes);
+    setTempSelectedInterests(tempSelectedInterests);
     setIsModalOpen(false);
   };
   
@@ -444,12 +444,13 @@ const EditInfo = () => {
 
   const handleSubmit = () => {
     const data: UpdateMemberInfoRequest = {
-      nickName: nickName || userInfo.nickName, 
-      blogName: blogName || userInfo.blogName, 
-      blogIntroduce: blogIntroduce || userInfo.blogIntroduce,
-      koreanInterestedTypes: selectedInterests || userInfo.koreanInterestedTypes,
-      profileImage: profileImage || userInfo.profileImage ,
-      blogImage: blogImage || userInfo.blogImage,
+      nickName, 
+      blogName, 
+      blogIntroduce,
+      koreanInterestedTypes: selectedInterests,
+      ...(isProfileImageChanged && { profileImage }), // 이미지가 수정된 경우에만 추가
+      ...(isBlogImageChanged && { blogImage }), // 이미지가 수정된 경우에만 추가
+  
       likeAlert,
       commentAlert,
       ticketScope,
@@ -457,32 +458,35 @@ const EditInfo = () => {
       badgeScope,
       followScope,
     };
-
+  
     console.log('Updated Data:', data); 
   
     updateUserInfoMutation.mutate(data);
-    updateUserInfo(data);
+    updateUserInfo(data); // 전역 상태를 업데이트
   };
+  
   
   return (
     <>
     <div className="relative w-full h-[240px]">
     {blogImage ? (
-                  <Image
-                    src={blogImage.accessUri}
-                    alt="Profile"
-                    layout="fill"
-                    objectFit="cover"
-                    className="z-0"  />
-                  ) : (
-                    <Image
-                    src={backgroundImg}
-                    alt="Background"
-                    layout="fill"
-                    objectFit="cover"
-                    className="z-0" />
-                  )}
-  <div className="absolute inset-0 flex flex-col items-center justify-center z-10">
+  <Image
+    src={(typeof blogImage === 'string' ? blogImage : blogImage?.accessUri) || backgroundImg}
+    alt="Background"
+    objectFit="cover"
+    layout="fill"  // 'fill'로 이미지 크기를 부모 요소에 맞게
+    className="z-0"
+  />
+) : (
+  <Image
+    src={backgroundImg}
+    alt="Backgrounded"
+    objectFit="cover"
+    layout="fill"  // 'fill'로 이미지 크기를 부모 요소에 맞게
+    className="z-0"
+  />
+)}
+  <div className="absolute inset-0 flex flex-col items-center justify-center z-10 ">
   <input
         type="file"
         accept="image/*"
@@ -490,64 +494,65 @@ const EditInfo = () => {
         style={{ display: 'none' }}  // input을 숨김
         onChange={handleBlogImageUpload}  // 파일이 선택되면 실행
       />
+    <div className="flex flex-col cursor-pointer justify-center items-center" onClick={handleImageUploadClick}>
     <Image 
       src={backgroundAddIcon}
       alt="Add Blog Image Icon" 
       width={50} 
       height={50} 
-      onClick={handleImageUploadClick}
+      className="cursor-pointer"
     />
-    <div className="text-white text-2xl font-semibold font-['Pretendard'] mt-[10px]">대표사진 추가</div>
-    <div className="text-[#cfcfcf] text-base font-semibold font-['Pretendard'] mt-[5px]">최적치수 1926 x 240 px</div>
+    <div className="text-white text-2xl font-semibold font-['Pretendard'] mt-[10px] cursor-pointer" onClick={handleImageUploadClick}>대표사진 추가</div>
+    <div className="text-[#cfcfcf] text-base font-semibold font-['Pretendard'] mt-[5px] cursor-pointer" onClick={handleImageUploadClick}>최적치수 1920 x 240 px</div>
+    </div>
   </div>
-    </div><div className="w-[66%] mx-auto">
-        <div className="mt-[8rem]">
-          <div className="mt-[6.82rem]">
+    </div><div className="w-[90%] mb-[100px] mx-auto sm-700:max-w-[400px] sm-700:mb-0">
+        <div className="mt-[4rem]">
+          <div className="">
             <div className="sign-up-info">프로필 사진</div>
-            <div className="mt-[4rem] flex items-center">
-              <div className="rounded-full overflow-hidden w-[16rem] h-[16rem]">
-              <div className="relative w-[160px] h-[160px]">
+            <div className="mt-[2rem] flex items-center">
+              <div className="rounded-full overflow-hidden w-[100px] h-[100px]">
                 {profileImage ? (
                   <Image
-                    src={profileImage.accessUri}
+                    src={(typeof profileImage === 'string' ? profileImage : profileImage?.accessUri) || backgroundImg}
                     alt="Profile"
-                    layout="fill"
-                    objectFit="cover"
-                    className="rounded-full" />
+                    className="object-cover w-full h-full"
+                    width={100}
+                    height={100}
+                     />
                   ) : (
                     <Image
-                    src={userInfo?.profileImageUrl || DefaultImage}
+                    src={DefaultImage}
                     alt="Default Profile"
-                    layout="fill"
-                    objectFit="cover"
-                    className="rounded-full" />
+                    width={100}
+                    height={100}
+                    className="object-cover w-full h-full"/>
                   )}
                 </div>
-              </div>
-              <div className="ml-4 flex flex-col">
+              <div className="ml-8 flex flex-col justify-center">
                 <input
                   type="file"
                   accept="image/*"
                   onChange={handleImageUpload}
                   className="hidden"
                   id="imageUpload" />
-                <label htmlFor="imageUpload" className="ml-[4rem] custom-label">
+                <label htmlFor="imageUpload" className="max-w-[200px] px-8 py-4 custom-label text-center">
                   프로필 사진 업로드
                 </label>
+                <div className="mt-[5px] h-[16px]">
                 {profileImage && (
-                  <div className="h-[1rem]">
                     <button
                       onClick={handleImageDelete}
-                      className="ml-[4rem] mt-[1.857rem] text-[1.4rem] text-gray-500 hover:text-gray-900"
+                      className="w-full mx-auto text-[1rem] text-gray-500 hover:text-gray-900"
                     >
                       이미지 삭제
                     </button>
-                  </div>
                 )}
+              </div>
               </div>
             </div>
             <div className="flex-col">
-              <div className="mt-[6rem]">
+              <div className="mt-[2rem]">
                 <label htmlFor="nickName" className="sign-up-info block">
                   닉네임
                 </label>
@@ -556,8 +561,8 @@ const EditInfo = () => {
                   value={nickName}
                   onChange={handleNickName}
                   placeholder="닉네임은 한글 2-8자, 영어 4-16자 이내로 입력 가능합니다."
-                  className="w-full px-4 py-2 mt-[2.5rem] mb-2 h-[6rem] rounded-xl border border-gray-300 focus:border-[#FB3463] focus:outline-none"
-                  style={{ background: "var(--4, #F5F5F5)", fontSize: "1.5rem" }} />
+                  className="w-full px-4 py-2 mt-[2rem] mb-2 h-[4rem] rounded-xl border border-gray-300 focus:border-[#FB3463] focus:outline-none"
+                  style={{ background: "var(--4, #F5F5F5)", fontSize: "1.2rem" }} />
                 {nickNameError && (
                   <p
                     className={`mt-2 ${nickNameError.includes("사용 가능한 닉네임입니다.")
@@ -569,7 +574,7 @@ const EditInfo = () => {
                 )}
               </div>
 
-              <div className="mt-[6rem]">
+              <div className="mt-[2rem]">
                 <label htmlFor="blogName" className="sign-up-info block">
                   블로그 이름
                 </label>
@@ -578,8 +583,8 @@ const EditInfo = () => {
                   value={blogName}
                   onChange={handleBlogName}
                   placeholder="블로그 이름은 한글 2-15자, 영어 4-30자 이내로 입력 가능합니다."
-                  className="w-full px-4 py-2 mt-[2.5rem] mb-2 h-[6rem] rounded-xl border border-gray-300 focus:border-[#FB3463] focus:outline-none"
-                  style={{ background: "var(--4, #F5F5F5)", fontSize: "1.5rem" }} />
+                  className="w-full px-4 py-2 mt-[2rem] mb-2 h-[4rem] rounded-xl border border-gray-300 focus:border-[#FB3463] focus:outline-none"
+                  style={{ background: "var(--4, #F5F5F5)", fontSize: "1.2rem" }} />
                 {blogNameError && (
                   <p
                     className={`mt-2 ${blogNameError.includes("사용 가능한 블로그 이름입니다.")
@@ -591,7 +596,7 @@ const EditInfo = () => {
                 )}
               </div>
 
-              <div className="mt-[6rem]">
+              <div className="mt-[2rem]">
                 <label htmlFor="blogIntroduce" className="sign-up-info block">
                   한 줄 소개(선택)
                 </label>
@@ -600,14 +605,14 @@ const EditInfo = () => {
                   value={blogIntroduce}
                   onChange={handleBlogIntroduce}
                   placeholder="50글자 이내로 소개글을 작성해보세요."
-                  className="w-full px-4 py-2 mt-[2.5rem] mb-2 h-[6rem] rounded-xl border border-gray-300 focus:border-[#FB3463] focus:outline-none"
-                  style={{ background: "var(--4, #F5F5F5)", fontSize: "1.5rem" }} />
+                  className="w-full px-4 py-2 mt-[2rem] mb-2 h-[4rem] rounded-xl border border-gray-300 focus:border-[#FB3463] focus:outline-none"
+                  style={{ background: "var(--4, #F5F5F5)", fontSize: "1.2rem" }} />
                 {blogIntroduceError && (
                   <p className="mt-2 text-red-500">{blogIntroduceError}</p>
                 )}
               </div>
 
-              <div className="mt-[6rem]">
+              <div className="mt-[3rem]">
                 <div className="flex">
                 <label htmlFor="interests" className="sign-up-info block">
                   관심 분야
@@ -621,11 +626,11 @@ const EditInfo = () => {
                   <Image src={RightIcon} alt="setting" width={8} height={14} />
                   </div>
                 </div>
-                <div className="mt-[2.5rem] flex flex-wrap">
+                <div className="mt-[2rem] flex flex-wrap">
                   {selectedInterests.map((interest, index) => (
                     <div
                       key={index}
-                      className="flex items-center px-4 py-3 mr-2 mb-2 rounded-[999px] bg-[#FB3463] text-white cursor-pointer"
+                      className="flex items-center px-6 py-2 mr-2 mb-2 rounded-[999px] bg-[#FB3463] text-white cursor-pointer"
                       onClick={() => handleInterestClick(interest)}
                     >
                       {interest}
@@ -634,9 +639,9 @@ const EditInfo = () => {
                 </div>
               </div>
 
-              <div className="mt-[6rem]">
-                <label className="sign-up-info block font-bold mb-6">알림 설정</label>
-                <div className="w-[70px] flex items-center mb-4">
+              <div className="mt-[3rem]">
+                <label className="sign-up-info block font-bold mb-[2rem]">알림 설정</label>
+                <div className="w-[70px] flex items-center">
                   <label htmlFor="likeAlert" className="mr-4 text-lg">좋아요</label>
                   <label className="relative inline-flex items-center cursor-pointer ml-auto">
                     <input
@@ -649,6 +654,7 @@ const EditInfo = () => {
                     <div className="w-11 h-6 bg-gray-200 rounded-xl peer-checked:bg-custom-pink peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:border-gray-300 after:border after:rounded-xl after:h-5 after:w-5 after:transition-transform after:duration-300"></div>
                   </label>
                 </div>
+                <div className="min-h-[6px]"></div>
                 <div className="w-[70px] flex items-center">
                   <label htmlFor="commentAlert" className="mr-4 text-lg">댓글</label>
                   <label className="relative inline-flex items-center cursor-pointer ml-auto">
@@ -664,10 +670,10 @@ const EditInfo = () => {
                 </div>
               </div>
 
-              <div className="mt-24">
+              <div className="mt-[3rem]">
                 <label className="block sign-up-info font-bold mb-6">공개범위 설정</label>
                 <div className="flex mb-8">
-                  <label className="block my-auto w-[150px] text-lg font-semibold">티켓</label>
+                  <label className="block my-auto w-[150px] text-lg">티켓</label>
                   <div className="relative">
                     <div
                       className={`w-40 rounded-lg shadow-lg text-[#6b6b6b] text-base focus:outline-none cursor-pointer ${
@@ -710,7 +716,7 @@ const EditInfo = () => {
                 </div>
 
                 <div className="flex mb-8">
-                  <label className="block my-auto w-[150px] text-lg font-semibold">OOTD</label>
+                  <label className="block my-auto w-[150px] text-lg">OOTD</label>
                   <div className="relative">
                   <div
                      className={`w-40 rounded-lg shadow-lg text-[#6b6b6b] text-base focus:outline-none cursor-pointer ${
@@ -753,8 +759,8 @@ const EditInfo = () => {
                 </div>
                 </div>
 
-                <div className="flex mb-8">
-                  <label className="block my-auto w-[150px] text-lg font-semibold">뱃지</label>
+                {/* <div className="flex mb-8">
+                  <label className="block my-auto w-[150px] text-lg">뱃지</label>
                   <div className="relative">
                   <div
                      className={`w-40 rounded-lg shadow-lg text-[#6b6b6b] text-base focus:outline-none cursor-pointer ${
@@ -795,10 +801,10 @@ const EditInfo = () => {
                     </div>
                   )}
                 </div>
-                </div>
+                </div> */}
 
               <div className="flex mb-8">
-                <label className="block my-auto w-[150px] text-lg font-semibold">팔로워 / 팔로잉</label>
+                <label className="block my-auto w-[150px] text-lg">팔로워 / 팔로잉</label>
                 <div className="relative">
                   <div
                      className={`w-40 rounded-lg shadow-lg text-[#6b6b6b] text-base focus:outline-none cursor-pointer ${
@@ -842,20 +848,21 @@ const EditInfo = () => {
               </div>
             </div>
             </div>
-
+            <div className="w-[90%] max-w-[400px] mx-auto mt-[50px]">
             <div className="text-center">
               <button
                 type="submit"
-                className={`mx-auto mt-32 mb-32 w-[22rem] h-[6rem] bg-btn-color text-white py-2 rounded-lg focus:outline-none ${nickNameError.includes("다시") ||
+                className={`mx-auto w-full sm-700:w-[150px] h-[44px] mt-[2rem] mb-[2rem] text-white py-2 rounded-xl flex justify-center items-center  ${nickNameError.includes("다시") ||
                     blogNameError.includes("다시")
-                    ? "cursor-not-allowed bg-gray-400 hover:bg-gray-400"
-                    : ""}`}
+                    ? "cursor-not-allowed bg-[#cfcfcf] hover:bg-[#cfcfcf]"
+                    : "bg-btn-color"}`}
                 onClick={handleSubmit}
-                style={{ fontSize: "2rem" }}
+                style={{ fontSize: "1.2rem" }}
                 disabled={nickNameError.includes("다시") || blogNameError.includes("다시")}
               >
-                완료
+                수정
               </button>
+            </div>
             </div>
           </div>
         </div>

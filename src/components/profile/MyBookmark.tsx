@@ -10,7 +10,7 @@ import Cookies from 'js-cookie';
 import { useRouter } from "next/navigation";
 import DefaultImage from '../../../public/defaultImage.svg';
 
-const PAGE_SIZE = 9;
+const PAGE_SIZE = 12;
 
 const MyBookmark = () => {
   const [activeTab, setActiveTab] = useState("posts");
@@ -93,7 +93,7 @@ const MyBookmark = () => {
               <></>
             ) : (
               <>
-                <div className="grid grid-cols-3 gap-12">
+                <div className="grid grid-cols-2 md-1000:grid-cols-3 gap-12">
                   {ootdData?.result?.map((item: any) => (
                     <div 
                       key={item.ootd.id} 
@@ -164,7 +164,9 @@ const MyBookmark = () => {
                     </div>
                   ))}
                 </div>
+                <div className="mb-[90px] sm-700:mb-0">
                 {renderPagination(totalOotdCount, pageOotd)}
+                </div>
               </>
             )}
           </div>

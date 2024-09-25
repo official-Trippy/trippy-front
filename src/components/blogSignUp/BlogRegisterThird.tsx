@@ -20,13 +20,6 @@ const BlogRegisterThird = () => {
       </div>
       </div>
       <div className="w-[90%] max-w-[400px] mx-auto my-auto sm-700:my-0 sm-700:mt-[4rem]">
-      <div className="absolute left-0 top-10 w-full">
-          <Image
-            src={AirplaneIcon}
-            alt="AirplaneIcon"
-            className="animate-slideInout"
-          />
-        </div>
       <Image src={TrippyImage} alt="checkLogo" className="mx-auto" />
       <div className="sign-up-complete mt-[3.6rem] text-center">회원가입 완료</div>
       <div className="sign-up-complete2 mt-[3.9rem] text-center">
