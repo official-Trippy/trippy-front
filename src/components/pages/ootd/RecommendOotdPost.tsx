@@ -178,9 +178,9 @@ const RecommendOotdPost = () => {
 
     // 데이터 슬라이드 생성
     const slides = [];
-    if (data?.result?.recommendOotdList) {
-        for (let i = 0; i < data.result.recommendOotdList.length; i += itemsPerSlide) {
-            slides.push(data.result.recommendOotdList.slice(i, i + itemsPerSlide));
+    if (data?.result?.ootdList) {
+        for (let i = 0; i < data.result.ootdList.length; i += itemsPerSlide) {
+            slides.push(data.result.ootdList.slice(i, i + itemsPerSlide));
         }
     }
 
@@ -295,8 +295,8 @@ const RecommendOotdPost = () => {
                     spaceBetween={20}
                     slidesPerView={itemsPerSlide}
                 >
-                    {data?.result?.recommendOotdList?.length > 0 ? (
-                        data.result.recommendOotdList.map((item: any) => (
+                    {data?.result?.ootdList?.length > 0 ? (
+                        data.result.ootdList.map((item: any) => (
                             <SwiperSlide key={item.post.id} className="flex flex-col cursor-pointer relative">
                                 <div onClick={() => handleOotdItemClick(item.post.id)}>
                                     <div className="flex items-center pb-4">
