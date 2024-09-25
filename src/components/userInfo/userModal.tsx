@@ -6,6 +6,7 @@ import Image from "next/image";
 import NaverLogo from "../../../public/NaverLogo.png";
 import KakaoLogo from "../../../public/KakaoLogo.svg";
 import GoogleLogo from "../../../public/GoogleLogo.svg";
+import { useUserStore } from "@/store/useUserStore";
 
 const UserModal: React.FC<
   UserModalProps & {
@@ -14,10 +15,24 @@ const UserModal: React.FC<
   }
 > = ({ isOpen, onClose, userInfo, style, handleLogout }) => {
   const router = useRouter();
+  const { resetUserInfo } = useUserStore(); // 전역 상태 초기화 함수 가져오기
 
   const handleMyPage = () => {
     router.push("/mypage");
   };
+
+  // 로그아웃 로직
+  const handleLogoutClick = async () => {
+    // 쿠키에서 accessToken 제거
+    Cookies.remove("accessToken");
+
+    // 전역 상태 초기화
+    resetUserInfo();
+
+    // 로그아웃 후 원하는 페이지로 리디렉션 (예: 로그인 페이지)
+    router.push("/login");
+  };
+
   
   if (!isOpen || !userInfo) return null;
 
@@ -89,7 +104,7 @@ const UserModal: React.FC<
             </span>
             <span
               className="text-rose-500 text-2xl font-normal font-Pretendard cursor-pointer ml-[10px]"
-              onClick={handleLogout}
+              onClick={handleLogoutClick}
             >
               로그아웃
             </span>
