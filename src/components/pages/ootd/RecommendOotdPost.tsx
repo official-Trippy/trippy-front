@@ -61,7 +61,7 @@ const TagContainer: React.FC<TagContainerProps> = ({ item }) => {
 
 const RecommendOotdPost = () => {
     const accessToken = Cookies.get('accessToken');
-    const [selectedInterest, setSelectedInterest] = useState(blogInterests[2]);
+    const [selectedInterest, setSelectedInterest] = useState(blogInterests[0]);
     const [likedPosts, setLikedPosts] = useState<number[]>([]);
     const router = useRouter();
     const scrollRef = useRef<HTMLDivElement | null>(null); 
@@ -109,6 +109,10 @@ const RecommendOotdPost = () => {
         router.push(`/ootd/${id}`);
     };
 
+    const handleWriteBtnClick = () => {
+          router.push("/login");
+      };
+
     if (isLoading) return <div className="text-lg text-gray-600">Loading...</div>;
     if (error) return <div className="text-lg text-red-600">Error loading posts!</div>;
 
@@ -141,12 +145,12 @@ const RecommendOotdPost = () => {
 
 
     return (
-        <div className="relative w-[90%] sm-700:w-[66%] mx-auto pt-[5rem] mb-[90px] overflow-visible">  
-            <h1 className="text-2xl font-bold mb-4">
-                Recommended OOTD Posts for <span className="text-blue-500">{selectedInterest}</span>
-            </h1>
-    
-            <div className="flex items-center my-12 relative"> 
+<div className="relative w-[90%] sm-700:w-[66%] mx-auto pt-[5rem] mb-[90px] overflow-visible">  
+    <h1 className="text-2xl font-bold mb-4">
+        Recommended OOTD Posts for <span className="text-blue-500">{selectedInterest}</span>
+    </h1>
+
+    <div className="flex items-center my-12 relative"> 
         <Image
             src={SwiperLeftButton}
             alt="Previous"
@@ -200,123 +204,111 @@ const RecommendOotdPost = () => {
             }}
         />
     </div>
-    
-    
-    <Swiper
-        ref={swiperRef}
-        spaceBetween={20}
-        slidesPerView={4}
-        breakpoints={{
-            640: {
-                slidesPerView: 2,
-            },
-            768: {
-                slidesPerView: 3,
-            },
-            1024: {
-                slidesPerView: 4,
-            },
-        }}
-    >
-        {data?.result?.recommendOotdList?.length > 0 ? (
-            data.result.recommendOotdList.map((item: any) => (
-                <SwiperSlide key={item.post.id} className="flex flex-col cursor-pointer">
-                    <div onClick={() => handleOotdItemClick(item.post.id)}>
-                        <div className="flex items-center pb-4">
-                            <div className="relative w-[24px] h-[24px]">
-                                <Image
-                                    src={item.member.profileUrl || DefaultImage}
-                                    alt="Profile"
-                                    layout="fill"
-                                    objectFit="cover"
-                                    className="rounded-full" 
-                                />
-                            </div>
-                            <div className="flex-1 overflow-hidden">
-                                <span className="text-[#6B6B6B] ml-[5px] overflow-hidden text-ellipsis whitespace-nowrap" style={{
-                                    whiteSpace: 'nowrap', 
-                                    overflow: 'hidden',   
-                                    textOverflow: 'ellipsis'
-                                }}>{item.member.nickName}</span>
-                            </div>
-                        </div>
-                        {item.post.images.length > 0 && (
-                            <div className="relative w-full" style={{ aspectRatio: '303 / 303' }}>
-                                <Image
-                                    className="absolute top-0 left-0 w-full h-full object-cover rounded-xl"
-                                    src={item.post.images[0].accessUri}
-                                    alt="OOTD"
-                                    layout="fill"
-                                />
-                            </div>
-                        )}
-                        <div className="py-4">
-                            <div className="flex items-center justify-end">
-                                <div className="flex items-center mt-2">
-                                    <Image
-                                        src={likedPosts.includes(item.post.id) ? HeartIcon : EmptyHeartIcon} 
-                                        alt="좋아요"
-                                        width={20}
-                                        height={20}
-                                    />
-                                    <span className="mx-2 text-[#cfcfcf]"> {item.post.likeCount}</span>
-                                    <Image
-                                        src={CommentIcon1}
-                                        alt="댓글"
-                                        width={20}
-                                        height={20}
-                                    />
-                                    <span className="mx-2 text-[#cfcfcf]"> {item.post.commentCount}</span>
-                                </div>
-                            </div>
-                            <TagContainer item={item} />
-                        </div>
-                    </div>
-                </SwiperSlide>
-            ))
-        ) : (
-            <div className="text-lg text-gray-500">No posts available.</div>
-        )}
-    </Swiper>
-    {itemsPerSlide < totalCount && (
+
+    <div className='relative h-[400px]'>
+        <Swiper
+            ref={swiperRef}
+            spaceBetween={20}
+            slidesPerView={4}
+            breakpoints={{
+                640: {
+                    slidesPerView: 2,
+                },
+                768: {
+                    slidesPerView: 3,
+                },
+                1024: {
+                    slidesPerView: 4,
+                },
+            }}
+        >
+             {itemsPerSlide < totalCount && (
             <Image
                 src={SwiperLeftButton}
                 alt="Previous"
-                className="swiper-button-prev"
                 width={60}
                 height={60}
                 onClick={() => handleScrollOotd('left')}
-                style={{
-                    width: '50px',
-                    height: '50px',
-                    position: 'absolute',
-                    top: '62%',
-                    transform: 'translateY(-50%)',
-                    left: '-25px',
-                    zIndex: 999, 
-                }}
+                className="absolute left-[0px] top-[42%] transform -translate-y-1/2 z-10"
             />
         )}
-        {itemsPerSlide < totalCount && (
+            {data?.result?.recommendOotdList?.length > 0 ? (
+                data.result.recommendOotdList.map((item: any) => (
+                    <SwiperSlide key={item.post.id} className="flex flex-col cursor-pointer relative">
+                        <div onClick={() => handleOotdItemClick(item.post.id)}>
+                            <div className="flex items-center pb-4">
+                                <div className="relative w-[24px] h-[24px]">
+                                    <Image
+                                        src={item.member.profileUrl || DefaultImage}
+                                        alt="Profile"
+                                        layout="fill"
+                                        objectFit="cover"
+                                        className="rounded-full" 
+                                    />
+                                </div>
+                                <div className="flex-1 overflow-hidden">
+                                    <span className="text-[#6B6B6B] ml-[5px] overflow-hidden text-ellipsis whitespace-nowrap" style={{
+                                        whiteSpace: 'nowrap', 
+                                        overflow: 'hidden',   
+                                        textOverflow: 'ellipsis'
+                                    }}>{item.member.nickName}</span>
+                                </div>
+                            </div>
+                            {item.post.images.length > 0 && (
+                                <div className="relative w-full" style={{ aspectRatio: '303 / 303' }}>
+                                    <Image
+                                        className="absolute top-0 left-0 w-full h-full object-cover rounded-xl"
+                                        src={item.post.images[0].accessUri}
+                                        alt="OOTD"
+                                        layout="fill"
+                                    />
+                                </div>
+                            )}
+                            <div className="py-4">
+                                <div className="flex items-center justify-end">
+                                    <div className="flex items-center mt-2">
+                                        <Image
+                                            src={likedPosts.includes(item.post.id) ? HeartIcon : EmptyHeartIcon} 
+                                            alt="좋아요"
+                                            width={20}
+                                            height={20}
+                                        />
+                                        <span className="mx-2 text-[#cfcfcf]"> {item.post.likeCount}</span>
+                                        <Image
+                                            src={CommentIcon1}
+                                            alt="댓글"
+                                            width={20}
+                                            height={20}
+                                        />
+                                        <span className="mx-2 text-[#cfcfcf]"> {item.post.commentCount}</span>
+                                    </div>
+                                </div>
+                                <TagContainer item={item} />
+                            </div>
+                        </div>
+                    </SwiperSlide>
+                ))
+            ) : (
+                <div className="h-[400px] flex flex-col text-[2rem] text-black my-auto items-center justify-center font-medium font-['Pretendard']">
+                    <div className='flex flex-row'>
+                        <span className="text-[#FB3463]">{selectedInterest} </span>{"\u00A0"}관련 OOTD가 없어요!
+                    </div>
+                    <div className='bg-btn-color text-white text-2xl rounded-[8px] font-semibold mt-[20px] px-8 py-4' onClick={handleWriteBtnClick}>OOTD 게시글 작성하러 가기</div>
+                </div>
+            )}
+            {itemsPerSlide < totalCount && (
             <Image
-                className="swiper-button-next"
                 src={SwiperRightButton}
                 alt="Next"
-                width={50}
-                height={50}
+                width={60}
+                height={60}
                 onClick={() => handleScrollOotd('right')}
-                style={{
-                    width: '50px',
-                    height: '50px',
-                    position: 'absolute',
-                    top: '62%',
-                    transform: 'translateY(-50%)',
-                    right: '-25px', 
-                    zIndex: 999, 
-                }}
+                className="absolute right-[0px] top-[42%] transform -translate-y-1/2 z-10"
             />
-        )}
+            )}
+        </Swiper>
     </div>
+</div>
     );
 }
     
