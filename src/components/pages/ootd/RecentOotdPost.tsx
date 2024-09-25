@@ -154,6 +154,10 @@ const RecentOotdPost: React.FC = () => {
     });
   };
 
+  const handleLogin = () => {
+    router.push('/login');
+  };
+
   if (!isTabInitialized) {
     return <div></div>;
   }
@@ -189,70 +193,81 @@ const RecentOotdPost: React.FC = () => {
           <CustomSelect orderType={orderType} onOrderTypeChange={handleOrderTypeChange} />
         </div>
       </div>
-      <div className="grid grid-cols-2 sm-700:grid-cols-3 lg:grid-cols-4 gap-8">
-        {ootdList.map((item) => (
-          <div key={item.post.id} className="flex flex-col overflow-hidden cursor-pointer overflow-hidden text-ellipsis" onClick={() => handleOotdItemClick(item.post.id)}>
-             <div className="flex items-center pb-4">
-                  <div className="relative w-[24px] h-[24px]">
-                    <Image
-                      src={item.member.profileUrl || DefaultImage}
-                      alt="Profile"
-                      layout="fill"
-                      objectFit="cover"
-                      className="rounded-full" />
-                  </div>
-                  <div className="flex-1 overflow-hidden">
-                  <span className="text-[#6B6B6B] ml-[5px] overflow-hidden text-ellipsis whitespace-nowrap" style={{
-                  whiteSpace: 'nowrap', 
-                  overflow: 'hidden',   
-                  textOverflow: 'ellipsis'
-                }}>{item.member.nickName}</span>
-                </div>
-              </div>
-            {item.post.images.length > 0 && (
-              <div className="relative w-full" style={{ aspectRatio: '303 / 381' }}>
-                <Image
-                  className="absolute top-0 left-0 w-full h-full object-cover rounded-xl"
-                  src={item.post.images[0].accessUri}
-                  alt="OOTD"
-                  layout="fill"
-                />
-              </div>
-            )}
-            <div className="py-4">
-              <div className="flex items-center justify-end">
-                {/* <div className="flex items-center">
-                  <div className="relative w-[24px] h-[24px]">
-                    <Image
-                      src={item.member.profileUrl}
-                      alt="Profile"
-                      layout="fill"
-                      objectFit="cover"
-                      className="rounded-full" />
-                  </div>
-                  <span className="text-[#6B6B6B] ml-[5px]">{item.member.nickName}</span>
-                </div> */}
-                <div className="flex items-center mt-2">
-                <Image
-                    src={likedPosts.includes(item.post.id) ? HeartIcon : EmptyHeartIcon} 
-                    alt="좋아요"
-                    width={20}
-                    height={20}
-                  />
-                  <span className="mx-2 text-[#cfcfcf]"> {item.post.likeCount}</span>
+       {/* 게시글이 있을 때와 없을 때 조건부 렌더링 */}
+      <div className={`${ootdList.length > 0 ? 'grid grid-cols-2 sm-700:grid-cols-3 lg:grid-cols-4 gap-8' : 'flex justify-center items-center'}`}>
+        {ootdList.length > 0 ? (
+          ootdList.map((item) => (
+            <div key={item.post.id} className="flex flex-col overflow-hidden cursor-pointer overflow-hidden text-ellipsis" onClick={() => handleOotdItemClick(item.post.id)}>
+              <div className="flex items-center pb-4">
+                <div className="relative w-[24px] h-[24px]">
                   <Image
-                    src={CommentIcon1}
-                    alt="댓글"
-                    width={20}
-                    height={20}
+                    src={item.member.profileUrl || DefaultImage}
+                    alt="Profile"
+                    layout="fill"
+                    objectFit="cover"
+                    className="rounded-full"
                   />
-                  <span className="mx-2 text-[#cfcfcf]"> {item.post.commentCount}</span>
+                </div>
+                <div className="flex-1 overflow-hidden">
+                  <span className="text-[#6B6B6B] ml-[5px] overflow-hidden text-ellipsis whitespace-nowrap" style={{
+                    whiteSpace: 'nowrap', 
+                    overflow: 'hidden',   
+                    textOverflow: 'ellipsis'
+                  }}>{item.member.nickName}</span>
                 </div>
               </div>
-              <TagContainer item={item} />
+              {item.post.images.length > 0 && (
+                <div className="relative w-full" style={{ aspectRatio: '303 / 381' }}>
+                  <Image
+                    className="absolute top-0 left-0 w-full h-full object-cover rounded-xl"
+                    src={item.post.images[0].accessUri}
+                    alt="OOTD"
+                    layout="fill"
+                  />
+                </div>
+              )}
+              <div className="py-4">
+                <div className="flex items-center justify-end">
+                  <div className="flex items-center mt-2">
+                    <Image
+                      src={likedPosts.includes(item.post.id) ? HeartIcon : EmptyHeartIcon} 
+                      alt="좋아요"
+                      width={20}
+                      height={20}
+                    />
+                    <span className="mx-2 text-[#cfcfcf]"> {item.post.likeCount}</span>
+                    <Image
+                      src={CommentIcon1}
+                      alt="댓글"
+                      width={20}
+                      height={20}
+                    />
+                    <span className="mx-2 text-[#cfcfcf]"> {item.post.commentCount}</span>
+                  </div>
+                </div>
+                <TagContainer item={item} />
+              </div>
             </div>
+          ))
+        ) : (
+          // 팔로우한 유저가 없거나 게시물이 없을 때 메시지 표시
+          <div className="h-full flex flex-col text-[2rem] text-black my-auto items-center justify-center font-medium font-['Pretendard'] py-[50px]">
+            {accessToken ? (
+              <div className='flex flex-row'>
+                  <span className="text-[#FB3463]">팔로우</span>한 유저의 OOTD가 없어요!
+              </div>
+            ) : (
+              <>
+              <div className='flex flex-row'>
+                <span className="text-black">트리피 로그인 후 팔로잉 게시글을 확인하세요!</span>
+              </div>
+              <div className='bg-btn-color text-white text-2xl rounded-[8px] font-semibold mt-[20px] px-8 py-4 cursor-pointer' onClick={handleLogin}>
+                OOTD 게시글 작성하러 가기
+              </div>
+            </>
+            )}
           </div>
-        ))}
+        )}
       </div>
       <div className='flex justify-center'>
         {[...Array(totalPages)].map((_, index) => (
