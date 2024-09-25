@@ -86,19 +86,24 @@ const RecommendOotdPost = () => {
         }
     }, [accessToken]);
 
-    // 사용자 정보에서 관심사 가져오기
-    const fetchUserInterests = async () => {
-        try {
-            const userInfo = await getMyInfo();
-            console.log(userInfo);
-            const userInterests = userInfo.koreanInterestedTypes || []; // 관심사 추출
-            const userName = userInfo.nickName;
-            setUserName(userName); 
-            setFilteredInterests(blogInterests.filter(interest => userInterests.includes(interest))); // 관심사로 필터링
-        } catch (error) {
-            console.error('Error fetching user interests:', error);
-        }
-    };
+      // 사용자 정보에서 관심사 가져오기
+  const fetchUserInterests = async () => {
+    try {
+      const userInfo = await getMyInfo();
+      const userInterests = userInfo.koreanInterestedTypes || []; // 유저의 관심사 추출
+      const userName = userInfo.nickName;
+      setUserName(userName);
+
+      if (userInterests.length > 0) {
+        setFilteredInterests(blogInterests.filter(interest => userInterests.includes(interest))); // 관심사로 필터링
+        setSelectedInterest(userInterests[0]); // 유저의 첫 번째 관심사로 설정
+      } else {
+        setSelectedInterest(blogInterests[0]); // 유저가 관심사를 설정하지 않았으면 기본값 유지
+      }
+    } catch (error) {
+      console.error('Error fetching user interests:', error);
+    }
+  };
 
     // 화면 크기에 따라 itemsPerSlide를 설정하는 함수
     const updateItemsPerSlide = () => {
