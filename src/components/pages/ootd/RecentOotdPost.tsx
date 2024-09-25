@@ -76,10 +76,12 @@ const RecentOotdPost: React.FC = () => {
   useEffect(() => {
     if (typeof window !== 'undefined') { 
       const savedTab = sessionStorage.getItem('tab');
-      if (savedTab) {
+      if (!accessToken) {
+        setTab('ALL');  // accessToken이 없으면 무조건 'ALL'
+      } else if (savedTab) {
         setTab(savedTab as 'ALL' | 'FOLLOWING');
       } else {
-        setTab(accessToken && !isGuest ? 'FOLLOWING' : 'ALL');
+        setTab(!isGuest ? 'FOLLOWING' : 'ALL');
       }
     }
   }, [accessToken]);
