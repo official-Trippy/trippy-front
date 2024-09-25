@@ -2,6 +2,9 @@ import React from "react";
 import Cookies from "js-cookie";
 import { UserModalProps } from "@/types/auth";
 import { useRouter } from "next/navigation";
+import { useQuery } from "react-query";
+import { MemberInfo } from "@/services/auth";
+
 import Image from "next/image";
 import NaverLogo from "../../../public/NaverLogo.png";
 import KakaoLogo from "../../../public/KakaoLogo.svg";
@@ -14,6 +17,18 @@ const UserModal: React.FC<
     handleLogout: () => Promise<void>;
   }
 > = ({ isOpen, onClose, userInfo, style, handleLogout }) => {
+  const accessToken = Cookies.get("accessToken");
+
+  const { data, error, isLoading } = useQuery({
+    queryKey: ["member", accessToken],
+    queryFn: () => MemberInfo(accessToken),
+    onError: (error) => {
+      console.error(error);
+    },
+  });
+
+  const userData = data?.result;
+  console.log("user Data", userData);
   const router = useRouter();
   const { resetUserInfo } = useUserStore(); // 전역 상태 초기화 함수 가져오기
 
@@ -38,7 +53,7 @@ const UserModal: React.FC<
 
   return (
     <div
-      className="w-[32rem] h-[23.4rem] relative bg-white rounded-lg shadow z-[50]"
+      className="w-[32rem] h-[25.4rem] relative bg-white rounded-lg shadow z-[50]"
       style={style}
     >
       <div className="px-[2rem] pt-[2rem] py-[1rem]">
@@ -55,13 +70,13 @@ const UserModal: React.FC<
                 <div className="justify-start items-center gap-[9px] inline-flex">
                   <div className="justify-start items-start gap-1 flex">
                     <div className="text-center text-neutral-400 text-2xl font-normal font-Pretendard">
-                      팔로워
+                      팔로워 {userData?.followerCnt}
                     </div>
                     <div className="text-center text-neutral-500 text-2xl font-semibold font-Pretendard"></div>
                   </div>
                   <div className="justify-start items-start gap-1 flex">
                     <div className="text-center text-neutral-400 text-2xl font-normal font-Pretendard">
-                      팔로잉
+                      팔로잉 {userData?.followingCnt}
                     </div>
                     <div className="text-center text-neutral-500 text-2xl font-semibold font-Pretendard"></div>
                   </div>
@@ -112,12 +127,12 @@ const UserModal: React.FC<
         </div>
       </div>
       <hr className="border-CFCFCF mb-[1px]" />
-      <div className="pt-[2rem] px-[2rem]">
+      <div className="pt-[1rem] px-[2rem]">
         <div className="flex-col justify-center items-start gap-1 inline-flex w-full">
           <div className="text-zinc-800 text-4xl font-bold font-Pretendard">
             {userInfo.blogName}
           </div>
-          <div className="mt-[0.4rem] text-neutral-400 text-2xl font-normal font-Pretendard">
+          <div className="mt-[0.4rem] text-neutral-400 text-2xl font-normal font-Pretendard p-1">
             {userInfo.blogIntroduce}
           </div>
         </div>

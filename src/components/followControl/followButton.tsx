@@ -68,6 +68,9 @@ const FollowButton: React.FC<FollowButtonProps> = ({
       }
     }
   };
+  if (postMemberId === userMemberId) {
+    return null;
+  }
 
   return (
     <div className="min-w-[70px] ml-[5px] flex items-center">

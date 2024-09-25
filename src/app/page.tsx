@@ -114,7 +114,7 @@ export default function Home() {
               return (
                 <div className="h-[54rem] shadow-xl rounded-[1rem] mb-[2rem]" key={index}>
                   <div className="flex flex-col h-full">
-                    <Image className={`w-full h-[35rem] py-[2rem] px-[1.7rem] rounded-[0.8rem] object-cover ${colorTicket[posts.ticket.ticketColor] ? `bg-[${colorTicket[posts.ticket.ticketColor]}]` : ''}`} src={posts.ticket.image.accessUri} alt="" width={300} height={260} />
+                    <Image className={`w-full h-[35rem] py-[1.5rem] px-[1.2rem] rounded-[0.8rem] object-cover ${colorTicket[posts.ticket.ticketColor] ? `bg-[${colorTicket[posts.ticket.ticketColor]}]` : ''}`} src={posts.ticket.image.accessUri} alt="" width={300} height={260} />
                     {posts.ticket.departureCode ? (
                       <div className="flex text-[3.2rem] font-extrabold font-akira mx-auto mt-[1rem]">
                         <span>{posts.ticket.departureCode}</span>

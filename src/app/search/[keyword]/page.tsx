@@ -7,6 +7,7 @@ import Keywords from "@/components/search/Keywords";
 import PopularSearches from "@/components/search/popularSearches";
 
 import axios from "axios";
+import { useRouter } from "next/navigation";
 import SortingBar from "@/components/search/sortingBar";
 // import PostAllCard from "@/components/search/PostAllCard";
 
@@ -25,6 +26,7 @@ const SearchPage = () => {
   const PAGE_SIZE = 10;
   const RealKeyword = decodeURIComponent(keyword as string);
 
+
   // Fetching Posts
   useEffect(() => {
     fetchPosts(RealKeyword, selectedSearchType);
@@ -32,6 +34,7 @@ const SearchPage = () => {
 
   // Fetching keywords and popular searches
   useEffect(() => {
+
     fetchPopularSearches();
   }, []);
 
@@ -98,13 +101,13 @@ const SearchPage = () => {
 
 
   return (
-    <div className="w-full min-h-[calc(100dvh-75px)] sm-700:min-h-[100vh] bg-white">
+    <div className="w-full min-h-screen bg-white">
       <Header />
 
-      <div className="w-[68%] mx-auto mt-8 px-10">
+      <div className="w-[90%] lg:w-[68%] mx-auto mt-8 px-4 lg:px-10">
         {/* 검색 결과 제목 */}
+        <h1 className="text-2xl lg:text-4xl font-semibold mb-6">
 
-        <h1 className="text-4xl font-semibold mb-6">
           <span className="text-[#FB3463]">{RealKeyword}</span>에 대한{" "}
           <span className="text-[#FB3463]"> {count}</span>건의 검색 결과입니다.
         </h1>
@@ -117,13 +120,17 @@ const SearchPage = () => {
           onSelectSortOrder={setSelectedSortOrder}
         />
 
-        <div className="flex">
+
+        <div className="flex flex-col lg:flex-row">
+
           <div className="flex-grow w-full">
             {/* Posts Section */}
             {isLoading ? (
               <p>Loading...</p>
             ) : posts.length > 0 ? (
-              <div className="flex flex-wrap justify-start items-start gap-[25px]">
+
+              <div className="flex flex-wrap justify-start items-start gap-[15px] lg:gap-[25px]">
+
                 <PostAllCard
                   posts={posts}
                   selectedSearchType={selectedSearchType}
@@ -131,8 +138,9 @@ const SearchPage = () => {
 
               </div>
             ) : (
-              <div className="flex-grow max-w-[790px]">
-                <h1 className="text-2xl font-semibold mb-6">
+              <div className="flex-grow max-w-full lg:max-w-[790px]">
+                <h1 className="text-lg lg:text-2xl font-semibold mb-6">
+
                   <span className="text-[#FB3463]">{RealKeyword}</span>에 대한
                   검색 결과가 없습니다
                 </h1>
@@ -141,8 +149,10 @@ const SearchPage = () => {
           </div>
 
           {/* Sidebar Section */}
-          <div className="flex-none w-[300px] ml-8">
-            <Keywords />
+
+
+          <div className="flex-none w-full lg:w-[300px] mt-8 lg:mt-0 lg:ml-8 hidden md:block">
+
             <PopularSearches popularSearches={popularSearches} />
           </div>
         </div>

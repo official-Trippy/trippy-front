@@ -79,7 +79,7 @@ function PostEdit({ params }: { params: { editNum: number } }) {
     const [result1, setResult1] = useState<ApiResponse | null>(null);
     const [transport, setTransport] = useState(postData?.result.ticket.transport);
     const [isImageIdx, setIsImageIdx] = useState<any[]>([]);
-    const [transportStr, setTransportStr] = useState('')
+    const [transportStr, setTransportStr] = useState(postData?.result.ticket.transport)
 
     useEffect(() => {
         setIsImageIdx([
@@ -220,7 +220,7 @@ function PostEdit({ params }: { params: { editNum: number } }) {
             startDate: startDates || startDate,
             endDate: endDates || endDate,
             ticketColor: ticketColor,
-            transport: transport
+            transport: transportStr
         };
         try {
             console.log(postRequest, ticketRequest)
