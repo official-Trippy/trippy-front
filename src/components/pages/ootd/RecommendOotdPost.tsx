@@ -17,6 +17,7 @@ import { Swiper, SwiperSlide, SwiperRef } from 'swiper/react';
 import 'swiper/swiper-bundle.css';
 import SwiperLeftButton from '../../../../public/SwiperLeftBtn.svg';
 import SwiperRightButton from '../../../../public/SwiperRightBtn.svg';
+import { getMyInfo } from '@/services/auth';
 
 const TagContainer: React.FC<TagContainerProps> = ({ item }) => {
     const containerRef = useRef<HTMLDivElement | null>(null);
@@ -64,7 +65,8 @@ const RecommendOotdPost = () => {
     const accessToken = Cookies.get('accessToken');
     const [selectedInterest, setSelectedInterest] = useState(blogInterests[0]);
     const [likedPosts, setLikedPosts] = useState<number[]>([]);
-    const [itemsPerSlide, setItemsPerSlide] = useState(4); // 초기값은 4개
+    const [itemsPerSlide, setItemsPerSlide] = useState(4);
+    const [filteredInterests, setFilteredInterests] = useState(blogInterests); // 필터된 관심사를 저장할 상태
     const router = useRouter();
     const scrollRef = useRef<HTMLDivElement | null>(null); 
     const swiperRef = useRef<SwiperRef | null>(null);
@@ -78,8 +80,21 @@ const RecommendOotdPost = () => {
     useEffect(() => {
         if (accessToken) {
             fetchLikedPosts().then(setLikedPosts);
+            fetchUserInterests(); // 관심사 정보 가져오기
         }
     }, [accessToken]);
+
+    // 사용자 정보에서 관심사 가져오기
+    const fetchUserInterests = async () => {
+        try {
+            const userInfo = await getMyInfo(); // getMyInfo API 호출
+            console.log(userInfo);
+            const userInterests = userInfo.koreanInterestedTypes || []; // 관심사 추출
+            setFilteredInterests(blogInterests.filter(interest => userInterests.includes(interest))); // 관심사로 필터링
+        } catch (error) {
+            console.error('Error fetching user interests:', error);
+        }
+    };
 
     // 화면 크기에 따라 itemsPerSlide를 설정하는 함수
     const updateItemsPerSlide = () => {
@@ -158,11 +173,10 @@ const RecommendOotdPost = () => {
         }
     };
 
-
     return (
         <div className="relative w-[90%] sm-700:w-[66%] mx-auto pt-[5rem] mb-[90px] overflow-visible">
-            <h1 className="text-2xl font-bold mb-4">
-                트리피의 인기 스타일을 확인해보세요!
+            <h1 className="font-bold text-[2rem] mb-4">
+                관심분야에 따른 OOTD를 확인해보세요!
             </h1>
 
             <div className="flex items-center my-12 relative">
@@ -189,7 +203,7 @@ const RecommendOotdPost = () => {
                     onMouseDown={handleDrag}
                 >
                     <div className="flex space-x-4 transition-transform duration-300 flex-shrink-0 mx-auto items-center">
-                        {blogInterests.map(interest => (
+                        {filteredInterests.map(interest => (
                             <button 
                                 key={interest} 
                                 className={`flex items-center justify-center px-6 py-2 rounded-[20px] text-[12px] font-medium border-[1px] transition duration-300 flex-shrink-0
@@ -220,16 +234,16 @@ const RecommendOotdPost = () => {
                 />
             </div>
             {itemsPerSlide < totalCount && (
-                    <Image
-                        src={SwiperLeftButton}
-                        alt="Previous"
-                        width={60}
-                        height={60}
-                        onClick={() => handleScrollOotd('left')}
-                        className="absolute left-[-30px] top-[60%] transform -translate-y-1/2 z-10"
-                    />
-                )}
-                <div className='relative mx-auto'>
+                <Image
+                    src={SwiperLeftButton}
+                    alt="Previous"
+                    width={60}
+                    height={60}
+                    onClick={() => handleScrollOotd('left')}
+                    className="absolute left-[-30px] top-[60%] transform -translate-y-1/2 z-10"
+                />
+            )}
+            <div className='relative mx-auto'>
                 <Swiper
                     ref={swiperRef}
                     spaceBetween={20}
@@ -301,28 +315,28 @@ const RecommendOotdPost = () => {
                         ))
                     ) : (
                         <div className="h-[400px] flex flex-col text-[2rem] text-black my-auto items-center justify-center font-medium font-['Pretendard']">
-                        <div className='flex flex-row'>
-                            <span className="text-[#FB3463]">{selectedInterest} </span>{"\u00A0"}관련 OOTD가 없어요!
+                            <div className='flex flex-row'>
+                                <span className="text-[#FB3463]">{selectedInterest} </span>{"\u00A0"}관련 OOTD가 없어요!
+                            </div>
+                            <div className='bg-btn-color text-white text-2xl rounded-[8px] font-semibold mt-[20px] px-8 py-4' onClick={handleWriteBtnClick}>
+                                OOTD 게시글 작성하러 가기
+                            </div>
                         </div>
-                        <div className='bg-btn-color text-white text-2xl rounded-[8px] font-semibold mt-[20px] px-8 py-4' onClick={handleWriteBtnClick}>
-                            OOTD 게시글 작성하러 가기
-                        </div>
-                    </div>
-                )}
-            </Swiper>
+                    )}
+                </Swiper>
             </div>
             {itemsPerSlide < totalCount && (
-                    <Image
-                        src={SwiperRightButton}
-                        alt="Next"
-                        width={60}
-                        height={60}
-                        onClick={() => handleScrollOotd('right')}
-                        className="absolute right-[-30px] top-[60%] transform -translate-y-1/2 z-10"
-                    />
-                    )}
+                <Image
+                    src={SwiperRightButton}
+                    alt="Next"
+                    width={60}
+                    height={60}
+                    onClick={() => handleScrollOotd('right')}
+                    className="absolute right-[-30px] top-[60%] transform -translate-y-1/2 z-10"
+                />
+            )}
         </div>
-);
+    );
 }
 
 export default RecommendOotdPost;
