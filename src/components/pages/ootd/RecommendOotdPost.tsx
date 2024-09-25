@@ -5,7 +5,6 @@ import { fetchRecommendOotdPost } from '@/services/ootd.ts/ootdGet';
 import Image from 'next/image';
 import React, { useEffect, useRef, useState } from 'react';
 import { useQuery } from 'react-query';
-import Cookies from 'js-cookie';
 import { fetchLikedPosts } from '@/services/ootd.ts/ootdComments';
 import HeartIcon from '../../../../public/heartedIcon.svg';
 import EmptyHeartIcon from '../../../../public/heartIcon-default.svg';
@@ -18,7 +17,7 @@ import { Swiper, SwiperSlide, SwiperRef } from 'swiper/react';
 import 'swiper/swiper-bundle.css';
 import SwiperLeftButton from '../../../../public/SwiperLeftBtn.svg';
 import SwiperRightButton from '../../../../public/SwiperRightBtn.svg';
-import { getMyInfo } from '@/services/auth';
+import { useUserStore } from '@/store/useUserStore'; // Zustand 전역 상태 사용
 
 const TagContainer: React.FC<TagContainerProps> = ({ item }) => {
     const containerRef = useRef<HTMLDivElement | null>(null);
@@ -63,14 +62,19 @@ const TagContainer: React.FC<TagContainerProps> = ({ item }) => {
 
 
 const RecommendOotdPost = () => {
-    const accessToken = Cookies.get('accessToken');
+    // Zustand에서 유저 정보와 로딩 상태를 가져옵니다
+    const { userInfo, loading } = useUserStore((state) => ({
+        userInfo: state.userInfo,
+        loading: state.loading,
+    }));
+
     const [selectedInterest, setSelectedInterest] = useState(blogInterests[0]);
     const [likedPosts, setLikedPosts] = useState<number[]>([]);
     const [itemsPerSlide, setItemsPerSlide] = useState(4);
     const [filteredInterests, setFilteredInterests] = useState(blogInterests);
     const [userName, setUserName] = useState('');
     const router = useRouter();
-    const scrollRef = useRef<HTMLDivElement | null>(null); 
+    const scrollRef = useRef<HTMLDivElement | null>(null);
     const swiperRef = useRef<SwiperRef | null>(null);
 
     const { data, isLoading, error } = useQuery(['recommendOotdPost', selectedInterest], () => fetchRecommendOotdPost(selectedInterest), {
@@ -80,30 +84,29 @@ const RecommendOotdPost = () => {
     const totalCount = data?.result.totalCnt;
 
     useEffect(() => {
-        if (accessToken) {
+        if (userInfo) {
             fetchLikedPosts().then(setLikedPosts);
             fetchUserInterests(); // 관심사 정보 가져오기
         }
-    }, [accessToken]);
+    }, [userInfo]);
 
-      // 사용자 정보에서 관심사 가져오기
-  const fetchUserInterests = async () => {
-    try {
-      const userInfo = await getMyInfo();
-      const userInterests = userInfo.koreanInterestedTypes || []; // 유저의 관심사 추출
-      const userName = userInfo.nickName;
-      setUserName(userName);
+    // 사용자 정보에서 관심사 가져오기
+    const fetchUserInterests = async () => {
+        try {
+            const userInterests = userInfo?.koreanInterestedTypes || []; // 유저의 관심사 추출
+            const userName = userInfo?.nickName;
+            setUserName(userName);
 
-      if (userInterests.length > 0) {
-        setFilteredInterests(blogInterests.filter(interest => userInterests.includes(interest))); // 관심사로 필터링
-        setSelectedInterest(userInterests[0]); // 유저의 첫 번째 관심사로 설정
-      } else {
-        setSelectedInterest(blogInterests[0]); // 유저가 관심사를 설정하지 않았으면 기본값 유지
-      }
-    } catch (error) {
-      console.error('Error fetching user interests:', error);
-    }
-  };
+            if (userInterests.length > 0) {
+                setFilteredInterests(blogInterests.filter(interest => userInterests.includes(interest))); // 관심사로 필터링
+                setSelectedInterest(userInterests[0]); // 유저의 첫 번째 관심사로 설정
+            } else {
+                setSelectedInterest(blogInterests[0]); // 유저가 관심사를 설정하지 않았으면 기본값 유지
+            }
+        } catch (error) {
+            console.error('Error fetching user interests:', error);
+        }
+    };
 
     // 화면 크기에 따라 itemsPerSlide를 설정하는 함수
     const updateItemsPerSlide = () => {
@@ -158,11 +161,10 @@ const RecommendOotdPost = () => {
     };
 
     const handleWriteBtnClick = () => {
-        if (!accessToken) {
+        if (!userInfo) {
             router.push("/login");
-        }
-        else {
-            router.push('/write')
+        } else {
+            router.push('/write');
         }
     };
 
@@ -170,10 +172,10 @@ const RecommendOotdPost = () => {
         router.push("/editProfile");
     };
 
-
-    if (isLoading) return null;
+    // 로딩 시에는 null을 반환
+    if (loading || isLoading) return null;
     if (error) return null;
-    
+
     // 데이터 슬라이드 생성
     const slides = [];
     if (data?.result?.recommendOotdList) {
@@ -185,21 +187,21 @@ const RecommendOotdPost = () => {
     const handleScrollOotd = (direction: string) => {
         if (swiperRef.current) {
             if (direction === 'left') {
-                swiperRef.current.swiper.slidePrev(); 
+                swiperRef.current.swiper.slidePrev();
             } else {
-                swiperRef.current.swiper.slideNext(); 
+                swiperRef.current.swiper.slideNext();
             }
         }
     };
 
     return (
         <div className="relative w-[90%] sm-700:w-[66%] mx-auto pt-[5rem] overflow-visible">
-            {!accessToken && (    
+            {!userInfo && (    
             <h1 className="font-bold text-[2rem] mb-4">
                 관심분야에 따른 OOTD를 확인해보세요!
             </h1>
             )}
-            {accessToken && (    
+            {userInfo && (    
             <h1 className="font-bold text-[2rem] mb-4">
                 {userName}님, 이런 스타일 어때요?
             </h1>
@@ -207,7 +209,7 @@ const RecommendOotdPost = () => {
 
 
             <div className="flex items-center my-12 relative">
-                {!accessToken && (
+                {!userInfo && (
                 <Image
                     src={SwiperLeftButton}
                     alt="Previous"
@@ -244,7 +246,7 @@ const RecommendOotdPost = () => {
                             ))}
                         </div>
 
-                        {accessToken && ( 
+                        {userInfo && ( 
                             <div className='flex mr-auto mt-[10px] sm-700:ml-auto sm-700:mt-0' onClick={handleGoEditPage}>
                             <div className="text-right text-[#9d9d9d]">관심 키워드 설정</div>
                             <Image
@@ -258,7 +260,7 @@ const RecommendOotdPost = () => {
                         )}
                 </div>
                 </div>
-                {!accessToken && (          
+                {!userInfo && (          
                 <Image
                     src={SwiperRightButton}
                     alt="Next"
