@@ -5,6 +5,7 @@ import { fetchUserProfile } from "@/services/ootd.ts/ootdGet";
 import { UserProfileResponse } from "@/types/ootd";
 import { useUserStore } from "@/store/useUserStore";
 import FollowButton from "../followControl/followButton";
+import DefaultImage from '../../../public/defaultImage.svg';
 
 const TABS = {
   FOLLOWER: "FOLLOWER",
@@ -56,7 +57,7 @@ const UserProfile: React.FC<UserProfileProps> = ({
         <div className="absolute top-[-150px] w-[200px] h-[300px] bg-white px-8 py-4 rounded-lg shadow-lg flex flex-col items-center">
           <div className="relative my-4">
             <Image
-              src={profileImageUrl}
+              src={profileImageUrl || DefaultImage}
               alt="Profile"
               width={80}
               height={80}
@@ -68,7 +69,7 @@ const UserProfile: React.FC<UserProfileProps> = ({
               }}
             />
           </div>
-          <h1 className="text-4xl font-bold mt-[10px]">{nickName}</h1>
+          <h1 className="text-4xl font-bold mt-[10px] text-center">{nickName}</h1>
           <span className="text-xl text-gray-600 mt-[5px]">{email}</span>
           <div className="mt-[10px] flex px-4">
             <span
@@ -88,6 +89,7 @@ const UserProfile: React.FC<UserProfileProps> = ({
             </span>
           </div>
 
+
           <div className="ml-auto flex items-center mt-[30px] mr-[50px]">
             {targetMemberId && userMemberId && (
               <FollowButton
@@ -95,6 +97,7 @@ const UserProfile: React.FC<UserProfileProps> = ({
                 userMemberId={userMemberId}
               />
             )}
+
           </div>
         </div>
       </div>

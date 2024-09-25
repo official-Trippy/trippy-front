@@ -72,7 +72,9 @@ const LoginForm = () => {
   return (
     <div className="mx-auto">
       <form onSubmit={handleSubmit} className="flex flex-col items-center">
-        <Image src={LogoMain} alt="Logo" />
+        <Link href="/">
+          <Image src={LogoMain} alt="Logo" className=""/>
+        </Link>
         <div className="flex flex-col mt-[6rem]">
           <label htmlFor="email" className="login-info mb-2">
             이메일

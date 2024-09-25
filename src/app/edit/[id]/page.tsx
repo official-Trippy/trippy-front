@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
-import ImageUploader from '@/components/ootd/ImageUploader';
 import PostInput from '@/components/ootd/PostInput';
 import LocationInput from '@/components/ootd/LocationInput';
 import DateInput from '@/components/ootd/DateInput';
@@ -14,6 +13,23 @@ import { getWeatherStatusInKorean } from '@/constants/weatherTransition';
 import { fetchWeather } from '@/services/ootd.ts/weather';
 import { getCoordinatesFromAddress } from '@/constants/geocode';
 import ImageChanger from '@/components/ootd/ImageChanger';
+import Header from '@/components//shared/header/Header';
+
+const weatherOptions = [
+  { value: 'rain', label: '비' },
+  { value: 'snow', label: '눈' },
+  { value: 'mostly_cloudy', label: '구름많음' },
+  { value: 'cloudy', label: '흐림' },
+  { value: 'sunny', label: '맑음' },
+  { value: 'unknown', label: '기억 안남' },
+];
+
+
+const temperatureOptions = Array.from({ length: 71 }, (_, i) => i - 20).map(temp => ({
+  value: temp === -100 ? 'unknown' : temp.toString(),
+  label: temp === -100 ? '기억 안남' : `${temp}°C`,
+}));
+
 
 const EditOotd: React.FC = () => {
   const router = useRouter();
@@ -114,6 +130,15 @@ const EditOotd: React.FC = () => {
     }
   }, [hasChanges, latitude, longitude, date]);
 
+  // useEffect(() => {
+  //   if (data && data.isSuccess) {
+  //     const postData = data.result.post;
+  //     if (postData) {
+  //       setImages(postData.images); // 상태 업데이트
+  //     }
+  //   }
+  // }, [data]);
+
   const weatherMutation = useMutation(
     (variables: { latitude: number; longitude: number; date: string }) =>
       fetchWeather(variables.latitude, variables.longitude, variables.date),
@@ -121,17 +146,66 @@ const EditOotd: React.FC = () => {
       onSuccess: (data) => {
         setWeather(data.result);
       },
-      onError: () => {
-        Swal.fire({
-          icon: 'error',
-          title: '날씨 정보를 불러올 수 없습니다.',
-          text: '날씨와 온도를 직접 선택해주세요.',
-          confirmButtonText: '확인',
-          confirmButtonColor: '#FB3463',
-        });
+      onError: async (error) => {
+        console.error('Error fetching weather:', error);
+
+        // 클라이언트에서만 실행되도록 useEffect 사용
+        if (typeof window !== 'undefined') {
+          Swal.fire({
+            icon: 'error',
+            title: '날씨 정보를 불러올 수 없습니다.',
+            text: '날씨와 온도를 직접 선택해주세요.',
+            confirmButtonText: '확인',
+            confirmButtonColor: '#FB3463',
+            allowOutsideClick: false,
+            preConfirm: async () => {
+              // 요소에 접근하려면 useEffect 안에서 지정합니다
+              return new Promise<void>((resolve) => {
+                Swal.fire({
+                  title: '날씨와 온도를 선택하세요',
+                  html: `
+                    <label for="weather-select">날씨 상태:</label>
+                    <select id="weather-select" class="swal2-input">
+                      ${weatherOptions.map(option => `<option value="${option.value}">${option.label}</option>`).join('')}
+                    </select>
+                    <label for="temperature-select" style="margin-top: 1em;">온도:</label>
+                    <select id="temperature-select" class="swal2-input">
+                      ${temperatureOptions.map(option => `<option value="${option.value}">${option.label}</option>`).join('')}
+                    </select>
+                  `,
+                  confirmButtonText: '확인',
+                  confirmButtonColor: '#FB3463',
+                  cancelButtonText: '취소',
+                  showCancelButton: true,
+                  allowOutsideClick: false,
+                  preConfirm: () => {
+                    const weatherSelect = document.getElementById('weather-select') as HTMLSelectElement;
+                    const temperatureSelect = document.getElementById('temperature-select') as HTMLSelectElement;
+                    return {
+                      weather: weatherSelect.value,
+                      temperature: temperatureSelect.value,
+                    };
+                  },
+                }).then((result) => {
+                  if (result.isConfirmed) {
+                    const selected = result.value;
+                    if (selected) {
+                      setWeather({
+                        status: selected.weather,
+                        avgTemp: selected.temperature === 'unknown' ? '정보 없음' : selected.temperature,
+                      });
+                    }
+                    resolve();
+                  }
+                });
+              });
+            },
+          });
+        }
       },
     }
   );
+
 
   const handleFetchWeather = () => {
     if (latitude === null || longitude === null || !date) {
@@ -270,7 +344,7 @@ const EditOotd: React.FC = () => {
   }
 
   return (
-    <div className="w-full max-w-screen-lg mx-auto px-4 py-8">
+    <><Header /><div className="min-h-[calc(100dvh-60px)] mb-[60px] w-[90%] py-16 sm-700:w-[66%] sm-700:min-h-screen sm-700:mb-0 mx-auto">
       <div className="w-full flex justify-end mb-[20px]">
         <button
           onClick={handleUpdatePost}
@@ -286,25 +360,22 @@ const EditOotd: React.FC = () => {
             onPostChange={setPost}
             onTagsChange={setTags}
             tags={tags}
-            initialPost={post}
-          />
+            initialPost={post} />
           <div className="space-y-4">
             <LocationInput
               onLocationChange={handleLocationChange}
-              selectedLocationName={location}
-            />
+              selectedLocationName={location} />
             <DateInput
               onDateChange={handleDateChange}
-              initialDate={date}
-            />
+              initialDate={date} />
             {weather ? (
               <div className="w-full bg-neutral-100 rounded-lg flex justify-center items-center py-4 text-neutral-500 text-lg">
                 <div>
                   {weather.avgTemp === '정보 없음'
                     ? '정보 없음'
                     : `${weather.avgTemp}°C, ${getWeatherStatusInKorean(
-                        weather.status
-                      )}`}
+                      weather.status
+                    )}`}
                 </div>
               </div>
             ) : (
@@ -318,7 +389,7 @@ const EditOotd: React.FC = () => {
           </div>
         </div>
       </div>
-    </div>
+    </div></>
   );
 };
 

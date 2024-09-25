@@ -66,3 +66,16 @@ export interface FetchCommentsResponse {
     return response.data.result.map((item: any) => item.post.id);
   };
   
+  export const updateComment = async (commentId: number, content: string) => {
+    const response = await axios.patch(`${backendUrl}/api/comment`, {
+      commentId,
+      content,
+    });
+    return response.data.result;
+  };
+
+  export const deleteComment = async (commentId: number) => {
+    const response = await axios.delete(`${backendUrl}/api/comment/${commentId}`);
+    return response.data;
+  };
+  

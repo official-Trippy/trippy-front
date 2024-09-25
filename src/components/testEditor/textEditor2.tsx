@@ -6,6 +6,9 @@ interface editorProps {
     postRequest: any;
     setPostRequest: any;
 }
+
+const inputAPI = process.env.INPUT_TEXT_API_KEY;
+
 const MyTinyMCEEditor = ({ postRequest, setPostRequest }: editorProps) => {
 
 
@@ -43,7 +46,7 @@ const MyTinyMCEEditor = ({ postRequest, setPostRequest }: editorProps) => {
         <div>
             <Editor
                 initialValue="<p>여러분의 경험을 자유롭게 적어주세요.</p>"
-                apiKey='a7jtjjd8h1f0ofvjye2cxg0xwzsz6576rgwoj91atcc2i8pf'
+                apiKey="a7jtjjd8h1f0ofvjye2cxg0xwzsz6576rgwoj91atcc2i8pf"
                 init={{
                     height: 820,
                     menubar: false,
@@ -68,7 +71,7 @@ const MyTinyMCEEditor = ({ postRequest, setPostRequest }: editorProps) => {
                         'lists table link charmap searchreplace | ' +
                         'image media codesample emoticons fullscreen preview | ' +
                         'removeformat | undo redo',
-                    // images_upload_handler: handleImageUpload, // 이미지 업로드 핸들러 지정
+                    Images_upload_handler: handleImageUpload, // 이미지 업로드 핸들러 지정
                 }}
                 value={postRequest.body} // 에디터의 내용을 상태로 관리
                 onEditorChange={handleEditorChange}

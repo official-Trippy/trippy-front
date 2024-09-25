@@ -11,6 +11,7 @@ import LogoMain from "../../../public/LogoMain.svg";
 import ServiceInfo from "./ServiceInfo";
 import Privacy from "./Privacy";
 import Swal from "sweetalert2";
+import AirplaneIcon from "../../../public/TrippyAirplane.svg";
 
 const SignUpForm = () => {
   const [email, setEmail] = useState("");
@@ -209,7 +210,14 @@ const SignUpForm = () => {
   return (
     <form onSubmit={handleSubmit} className="min-h-[calc(100dvh-60px)] flex flex-col justify-between flex-col-reverse mb-[60px] sm:flex-col sm-700:min-h-[100vh] sm-700:justify-center sm-700:mb-0 items-center w-full">
       <div className="w-[90%] max-w-[400px] mx-auto">
-      <Image src={LogoMain} alt="Logo" className="mx-auto mt-[2rem]" width={135} height={34} />
+      <div className="absolute left-0 top-0 w-full">
+          <Image
+            src={AirplaneIcon}
+            alt="AirplaneIcon"
+            className="animate-slideInout"
+          />
+        </div>
+      <Image src={LogoMain} alt="Logo" className="mx-auto mt-[2rem]" width={170} height={57} />
       </div>
       <div className="w-[90%] max-w-[400px] mx-auto">
       <label htmlFor="email" className="sign-up-info block mt-[4rem]">
@@ -394,11 +402,12 @@ const SignUpForm = () => {
         </label>
       </div>
       </div>
+      
       <div className="w-[90%] max-w-[400px] mx-auto mt-auto sm-700:mt-0">
       <div className="text-center">
               <button
                 type="submit"
-                className={`mx-auto w-full h-[44px] mt-[4rem] mb-[2rem] text-white py-2 rounded-lg focus:outline-none ${!verificationClicked ||
+                className={`mx-auto w-full sm-700:w-[150px] h-[44px] mt-[2rem] mb-[2rem] text-white py-2 rounded-xl flex justify-center items-center mt-[4rem] mb-[2rem] ${!verificationClicked ||
                   !passwordValid ||
                   !passwordMatch ||
                   !agreementChecked ||
@@ -416,6 +425,7 @@ const SignUpForm = () => {
               >
                 다음
               </button>
+              
             </div>
             </div>
             {modalOpen && (

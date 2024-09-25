@@ -10,7 +10,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Image from "next/image";
 import { formatDate } from "@/constants/dateFotmat";
-import LocationIcon from "../../../public/icon_pin.png";
+import LocationIcon from "../../../public/Location.svg";
 import CommentSection from "./CommentSection";
 import LeftArrowIcon from "../../../public/left-arrow.svg";
 import RightArrowIcon from "../../../public/right-arrow.svg";
@@ -19,10 +19,12 @@ import { useRouter } from "next/navigation";
 import FollowButton from "../followControl/followButton";
 import Cookies from "js-cookie";
 import Swal from "sweetalert2";
-import CabapIcon from "../../../public/icon_cabap.svg";
+import CabapIcon from "../../../public/cabap.svg";
 import BookmarkIcon from "../../../public/icon_bookmark.svg";
 import BookmarkedIcon from "../../../public/bookmark-fill.svg";
 import { addBookmark, deleteBookmark, fetchIsBookmarked } from "@/services/bookmark/bookmark";
+import WeatherIcon from "../../../public/WeatherIcon.svg";
+import DefaultImage from "../../../public/defaultImage.svg";
 
 interface OotdDetailProps {
   id: number;
@@ -31,7 +33,12 @@ interface OotdDetailProps {
 const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
   const { data, error, isLoading, refetch } = useQuery<OotdDetailGetResponse>(
     ["ootdPostDetail", id],
-    () => fetchOotdPostDetail(id)
+    () => fetchOotdPostDetail(id),
+    {
+      refetchOnWindowFocus: true, // 포커스가 돌아왔을 때 리패칭
+      refetchOnMount: true,       // 컴포넌트가 다시 마운트될 때 리패칭
+      staleTime: 0,               // 데이터를 신선하게 유지하기 위한 시간
+    }
   );
 
   const [isBookmarked, setIsBookmarked] = useState<boolean>(false);
@@ -197,96 +204,89 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
 
   return (
     <>
-      <div className="w-[90%] sm-700:w-full sm-700:max-w-6xl mx-auto sm-700:p-4">
+      <div className="w-[90%] sm-700:w-[66%] sm-700:max-w-7xl mx-auto">
         <div className="w-full mx-auto">
-          <div className="py-12 flex items-center">
-            <div className="flex items-center">
-            <div className="relative w-[50px] h-[50px]">
-                <Image
-                  src={ootdItem.member.profileUrl}
-                  alt="사용자 프로필"
-                  layout="fill"
-                  objectFit="cover"
-                  className="rounded-full cursor-pointer"
-                  onClick={handleProfileClick}
-                />
-              </div>
-              <div className="h-[48px] ml-4">
-                <span className="block font-bold text-[20px] ml-[2px] cursor-pointer" onClick={handleProfileClick}>
-                  {ootdItem.member.nickName}
-                </span>
-                <div className="flex items-center gap-2">
-                  <Image
-                    width={16}
-                    height={16}
-                    src={LocationIcon}
-                    alt="location"
-                  />
-                  <span className="block text-gray-600 mt-[2px]">
-                    {ootdItem.post.location} |{" "}
-                    {getWeatherStatusInKorean(ootdItem.ootd.weatherStatus)},{" "}
-                    {ootdItem.ootd.weatherTemp}°C
-                  </span>
+        <div className="py-12 flex items-center justify-between">
+          {/* 왼쪽 사용자 정보 및 location/weather 부분 */}
+          <div className="flex items-center flex-shrink min-w-0 mr-auto">
+            <div className="relative w-[55px] h-[55px] flex-shrink-0">
+              <Image
+                src={ootdItem.member.profileUrl || DefaultImage}
+                alt="사용자 프로필"
+                layout="fill"
+                objectFit="cover"
+                className="rounded-full cursor-pointer"
+                onClick={handleProfileClick}
+              />
+            </div>
+            <div className="ml-4 min-w-0">
+              <span
+                className="block font-bold text-[16px] ml-[2px] cursor-pointer truncate"
+                onClick={handleProfileClick}
+              >
+                {ootdItem.member.nickName}
+              </span>
+              <div className="flex items-center gap-2">
+                <div className="flex-shrink-0 ml-[0.35px]">
+                  <Image width={16} height={16} src={LocationIcon} alt="location" />
+                </div>
+                <div className="whitespace-nowrap overflow-hidden text-ellipsis">
+                  <span className="block text-gray-600 truncate">{ootdItem.post.location}</span>
                 </div>
               </div>
+              <div className="flex items-center gap-2 whitespace-nowrap overflow-hidden text-ellipsis">
+                <Image width={16} height={16} src={WeatherIcon} alt="weather" />
+                <span className="block text-gray-600 truncate">
+                  {ootdItem.ootd.date} |{" "}
+                  {getWeatherStatusInKorean(ootdItem.ootd.weatherStatus)}, {ootdItem.ootd.weatherTemp}°C
+                </span>
+              </div>
             </div>
-            <div className="ml-auto flex items-center">
-            <div className="flex items-center space-x-2 ml-auto">
-              <FollowButton
-                postMemberId={data.result.member.memberId}
-                userMemberId={userMemberId}
-              />
-              <i className="far fa-bookmark text-xl"></i>
-              <i className="fas fa-ellipsis-h text-xl"></i>
-            </div>
-            <div className="hidden sm-700:flex items-center my-auto ml-4">
+          </div>
+
+          {/* 오른쪽 팔로우 버튼 및 아이콘들 */}
+          <div className="flex items-center space-x-2 sm-700:space-x-8">
+            <FollowButton postMemberId={data.result.member.memberId} userMemberId={userMemberId} />
+            {/* 북마크 및 메뉴 아이콘 */}
+            <div className="min-w-[35px] flex items-center">
               <Image
                 src={isBookmarked ? BookmarkedIcon : BookmarkIcon}
                 alt="bookmark"
                 width={24}
                 height={24}
-                className="cursor-pointer mr-2"
+                className="cursor-pointer"
                 onClick={handleBookmarkClick}
               />
               <div className="text-[#9d9d9d] min-w-[10px] text-center">
                 {data.result.post.bookmarkCount}
               </div>
             </div>
+
             {userMemberId === data.result.member.memberId && (
-              <div className="relative my-auto flex justify-end">
-                <div className="relative mt-[2px] ml-4">
-                  <Image
-                    src={CabapIcon}
-                    alt="cabap"
-                    width={36}
-                    height={36}
-                    onClick={handleCabapIconClick}
-                    className="cursor-pointer"
-                  />
-                  {isMenuOpen && (
-                    <div className="w-[100px] absolute top-full right-4 mt-4 w-32 bg-white rounded shadow-lg z-10">
-                      <div
-                        className="py-6 px-8 text-[#ff4f4f] hover:bg-gray-100 cursor-pointer text-center"
-                        onClick={handleDeleteClick}
-                      >
-                        삭제
-                      </div>
-                      <hr/>
-                      <div
-                        className="py-6 px-8 text-black hover:bg-gray-100 cursor-pointer text-center"
-                        onClick={() => {
-                          router.push(`/edit/${id}`);
-                        }}
-                      >
-                        수정
-                      </div>
+              <div className="relative flex-shrink-0">
+                <Image
+                  src={CabapIcon}
+                  alt="cabap"
+                  width={3.5}
+                  height={30}
+                  onClick={handleCabapIconClick}
+                  className="cursor-pointer"
+                />
+                {isMenuOpen && (
+                  <div className="absolute top-full right-0 mt-4 w-32 bg-white rounded shadow-lg z-10">
+                    <div className="py-2 px-4 text-[#ff4f4f] hover:bg-gray-100 cursor-pointer text-center" onClick={handleDeleteClick}>
+                      삭제
                     </div>
-                  )}
-                </div>
+                    <hr />
+                    <div className="py-2 px-4 text-black hover:bg-gray-100 cursor-pointer text-center" onClick={() => router.push(`/edit/${id}`)}>
+                      수정
+                    </div>
+                  </div>
+                )}
               </div>
             )}
           </div>
-          </div>
+        </div>
           <div className="relative">
           <Slider {...settings}>
             {ootdItem.post.images.map((image, index) => (
@@ -329,6 +329,8 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
             postId={id}
             initialLikeCount={ootdItem.post.likeCount}
             initialCommentCount={ootdItem.post.commentCount}
+            memberId={ootdItem.member.memberId}
+            refetchPostDetail={refetch}
           />
         </div>
       </div>

@@ -118,12 +118,14 @@ const UserPage = ({ params }: { params: { id: string } }) => {
           <UserProfile memberId={decodedId} setActiveTab={setActiveTab} />
         </div>
         <div className="w-[100%] ml-[50px]">
+
           <h1 className="absolute ml-[20px] text-left top-[260px] text-white text-4xl font-bold">
             {userData && userData.blogName}
           </h1>
           <div className="absolute ml-[20px] text-left top-[290px] text-white text-xl font-normal font-['Pretendard']">
             {userData && userData.blogIntroduce}
           </div>
+
           <div className="flex justify-between mb-4 ml-4 text-2xl">
             <div className="flex space-x-4">
               <button
@@ -210,7 +212,7 @@ const UserPage = ({ params }: { params: { id: string } }) => {
       </div>
 
       <div className="w-full mx-auto mb-[90px] sm-700:hidden">
-        <div className="relative z-[9999]">
+        <div className="hidden sm-700:relative z-[9999]">
           <div className="absolute top-[-300px] left-1/2 transform -translate-x-1/2 w-[200px] h-[300px] px-8 py-4 flex flex-col items-center">
             <h1 className="text-white text-4xl font-bold mt-[20px]">
               {userData && userData.blogName}

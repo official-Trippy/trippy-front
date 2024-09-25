@@ -5,8 +5,7 @@ import useUserInfo from "@/hooks/useUserInfo";
 import { checkBlogNameDuplicate, checkNickNameDuplicate, uploadImage } from "@/services/blog";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import DefaultProfileImg from "../../../public/DefaultProfile.svg";
+import { useEffect, useRef, useState } from "react";
 import { useUserStore } from "@/store/useUserStore";
 import { blogInterests } from "@/constants/blogPreference";
 import { getMyInfo, updateMemberInfo } from "@/services/auth";
@@ -19,22 +18,31 @@ import UpIcon from '../../../public/arrow_up.svg';
 import DownIcon from '../../../public/arrow_down.svg';
 import Swal from "sweetalert2";
 import { AxiosError } from "axios";
+import DefaultImage from '../../../public/defaultImage.svg';
 
 const EditInfo = () => {
   const { userInfo, updateUserInfo } = useUserStore(); 
   const queryClient = useQueryClient();
+  const inputFileRef = useRef<HTMLInputElement | null>(null);
+
+  const handleImageUploadClick = () => {
+    if (inputFileRef.current) {
+      inputFileRef.current.click(); 
+    }
+  };
 
   const [profileImage, setProfileImage] = useState<{
     accessUri: string;
     authenticateId: string;
     imgUrl: string;
-  } | null>(userInfo?.profileImage || null);
-
+  } | null>(userInfo?.profileImage ?? null); // null 병합 연산자 사용
+  
   const [blogImage, setBlogImage] = useState<{
     accessUri: string;
     authenticateId: string;
     imgUrl: string;
-  } | null>(userInfo?.blogImage || null);
+  } | null>(userInfo?.blogImage ?? null);
+
 
   const [nickName, setNickName] = useState<string>(userInfo?.nickName || '');
   const [nickNameError, setNickNameError] = useState<string>('');
@@ -42,6 +50,7 @@ const EditInfo = () => {
   const [blogNameError, setBlogNameError] = useState<string>('');
   const [blogIntroduce, setBlogIntroduce] = useState<string>(userInfo?.blogIntroduce || '');
   const [blogIntroduceError, setBlogIntroduceError] = useState<string>('');
+  const [imageBlogUploaded, setImageBlogUploaded] = useState(false);
   const [imageUploaded, setImageUploaded] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedInterests, setSelectedInterests] = useState<string[]>(userInfo?.koreanInterestedTypes || []);
@@ -70,6 +79,20 @@ const EditInfo = () => {
       setOotdScope(userInfo.ootdScope || "public");
       setBadgeScope(userInfo.badgeScope || "public");
       setFollowScope(userInfo.followScope || "public");
+    } else {
+      // userInfo가 null일 때 상태 초기화
+      setProfileImage(null);
+      setBlogImage(null);
+      setNickName('');
+      setBlogName('');
+      setBlogIntroduce('');
+      setSelectedInterests([]);
+      setLikeAlert(true);
+      setCommentAlert(true);
+      setTicketScope("public");
+      setOotdScope("public");
+      setBadgeScope("public");
+      setFollowScope("public");
     }
   }, [userInfo]);
 
@@ -225,6 +248,64 @@ const EditInfo = () => {
     setProfileImage(null);
   };
 
+  const handleBlogImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      const file = e.target.files[0];
+      try {
+        const response = await uploadImage(file);
+        setBlogImage(response.result);
+        setImageBlogUploaded(true);
+      } catch (error: unknown) {
+        console.error("Image upload failed:", error);
+  
+        if (error instanceof AxiosError) {
+          if (error.response && error.response.status === 413) {
+            Swal.fire({
+              icon: 'error',
+              title: '이미지 용량이 너무 큽니다.',
+              text: '5MB 이하의 이미지를 선택해주세요.',
+              confirmButtonText: '확인',
+              confirmButtonColor: '#FB3463',
+              customClass: {
+                popup: 'swal-custom-popup',
+                icon: 'swal-custom-icon'
+              }
+            });
+          } else {
+            Swal.fire({
+              icon: 'error',
+              title: '이미지 업로드 실패',
+              text: '이미지 업로드에 실패했습니다. 다시 시도해주세요.',
+              confirmButtonText: '확인',
+              confirmButtonColor: '#FB3463',
+              customClass: {
+                popup: 'swal-custom-popup',
+                icon: 'swal-custom-icon'
+              }
+            });
+          }
+        } else {
+          Swal.fire({
+            icon: 'error',
+            title: '알 수 없는 오류 발생',
+            text: '다시 시도해주세요.',
+            confirmButtonText: '확인',
+            confirmButtonColor: '#FB3463',
+            customClass: {
+              popup: 'swal-custom-popup',
+              icon: 'swal-custom-icon'
+            }
+          });
+        }
+      }
+    }
+  };
+  
+
+  const handleBlogImageDelete = () => {
+    setBlogImage(null);
+  };
+
   const handleBlogIntroduce = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setBlogIntroduce(value);
@@ -252,6 +333,7 @@ const EditInfo = () => {
   useEffect(() => {
     console.log('Selected Interests:', selectedInterests);
   }, [selectedInterests]);
+
 
   useEffect(() => {
     if (userInfo) {
@@ -366,8 +448,8 @@ const EditInfo = () => {
       blogName: blogName || userInfo.blogName, 
       blogIntroduce: blogIntroduce || userInfo.blogIntroduce,
       koreanInterestedTypes: selectedInterests || userInfo.koreanInterestedTypes,
-      profileImage: profileImage || userInfo.profileImage || undefined,
-      blogImage: blogImage || userInfo.blogImage || undefined,
+      profileImage: profileImage || userInfo.profileImage ,
+      blogImage: blogImage || userInfo.blogImage,
       likeAlert,
       commentAlert,
       ticketScope,
@@ -383,21 +465,37 @@ const EditInfo = () => {
   };
   
   return (
-    <><div className="relative w-full h-[300px]">
-      <Image 
-    src={backgroundImg} 
-    alt="Background" 
-    layout="fill" 
-    objectFit="cover" 
-    className="z-0" 
-  />
-  
+    <>
+    <div className="relative w-full h-[240px]">
+    {blogImage ? (
+                  <Image
+                    src={blogImage.accessUri}
+                    alt="Profile"
+                    layout="fill"
+                    objectFit="cover"
+                    className="z-0"  />
+                  ) : (
+                    <Image
+                    src={backgroundImg}
+                    alt="Background"
+                    layout="fill"
+                    objectFit="cover"
+                    className="z-0" />
+                  )}
   <div className="absolute inset-0 flex flex-col items-center justify-center z-10">
+  <input
+        type="file"
+        accept="image/*"
+        ref={inputFileRef}
+        style={{ display: 'none' }}  // input을 숨김
+        onChange={handleBlogImageUpload}  // 파일이 선택되면 실행
+      />
     <Image 
       src={backgroundAddIcon}
       alt="Add Blog Image Icon" 
       width={50} 
       height={50} 
+      onClick={handleImageUploadClick}
     />
     <div className="text-white text-2xl font-semibold font-['Pretendard'] mt-[10px]">대표사진 추가</div>
     <div className="text-[#cfcfcf] text-base font-semibold font-['Pretendard'] mt-[5px]">최적치수 1926 x 240 px</div>
@@ -418,7 +516,7 @@ const EditInfo = () => {
                     className="rounded-full" />
                   ) : (
                     <Image
-                    src={userInfo?.profileImageUrl || DefaultProfileImg}
+                    src={userInfo?.profileImageUrl || DefaultImage}
                     alt="Default Profile"
                     layout="fill"
                     objectFit="cover"

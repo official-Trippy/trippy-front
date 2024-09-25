@@ -4,8 +4,10 @@ import { showFollows, showFollowings } from "@/services/follow";
 import { useUserStore } from "@/store/useUserStore";
 import { unfollow } from "@/services/follow";
 import { ACCESS_TOKEN } from "@/constants/general";
+
 import axios from "@/app/api/axios";
 import Swal from "sweetalert2";
+
 
 const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 const FollowList: React.FC<{
@@ -140,7 +142,7 @@ const FollowList: React.FC<{
                 <div className="flex items-center">
                   <div className="w-16 h-16 rounded-full overflow-hidden">
                     <img
-                      src={user.profileImageUrl}
+                      src={user.profileImageUrl || DefaultImage}
                       alt="Profile"
                       className="w-full h-full object-cover"
                     />

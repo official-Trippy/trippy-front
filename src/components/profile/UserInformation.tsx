@@ -4,7 +4,7 @@ import { useQuery } from "react-query";
 import { MemberInfo } from "@/services/auth";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
-import { doFollow } from "@/services/follow";
+import DefaultImage from "../../../public/defaultImage.svg";
 
 const TABS = {
   ALL: "ALL",
@@ -22,30 +22,29 @@ const UserInformation: React.FC<{ setActiveTab: (tab: string) => void }> = ({
   const accessToken = Cookies.get("accessToken");
   const router = useRouter();
 
+  useEffect(() => {
+    if (!accessToken) {
+      router.push('/login');
+    }
+  }, [accessToken, router]);
+
   const { data, error, isLoading } = useQuery({
     queryKey: ["member", accessToken],
     queryFn: () => MemberInfo(accessToken),
     onError: (error) => {
       console.error(error);
     },
+    enabled: !!accessToken, // accessToken이 있을 때만 쿼리 실행
   });
 
   const handleEditProfile = () => {
     router.push("/editProfile");
   };
 
-  if (isLoading) return <div></div>;
-  if (error) return <div></div>;
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error occurred.</div>;
 
   const userData = data?.result;
-
-  useEffect(() => {
-    if (!accessToken) {
-      router.refresh();
-      router.push('/login');
-    }
-  }, [router]);
-
 
   return (
     <div className="w-full flex flex-col relative">
@@ -53,7 +52,7 @@ const UserInformation: React.FC<{ setActiveTab: (tab: string) => void }> = ({
         <div className="absolute top-[-150px] w-[200px] h-auto bg-white px-8 py-6 rounded-lg shadow-lg flex flex-col items-center">
           <div className="relative my-4">
             <Image
-              src={userData?.profileImageUrl}
+              src={userData?.profileImageUrl || DefaultImage}
               alt="Profile"
               width={80}
               height={80}
@@ -65,7 +64,7 @@ const UserInformation: React.FC<{ setActiveTab: (tab: string) => void }> = ({
               }}
             />
           </div>
-          <h1 className="text-4xl font-bold mt-[10px]">{userData?.nickName}</h1>
+          <h1 className="text-4xl font-bold mt-[10px] text-center">{userData?.nickName}</h1>
           <span
             style={{
               overflowWrap: 'break-word',
@@ -77,12 +76,12 @@ const UserInformation: React.FC<{ setActiveTab: (tab: string) => void }> = ({
           </span>
           <div className="mt-[10px] flex px-4">
             <span className="text-base text-[#9d9d9d] cursor-pointer" onClick={() => setActiveTab(TABS.FOLLOWER)}>
-              팔로워 
+              팔로워
               <span className="text-[#6b6b6b]"> {userData?.followerCnt}</span>
             </span>
             <span className="text-base text-[#9d9d9d]">&ensp;|&ensp;</span>
             <span className="text-base text-[#9d9d9d] cursor-pointer" onClick={() => setActiveTab(TABS.FOLLOWING)}>
-              팔로잉 
+              팔로잉
               <span className="text-[#6b6b6b]"> {userData?.followingCnt}</span>
             </span>
           </div>
@@ -98,7 +97,7 @@ const UserInformation: React.FC<{ setActiveTab: (tab: string) => void }> = ({
           >
             팔로우
           </button> */}
-          
+
         </div>
       </div>
     </div>

@@ -1,14 +1,17 @@
+
 import React from "react";
 import SearchBar from "./searchBar"; // searchBar 컴포넌트 가져오기
 import { useRouter } from "next/navigation";
 interface SortingBarProps {
   selectedSearchType: string;
   onSelectSearchType: (searchType: string) => void;
+
   selectedSortOrder: string;
   onSelectSortOrder: (sortOrder: string) => void;
 }
 
 const SortingBar: React.FC<SortingBarProps> = ({
+
   selectedSearchType,
   onSelectSearchType,
   selectedSortOrder,
@@ -19,6 +22,7 @@ const SortingBar: React.FC<SortingBarProps> = ({
     { label: "OOTD", value: "OOTD" },
     { label: "사용자 이름", value: "NICKNAME" },
     { label: "블로그 이름", value: "BLOG" },
+
   ];
 
   const sortOrders = [
@@ -28,6 +32,7 @@ const SortingBar: React.FC<SortingBarProps> = ({
   const router = useRouter();
 
   return (
+
     <div className="w-full mb-4">
       <div className="flex items-center justify-between md:hidden mb-4">
         <button
@@ -43,12 +48,15 @@ const SortingBar: React.FC<SortingBarProps> = ({
 
       {/* 검색 타입 버튼 */}
       <div className="grid-cols-2 gap-2 md:flex md:w-[789px] pt-[2rem]">
+
         {searchTypes.map((type) => (
           <button
             key={type.value}
             onClick={() => onSelectSearchType(type.value)}
+
             className={`px-2 py-1 sm-700:px-4 sm-700:py-2 rounded ${
               selectedSearchType === type.value
+
                 ? "bg-[#FB3463] text-white"
                 : "bg-white text-gray-700"
             } hover:bg-gray-200 transition`}

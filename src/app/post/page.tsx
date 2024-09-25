@@ -1,16 +1,6 @@
 "use client"
 import Header from '@/components/shared/header/Header'
 import React, { ChangeEvent, useEffect, useState } from 'react'
-import air from '@/dummy/air.svg'
-import train from '@/dummy/train.svg'
-import bus from '@/dummy/bus.svg'
-import bicycle from '@/dummy/bicycle.svg'
-import car from '@/dummy/car.svg'
-import air1 from '@/dummy/air1.svg'
-import train1 from '@/dummy/train1.svg'
-import bus1 from '@/dummy/bus1.svg'
-import bicycle1 from '@/dummy/bicycle1.svg'
-import car1 from '@/dummy/car1.svg'
 import Image from 'next/image'
 import searchicon from '@/dummy/search.svg'
 import uploadImages from "@/dummy/uploadfile.svg"
@@ -24,43 +14,27 @@ import { useRouter } from 'next/navigation'
 import Swal from 'sweetalert2'
 import { colorTicket } from '@/types/board'
 import MyTinyMCEEditor from '@/components/testEditor/textEditor2'
+import { getCountry, getCountry1 } from '@/services/board/get/getCountry'
+import { PostAirSVG, PostBusSVG, PostBycicleSVG, PostCarSVG, PostTrainSVG } from '@/components/transportsvg/post'
 
-const countries: { [key: string]: string } = {
-    KOR: '대한민국',
-    USA: '미국',
-    JPN: '일본',
-    CHN: '중국',
-    GBR: '영국',
-    FRA: '프랑스',
-    DEU: '독일',
-    CAN: '캐나다',
-    AUS: '호주',
-    IND: '인도',
-    BRA: '브라질',
-    MEX: '멕시코',
-    RUS: '러시아',
-    ITA: '이탈리아'
-};
+interface CountryResult {
+    countryIsoAlp2: string;
+    // 다른 필요한 필드 추가
+}
 
+interface ApiResponse {
+    result: CountryResult;
+}
 
-
+interface CountryResult {
+    // 기존 프로퍼티들...
+    isoAlp3?: string; // isoAlp3 프로퍼티 추가 (선택적)
+}
 
 function PostWrite() {
     const [bgColor, setBgColor] = useState('#55FBAF');
     const [thumbnailPreview, setThumbnailPreview] = useState<string | null>(null);
     const [isTransport, setIsTransport] = useState(false);
-    const [isImageIdx, setIsImageIdx] = useState([
-        { imgsrc: air },
-        { imgsrc: train },
-        { imgsrc: bus },
-        { imgsrc: bicycle },
-        { imgsrc: car },
-        { imgsrc: air1 },
-        { imgsrc: train1 },
-        { imgsrc: bus1 },
-        { imgsrc: bicycle1 },
-        { imgsrc: car1 },
-    ]);
     const [passengerCount, setPassengerCount] = useState(0);
     const [startDate, setStartDate] = useState<Date | null>(null);
     const [endDate, setEndDate] = useState<Date | null>(null);
@@ -78,79 +52,25 @@ function PostWrite() {
     const [selectedCountryCode2, setSelectedCountryCode2] = useState('');
     const [tags, setTags] = useState<string[]>([]);
     const [inputValue, setInputValue] = useState<string>('');
-    const [ticketColor, setTicketColor] = useState('')
+    const [ticketColor, setTicketColor] = useState('Aquamarine')
+    const [isImageIdx, setIsImageIdx] = useState<any[]>([]);
     const [postRequests, setPostRequests] = useState({
         body: '',
         images: [] as string[], // 이미지 URL을 저장할 배열
     });
+    const [result, setResult] = useState<ApiResponse | null>(null);
+    const [result1, setResult1] = useState<ApiResponse | null>(null);
+    const [transportStr, setTransportStr] = useState('')
 
-    const handleInputChange1 = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const value = e.target.value;
-        setInputValue1(value);
-
-        // 첫 번째 입력 필드에 대한 추천 목록 업데이트
-        if (value) {
-            const filteredSuggestions = Object.values(countries).filter(country =>
-                country.toLowerCase().includes(value.toLowerCase())
-            );
-            setSuggestions1(filteredSuggestions);
-        } else {
-            setSuggestions1([]);
-        }
-
-        // 입력값에 맞는 키값 업데이트
-        const countryCode = Object.keys(countries).find(key => countries[key] === value);
-        if (countryCode) {
-            setSelectedCountryCode(countryCode);
-        } else {
-            setSelectedCountryCode(''); // 일치하는 국가가 없을 경우
-        }
-    };
-
-    const handleInputChange2 = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const value = e.target.value;
-        setInputValue2(value);
-
-        // 두 번째 입력 필드에 대한 추천 목록 업데이트
-        if (value) {
-            const filteredSuggestions = Object.values(countries).filter(country =>
-                country.toLowerCase().includes(value.toLowerCase())
-            );
-            setSuggestions2(filteredSuggestions);
-        } else {
-            setSuggestions2([]);
-        }
-
-        // 입력값에 맞는 키값 업데이트
-        const countryCode = Object.keys(countries).find(key => countries[key] === value);
-        if (countryCode) {
-            setSelectedCountryCode2(countryCode);
-        } else {
-            setSelectedCountryCode2(''); // 일치하는 국가가 없을 경우
-        }
-    };
-
-    const handleSuggestionClick1 = (suggestion: string) => {
-        setInputValue1(suggestion);
-        setSuggestions1([]); // 추천 목록 비우기
-
-        // 클릭한 추천에 맞는 키값 업데이트
-        const countryCode = Object.keys(countries).find(key => countries[key] === suggestion);
-        if (countryCode) {
-            setSelectedCountryCode(countryCode);
-        }
-    };
-
-    const handleSuggestionClick2 = (suggestion: string) => {
-        setInputValue2(suggestion);
-        setSuggestions2([]); // 두 번째 추천 목록 비우기
-
-        // 클릭한 추천에 맞는 키값 업데이트
-        const countryCode = Object.keys(countries).find(key => countries[key] === suggestion);
-        if (countryCode) {
-            setSelectedCountryCode2(countryCode);
-        }
-    };
+    useEffect(() => {
+        setIsImageIdx([
+            { imgsrc: <PostAirSVG fillColor={colorTicket[ticketColor]} /> },
+            { imgsrc: <PostTrainSVG fillColor={colorTicket[ticketColor]} /> },
+            { imgsrc: <PostBusSVG fillColor={colorTicket[ticketColor]} /> },
+            { imgsrc: <PostBycicleSVG fillColor={colorTicket[ticketColor]} /> },
+            { imgsrc: <PostCarSVG fillColor={colorTicket[ticketColor]} /> },
+        ]);
+    }, [ticketColor]);
 
     const formatDate = (date: Date | null) => {
         if (!date) return '';
@@ -194,13 +114,13 @@ function PostWrite() {
         setTicketColor(selectedColor);
     };
 
-    console.log(ticketColor, bgColor)
+    console.log()
 
 
-    const selectTransport = (imgSrc: any) => {
+    const selectTransport = (imgSrc: JSX.Element) => {
         setIsImageIdx((prevState) => {
             // 클릭한 항목의 인덱스를 찾기
-            const selectedIndex = prevState.findIndex((item) => item.imgsrc === imgSrc);
+            const selectedIndex = prevState.findIndex((item) => item.imgsrc.type === imgSrc.type && item.imgsrc.props.fillColor === imgSrc.props.fillColor);
 
             // 새로운 배열 생성
             const updatedState: any = [...prevState];
@@ -210,17 +130,32 @@ function PostWrite() {
                 const selectedItem = updatedState.splice(selectedIndex, 1)[0];
                 updatedState.unshift(selectedItem);
 
-                // 나머지 항목의 인덱스 업데이트
-                for (let i = 0; i < updatedState.length; i++) {
-                    updatedState[i].index = i;
+                // 첫 번째 항목의 src에 따라 setTransportStr 설정
+                if (updatedState.length > 0) {
+                    const transportValue = updatedState[0].imgsrc.type.name; // SVG 컴포넌트의 이름 사용
+
+                    if (transportValue === 'PostBicycleSVG') {
+                        setTransportStr('Bicycle');
+                    } else if (transportValue === 'PostAirSVG') {
+                        setTransportStr('Airplane');
+                    } else if (transportValue === 'PostTrainSVG') {
+                        setTransportStr('Train');
+                    } else if (transportValue === 'PostBusSVG') {
+                        setTransportStr('Bus');
+                    } else if (transportValue === 'PostCarSVG') {
+                        setTransportStr('Car');
+                    }
+                } else {
+                    console.warn('No valid src found in updatedState[0]'); // 디버깅: src가 없을 경우 경고
                 }
             }
-
-            setIsTransport(false);
+            setIsTransport(false); // transport 상태를 false로 설정
 
             return updatedState;
         });
     };
+
+
 
     const handleImageUpload = async (event: ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
@@ -241,9 +176,10 @@ function PostWrite() {
         }
     };
 
+
     const displayImages = images.map(image => image.accessUri);
 
-    console.log(displayImages)
+    console.log(thumbnailPreview)
     const addPost = async () => {
         const postRequest = {
             title: title,
@@ -255,13 +191,15 @@ function PostWrite() {
         }
         const ticketRequest = {
             departure: inputValue1,
+            departureCode: result?.result.isoAlp3,
             destination: inputValue2,
+            destinationCode: result1?.result.isoAlp3,
             image: images[0],
             memberNum: Number(passengerCount),
             startDate: formatDates(startDate),
             endDate: formatDates(endDate),
             ticketColor: ticketColor,
-            transport: 'Airplane'
+            transport: transportStr
         }
         try {
             console.log(postRequest, ticketRequest)
@@ -303,7 +241,7 @@ function PostWrite() {
     };
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === 'Enter' && inputValue.trim() !== '') {
+        if (e.key === 'Enter' && inputValue.trim() !== "") {
             // 중복 태그 체크
             if (!tags.includes(inputValue.trim())) {
                 setTags([...tags, inputValue.trim()]);
@@ -312,8 +250,19 @@ function PostWrite() {
         }
     };
 
+    const { getLocationData } = getCountry({ setResult });
+    const { getLocationData1 } = getCountry1({ setResult1 });
 
-    console.log(tags)
+    const searchCountry = async (locations: string) => {
+        await getLocationData(locations);
+    }
+
+    const searchCountry1 = async (locationss: string) => {
+        await getLocationData1(locationss);
+    }
+
+
+    console.log(transportStr)
     return (
         <div>
             <Header />
@@ -350,43 +299,33 @@ function PostWrite() {
                     <div className='w-full mt-[5rem] relative'>
                         <div className='flex justify-center'>
                             <div>
-                                <h1 className='h-[10rem] text-[6rem] font-extrabold font-akira'>{selectedCountryCode}</h1>
+                                <h1 className='h-[10rem] text-[6rem] font-extrabold font-akira'>{result?.result.isoAlp3}</h1>
                                 <div className='w-[18rem] h-[3.6rem] px-[2rem] shadowall rounded-[0.8rem] flex'>
                                     <input
                                         className='w-[12rem] text-[1.6rem] outline-none'
                                         type='text'
                                         placeholder='검색 1'
                                         value={inputValue1} // 첫 번째 입력 값 상태
-                                        onChange={handleInputChange1} // 입력 값 변경 시 핸들러
+                                        onChange={(e) => setInputValue1(e.target.value)} // 입력 값 변경 시 핸들러
+                                        onKeyDown={(e) => {
+                                            if (e.key === 'Enter') {
+                                                searchCountry(inputValue1); // 엔터 키가 눌리면 함수 호출
+                                            }
+                                        }}
                                     />
-                                    <Image className='ml-auto' src={searchicon} alt='' />
+                                    <button className='ml-auto' onClick={() => searchCountry(inputValue1)} >
+                                        <Image src={searchicon} alt='' />
+                                    </button>
                                 </div>
-                                {suggestions1.length > 0 && (
-                                    <div className='w-[18rem] mt-2 absolute'>
-                                        {suggestions1.map((suggestion, index) => (
-                                            <div
-                                                key={index}
-                                                className='absolute w-[18rem] p-2 pl-[2rem] text-[1.6rem] hover:bg-gray-200 flex flex-col shadowall rounded-[0.8rem] cursor-pointer bg-white z-10'
-                                                onClick={() => handleSuggestionClick1(suggestion)} // 클릭 시 핸들러
-                                            >
-                                                {suggestion}
-                                            </div>
-                                        ))}
-                                    </div>
-                                )}
                             </div>
                             <div className='relative bg-white z-10 ml-[7%] mr-[10%]'>
                                 {
                                     isTransport ? (
                                         <div className='w-[6rem] h-[28rem] absolute z-10 bg-white shadowall rounded-[3rem] flex items-center justify-center mt-[2rem] flex-col space-y-9'>
                                             {isImageIdx.slice(0, 5).map((item: any, index) => (
-                                                <Image
-                                                    key={index}
-                                                    className=""
-                                                    src={item.imgsrc}
-                                                    alt={`item ${index}`}
-                                                    onClick={() => selectTransport(item.imgsrc)}
-                                                />
+                                                <div key={index} onClick={() => selectTransport(item.imgsrc)}>
+                                                    {item.imgsrc}
+                                                </div>
                                             ))}
                                         </div>
                                     ) : (
@@ -394,36 +333,30 @@ function PostWrite() {
                                             className='w-[6rem] h-[6rem] absolute shadowall rounded-full flex items-center justify-center mt-[2rem]'
                                             onClick={() => setIsTransport(true)}
                                         >
-                                            <Image className='' src={isImageIdx[0].imgsrc} alt='비행기' />
+                                            {isImageIdx[0]?.imgsrc}
                                         </div>
                                     )
                                 }
                             </div>
                             <div className='ml-[5rem]'>
-                                <h1 className='h-[9rem] text-[6rem] font-extrabold font-akira'>{selectedCountryCode2}</h1>
+                                <h1 className='h-[9rem] text-[6rem] font-extrabold font-akira'>{result1?.result.isoAlp3}</h1>
                                 <div className='w-[18rem] h-[3.6rem] px-[2rem] shadowall rounded-[0.8rem] flex mt-4'>
                                     <input
                                         className='w-[12rem] text-[1.6rem] outline-none'
                                         type='text'
                                         placeholder='검색 2'
                                         value={inputValue2} // 두 번째 입력 값 상태
-                                        onChange={handleInputChange2} // 입력 값 변경 시 핸들러
+                                        onChange={(e) => setInputValue2(e.target.value)} // 입력 값 변경 시 핸들러
+                                        onKeyDown={(e) => {
+                                            if (e.key === 'Enter') {
+                                                searchCountry1(inputValue2); // 엔터 키가 눌리면 함수 호출
+                                            }
+                                        }}
                                     />
-                                    <Image className='ml-auto' src={searchicon} alt='' />
+                                    <button className='ml-auto' onClick={() => searchCountry1(inputValue2)} >
+                                        <Image src={searchicon} alt='' />
+                                    </button>
                                 </div>
-                                {suggestions2.length > 0 && (
-                                    <div className='absolute w-[18rem] mt-2'>
-                                        {suggestions2.map((suggestion, index) => (
-                                            <div
-                                                key={index}
-                                                className='absolute w-[18rem] p-2 pl-[2rem] text-[1.6rem] hover:bg-gray-200 flex flex-col shadowall rounded-[0.8rem] cursor-pointer bg-white z-10'
-                                                onClick={() => handleSuggestionClick2(suggestion)} // 클릭 시 핸들러
-                                            >
-                                                {suggestion}
-                                            </div>
-                                        ))}
-                                    </div>
-                                )}
                             </div>
                         </div>
                         <div className='w-[95%] border-2 border-dashed border-[#CFCFCF] my-[3rem] mx-auto relative z-0' />
@@ -471,14 +404,14 @@ function PostWrite() {
                             </div>
                         </div>
                     </div>
-                    <div className={`w-[60rem] h-full bg-[${bgColor}] rounded-r-[1rem] flex ml-auto`}>
+                    <div className={`w-full max-w-[40rem] h-full bg-[${bgColor}] rounded-r-[1rem] flex ml-auto`}>
                         <div className='absolute'>
                             <div className='relative bg-white w-[4rem] h-[4rem] rounded-full -mt-[2rem] -ml-[2rem]'></div>
                             <div className='relative bg-white w-[4rem] h-[4rem] rounded-full mt-[28rem] -ml-[2rem]'></div>
                         </div>
-                        <label className='w-full h-full flex cursor-pointer' htmlFor='input-file'>
+                        <label className='w-full h-full flex cursor-pointer p-[2rem]' htmlFor='input-file'>
                             {thumbnailPreview === null ? (
-                                <div className='flex flex-col justify-center m-auto w-[30rem] h-[25rem] rounded-[1rem] border-2 border-dashed border-white'>
+                                <div className='flex flex-col justify-center m-auto w-full max-w-[30rem] h-full max-[25rem] rounded-[1rem] border-2 border-dashed border-white'>
                                     <Image className='mx-auto' src={uploadImages} alt='' />
                                     <span className='text-[1.4rem] font-bold text-white text-center'>대표사진을 등록해주세요</span>
                                 </div>
