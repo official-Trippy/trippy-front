@@ -329,16 +329,16 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
   return (
     <div>
       <Header />
-      <div className="w-[50%] mx-auto">
+      <div className="w-[90%] sm-700:w-[50%] mx-auto">
         <div className="flex mt-[8rem] text-[#6B6B6B] font-semibold text-[2rem]">
           <span>{postData?.result.member.blogName}의 블로그</span>
           {memberDatas?.result.blogName === postData?.result.member.blogName && (
             <div className="flex ml-auto gap-[1rem]">
               <Image className="cursor-pointer" src={menubars} alt="" onClick={() => { setIsOpenMenu(!isOpenMenu) }} />
               {isOpenMenu && (
-                <div className="absolute bg-white shadow-md rounded-md mt-[3rem] -ml-[6rem] p-2 animate-dropdown z-20" style={{ opacity: 0, transform: 'translateY(-10px)' }}> {/* 스타일 추가 */}
-                  <span className="cursor-pointer block hover:bg-gray-200" onClick={editBoardEdit}>수정하기</span>
-                  <span className="cursor-pointer block hover:bg-gray-200" onClick={deleteBoardHandler}>삭제</span>
+                <div className="absolute bg-white shadow-md rounded-md mt-[3rem] -ml-[10rem] px-[1.5rem] py-[2rem] animate-dropdown z-20 rounded-[0.8rem]" style={{ opacity: 0, transform: 'translateY(-10px)' }}> {/* 스타일 추가 */}
+                  <span className="cursor-pointer bg-[#F5F5F5] text-[#292929] hover:bg-[#F5F5F5d] block p-[0.8rem] rounded-[0.8rem]" onClick={editBoardEdit}>수정하기</span>
+                  <span className="cursor-pointer bg-[#292929] text-white hover:bg-[#292929cc] block mt-[0.8rem] p-[0.8rem] rounded-[0.8rem]" onClick={deleteBoardHandler}>삭제하기</span>
                 </div>
               )}
 
@@ -638,7 +638,7 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
                                         @{coData.member.nickName}
                                       </span>
                                       <input
-                                        className="w-[70%] outline-none ml-[10rem] text-[1.4rem] font-normal pl-[4.5rem]"
+                                        className="w-[70%] outline-none ml-[10rem] text-[1.4rem] font-normal pl-[1.5rem]"
                                         type="text"
                                         placeholder="에게 답글쓰기"
                                         value={replyComment}
@@ -743,7 +743,7 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
                                       @{replyNickname}
                                     </span>
                                     <input
-                                      className="w-[70%] outline-none ml-[10rem] text-[1.4rem] font-normal pl-[4.5rem]" // padding-left 추가
+                                      className="w-[70%] outline-none ml-[10rem] text-[1.4rem] font-normal pl-[1.5rem]" // padding-left 추가
                                       type="text"
                                       value={replyComment}
                                       onChange={(e) => setReplyComment(e.target.value)}
