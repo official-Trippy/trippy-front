@@ -172,7 +172,7 @@ const RecentOotdPost: React.FC = () => {
 
   return (
     <div className='w-[90%] sm-700:w-[66%]  mx-auto pt-[5rem] mb-[90px]'>
-      {userInfo && !isLoading && (
+      {!isLoading && (
         <div>
           <h1 className='font-bold text-[2rem]'>최근 업로드된 OOTD를 만나보세요</h1>
         </div>
