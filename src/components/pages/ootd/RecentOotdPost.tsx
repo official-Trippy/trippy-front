@@ -45,7 +45,7 @@ const TagContainer: React.FC<TagContainerProps> = ({ item }) => {
       <div className="text-[#6b6b6b] text-xl font-normal font-['Pretendard'] text-ellipsis overflow-hidden whitespace-nowrap">
         {item.post.body}
       </div>
-      <div className="tag-container mt-2" ref={containerRef}>
+      <div className="tag-container" ref={containerRef}>
         {visibleTags.map((tag, index) => (
           <span
             key={index}
@@ -221,14 +221,19 @@ const isGuest = userInfo?.role === 'GUEST';
                />
            </div>
            )}
-           <div className="py-4">
-               <div className="flex items-center justify-end">
+            <TagContainer item={item} />
+           <div className="pb-4">
+               <div className="flex items-center justify-start">
                    <div className="flex items-center mt-2">
                        <Image
                            src={likedPosts.includes(item.post.id) ? HeartIcon : EmptyHeartIcon}
                            alt="좋아요"
                            width={20}
-                           height={20}
+                           height={10}
+                           style={{
+                               width: '20px',
+                               height: '18px',
+                           }}
                        />
                        <span className="mx-2 text-[#cfcfcf]"> {item.post.likeCount}</span>
                        <Image
@@ -236,11 +241,14 @@ const isGuest = userInfo?.role === 'GUEST';
                            alt="댓글"
                            width={20}
                            height={20}
+                           style={{
+                               width: '20px',
+                               height: '18px',
+                           }}
                        />
                        <span className="mx-2 text-[#cfcfcf]"> {item.post.commentCount}</span>
                    </div>
                </div>
-               <TagContainer item={item} />
            </div>
            </div>
            ))
