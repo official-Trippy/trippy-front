@@ -184,8 +184,8 @@ const Header = () => {
                       userInfo={userInfo}
                       style={{
                         position: "absolute",
-                        bottom: "-260px",
-                        left: "-290px",
+                        bottom: "-200px",
+                        left: "-210px",
                       }}
                       handleLogout={async () => {
                         Cookies.remove("accessToken");

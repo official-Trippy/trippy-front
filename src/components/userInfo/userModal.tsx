@@ -53,37 +53,37 @@ const UserModal: React.FC<
 
   return (
     <div
-      className="w-[32rem] h-[25.4rem] relative bg-white rounded-lg shadow z-[50]"
+      className="w-[24rem] h-[18rem] relative bg-white rounded-lg shadow z-[50]"
       style={style}
     >
-      <div className="px-[2rem] pt-[2rem] py-[1rem]">
+      <div className="px-[2rem] pt-[2rem] pb-[1rem]">
         <div className="flex-col justify-center items-start gap-3 inline-flex">
-          <div className="self-stretch justify-start items-center gap-20 inline-flex">
+          <div className="self-stretch justify-start items-center inline-flex gap-12">
             <div className="flex-col justify-start items-start gap-2 inline-flex">
-              <div className="text-zinc-800 text-4xl font-bold font-Pretendard">
+              <div className="text-zinc-800 text-2xl font-bold font-Pretendard">
                 {userInfo.nickName}
               </div>
               <div className="flex-col justify-start items-start gap-1 flex">
-                <div className="text-neutral-400 text-2xl font-normal font-Pretendard">
+                <div className="text-neutral-400 text-xl font-normal font-Pretendard">
                   {userInfo.email}
                 </div>
                 <div className="justify-start items-center gap-[9px] inline-flex">
                   <div className="justify-start items-start gap-1 flex">
-                    <div className="text-center text-neutral-400 text-2xl font-normal font-Pretendard">
+                    <div className="text-center text-neutral-400 text-xl font-normal font-Pretendard">
                       팔로워 {userData?.followerCnt}
                     </div>
-                    <div className="text-center text-neutral-500 text-2xl font-semibold font-Pretendard"></div>
+                    <div className="text-center text-neutral-500 text-xl font-semibold font-Pretendard"></div>
                   </div>
                   <div className="justify-start items-start gap-1 flex">
-                    <div className="text-center text-neutral-400 text-2xl font-normal font-Pretendard">
+                    <div className="text-center text-neutral-400 text-xl font-normal font-Pretendard">
                       팔로잉 {userData?.followingCnt}
                     </div>
-                    <div className="text-center text-neutral-500 text-2xl font-semibold font-Pretendard"></div>
+                    <div className="text-center text-neutral-500 text-xl font-semibold font-Pretendard"></div>
                   </div>
                 </div>
               </div>
             </div>
-            <div className="w-[46.61px] h-[46.61px]">
+            <div className="w-[36px] h-[36px]">
               {userInfo.socialType === "naver" && (
                 <Image
                   src={NaverLogo}
@@ -110,15 +110,15 @@ const UserModal: React.FC<
               )}
             </div>
           </div>
-          <div className="mt-[0.8rem]">
+          <div className="">
             <span
-              className="text-neutral-500 text-2xl font-normal font-Pretendard cursor-pointer"
+              className="text-neutral-500 text-lg font-normal font-Pretendard cursor-pointer"
               onClick={handleMyPage}
             >
               마이페이지
             </span>
             <span
-              className="text-rose-500 text-2xl font-normal font-Pretendard cursor-pointer ml-[10px]"
+              className="text-rose-500 text-lg font-normal font-Pretendard cursor-pointer ml-[10px]"
               onClick={handleLogoutClick}
             >
               로그아웃
@@ -127,12 +127,12 @@ const UserModal: React.FC<
         </div>
       </div>
       <hr className="border-CFCFCF mb-[1px]" />
-      <div className="pt-[1rem] px-[2rem]">
-        <div className="flex-col justify-center items-start gap-1 inline-flex w-full">
-          <div className="text-zinc-800 text-4xl font-bold font-Pretendard">
+      <div className="pt-[1rem] px-[2rem] pb-[2rem]">
+        <div className="flex-col justify-center items-start inline-flex w-full">
+          <div className="text-zinc-800 text-2xl font-bold font-Pretendard">
             {userInfo.blogName}
           </div>
-          <div className="mt-[0.4rem] text-neutral-400 text-2xl font-normal font-Pretendard p-1">
+          <div className="text-neutral-400 text-xl font-normal font-Pretendard pt-[2px]">
             {userInfo.blogIntroduce}
           </div>
         </div>
