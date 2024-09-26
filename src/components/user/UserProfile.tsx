@@ -90,7 +90,7 @@ const UserProfile: React.FC<UserProfileProps> = ({
           </div>
 
 
-          <div className="ml-auto flex items-center mt-[30px] mr-[50px]">
+          <div className="ml-auto flex items-center mt-[30px] mx-auto">
             {targetMemberId && userMemberId && (
               <FollowButton
                 postMemberId={memberId}

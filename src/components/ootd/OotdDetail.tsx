@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import Slider from "react-slick";
-import { deleteOotdPost, fetchOotdPostDetail } from "@/services/ootd.ts/ootdGet";
+import { deleteOotdPost, fetchOotdPostDetail, fetchRecommendedSpots } from "@/services/ootd.ts/ootdGet";
 import { OotdDetailGetResponse } from "@/types/ootd";
 import { useUserStore } from "@/store/useUserStore";
 import "slick-carousel/slick/slick.css";
@@ -18,7 +18,7 @@ import { useRouter } from "next/navigation";
 import FollowButton from "../followControl/followButton";
 import Cookies from "js-cookie";
 import Swal from "sweetalert2";
-import CabapIcon from "../../../public/cabap.svg";
+import CabapIcon from "../../../public/cabap-icon2.svg";
 import BookmarkIcon from "../../../public/icon_bookmark.svg";
 import BookmarkedIcon from "../../../public/bookmark-fill.svg";
 import { addBookmark, deleteBookmark, fetchIsBookmarked } from "@/services/bookmark/bookmark";
@@ -35,11 +35,23 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
     ["ootdPostDetail", id],
     () => fetchOotdPostDetail(id),
     {
-      refetchOnWindowFocus: true, // 포커스가 돌아왔을 때 리패칭
-      refetchOnMount: true,       // 컴포넌트가 다시 마운트될 때 리패칭
-      staleTime: 0,               // 데이터를 신선하게 유지하기 위한 시간
+      refetchOnWindowFocus: true, 
+      refetchOnMount: true,       
+      staleTime: 0,              
     }
   );
+
+  console.log('Current post id:', id);
+
+  const { data: recommendedSpots, isLoading: isSpotsLoading, error: spotsError } = useQuery(
+    ['recommendedSpots', id],
+    () => fetchRecommendedSpots(id),
+    {
+      enabled: !!id, // id가 존재할 때만 호출되도록 설정
+      refetchOnWindowFocus: false,
+    }
+  );
+  console.log('추천', recommendedSpots);
 
   const [isBookmarked, setIsBookmarked] = useState<boolean>(false);
 
@@ -230,7 +242,7 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
                 {ootdItem.member.nickName}
               </span>
               <div className="flex items-center gap-2">
-                <div className="flex-shrink-0 ml-[0.35px]">
+                <div className="flex-shrink-0">
                   <Image width={16} height={16} src={LocationIcon} alt="location" />
                 </div>
                 <div className="whitespace-nowrap overflow-hidden text-ellipsis">
@@ -254,10 +266,10 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
           </div>
 
           {/* 오른쪽 팔로우 버튼 및 아이콘들 */}
-          <div className="mt-auto flex items-center space-x-4 sm-700:space-x-8">
+          <div className="mt-auto flex items-center space-x-4">
             <FollowButton postMemberId={data.result.member.memberId} userMemberId={userMemberId} />
             {/* 북마크 및 메뉴 아이콘 */}
-            <div className="min-w-[35px] flex items-center mr-[10px]">
+            <div className="min-w-[35px] flex items-center">
               <Image
                 src={isBookmarked ? BookmarkedIcon : BookmarkIcon}
                 alt="bookmark"
@@ -276,17 +288,17 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
                 <Image
                   src={CabapIcon}
                   alt="cabap"
-                  width={3.5}
-                  height={30}
+                  width={24}
+                  height={24}
                   onClick={handleCabapIconClick}
                   className="cursor-pointer"
                 />
                 {isMenuOpen && (
-                 <div className="absolute top-full right-0 mt-4 w-32 bg-white rounded shadow-lg z-10">
+                 <div className="absolute top-full right-0 mt-4 w-32 bg-white rounded shadow-2xl z-10">
                  <div className="pb-2 pt-3 px-4 text-[#ff4f4f] cursor-pointer text-center" onClick={handleDeleteClick}>
                    삭제
                  </div>
-                 <div className="border-t border-gray-300 my-2" /> {/* 줄 추가 */}
+                 <div className="border-t border-gray-300 my-2" />
                  <div className="pb-3 pt-2 px-4 text-black cursor-pointer text-center" onClick={() => router.push(`/edit/${id}`)}>
                    수정
                  </div>
@@ -344,6 +356,31 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
           />
         </div>
       </div>
+      <div className="mt-12">
+  <h2 className="font-bold text-2xl">추천 장소</h2>
+  {isSpotsLoading && <p>추천 장소를 불러오는 중입니다...</p>}
+  
+  {recommendedSpots?.result && recommendedSpots.result.length > 0 ? (
+    <ul className="mt-4">
+      {recommendedSpots.result.map((spot: any, index: number) => (
+        <li key={index} className="mb-2">
+          <p className="text-xl font-medium">{spot.title}</p>
+          <p className="text-gray-600">{spot.content}</p>
+          {/* {spot.imgUrl && spot.imgUrl.length > 0 && (
+            <Image
+              src={spot.imgUrl[0].imgUrl} // 첫 번째 이미지 사용
+              alt={spot.title}
+              width={spot.imgUrl[0].width}
+              height={spot.imgUrl[0].height}
+            />
+          )} */}
+        </li>
+      ))}
+    </ul>
+  ) : (
+    !isSpotsLoading && <p>추천 장소가 없습니다.</p>
+  )}
+</div>
     </>
   );
 };

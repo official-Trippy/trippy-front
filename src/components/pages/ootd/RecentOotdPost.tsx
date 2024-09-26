@@ -8,12 +8,13 @@ import { OotdGetResponse } from '@/types/ootd';
 import { fetchAllOotdPostCount, fetchAllOotdPosts, fetchFollowOotdPosts, fetchOotdFollowPostCount } from '@/services/ootd.ts/ootdGet';
 import { fetchLikedPosts } from '@/services/ootd.ts/ootdComments';
 import CustomSelect from './CustomSelect';
-import { useUserStore } from '@/store/useUserStore'; // zustand로 전역 상태를 사용합니다.
+import { useUserStore } from '@/store/useUserStore';
 import DefaultImage from '../../../../public/defaultImage.svg';
 import HeartIcon from '../../../../public/heartedIcon.svg';
 import EmptyHeartIcon from '../../../../public/heartIcon-default.svg';
 import CommentIcon1 from '../../../../public/commentIcon-default.svg';
 import { TagContainerProps } from '@/types/tag';
+import Cookies from "js-cookie";
 
 const PAGE_SIZE = 12;
 
@@ -45,7 +46,7 @@ const TagContainer: React.FC<TagContainerProps> = ({ item }) => {
       <div className="text-[#6b6b6b] text-xl font-normal font-['Pretendard'] text-ellipsis overflow-hidden whitespace-nowrap">
         {item.post.body}
       </div>
-      <div className="tag-container mt-2" ref={containerRef}>
+      <div className="tag-container" ref={containerRef}>
         {visibleTags.map((tag, index) => (
           <span
             key={index}
@@ -71,8 +72,16 @@ const RecentOotdPost: React.FC = () => {
     userInfo: state.userInfo,
     loading: state.loading,
   }));
+  const accessToken = Cookies.get('accessToken');
+  const [token,setToken] = useState(false);
 
-const isGuest = userInfo?.role === 'GUEST';
+  const isGuest = userInfo?.role === 'GUEST';
+
+  useEffect(() => {
+    if (token) {
+      setToken(true);
+    }
+  },[accessToken]);
 
 
   useEffect(() => {
@@ -157,8 +166,6 @@ const isGuest = userInfo?.role === 'GUEST';
     router.push('/login');
   };
   
-
-  // 탭이 초기화되지 않았거나 로딩 중이면 null을 반환
   if (!isTabInitialized || isLoading) return null;
   if (loading || isLoading) return null;
 
@@ -178,12 +185,14 @@ const isGuest = userInfo?.role === 'GUEST';
         >
           전체글
         </span>
+        { userInfo && (
         <span
           className={`px-[1rem] cursor-pointer ${tab === 'FOLLOWING' ? 'font-bold text-[#fa3463]' : ''}`}
           onClick={() => handleTabChange('FOLLOWING')}
         >
           팔로잉
         </span>
+        )}
         <div className='ml-auto'>
           <CustomSelect orderType={orderType} onOrderTypeChange={handleOrderTypeChange} />
         </div>
@@ -221,14 +230,19 @@ const isGuest = userInfo?.role === 'GUEST';
                />
            </div>
            )}
-           <div className="py-4">
-               <div className="flex items-center justify-end">
+            <TagContainer item={item} />
+           <div className="pb-4">
+               <div className="flex items-center justify-start">
                    <div className="flex items-center mt-2">
                        <Image
                            src={likedPosts.includes(item.post.id) ? HeartIcon : EmptyHeartIcon}
                            alt="좋아요"
                            width={20}
-                           height={20}
+                           height={10}
+                           style={{
+                               width: '20px',
+                               height: '18px',
+                           }}
                        />
                        <span className="mx-2 text-[#cfcfcf]"> {item.post.likeCount}</span>
                        <Image
@@ -236,11 +250,14 @@ const isGuest = userInfo?.role === 'GUEST';
                            alt="댓글"
                            width={20}
                            height={20}
+                           style={{
+                               width: '20px',
+                               height: '18px',
+                           }}
                        />
                        <span className="mx-2 text-[#cfcfcf]"> {item.post.commentCount}</span>
                    </div>
                </div>
-               <TagContainer item={item} />
            </div>
            </div>
            ))

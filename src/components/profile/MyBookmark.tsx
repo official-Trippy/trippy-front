@@ -132,7 +132,20 @@ const MyBookmark = () => {
                           />
                         </div>
                       )}
-                      <div className="flex items-center my-4 justify-end">
+                      <div className="mt-4 text-[#6b6b6b] text-xl font-normal text-ellipsis overflow-hidden whitespace-nowrap">
+                        {item.post.body}
+                      </div>
+                      <div className="tag-container">
+                        {item.post.tags?.map((tag: string, index: number) => (
+                          <span
+                            key={index}
+                            className="tag-item px-4 py-1 bg-neutral-100 rounded-3xl text-xl text-[#9d9d9d]"
+                          >
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+                      <div className="flex items-center mt-2 pb-4 justify-start">
                         <Image
                           src={likedPosts.includes(item.post.id) ? HeartIcon : EmptyHeartIcon} 
                           alt="좋아요"
@@ -147,19 +160,6 @@ const MyBookmark = () => {
                           height={20}
                         />
                         <span className="mx-2 text-[#cfcfcf]">{item.post.commentCount}</span>
-                      </div>
-                      <div className="text-[#6b6b6b] text-xl font-normal text-ellipsis overflow-hidden whitespace-nowrap">
-                        {item.post.body}
-                      </div>
-                      <div className="tag-container">
-                        {item.post.tags?.map((tag: string, index: number) => (
-                          <span
-                            key={index}
-                            className="tag-item px-4 py-1 bg-neutral-100 rounded-3xl text-xl text-[#9d9d9d]"
-                          >
-                            {tag}
-                          </span>
-                        ))}
                       </div>
                     </div>
                   ))}

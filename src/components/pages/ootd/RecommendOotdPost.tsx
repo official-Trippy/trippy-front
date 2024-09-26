@@ -95,6 +95,8 @@ const RecommendOotdPost = () => {
         try {
             const userInterests = userInfo?.koreanInterestedTypes || []; // 유저의 관심사 추출
             const userName = userInfo?.nickName;
+
+            console.log('유저 관심사', userInterests);
             setUserName(userName);
 
             if (userInterests.length > 0) {
