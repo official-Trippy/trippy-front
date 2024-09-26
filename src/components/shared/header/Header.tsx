@@ -139,12 +139,12 @@ const Header = () => {
             <>
               {userInfo && accessToken ? (
                 <div className="flex relative items-center gap-8">
-                  <div className="w-[30px] h-[30px] relative">
+                  <div className="w-[18px] h-[18px] relative">
                     <Image
                       src={alertIconMobile}
                       alt="alert"
-                      width={30}
-                      height={30}
+                      width={18}
+                      height={18}
                       onClick={handleNotificationsToggle}
                       className="cursor-pointer"
                     />

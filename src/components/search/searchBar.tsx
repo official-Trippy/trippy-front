@@ -23,7 +23,7 @@ const SearchBar: React.FC = () => {
           type="text"
           value={query}
           onChange={handleInputChange}
-          placeholder="찾으시는 게시물을 입력하세요"
+          placeholder=""
           className="w-full min-w-[100px] h-[32px] pl-4 pr-10 text-gray-800 border-none rounded-[16px] outline-none focus:ring-2 focus:ring-gray-300"
           style={{
             backgroundColor: "#F5F5F5",
@@ -34,13 +34,14 @@ const SearchBar: React.FC = () => {
             }
           }}
         />
-        <FaSearch
-          className="absolute right-3 text-gray-600 cursor-pointer"
-          style={{
-            color: "#6B6B6B",
-          }}
-          onClick={handleSearch}
-        />
+      <FaSearch
+        className="absolute right-3 text-gray-600 cursor-pointer"
+        style={{
+          color: "#6B6B6B",
+          fontSize: '14px', 
+        }}
+        onClick={handleSearch}
+      />
       </div>
     </div>
   );
