@@ -20,6 +20,7 @@ import trainG from "@/dummy/main/trainG.svg"
 import bycicleG from "@/dummy/main/bycicleG.svg"
 import carG from "@/dummy/main/carG.svg"
 import { AirSVG, BusSVG, BycicleSVG, CarSVG, TrainSVG } from "@/components/transportsvg/home";
+import RecommendBoard from "@/components/pages/home/RecommendBoard";
 
 
 const PAGE_SIZE = 10;
@@ -79,7 +80,8 @@ export default function Home() {
     <div>
       <Header />
       {/*추천 알고리즘 구현해야됨*/}
-      <Recommend memberData={memberData} isLoading={isLoading}>
+      <RecommendBoard />
+      {/* <Recommend memberData={memberData} isLoading={isLoading}>
         <div className="flex mt-[4rem]">
           <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-4 gap-x-[2rem] w-full">
             {boardData?.result.slice(0, visibleCards).map((posts: any, index: number) => {
@@ -153,7 +155,7 @@ export default function Home() {
             })}
           </div>
         </div>
-      </Recommend>
+      </Recommend> */}
       <RecentPost allPosts={allPosts} setAllPosts={setAllPosts} boardData={boardData} userInfo={userInfo} boardRefetch={boardRefetch} PAGE_SIZE={PAGE_SIZE} pages={pages} setPages={setPages} />
 
     </div>
