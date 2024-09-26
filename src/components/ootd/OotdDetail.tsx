@@ -230,7 +230,7 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
                 {ootdItem.member.nickName}
               </span>
               <div className="flex items-center gap-2">
-                <div className="flex-shrink-0 ml-[0.35px]">
+                <div className="flex-shrink-0">
                   <Image width={16} height={16} src={LocationIcon} alt="location" />
                 </div>
                 <div className="whitespace-nowrap overflow-hidden text-ellipsis">
