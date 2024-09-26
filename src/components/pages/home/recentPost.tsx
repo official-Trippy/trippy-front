@@ -103,8 +103,7 @@ function RecentPost({ allPosts, setAllPosts, boardData, userInfo, boardRefetch, 
     return (
         <div className='w-[90%] sm-700:w-[66%] mx-auto py-[5rem]'>
             <div>
-                <h1 className='font-bold text-[2rem]'>최근 여행 여정을
-                    함께 해보세요! </h1>
+                <h1 className='font-bold text-[2rem]'>트리피의 다양한 여정을 함께 해보세요!</h1>
                 <div className='flex text-[1.6rem] pt-[5rem] px-[1rem]'>
                     <span className={`px-[2rem] cursor-pointer transition-all duration-300 ${allPosts === 0 ? "font-bold border-b-2 border-black" : ""}`} onClick={() => setAllPosts(0)}>전체글</span>
                     <span className={`px-[2rem] cursor-pointer transition-all duration-300 ${allPosts === 1 ? "font-bold border-b-2 border-black" : ""}`} onClick={() => setAllPosts(1)}>팔로잉</span>
