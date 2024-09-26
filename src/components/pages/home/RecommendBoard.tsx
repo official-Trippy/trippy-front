@@ -379,11 +379,11 @@ const RecommendBoard = () => {
                                         <div className={`w-full flex font-extrabold font-akira mx-auto justify-center items-center `}>
                                             {item.ticket.departureCode && (
                                                 <>
-                                                    <span className={`2xl:text-[3.2rem] xl:text-[2.6rem] lg:text-[2rem] md:text-[1.4rem] text-[1.4rem] ${window.innerWidth < 500 ? 'hidden' : ''}`}>{item.ticket.departureCode}</span>
+                                                    <span className={`text-[1.4rem] 2xl:text-[3.2rem] xl:text-[2.2rem] lg:text-[1.6rem] md:text-[1.4rem] ${window.innerWidth < 500 ? 'hidden' : ''}`}>{item.ticket.departureCode}</span>
                                                     <div className={`mx-[0.5rem] ${window.innerWidth < 500 ? 'hidden' : ''}`}>
                                                         {getTransportImage(item.ticket.transport, item.ticket.ticketColor)}
                                                     </div>
-                                                    <span className={`2xl:text-[3.2rem] xl:text-[2.6rem] lg:text-[2rem] md:text-[1.4rem] text-[1.4rem] ${window.innerWidth < 500 ? 'hidden' : ''}`}>{item.ticket.destinationCode}</span>
+                                                    <span className={`2xl:text-[3.2rem] xl:text-[2.2rem] lg:text-[1.6rem] md:text-[1.4rem] text-[1.4rem] ${window.innerWidth < 500 ? 'hidden' : ''}`}>{item.ticket.destinationCode}</span>
                                                 </>
                                             )}
                                         </div>
