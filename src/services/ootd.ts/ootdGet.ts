@@ -221,3 +221,17 @@ export const fetchRecommendOotdPost = async (interestType: string) => {
     throw error;
   }
 };
+
+export const fetchRecommendedSpots = async (postId: number) => {
+  console.log(`Fetching recommended spots for postId: ${postId}`);
+  try {
+    const response = await axios.get(
+      `${backendUrl}/api/recommend/spot?postId=${postId}`
+    );
+    console.log('추천 장소 데이터:', response.data);  // 데이터를 콘솔에 출력
+    return response.data;        // 받은 데이터를 반환
+  } catch (error) {
+    console.error(`추천 장소 정보를 가져오는 중 오류가 발생했습니다: ${error}`);
+    throw error;
+  }
+};

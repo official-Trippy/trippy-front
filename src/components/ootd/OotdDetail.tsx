@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import Slider from "react-slick";
-import { deleteOotdPost, fetchOotdPostDetail } from "@/services/ootd.ts/ootdGet";
+import { deleteOotdPost, fetchOotdPostDetail, fetchRecommendedSpots } from "@/services/ootd.ts/ootdGet";
 import { OotdDetailGetResponse } from "@/types/ootd";
 import { useUserStore } from "@/store/useUserStore";
 import "slick-carousel/slick/slick.css";
@@ -35,11 +35,23 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
     ["ootdPostDetail", id],
     () => fetchOotdPostDetail(id),
     {
-      refetchOnWindowFocus: true, // 포커스가 돌아왔을 때 리패칭
-      refetchOnMount: true,       // 컴포넌트가 다시 마운트될 때 리패칭
-      staleTime: 0,               // 데이터를 신선하게 유지하기 위한 시간
+      refetchOnWindowFocus: true, 
+      refetchOnMount: true,       
+      staleTime: 0,              
     }
   );
+
+  console.log('Current post id:', id);
+
+  const { data: recommendedSpots, isLoading: isSpotsLoading, error: spotsError } = useQuery(
+    ['recommendedSpots', id],
+    () => fetchRecommendedSpots(id),
+    {
+      enabled: !!id, // id가 존재할 때만 호출되도록 설정
+      refetchOnWindowFocus: false,
+    }
+  );
+  console.log('추천', recommendedSpots);
 
   const [isBookmarked, setIsBookmarked] = useState<boolean>(false);
 
@@ -344,6 +356,31 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
           />
         </div>
       </div>
+      <div className="mt-12">
+  <h2 className="font-bold text-2xl">추천 장소</h2>
+  {isSpotsLoading && <p>추천 장소를 불러오는 중입니다...</p>}
+  
+  {recommendedSpots?.result && recommendedSpots.result.length > 0 ? (
+    <ul className="mt-4">
+      {recommendedSpots.result.map((spot: any, index: number) => (
+        <li key={index} className="mb-2">
+          <p className="text-xl font-medium">{spot.title}</p>
+          <p className="text-gray-600">{spot.content}</p>
+          {/* {spot.imgUrl && spot.imgUrl.length > 0 && (
+            <Image
+              src={spot.imgUrl[0].imgUrl} // 첫 번째 이미지 사용
+              alt={spot.title}
+              width={spot.imgUrl[0].width}
+              height={spot.imgUrl[0].height}
+            />
+          )} */}
+        </li>
+      ))}
+    </ul>
+  ) : (
+    !isSpotsLoading && <p>추천 장소가 없습니다.</p>
+  )}
+</div>
     </>
   );
 };
