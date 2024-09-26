@@ -14,9 +14,8 @@ import { useRouter, usePathname } from "next/navigation";
 import Cookies from "js-cookie";
 import SearchBar from "@/components/search/searchBar";
 import NotificationComponent from "@/components/notification/notificationComponent"; // Import NotificationComponent
-
-import postwriteImg from "@/dummy/postwrite.svg"
-
+import SearchBarMobileBar from "@/components/search/searchMobileBar";
+import postwriteImg from "@/dummy/postwrite.svg";
 
 const Header = () => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -197,7 +196,7 @@ const Header = () => {
                   {isDropdownOpen && (
                     <div
                       className="absolute w-[31rem] mt-[1rem] ml-[1rem] top-[3.6rem] rounded-[0.8rem] bg-white shadowalltop rounded-lg animate-dropdown z-20"
-                      style={{ opacity: 0, transform: 'translateY(-10px)' }}
+                      style={{ opacity: 0, transform: "translateY(-10px)" }}
                       onMouseEnter={() => setIsDropdownOpen(true)} // 드롭다운에 마우스가 올라가면 열려있도록 유지
                       onMouseLeave={() => setIsDropdownOpen(false)}
                     >
@@ -205,10 +204,20 @@ const Header = () => {
                         <div className="px-[1.3rem] pt-[1.2rem] rounded-lg border-b border-white">
                           <div className="hover:bg-gray-200 px-[1.3rem] py-[1.2rem]">
                             <div className="flex items-start">
-                              <Image className="mr-[1.7rem] mt-[0.5rem]" src={postwriteImg} width={24} height={24} alt="" />
+                              <Image
+                                className="mr-[1.7rem] mt-[0.5rem]"
+                                src={postwriteImg}
+                                width={24}
+                                height={24}
+                                alt=""
+                              />
                               <div>
-                                <h1 className="text-[1.6rem] font-medium text-black">블로그 티켓 글쓰기</h1>
-                                <span className="text-[1.4rem] font-normal text-[#9D9D9D]">여행에서 겪었던 이야기를 기록해 보세요.</span>
+                                <h1 className="text-[1.6rem] font-medium text-black">
+                                  블로그 티켓 글쓰기
+                                </h1>
+                                <span className="text-[1.4rem] font-normal text-[#9D9D9D]">
+                                  여행에서 겪었던 이야기를 기록해 보세요.
+                                </span>
                               </div>
                             </div>
                           </div>
@@ -218,10 +227,20 @@ const Header = () => {
                         <div className="px-[1.3rem] pb-[1.2rem] rounded-lg border-b border-white">
                           <div className="hover:bg-gray-200 px-[1.3rem] py-[1.2rem]">
                             <div className="flex items-start">
-                              <Image className="mr-[1.7rem] mt-[0.5rem]" src={postwriteImg} width={24} height={24} alt="" />
+                              <Image
+                                className="mr-[1.7rem] mt-[0.5rem]"
+                                src={postwriteImg}
+                                width={24}
+                                height={24}
+                                alt=""
+                              />
                               <div>
-                                <h1 className="text-[1.6rem] font-medium text-black">OOTD 글쓰기</h1>
-                                <span className="text-[1.4rem] font-normal text-[#9D9D9D]">여행 중 나의 특별한 OOTD를 공유해보세요.</span>
+                                <h1 className="text-[1.6rem] font-medium text-black">
+                                  OOTD 글쓰기
+                                </h1>
+                                <span className="text-[1.4rem] font-normal text-[#9D9D9D]">
+                                  여행 중 나의 특별한 OOTD를 공유해보세요.
+                                </span>
                               </div>
                             </div>
                           </div>
@@ -239,9 +258,7 @@ const Header = () => {
               ) : (
                 <div>
                   <Link href="/login">
-                    <button
-                      className="w-[8.6rem] h-[32px] bg-btn-color text-white text-2xl rounded-[8px] font-semibold"
-                    >
+                    <button className="w-[8.6rem] h-[32px] bg-btn-color text-white text-2xl rounded-[8px] font-semibold">
                       로그인
                     </button>
                   </Link>
@@ -252,9 +269,7 @@ const Header = () => {
           {!loading && isGuest && (
             <div>
               <Link href="/login">
-                <button
-                  className="w-[8.6rem] h-[32px] bg-btn-color text-white text-2xl rounded-[8px] font-semibold"
-                >
+                <button className="w-[8.6rem] h-[32px] bg-btn-color text-white text-2xl rounded-[8px] font-semibold">
                   로그인
                 </button>
               </Link>
@@ -275,7 +290,6 @@ const Header = () => {
           </Link>
         </div>
         <div className="flex items-center gap-4 ml-auto">
-
           <Image
             src={searchIconMobile}
             alt="Search"
@@ -294,28 +308,23 @@ const Header = () => {
           />
         </div>
         {searchModalVisible && (
-          <div className="fixed inset-0 z-50 bg-white flex flex-col items-center pt-8">
+          <div className="fixed inset-0 z-50 bg-white flex flex-col items-center pt-2">
             {" "}
             {/* pt-8로 상단에 적당히 여백을 줌 */}
             <div className="w-full max-w-[600px] flex justify-between items-center mb-4 px-4 py-2">
-              <Image
+              {/* <Image
                 src={LogoHeader}
                 alt="Logo"
                 className="w-[110px] h-[34px] object-contain"
-              />
-              <button
-                className="text-gray-600 px-6"
-                onClick={() => setSearchModalVisible(false)} // 닫기 버튼
-              >
-                닫기
-              </button>
+              /> */}
             </div>
             <div className="w-full max-w-[600px] px-4">
-              <SearchBar />
+              <SearchBarMobileBar
+                setSearchModalVisible={setSearchModalVisible}
+              />
             </div>
           </div>
         )}
-
       </div>
     </header>
   );
