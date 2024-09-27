@@ -376,7 +376,7 @@ const RecommendBoard = () => {
                                         {window.innerWidth < 500 ? (
                                             <div className={`relative w-full rounded-xl `} style={{ aspectRatio: '273 / 303' }}>
                                                 <Image
-                                                    className="absolute top-0 left-0 h-full object-cover rounded-xl"
+                                                    className="absolute top-0 left-0 h-full object-cover rounded-xl filter brightness-90"
                                                     src={item.ticket.image?.accessUri}
                                                     alt="TICKET"
                                                     layout="fill"
@@ -389,7 +389,7 @@ const RecommendBoard = () => {
                                         ) : (
                                             <div className={`relative w-full rounded-xl ${colorTicket[item.ticket.ticketColor] ? `bg-[${colorTicket[item.ticket.ticketColor]}]` : ''}`} style={{ aspectRatio: '273 / 303' }}>
                                                 <Image
-                                                    className="absolute top-0 left-0 h-full object-cover rounded-xl p-[1rem]"
+                                                    className="absolute top-0 left-0 h-full object-cover rounded-xl p-[1rem] "
                                                     src={item.ticket.image?.accessUri}
                                                     alt="TICKET"
                                                     layout="fill"
