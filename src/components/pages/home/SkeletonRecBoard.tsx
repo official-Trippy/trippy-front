@@ -49,7 +49,7 @@ const SkeletonRecBoard: React.FC = () => {
             <div className="relative mx-auto">
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
                     {[...Array(itemCount)].map((_, index) => (
-                        <div key={index} className="relative bg-gray-200 rounded-xl w-full h-[40rem] animate-pulse" />
+                        <div key={index} className="relative bg-gray-200 rounded-xl w-full h-[20rem] sm:h-[20rem] lg:h-[45rem] animate-pulse" />
                     ))}
                 </div>
             </div>
