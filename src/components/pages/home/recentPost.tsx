@@ -114,7 +114,7 @@ function RecentPost({ allPosts, setAllPosts, boardData, boardRefetch, PAGE_SIZE,
 
             return () => clearTimeout(delay);
         }
-    }, [isLoading]);
+    }, [loading]);
 
     if (loading || showSkeleton) {
         return <SkeletonBoard />;
