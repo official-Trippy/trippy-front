@@ -550,7 +550,7 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
                     <div className="w-full">
                       <div className="flex items-center">
                         <Image
-                          className="flex items-center"
+                          className="w-[2.8rem] h-[2.8rem] flex items-center rounded-[4.5rem]"
                           src={memberDatas?.result.profileImageUrl}
                           alt=""
                           width={28}
