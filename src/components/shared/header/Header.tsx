@@ -72,6 +72,9 @@ const Header = () => {
 
   const handleModalToggle = () => {
     setModalVisible(!modalVisible);
+    if (isDropdownOpen) {
+      setIsDropdownOpen(false);
+    }
   };
 
   const handleNotificationsToggle = () => {
@@ -155,7 +158,7 @@ const Header = () => {
                     )}
                   </div>
                   <div className="w-[32px] my-auto relative">
-                    <div onClick={handleModalToggle}>
+                    <div onClick={() => { handleModalToggle(); setIsDropdownOpen(false); }}>
                       <div
                         style={{
                           width: "32px",
@@ -198,7 +201,10 @@ const Header = () => {
                     <div
                       className="absolute w-[31rem] mt-[1rem] ml-[1rem] top-[3.6rem] rounded-[0.8rem] bg-white shadowalltop rounded-lg animate-dropdown z-20"
                       style={{ opacity: 0, transform: 'translateY(-10px)' }}
-                      onMouseEnter={() => setIsDropdownOpen(true)} // 드롭다운에 마우스가 올라가면 열려있도록 유지
+                      onMouseEnter={() => {
+                        setIsDropdownOpen(true);
+
+                      }} // 드롭다운에 마우스가 올라가면 열려있도록 유지
                       onMouseLeave={() => setIsDropdownOpen(false)}
                     >
                       <Link href="/post">
@@ -231,7 +237,7 @@ const Header = () => {
                   )}
                   <button
                     className="w-[8.6rem] h-[32px] bg-btn-color text-white text-2xl rounded-[8px] ml-4 font-semibold"
-                    onMouseEnter={() => setIsDropdownOpen(true)}
+                    onMouseEnter={() => { setIsDropdownOpen(true); setModalVisible(false); }}
                   >
                     글쓰기
                   </button>
