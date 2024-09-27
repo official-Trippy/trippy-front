@@ -308,7 +308,7 @@ function PostWrite() {
                                     <input
                                         className='w-[12rem] text-[1.6rem] outline-none'
                                         type='text'
-                                        placeholder='검색 1'
+                                        placeholder='출발지'
                                         value={inputValue1} // 첫 번째 입력 값 상태
                                         onChange={(e) => setInputValue1(e.target.value)} // 입력 값 변경 시 핸들러
                                         onKeyDown={(e) => {
@@ -348,7 +348,7 @@ function PostWrite() {
                                     <input
                                         className='w-[12rem] text-[1.6rem] outline-none'
                                         type='text'
-                                        placeholder='검색 2'
+                                        placeholder='도착지'
                                         value={inputValue2} // 두 번째 입력 값 상태
                                         onChange={(e) => setInputValue2(e.target.value)} // 입력 값 변경 시 핸들러
                                         onKeyDown={(e) => {

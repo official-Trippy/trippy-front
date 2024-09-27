@@ -87,7 +87,7 @@ const RecommendBoard = () => {
         keepPreviousData: true,
     });
     console.log(data, selectedInterest)
-    const totalCount = data?.result.totalCnt;
+    const totalCount = data?.result?.totalCnt;
 
 
 
@@ -381,7 +381,7 @@ const RecommendBoard = () => {
                                                     alt="TICKET"
                                                     layout="fill"
                                                 />
-                                                <div className="absolute px-[1.7rem] flex-1 mt-[13rem]">
+                                                <div className="absolute px-[1.7rem] flex-1 mt-[12rem]">
                                                     <h1 className="font-semibold text-[1.7rem] text-white font-medium theboki text-ellipsis overflow-hidden">{item.post.title}</h1>
                                                     <span className="font-normal text-[1.4rem] text-white font-normal text-ellipsis overflow-hidden theboki1">{bodyText}</span>
                                                 </div>
