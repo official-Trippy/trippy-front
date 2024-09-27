@@ -48,15 +48,15 @@ const UserModal: React.FC<
     router.push("/login");
   };
 
-  
+
   if (!isOpen || !userInfo) return null;
 
   return (
     <div
-      className="w-[24rem] h-[18rem] relative bg-white rounded-lg shadow z-[50]"
+      className="w-[24rem] h-[18rem] relative bg-white rounded-lg shadow z-50"
       style={style}
     >
-      <div className="px-[2rem] pt-[2rem] pb-[1rem]">
+      <div className="px-[2rem] pt-[1.5rem] pb-[1rem]">
         <div className="flex-col justify-center items-start gap-3 inline-flex">
           <div className="self-stretch justify-start items-center inline-flex gap-12">
             <div className="flex-col justify-start items-start gap-2 inline-flex">
@@ -132,7 +132,7 @@ const UserModal: React.FC<
           <div className="text-zinc-800 text-2xl font-bold font-Pretendard">
             {userInfo.blogName}
           </div>
-          <div className="text-neutral-400 text-xl font-normal font-Pretendard pt-[2px]">
+          <div className="text-neutral-400 text-xl font-normal font-Pretendard pt-[2px] pb-[1rem]">
             {userInfo.blogIntroduce}
           </div>
         </div>
