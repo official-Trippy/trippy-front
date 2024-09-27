@@ -7,7 +7,7 @@ interface editorProps {
     setPostRequest: any;
 }
 
-const inputAPI = process.env.INPUT_TEXT_API_KEY;
+const inputAPI = process.env.NEXT_PUBLIC_INPUT_TEXT_API_KEY
 
 const MyTinyMCEEditor = ({ postRequest, setPostRequest }: editorProps) => {
 

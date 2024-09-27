@@ -21,6 +21,8 @@ import { colorTicket } from '@/types/board';
 import nonheartImg from "@/dummy/heartbin.svg"
 import heartImg from "@/dummy/heart.svg";
 import moment from "@/dummy/moment.svg"
+import SkeletonRecommendOotdPost from '../ootd/SkeletonRecommendOotdPost';
+import SkeletonRecBoard from './SkeletonRecBoard';
 
 const TagContainer: React.FC<TagContainerProps> = ({ item }) => {
     const containerRef = useRef<HTMLDivElement | null>(null);
@@ -79,19 +81,15 @@ const RecommendBoard = () => {
     const router = useRouter();
     const scrollRef = useRef<HTMLDivElement | null>(null);
     const swiperRef = useRef<SwiperRef | null>(null);
+    const [showSkeleton, setShowSkeleton] = useState(true);
 
     const { data, isLoading, error } = useQuery(['recommendOotdPost', selectedInterest], () => fetchRecommendBoard(selectedInterest), {
         keepPreviousData: true,
     });
-    console.log(data)
+    console.log(data, selectedInterest)
     const totalCount = data?.result.totalCnt;
 
-    useEffect(() => {
-        if (userInfo) {
-            fetchLikedPosts().then(setLikedPosts);
-            fetchUserInterests(); // 관심사 정보 가져오기
-        }
-    }, [userInfo]);
+
 
     // 사용자 정보에서 관심사 가져오기
     const fetchUserInterests = async () => {
@@ -110,6 +108,13 @@ const RecommendBoard = () => {
             console.error('Error fetching user interests:', error);
         }
     };
+
+    useEffect(() => {
+        if (userInfo) {
+            fetchLikedPosts().then(setLikedPosts);
+            fetchUserInterests(); // 관심사 정보 가져오기
+        }
+    }, [userInfo]);
 
     // 화면 크기에 따라 itemsPerSlide를 설정하는 함수
     const updateItemsPerSlide = () => {
@@ -139,6 +144,15 @@ const RecommendBoard = () => {
             scrollRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
         }
     };
+
+
+    useEffect(() => {
+        const delay = setTimeout(() => {
+            setShowSkeleton(false);
+        }, 1000); // 1000ms = 1초, 지연 시간을 원하는 시간으로 설정
+
+        return () => clearTimeout(delay);
+    }, []);
 
     const handleDrag = (e: React.MouseEvent) => {
         e.preventDefault();
@@ -197,6 +211,12 @@ const RecommendBoard = () => {
             }
         }
     };
+
+
+
+    if (loading || showSkeleton) {
+        return <SkeletonRecBoard />;
+    }
 
     return (
         <div className="relative w-[90%] sm-700:w-[66%] mx-auto mt-[5rem] overflow-visible">
@@ -342,7 +362,7 @@ const RecommendBoard = () => {
                                                     />
                                                 </div>
                                                 <div className="flex-1 overflow-hidden">
-                                                    <span className="text-white font-normal font-['Pretendard'] ml-[5px] overflow-hidden text-ellipsis whitespace-nowrap" style={{
+                                                    <span className="text-white font-normal text-[1.4rem] font-['Pretendard'] ml-[5px] overflow-hidden text-ellipsis whitespace-nowrap" style={{
                                                         whiteSpace: 'nowrap',
                                                         overflow: 'hidden',
                                                         textOverflow: 'ellipsis'

@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import React, { ReactNode, useState } from 'react'
+import React, { ReactNode, useEffect, useState } from 'react'
 import Link from "next/link";
 import nonheartImg from "@/dummy/heartbin.svg"
 import heartImg from "@/dummy/heart.svg";
@@ -7,12 +7,13 @@ import moment from "@/dummy/moment.svg"
 import { useQuery } from 'react-query';
 import { getAllBoardCount, getFollowBoard } from '@/services/board/get/getBoard';
 import DefaultImage from '../../../../public/defaultImage.svg';
+import { useUserStore } from '@/store/useUserStore';
+import SkeletonBoard from './SkeletonBoard';
 
 interface HomeRecentProps {
     allPosts: number;
     setAllPosts: any;
     boardData: any;
-    userInfo: any;
     boardRefetch: any;
     PAGE_SIZE: any;
     pages: number;
@@ -20,13 +21,17 @@ interface HomeRecentProps {
 }
 
 
-function RecentPost({ allPosts, setAllPosts, boardData, userInfo, boardRefetch, PAGE_SIZE, pages, setPages }: HomeRecentProps) {
+function RecentPost({ allPosts, setAllPosts, boardData, boardRefetch, PAGE_SIZE, pages, setPages }: HomeRecentProps) {
     const [sortOrder, setSortOrder] = useState('최신순');
     // const [sortOrders, setSortOrders] = useState('최신순');
+
+    const [isClicked, setIsClicked] = useState(false);
+    const { userInfo, loading } = useUserStore((state) => ({
+        userInfo: state.userInfo,
+        loading: state.loading,
+    }));
+
     const memberIds = userInfo && userInfo?.memberId;
-    const [isClicked, setIsClicked] = useState(false)
-
-
     const { data: followData } = useQuery({
         queryKey: ['followData'],
         queryFn: () => getFollowBoard(memberIds)
@@ -99,6 +104,20 @@ function RecentPost({ allPosts, setAllPosts, boardData, userInfo, boardRefetch, 
         }, 100)
     };
 
+    const [showSkeleton, setShowSkeleton] = useState(true);
+
+    useEffect(() => {
+        const delay = setTimeout(() => {
+            setShowSkeleton(false);
+        }, 1000); // 1000ms = 1초, 지연 시간을 원하는 시간으로 설정
+
+        return () => clearTimeout(delay);
+    }, []);
+
+    if (loading || showSkeleton) {
+        return <SkeletonBoard />;
+    };
+
 
     return (
         <div className='w-[90%] sm-700:w-[66%] mx-auto py-[5rem]'>
@@ -166,7 +185,7 @@ function RecentPost({ allPosts, setAllPosts, boardData, userInfo, boardRefetch, 
                                                             width={24}
                                                             height={24}
                                                             alt=""
-                                                            className="hidden md:block" // 500px 이상에서만 보이도록 설정
+                                                            className="hidden md:block rounded-[4.5rem]" // 500px 이상에서만 보이도록 설정
                                                         />
                                                         <span className={`hidden md:block`}>{posts.member.nickName}</span>
                                                         {/* <span className="">{formattedDate}</span> */}
