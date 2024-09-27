@@ -25,6 +25,8 @@ import { addBookmark, deleteBookmark, fetchIsBookmarked } from "@/services/bookm
 import WeatherIcon from "../../../public/WeatherIcon.svg";
 import DefaultImage from "../../../public/defaultImage.svg";
 import { getWeatherStatusInfo } from "@/constants/weatherTransition";
+import RecommendedSpots from "./RecommendedSpot";
+import RecommendedSpot from "./RecommendedSpot";
 
 interface OotdDetailProps {
   id: number;
@@ -47,7 +49,7 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
     ['recommendedSpots', id],
     () => fetchRecommendedSpots(id),
     {
-      enabled: !!id, // id가 존재할 때만 호출되도록 설정
+      enabled: !!id,
       refetchOnWindowFocus: false,
     }
   );
@@ -355,32 +357,8 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
             refetchPostDetail={refetch}
           />
         </div>
+        <RecommendedSpot postId={id} />
       </div>
-      <div className="mt-12">
-  <h2 className="font-bold text-2xl">추천 장소</h2>
-  {isSpotsLoading && <p>추천 장소를 불러오는 중입니다...</p>}
-  
-  {recommendedSpots?.result && recommendedSpots.result.length > 0 ? (
-    <ul className="mt-4">
-      {recommendedSpots.result.map((spot: any, index: number) => (
-        <li key={index} className="mb-2">
-          <p className="text-xl font-medium">{spot.title}</p>
-          <p className="text-gray-600">{spot.content}</p>
-          {/* {spot.imgUrl && spot.imgUrl.length > 0 && (
-            <Image
-              src={spot.imgUrl[0].imgUrl} // 첫 번째 이미지 사용
-              alt={spot.title}
-              width={spot.imgUrl[0].width}
-              height={spot.imgUrl[0].height}
-            />
-          )} */}
-        </li>
-      ))}
-    </ul>
-  ) : (
-    !isSpotsLoading && <p>추천 장소가 없습니다.</p>
-  )}
-</div>
     </>
   );
 };

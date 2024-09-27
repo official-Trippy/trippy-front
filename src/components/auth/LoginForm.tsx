@@ -54,6 +54,7 @@ const LoginForm = () => {
 
         Swal.fire({
           icon: 'error',
+          iconColor: '#FB3463',
           title: '기존에 회원가입을 \n완료하지 않았습니다.',
           text: '블로그 설정 페이지로 이동합니다.',
           confirmButtonText: '확인',
