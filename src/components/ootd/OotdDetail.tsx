@@ -27,6 +27,8 @@ import DefaultImage from "../../../public/defaultImage.svg";
 import { getWeatherStatusInfo } from "@/constants/weatherTransition";
 import RecommendedSpots from "./RecommendedSpot";
 import RecommendedSpot from "./RecommendedSpot";
+import { RecommendedSpotsResponse } from "@/types/recommend";
+import SkeletonRecommendOotdPost from "../pages/ootd/SkeletonRecommendOotdPost";
 
 interface OotdDetailProps {
   id: number;
@@ -45,7 +47,7 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
 
   console.log('Current post id:', id);
 
-  const { data: recommendedSpots, isLoading: isSpotsLoading, error: spotsError } = useQuery(
+  const { data: recommendedSpots, isLoading: isSpotsLoading, error: spotsError } = useQuery<RecommendedSpotsResponse>(
     ['recommendedSpots', id],
     () => fetchRecommendedSpots(id),
     {
@@ -53,7 +55,7 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
       refetchOnWindowFocus: false,
     }
   );
-  console.log('추천', recommendedSpots);
+  
 
   const [isBookmarked, setIsBookmarked] = useState<boolean>(false);
 
@@ -357,7 +359,13 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
             refetchPostDetail={refetch}
           />
         </div>
-        <RecommendedSpot postId={id} />
+        {
+          isSpotsLoading ? (
+            <SkeletonRecommendOotdPost /> 
+          ) : (
+            <RecommendedSpot recommendedSpots={recommendedSpots?.result || []} />
+          )
+        }
       </div>
     </>
   );

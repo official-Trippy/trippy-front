@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import ImageUploader from './ImageUploader';
 import PostInput from './PostInput';
@@ -41,6 +41,8 @@ const PostOotd: React.FC = () => {
 
   const userInfo = useUserStore((state) => state.userInfo);
   const userMemberId = userInfo?.memberId;
+
+  const dateInputRef = useRef<HTMLInputElement>(null); 
 
   const weatherMutation = useMutation(
     (variables: { latitude: number; longitude: number; date: string }) =>
@@ -101,7 +103,7 @@ const PostOotd: React.FC = () => {
                     resolve();
                   }
                 });
-              });
+              })
             },
           });
         }
