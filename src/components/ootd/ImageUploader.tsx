@@ -103,7 +103,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onImagesChange, initialIm
             ...style,
             display: 'block',
             position: 'absolute', // 부모 요소 기준으로 절대 배치
-            right: '0px',
+            right: '5px',
             top: '50%', // 세로 중앙에 배치
             transform: 'translateY(-50%)', // 세로 중앙 정렬
             zIndex: 10, // 모달과 겹치지 않도록 z-index 조정
@@ -126,7 +126,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onImagesChange, initialIm
             ...style,
             display: 'block',
             position: 'absolute', // 부모 요소 기준으로 절대 배치
-            left: '0px',
+            left: '3px',
             top: '50%', // 세로 중앙에 배치
             transform: 'translateY(-50%)', // 세로 중앙 정렬
             zIndex: 10, // 모달과 겹치지 않도록 z-index 조정
@@ -162,24 +162,30 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onImagesChange, initialIm
         {/* 크롭 모달 */}
         {isModalOpen && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-            <div className="bg-white p-4 rounded-lg shadow-lg">
-              <h3 className="mb-4 text-center">이미지 자르기</h3>
+            <div className="bg-white py-4 px-8 rounded-lg shadow-lg">
+              <h3 className="mb-4 text-center">이미지 영역 선택</h3>
               <div className="relative w-[300px] h-[300px] bg-gray-200">
                 {imageSrc && (
-                  <Cropper
-                    image={imageSrc}
-                    crop={crop}
-                    zoom={zoom}
-                    aspect={1} // 1:1 비율 유지
-                    onCropChange={setCrop}
-                    onCropComplete={onCropComplete}
-                    onZoomChange={setZoom}
-                  />
+                 <Cropper
+                 image={imageSrc}
+                 crop={crop}
+                 zoom={zoom}
+                 aspect={1} // 1:1 비율 유지
+                 onCropChange={setCrop}
+                 onCropComplete={onCropComplete}
+                 onZoomChange={setZoom}
+                 objectFit="cover" // 이미지 여백을 없애고, 화면에 맞춤
+               />
                 )}
               </div>
               <div className="flex justify-end mt-4">
-                <button className="bg-blue-500 text-white px-4 py-2 rounded" onClick={handleCropImage}>완료</button>
+              <div className="bg-btn-color text-white px-4 py-2 font-medium font-['Pretendard'] rounded mr-2 cursor-pointer" onClick={handleCropImage}>
+                완료
               </div>
+              <div className="border border-[#cfcfcf] text-[#cfcfcf] px-4 py-2 font-medium font-['Pretendard'] rounded cursor-pointer" onClick={() => setIsModalOpen(false)}>
+                취소
+              </div>
+            </div>
             </div>
           </div>
         )}
