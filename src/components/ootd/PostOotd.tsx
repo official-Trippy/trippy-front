@@ -290,13 +290,13 @@ const PostOotd: React.FC = () => {
             <LocationInput onLocationChange={handleLocationChange} selectedLocationName={location} />
             <DateInput onDateChange={handleDateChange} />
             {weather ? (
-              <div className="w-full bg-neutral-100 rounded-lg flex justify-center items-center py-4 text-neutral-500 text-lg">
+              <div className="w-full bg-neutral-100 rounded-[8px] flex justify-center items-center py-4 text-neutral-500 text-lg">
                 <div>{weather.avgTemp === '정보 없음' ? '정보 없음' : weather.avgTemp}°C, {getWeatherStatusInKorean(weather.status)}</div>
               </div>
             ) : (
               <button
                 onClick={handleFetchWeather}
-                className="w-full bg-neutral-100 rounded-lg flex justify-center items-center py-4 text-neutral-500 text-lg"
+                className="w-full bg-neutral-100 rounded-[8px] flex justify-center items-center py-4 text-neutral-500 text-lg"
               >
                 날씨 불러오기
               </button>

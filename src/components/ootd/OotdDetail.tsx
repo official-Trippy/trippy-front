@@ -330,7 +330,7 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
 
           </div>
           <div className="py-[50px] text-[#292929] text-xl" dangerouslySetInnerHTML={{ __html: ootdItem.post.body.replace(/\n/g, '<br />') }}></div>
-          <div className="flex pt-4">
+          <div className="flex pt-4 gap-4">
             <div className="flex flex-wrap gap-2">
               {ootdItem.post.tags.map((tag: string, index: number) => (
                 <span
@@ -341,7 +341,7 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
                 </span>
               ))}
             </div>
-            <div className="ml-auto text-neutral-400 text-base font-normal font-['Pretendard'] my-auto">
+            <div className="ml-auto text-neutral-400 text-base font-normal font-['Pretendard'] my-auto flex-shrink-0">
               {formatDate(ootdItem.post.createDateTime)}
             </div>
           </div>
