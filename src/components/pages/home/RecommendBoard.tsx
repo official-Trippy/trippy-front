@@ -354,13 +354,14 @@ const RecommendBoard = () => {
                                     <div onClick={() => handleOotdItemClick(item.post.id)}>
                                         {window.innerWidth < 500 && (
                                             <div className="flex absolute items-center mt-[1rem] pl-[2rem] pr-[1rem] z-10">
-                                                <div className="relative w-[24px] h-[24px]">
+                                                <div className="relative w-[24px] h-[24px] object-cover">
                                                     <Image
                                                         src={item.member.profileUrl || DefaultImage}
                                                         alt="Profile"
-                                                        layout="fill"
                                                         objectFit="cover"
-                                                        className="rounded-full"
+                                                        width={24}
+                                                        height={24}
+                                                        className="rounded-[4.5rem] w-[2.4rem] h-[2.4rem]"
                                                     />
                                                 </div>
                                                 <div className="flex-1 overflow-hidden">
@@ -427,9 +428,10 @@ const RecommendBoard = () => {
                                                         <Image
                                                             src={item.member.profileUrl || DefaultImage}
                                                             alt="Profile"
-                                                            layout="fill"
                                                             objectFit="cover"
-                                                            className="rounded-full"
+                                                            width={24}
+                                                            height={24}
+                                                            className="rounded-[4.5rem] w-[2.4rem] h-[2.4rem]"
                                                         />
                                                     </div>
                                                     <div className="flex-1 overflow-hidden">
