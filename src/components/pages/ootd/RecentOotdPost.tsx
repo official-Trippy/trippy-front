@@ -15,6 +15,8 @@ import EmptyHeartIcon from '../../../../public/heartIcon-default.svg';
 import CommentIcon1 from '../../../../public/commentIcon-default.svg';
 import { TagContainerProps } from '@/types/tag';
 import Cookies from "js-cookie";
+import SkeletonRecommendOotdPost from './SkeletonRecommendOotdPost';
+import SkeletonRecentOotdPost from './SkeletonRecentOotdPost';
 
 const PAGE_SIZE = 12;
 
@@ -166,9 +168,19 @@ const RecentOotdPost: React.FC = () => {
     router.push('/login');
   };
   
-  if (!isTabInitialized || isLoading) return null;
-  if (loading || isLoading) return null;
+  const [showSkeleton, setShowSkeleton] = useState(true);
 
+    useEffect(() => {
+        const delay = setTimeout(() => {
+          setShowSkeleton(false);
+        }, 1000); // 1000ms = 1초, 지연 시간을 원하는 시간으로 설정
+      
+        return () => clearTimeout(delay);
+      }, []);
+      
+      if (loading || showSkeleton) {
+        return <SkeletonRecentOotdPost />;
+  };
 
   return (
     <div className='w-[90%] sm-700:w-[66%]  mx-auto pt-[5rem] mb-[90px]'>
@@ -199,6 +211,7 @@ const RecentOotdPost: React.FC = () => {
           <CustomSelect orderType={orderType} onOrderTypeChange={handleOrderTypeChange} />
         </div>
       </div>
+
       {/* 게시글이 있을 때와 없을 때 조건부 렌더링 */}
       <div className={`${ootdList.length > 0 ? 'grid grid-cols-2 sm-700:grid-cols-3 lg:grid-cols-4 gap-8' : 'flex justify-center items-center'}`}>
         {ootdList.length > 0 ? (

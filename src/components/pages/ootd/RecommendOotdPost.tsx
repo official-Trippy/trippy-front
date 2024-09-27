@@ -18,6 +18,7 @@ import 'swiper/swiper-bundle.css';
 import SwiperLeftButton from '../../../../public/SwiperLeftBtn.svg';
 import SwiperRightButton from '../../../../public/SwiperRightBtn.svg';
 import { useUserStore } from '@/store/useUserStore'; // Zustand 전역 상태 사용
+import SkeletonRecommendOotdPost from './SkeletonRecommendOotdPost';
 
 const TagContainer: React.FC<TagContainerProps> = ({ item }) => {
     const containerRef = useRef<HTMLDivElement | null>(null);
@@ -195,6 +196,20 @@ const RecommendOotdPost = () => {
             }
         }
     };
+    
+    const [showSkeleton, setShowSkeleton] = useState(true);
+    useEffect(() => {
+        const delay = setTimeout(() => {
+          setShowSkeleton(false);
+        }, 1000); // 1000ms = 1초, 지연 시간을 원하는 시간으로 설정
+      
+        return () => clearTimeout(delay);
+      }, []);
+      
+      if (loading || showSkeleton) {
+        return <SkeletonRecommendOotdPost />;
+      }
+
     return (
         <div className="relative w-[90%] sm-700:w-[66%] mx-auto pt-[5rem] overflow-visible">
             {!userInfo && (    
