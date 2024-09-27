@@ -24,9 +24,11 @@ const LocationInput: React.FC<LocationInputProps> = ({ onLocationChange, selecte
     lng: 126.9780,
   });
   const [currentAddress, setCurrentAddress] = useState<string>('');
+  const [autocompleteResults, setAutocompleteResults] = useState<any[]>([]); 
   const inputRef = useRef<HTMLInputElement>(null);
   const mapRef = useRef<google.maps.Map | null>(null);
-  const searchBoxRef = useRef<google.maps.places.SearchBox | null>(null);
+  const autocompleteServiceRef = useRef<google.maps.places.AutocompleteService | null>(null);
+  const placesServiceRef = useRef<google.maps.places.PlacesService | null>(null);
 
   const onMapClick = useCallback((event: google.maps.MapMouseEvent) => {
     if (event.latLng) {
@@ -43,22 +45,34 @@ const LocationInput: React.FC<LocationInputProps> = ({ onLocationChange, selecte
     }
   }, []);
 
-  const onPlacesChanged = () => {
-    const places = searchBoxRef.current?.getPlaces();
-    if (places && places.length > 0) {
-      const place = places[0];
-      if (place.geometry && place.geometry.location) {
-        const lat = place.geometry.location.lat();
-        const lng = place.geometry.location.lng();
-
-        setSelectedLocation({ lat, lng });
-        setCurrentAddress(place.formatted_address || '');
-
-        if (mapRef.current) {
-          mapRef.current.panTo({ lat, lng });
-          mapRef.current.setZoom(12); // 적절한 줌 레벨 설정
+  const handleInputChange = () => {
+    const input = inputRef.current?.value;
+    if (input && autocompleteServiceRef.current) {
+      autocompleteServiceRef.current.getPlacePredictions({ input }, (predictions, status) => {
+        if (status === window.google.maps.places.PlacesServiceStatus.OK && predictions) {
+          setAutocompleteResults(predictions);
         }
-      }
+      });
+    }
+  };
+
+  const onPlaceSelect = (placeId: string) => {
+    if (placesServiceRef.current) {
+      placesServiceRef.current.getDetails({ placeId }, (place, status) => {
+        if (status === window.google.maps.places.PlacesServiceStatus.OK && place?.geometry?.location) {
+          const lat = place.geometry.location.lat();
+          const lng = place.geometry.location.lng();
+          setSelectedLocation({ lat, lng });
+          setCurrentAddress(place.formatted_address || '');
+  
+          if (mapRef.current) {
+            mapRef.current.panTo({ lat, lng });
+            mapRef.current.setZoom(15);
+          }
+
+          setAutocompleteResults([]); 
+        }
+      });
     }
   };
 
@@ -73,10 +87,14 @@ const LocationInput: React.FC<LocationInputProps> = ({ onLocationChange, selecte
 
   const onMapLoad = (map: google.maps.Map) => {
     mapRef.current = map;
-    if (inputRef.current) {
-      const searchBox = new window.google.maps.places.SearchBox(inputRef.current);
-      searchBoxRef.current = searchBox;
-      searchBox.addListener('places_changed', onPlacesChanged);
+    autocompleteServiceRef.current = new window.google.maps.places.AutocompleteService();
+    placesServiceRef.current = new window.google.maps.places.PlacesService(map);
+  };
+
+  const handleKeyDown = (event: React.KeyboardEvent) => {
+    if (event.key === "Enter" && autocompleteResults.length > 0) {
+      onPlaceSelect(autocompleteResults[0].place_id); 
+      event.preventDefault();  
     }
   };
 
@@ -98,9 +116,7 @@ const LocationInput: React.FC<LocationInputProps> = ({ onLocationChange, selecte
         dialogClassName="modal-dialog-centered"
       >
         <Modal.Header closeButton>
-          <Modal.Title id="contained-modal-title-vcenter">
-            위치 선택
-          </Modal.Title>
+          <Modal.Title id="contained-modal-title-vcenter">위치 선택</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <div className="relative w-full h-[50rem]">
@@ -111,7 +127,23 @@ const LocationInput: React.FC<LocationInputProps> = ({ onLocationChange, selecte
                   type="text"
                   placeholder="장소를 검색하세요"
                   className="absolute z-10 top-4 left-1/2 transform -translate-x-1/2 w-[80%] p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:border-blue-500"
+                  onChange={handleInputChange}
+                  onKeyDown={handleKeyDown}
                 />
+                {/* 검색 결과를 보여주는 리스트 */}
+                {autocompleteResults.length > 0 && (
+                  <ul className="absolute z-10 w-[80%] top-[4.7rem] pl-0 left-1/2 transform -translate-x-1/2 bg-white shadow-lg border rounded-lg">
+                    {autocompleteResults.map((result) => (
+                      <li
+                        key={result.place_id}
+                        className="p-3 hover:bg-gray-200 cursor-pointer"
+                        onClick={() => onPlaceSelect(result.place_id)}
+                      >
+                        {result.description}
+                      </li>
+                    ))}
+                  </ul>
+                )}
                 <GoogleMap
                   mapContainerStyle={{ width: '100%', height: '100%' }}
                   center={selectedLocation}
@@ -121,13 +153,13 @@ const LocationInput: React.FC<LocationInputProps> = ({ onLocationChange, selecte
                     disableDefaultUI: true,
                     zoomControl: true,
                   }}
-                  onLoad={onMapLoad} // Map을 로드하면 onMapLoad 호출
+                  onLoad={onMapLoad}
                 >
                   <Marker position={selectedLocation} draggable={true} onDragEnd={onMapClick} />
                 </GoogleMap>
               </>
             ) : (
-              <div>Loading...</div>
+              <div></div>
             )}
           </div>
         </Modal.Body>
