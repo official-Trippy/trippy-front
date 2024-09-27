@@ -37,6 +37,7 @@ import Swal from "sweetalert2";
 import menubars from "@/dummy/menubars.svg"
 import deleteReply from "@/services/board/delete/deleteReply";
 import { PostAirSVG, PostBusSVG, PostBycicleSVG, PostCarSVG, PostTrainSVG } from "@/components/transportsvg/post";
+import backbutton from "@/dummy/backbutton.svg"
 
 export default function BoardPage({ params }: { params: { boardId: number } }) {
   const accessToken = Cookies.get("accessToken");
@@ -148,7 +149,7 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
     const hours = String(date.getHours()).padStart(2, "0");
     const minutes = String(date.getMinutes()).padStart(2, "0");
 
-    return `${year}.${month}.${day} ${hours}:${minutes}`;
+    return `${year}.${month}.${day}`;
   }
   const createdAt = postData?.result.post.createDateTime;
   const formattedDate = formatDate(createdAt);
@@ -326,12 +327,28 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
     }
   };
 
+  // const router = useRouter();
+
+  const handleBackButtonClick = () => {
+    router.back(); // 이전 페이지로 이동
+  };
+
   return (
     <div>
       <Header />
       <div className="w-[90%] sm-700:w-[50%] mx-auto">
-        <div className="flex mt-[8rem] text-[#6B6B6B] font-semibold text-[2rem]">
-          <span>{postData?.result.member.blogName}의 블로그</span>
+        <div className="flex text-[#6B6B6B] font-semibold text-[2rem]">
+          {window.innerWidth > 600 ? (
+            <span className="mt-[8rem]">{postData?.result.member.blogName}의 블로그</span>
+          ) : (
+            <div className="flex w-full items-center justify-center">
+              <button onClick={handleBackButtonClick}>
+                <Image src={backbutton} alt="" />
+              </button>
+              <span className="text-[#171717] flex mx-auto">{postData?.result.member.blogName}의 블로그</span>
+            </div>
+          )
+          }
           {memberDatas?.result.blogName === postData?.result.member.blogName && (
             <div className="flex ml-auto gap-[1rem]">
               <Image className="cursor-pointer" src={menubars} alt="" onClick={() => { setIsOpenMenu(!isOpenMenu) }} />
@@ -346,7 +363,7 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
           )}
         </div>
         <div className="flex items-center mt-[2rem]">
-          <h1 className="text-[3.6rem] font-bold">
+          <h1 className="text-[2.4rem] xl:text-[3.6rem] sm-700:text-[2.4rem] font-bold">
             {postData?.result.post.title}
           </h1>
         </div>
