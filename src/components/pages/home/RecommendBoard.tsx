@@ -358,8 +358,9 @@ const RecommendBoard = () => {
                                                     <Image
                                                         src={item.member.profileUrl || DefaultImage}
                                                         alt="Profile"
-                                                        layout="fill"
                                                         objectFit="cover"
+                                                        width={24}
+                                                        height={24}
                                                         className="rounded-[4.5rem] w-[2.4rem] h-[2.4rem]"
                                                     />
                                                 </div>
