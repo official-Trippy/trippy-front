@@ -147,12 +147,14 @@ const RecommendBoard = () => {
 
 
     useEffect(() => {
-        const delay = setTimeout(() => {
-            setShowSkeleton(false);
-        }, 1000); // 1000ms = 1초, 지연 시간을 원하는 시간으로 설정
+        if (typeof window !== 'undefined') { // 클라이언트에서만 실행되도록 체크
+            const delay = setTimeout(() => {
+                setShowSkeleton(false);
+            }, 1000); // 스켈레톤을 1초 동안 유지
 
-        return () => clearTimeout(delay);
-    }, []);
+            return () => clearTimeout(delay);
+        }
+    }, [isLoading]);
 
     const handleDrag = (e: React.MouseEvent) => {
         e.preventDefault();
