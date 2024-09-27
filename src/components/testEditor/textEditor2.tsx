@@ -46,7 +46,7 @@ const MyTinyMCEEditor = ({ postRequest, setPostRequest }: editorProps) => {
         <div>
             <Editor
                 initialValue="<p>여러분의 경험을 자유롭게 적어주세요.</p>"
-                apiKey="a7jtjjd8h1f0ofvjye2cxg0xwzsz6576rgwoj91atcc2i8pf"
+                apiKey={inputAPI}
                 init={{
                     height: 820,
                     menubar: false,

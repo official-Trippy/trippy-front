@@ -80,7 +80,7 @@ const MyTicket = ({ totalBoardCount }: ticketProps) => {
               <div className="font-normal font-['Pretendard'] shadowall rounded-[1rem] p-[1rem] flex">
                 <div className="mx-auto">
                   <div className="flex flex-col">
-                    <span className={`text-[1.2rem] font-extrabold font-akira`} style={{ color: colorTicket[ticektDatas.ticket.ticketColor] || 'inherit' }}>
+                    <span className={`text-[0.8rem] lg:text-[0.8rem] xl:text-[1.2rem] font-extrabold font-akira`} style={{ color: colorTicket[ticektDatas.ticket.ticketColor] || 'inherit' }}>
                       PASSENGER
                     </span>
                     <span className="text-[1.2rem] font-medium text-[#6B6B6B]">USERID</span>
@@ -96,11 +96,11 @@ const MyTicket = ({ totalBoardCount }: ticketProps) => {
                 </div>
                 <div className="mx-auto border border-dashed border-[#CFCFCF]" />
                 <div className="flex flex-col font-extrabold font-akira mx-auto">
-                  <span className="text-[3.2rem] sm:text-[2.8rem] md:text-[2.4rem] lg:text-[2rem] xl:text-[3.2rem]">{ticektDatas.ticket.departureCode}</span>
+                  <span className="text-[1.8rem] sm:text-[2.8rem] md:text-[2.4rem] lg:text-[1.8rem] xl:text-[3.2rem]">{ticektDatas.ticket.departureCode}</span>
                   <div className="mx-auto">
                     {getTransportImage(ticektDatas.ticket.transport, ticektDatas.ticket.ticketColor)}
                   </div>
-                  <span className="text-[3.2rem] sm:text-[2.8rem] md:text-[2.4rem] lg:text-[2rem] xl:text-[3.2rem]">{ticektDatas.ticket.destinationCode}</span>
+                  <span className="text-[1.8rem] sm:text-[2.8rem] md:text-[2.4rem] lg:text-[1.8rem] xl:text-[3.2rem]">{ticektDatas.ticket.destinationCode}</span>
                 </div>
               </div>
 
