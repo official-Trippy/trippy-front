@@ -192,7 +192,7 @@ const RecommendBoard = () => {
     };
 
     // 로딩 시에는 null을 반환
-    if (loading || isLoading) return null;
+    // if (loading || isLoading) return null;
     if (error) return null;
 
     console.log(data)
@@ -216,7 +216,7 @@ const RecommendBoard = () => {
 
 
 
-    if (loading || showSkeleton) {
+    if (loading || showSkeleton || isLoading) {
         return <SkeletonRecBoard />;
     }
 
