@@ -154,8 +154,11 @@ const PostOotd: React.FC = () => {
       if (typeof window !== 'undefined') {
         Swal.fire({
           icon: 'error',
+          iconColor: '#FB3463', 
+          confirmButtonText: '확인',
+          confirmButtonColor: '#FB3463', 
           title: '입력 오류',
-          text: '위치와 날짜를 모두 입력해주세요.',
+          text: '지역과 날짜를 모두 입력해주세요.',
         });
       }
       return;
@@ -267,11 +270,11 @@ const PostOotd: React.FC = () => {
   return (
     <div className="min-h-[calc(100dvh-60px)] mb-[60px] w-[90%] py-16 sm-700:w-[66%] sm-700:min-h-screen sm-700:mb-0 mx-auto">
       <div className="w-full flex justify-end mb-[20px]">
-        <button
+        {/* <button
           className="bg-neutral-100 rounded-lg flex justify-center items-center px-10 py-2 text-black text-lg mr-[10px]"
         >
           임시저장
-        </button>
+        </button> */}
         <button
           onClick={handleCreatePost}
           className="bg-[#fa3463] rounded-lg flex justify-center items-center px-10 py-2 text-white text-lg"

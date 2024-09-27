@@ -314,7 +314,7 @@ const BlogRegisterFirst = () => {
                 !blogNameError.includes("사용 가능") ||
                 !imageUploaded
                   ? "cursor-not-allowed bg-[#cfcfcf] hover:bg-[#cfcfcf]"
-                  : ""
+                  : "bg-btn-color"
               }`}
               onClick={handleSubmit}
               style={{ fontSize: "1.2rem" }}

@@ -178,13 +178,15 @@ const RecentOotdPost: React.FC = () => {
         </div>
       )}
       
-      <div className='flex text-[1.6rem] py-12'>
+      <div className={`flex text-[1.6rem] py-12`}>
+        {userInfo && (
         <span
           className={`pr-[1rem] cursor-pointer ${tab === 'ALL' ? 'font-bold text-[#fa3463]' : ''}`}
           onClick={() => handleTabChange('ALL')}
         >
           전체글
         </span>
+        )}
         { userInfo && (
         <span
           className={`px-[1rem] cursor-pointer ${tab === 'FOLLOWING' ? 'font-bold text-[#fa3463]' : ''}`}
