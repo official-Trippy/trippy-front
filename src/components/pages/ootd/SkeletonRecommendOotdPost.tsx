@@ -10,20 +10,29 @@ const SkeletonRecommendOotdPost: React.FC = () => {
       return 4;
     }
   };
-
-  const [itemCount, setItemCount] = useState<number>(() => getItemCount(window.innerWidth));
+  const [itemCount, setItemCount] = useState<number>(() => {
+    if (typeof window !== 'undefined') {
+      return getItemCount(window.innerWidth);
+    }
+    return 4; // 서버 측에서는 기본값을 반환
+  });
 
   // 화면 크기에 따라 표시할 아이템 수를 설정하는 함수
   const updateItemCount = () => {
-    const width = window.innerWidth;
-    setItemCount(getItemCount(width));
+    if (typeof window !== 'undefined') {
+      const width = window.innerWidth;
+      setItemCount(getItemCount(width));
+    }
   };
 
   useEffect(() => {
-    updateItemCount(); // 처음 페이지 로드 시 실행
-    window.addEventListener('resize', updateItemCount); // 창 크기 변경 시 실행
-    return () => window.removeEventListener('resize', updateItemCount); // 이벤트 리스너 제거
+    if (typeof window !== 'undefined') {
+      updateItemCount(); // 처음 페이지 로드 시 실행
+      window.addEventListener('resize', updateItemCount); // 창 크기 변경 시 실행
+      return () => window.removeEventListener('resize', updateItemCount); // 이벤트 리스너 제거
+    }
   }, []);
+
 
   return (
     <div className="relative w-[90%] sm-700:w-[66%] mx-auto pt-[6rem] overflow-visible">
