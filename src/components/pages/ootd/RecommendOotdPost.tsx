@@ -115,27 +115,30 @@ const RecommendOotdPost = () => {
         }
     };
 
-    // 화면 크기에 따라 itemsPerSlide를 설정하는 함수
     const updateItemsPerSlide = () => {
-        const width = window.innerWidth;
-        if (width < 700) {
+        if (typeof window !== 'undefined') {
+          const width = window.innerWidth;
+          if (width < 700) {
             setItemsPerSlide(2);
-        } else if (width < 1000) {
+          } else if (width < 1000) {
             setItemsPerSlide(3);
-        } else {
+          } else {
             setItemsPerSlide(4);
+          }
         }
-    };
-
-    useEffect(() => {
-        // 페이지가 로드될 때, 그리고 창 크기가 변경될 때마다 슬라이드 개수 업데이트
-        updateItemsPerSlide();
-        window.addEventListener('resize', updateItemsPerSlide);
-
-        return () => {
+      };
+    
+      useEffect(() => {
+        if (typeof window !== 'undefined') {
+          // 페이지가 로드될 때, 그리고 창 크기가 변경될 때마다 슬라이드 개수 업데이트
+          updateItemsPerSlide();
+          window.addEventListener('resize', updateItemsPerSlide);
+    
+          return () => {
             window.removeEventListener('resize', updateItemsPerSlide);
-        };
-    }, []);
+          };
+        }
+      }, []);
 
     const handleScroll = (direction: string) => {
         if (scrollRef.current) {
