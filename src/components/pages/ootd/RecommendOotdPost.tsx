@@ -62,7 +62,6 @@ const TagContainer: React.FC<TagContainerProps> = ({ item }) => {
 
 
 const RecommendOotdPost = () => {
-    // Zustand에서 유저 정보와 로딩 상태를 가져옵니다
     const { userInfo, loading } = useUserStore((state) => ({
         userInfo: state.userInfo,
         loading: state.loading,
@@ -77,11 +76,16 @@ const RecommendOotdPost = () => {
     const scrollRef = useRef<HTMLDivElement | null>(null);
     const swiperRef = useRef<SwiperRef | null>(null);
 
-    const { data, isLoading, error } = useQuery(['recommendOotdPost', selectedInterest], () => fetchRecommendOotdPost(selectedInterest), {
-        keepPreviousData: true,
-    });
+    const { data, isLoading } = useQuery(
+        ['recommendOotdPost', selectedInterest], 
+        () => fetchRecommendOotdPost(selectedInterest),
+        {
+            keepPreviousData: true
+        }
+    );
 
-    const totalCount = data?.result.totalCnt;
+
+    const totalCount = data?.result?.totalCnt ?? 0; 
 
     useEffect(() => {
         if (userInfo) {
@@ -174,10 +178,6 @@ const RecommendOotdPost = () => {
         router.push("/editProfile");
     };
 
-    // 로딩 시에는 null을 반환
-    if (loading || isLoading) return null;
-    if (error) return null;
-
     // 데이터 슬라이드 생성
     const slides = [];
     if (data?.result?.ootdList) {
@@ -195,7 +195,6 @@ const RecommendOotdPost = () => {
             }
         }
     };
-
     return (
         <div className="relative w-[90%] sm-700:w-[66%] mx-auto pt-[5rem] overflow-visible">
             {!userInfo && (    
@@ -208,7 +207,6 @@ const RecommendOotdPost = () => {
                 {userName}님, 이런 스타일 어때요?
             </h1>
             )}
-
 
             <div className="flex items-center my-12 relative">
                 {!userInfo && (
@@ -291,6 +289,7 @@ const RecommendOotdPost = () => {
                     className="absolute left-[-30px] top-[60%] transform -translate-y-1/2 z-10"
                 />
             )}
+
             <div className='relative mx-auto '>
                 <Swiper
                     ref={swiperRef}
@@ -362,15 +361,14 @@ const RecommendOotdPost = () => {
                             </SwiperSlide>
                         ))
                     ) : (
-                        <div className="h-full flex flex-col text-[2rem] text-black my-auto items-center justify-center font-medium font-['Pretendard'] py-[50px]">
-                            
-                            <div className='flex flex-row'>
+                            <div className="h-full w-full mx-auto flex flex-col text-[2rem] text-black my-auto items-center justify-center font-medium font-['Pretendard'] py-[50px]">
+                                <div className='flex flex-row'>
                                 <span className="text-[#FB3463]">{selectedInterest} </span>{"\u00A0"}관련 OOTD가 없어요!
+                                </div>
+                                <div className='bg-btn-color text-white text-2xl rounded-[8px] font-semibold mt-[20px] px-8 py-4 cursor-pointer' onClick={handleWriteBtnClick}>
+                                    OOTD 게시글 작성하러 가기
+                                </div>
                             </div>
-                            <div className='bg-btn-color text-white text-2xl rounded-[8px] font-semibold mt-[20px] px-8 py-4 cursor-pointer' onClick={handleWriteBtnClick}>
-                                OOTD 게시글 작성하러 가기
-                            </div>
-                        </div>
                     )}
                 </Swiper>
             </div>
