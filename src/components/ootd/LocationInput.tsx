@@ -1,6 +1,6 @@
 import React, { useCallback, useState, useRef } from 'react';
 import { Modal } from 'react-bootstrap';
-import { GoogleMap, Marker, Autocomplete, useLoadScript, Libraries } from '@react-google-maps/api';
+import { GoogleMap, Marker, useLoadScript, Libraries } from '@react-google-maps/api';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import SearchIcon from '../../../public/icon_search.svg';
@@ -24,8 +24,9 @@ const LocationInput: React.FC<LocationInputProps> = ({ onLocationChange, selecte
     lng: 126.9780,
   });
   const [currentAddress, setCurrentAddress] = useState<string>('');
-  const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const mapRef = useRef<google.maps.Map | null>(null);
+  const searchBoxRef = useRef<google.maps.places.SearchBox | null>(null);
 
   const onMapClick = useCallback((event: google.maps.MapMouseEvent) => {
     if (event.latLng) {
@@ -42,14 +43,21 @@ const LocationInput: React.FC<LocationInputProps> = ({ onLocationChange, selecte
     }
   }, []);
 
-  const onPlaceChanged = () => {
-    if (autocompleteRef.current) {
-      const place = autocompleteRef.current.getPlace();
-      if (place.geometry?.location) {
+  const onPlacesChanged = () => {
+    const places = searchBoxRef.current?.getPlaces();
+    if (places && places.length > 0) {
+      const place = places[0];
+      if (place.geometry && place.geometry.location) {
         const lat = place.geometry.location.lat();
         const lng = place.geometry.location.lng();
+
         setSelectedLocation({ lat, lng });
         setCurrentAddress(place.formatted_address || '');
+
+        if (mapRef.current) {
+          mapRef.current.panTo({ lat, lng });
+          mapRef.current.setZoom(12); // 적절한 줌 레벨 설정
+        }
       }
     }
   };
@@ -61,6 +69,15 @@ const LocationInput: React.FC<LocationInputProps> = ({ onLocationChange, selecte
       address: currentAddress,
     });
     setModalIsOpen(false);
+  };
+
+  const onMapLoad = (map: google.maps.Map) => {
+    mapRef.current = map;
+    if (inputRef.current) {
+      const searchBox = new window.google.maps.places.SearchBox(inputRef.current);
+      searchBoxRef.current = searchBox;
+      searchBox.addListener('places_changed', onPlacesChanged);
+    }
   };
 
   return (
@@ -89,28 +106,28 @@ const LocationInput: React.FC<LocationInputProps> = ({ onLocationChange, selecte
           <div className="relative w-full h-[50rem]">
             {isLoaded ? (
               <>
-                <Autocomplete
-                  onLoad={(autocomplete) => (autocompleteRef.current = autocomplete)}
-                  onPlaceChanged={onPlaceChanged}
-                >
-                  <input
-                    ref={inputRef}
-                    type="text"
-                    placeholder="장소를 검색하세요"
-                    className="absolute z-10 top-4 left-1/2 transform -translate-x-1/2 w-[80%] p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:border-blue-500"
-                  />
-                </Autocomplete>
+                <input
+                  ref={inputRef}
+                  type="text"
+                  placeholder="장소를 검색하세요"
+                  className="absolute z-10 top-4 left-1/2 transform -translate-x-1/2 w-[80%] p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:border-blue-500"
+                />
                 <GoogleMap
                   mapContainerStyle={{ width: '100%', height: '100%' }}
                   center={selectedLocation}
                   zoom={12}
                   onClick={onMapClick}
+                  options={{
+                    disableDefaultUI: true,
+                    zoomControl: true,
+                  }}
+                  onLoad={onMapLoad} // Map을 로드하면 onMapLoad 호출
                 >
                   <Marker position={selectedLocation} draggable={true} onDragEnd={onMapClick} />
                 </GoogleMap>
               </>
             ) : (
-              <div></div>
+              <div>Loading...</div>
             )}
           </div>
         </Modal.Body>
