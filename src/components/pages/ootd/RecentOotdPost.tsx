@@ -24,7 +24,7 @@ const TagContainer: React.FC<TagContainerProps> = ({ item }) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [visibleTags, setVisibleTags] = useState<string[]>(item.post.tags);
 
-  useEffect(() => {
+  const calculateVisibleTags = () => {
     const container = containerRef.current;
     if (!container) return;
 
@@ -34,13 +34,24 @@ const TagContainer: React.FC<TagContainerProps> = ({ item }) => {
 
     tags.forEach((tag, index) => {
       totalWidth += tag.offsetWidth + parseInt(getComputedStyle(tag).marginRight);
-
       if (totalWidth <= container.offsetWidth) {
         visibleCount = index + 1;
       }
     });
 
     setVisibleTags(item.post.tags.slice(0, visibleCount));
+  };
+
+  useEffect(() => {
+    // DOM이 완전히 로드된 후 태그 계산
+    setTimeout(calculateVisibleTags, 100);
+
+    // 창 크기 변경 시 태그 계산
+    window.addEventListener('resize', calculateVisibleTags);
+
+    return () => {
+      window.removeEventListener('resize', calculateVisibleTags);
+    };
   }, [item.post.tags]);
 
   return (

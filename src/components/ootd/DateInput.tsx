@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import Swal from 'sweetalert2';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { format, isValid, parse } from 'date-fns';
@@ -35,13 +34,13 @@ const DateInput: React.FC<DateInputProps> = ({ onDateChange, initialDate }) => {
   };
 
   return (
-    <div className="datepicker-container w-full h-[4rem] rounded border border-[#cfcfcf] flex items-center text-neutral-500 text-lg">
+    <div className="datepicker-container w-full h-[4rem] rounded-[8px] border border-[#cfcfcf] flex items-center text-neutral-500 text-lg">
       <DatePicker
         selected={selectedDate}
         onChange={handleDateChange}
         dateFormat="yyyyMMdd"
         placeholderText="날짜 선택"
-        className="datepicker-input h-full py-0 px-4 border-none text-neutral-500"
+        className="datepicker-input h-full py-0 px-4 border-none text-neutral-500 rounded-[8px] placeholder:text-[#cfcfcf]" // 추가된 placeholder 색상
         maxDate={new Date()} 
         popperClassName="custom-datepicker-popover"
       />

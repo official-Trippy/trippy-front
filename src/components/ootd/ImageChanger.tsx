@@ -2,7 +2,7 @@ import React, { ChangeEvent, useCallback, useEffect, useState } from 'react';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-import OotdDefault from '../../../public/ootdDefaultImg.svg';
+import OotdDefault from '../../../public/OotdPostAddImg.svg';
 import OotdAddImage from '../../../public/ootdImageAdd.svg';
 import OOtdDeleteImage from '../../../public/ootdImageDelete.svg';
 import { uploadImage } from '@/services/blog';
@@ -200,16 +200,18 @@ const ImageChanger: React.FC<ImageChangerProps> = ({ onImagesChange, initialImag
         )}
         {/* 기존 이미지 영역은 모달이 열려도 그대로 유지 */}
         <div
-          onClick={() => displayImages.length === 0 && document.getElementById('image-change-input')?.click()}
-          className={`relative cursor-pointer overflow-hidden bg-cover bg-center mx-auto ${
-            isModalOpen ? 'opacity-50' : ''
-          }`}
-          style={{
-            backgroundImage: displayImages.length > 0 ? 'none' : `url(${OotdDefault.src})`,
-            maxWidth: '460px',
-            aspectRatio: '1 / 1',
-          }}
-        >
+            onClick={() => displayImages.length === 0 && document.getElementById('image-upload-input')?.click()}
+            className={`relative cursor-pointer overflow-hidden bg-cover bg-center mx-auto ${
+              displayImages.length > 0 ? '' : 'border' // 이미지가 없을 때만 border를 적용
+            } rounded-[8px] ${
+              isModalOpen ? 'opacity-50' : '' // 모달이 열릴 때 투명도 조정
+            }`}
+            style={{
+              backgroundImage: displayImages.length > 0 ? 'none' : `url(${OotdDefault.src})`,
+              maxWidth: '460px',
+              aspectRatio: '1 / 1', // 1:1 비율 유지
+            }}
+          >
           {!isUploading && displayImages.length === 0 && (
             <div className="flex items-center justify-center w-full h-full">
               <img
@@ -224,7 +226,7 @@ const ImageChanger: React.FC<ImageChangerProps> = ({ onImagesChange, initialImag
               <Image
                 src={displayImages[0]}
                 alt="Uploaded Image"
-                className="w-full h-full object-cover rounded-lg"
+                className="w-full h-full object-cover rounded-[8px]"
                 width={400}
                 height={400}
               />
@@ -238,7 +240,7 @@ const ImageChanger: React.FC<ImageChangerProps> = ({ onImagesChange, initialImag
                     <Image
                       src={image}
                       alt={`Slide ${index}`}
-                      className="d-block w-full h-full object-cover rounded-lg"
+                      className="d-block w-full h-full object-cover rounded-[8px]"
                       width={200}
                       height={200}
                     />
@@ -253,7 +255,7 @@ const ImageChanger: React.FC<ImageChangerProps> = ({ onImagesChange, initialImag
             {(provided) => (
                 <div
                 className={`flex w-full mx-auto mt-4 p-[2%] ${
-                  displayImages.length === 0 ? '' : 'rounded-lg border border-[#cfcfcf]'
+                  displayImages.length === 0 ? '' : 'rounded-[8px] border'
                 }`}
                 {...provided.droppableProps}
                 ref={provided.innerRef}
