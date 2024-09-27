@@ -166,7 +166,7 @@ function RecentPost({ allPosts, setAllPosts, boardData, boardRefetch, PAGE_SIZE,
                                 >
                                     {window.innerWidth > 500 ? (
                                         <div className="flex w-full">
-                                            <Image className="w-[17rem] h-[17rem] rounded-[0.8rem]" src={posts.ticket.image.accessUri} alt="" width={170} height={170} />
+                                            <Image className="w-[17rem] h-[17rem] rounded-[0.8rem] object-cover" src={posts.ticket.image.accessUri} alt="" width={170} height={170} />
                                             <div className='flex flex-col w-full ml-[2.5rem]'>
                                                 <h1 className="text-[2rem] font-medium text-ellipsis overflow-hidden theboki">{posts.post.title}</h1>
                                                 <span className="text-[1.6rem] mt-[0.4rem] h-[5rem] font-normal text-[#6B6B6B] text-ellipsis overflow-hidden theboki1">{bodyText}</span>
