@@ -185,7 +185,7 @@ function RecentPost({ allPosts, setAllPosts, boardData, boardRefetch, PAGE_SIZE,
                                                             width={24}
                                                             height={24}
                                                             alt=""
-                                                            className="hidden md:block rounded-[4.5rem]" // 500px 이상에서만 보이도록 설정
+                                                            className="hidden md:block rounded-[4.5rem] w-[2.4rem] h-[2.4rem]" // 500px 이상에서만 보이도록 설정
                                                         />
                                                         <span className={`hidden md:block`}>{posts.member.nickName}</span>
                                                         {/* <span className="">{formattedDate}</span> */}
