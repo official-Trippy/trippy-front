@@ -430,14 +430,14 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
                 style={{ color: colorTicket[postData?.result.ticket.ticketColor] || 'inherit' }}
               >
                 <span className="w-[5rem] xl:w-[16rem] lg:w-[10rem] sm:w-[5rem]">PASSENGER</span>
-                <span className="w-[10rem] xl:w-[25rem] lg:w-[18rem] sm:w-[10rem]">DATE</span>
+                <span className="w-[10rem] xl:w-[25rem] lg:w-[18rem] sm:w-[10rem] ml-[1rem]">DATE</span>
                 <span className="w-[2rem] xl:w-[8rem] lg:w-[4rem] sm:w-[2rem]">GROUP</span>
               </div>
               <div
                 className={`flex justify-center text-[0.5rem] xl:text-[1.4rem] lg:text-[1rem] sm:text-[0.5rem] font-extrabold text-[#6B6B6B]`}
               >
                 <span className="w-[5rem] xl:w-[16rem] lg:w-[10rem] sm:w-[5rem]">USERID</span>
-                <span className="w-[10rem] xl:w-[25rem] lg:w-[18rem] sm:w-[10rem]">
+                <span className="w-[10rem] xl:w-[25rem] lg:w-[18rem] sm:w-[10rem] ml-[1rem]">
                   {postData?.result.ticket.startDate} ~{" "}
                   {postData?.result.ticket.endDate}
                 </span>
