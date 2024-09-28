@@ -1062,7 +1062,7 @@ const EditInfo = () => {
         )}
       </div>
       <div className="flex justify-end mt-4">
-                <div className="bg-btn-color text-white px-4 py-2 font-medium font-['Pretendard'] rounded mr-2 cursor-pointer" onClick={handleCropImage}>
+                <div className="bg-btn-color text-white px-4 py-2 font-medium font-['Pretendard'] rounded mr-2 cursor-pointer" onClick={handleCropBlogImage}>
                   완료
                 </div>
                 <div className="border border-[#cfcfcf] text-[#cfcfcf] px-4 py-2 font-medium font-['Pretendard'] rounded cursor-pointer" onClick={() => setIsBlogImageModalOpen(false)}>
