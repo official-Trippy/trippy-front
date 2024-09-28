@@ -87,7 +87,7 @@ const RecommendBoard = () => {
         keepPreviousData: true,
     });
     console.log(data, selectedInterest)
-    const totalCount = data?.result.totalCnt;
+    const totalCount = data?.result?.totalCnt;
 
 
 
@@ -147,12 +147,14 @@ const RecommendBoard = () => {
 
 
     useEffect(() => {
-        const delay = setTimeout(() => {
-            setShowSkeleton(false);
-        }, 1000); // 1000ms = 1초, 지연 시간을 원하는 시간으로 설정
+        if (typeof window !== 'undefined') { // 클라이언트에서만 실행되도록 체크
+            const delay = setTimeout(() => {
+                setShowSkeleton(false);
+            }, 1000); // 스켈레톤을 1초 동안 유지
 
-        return () => clearTimeout(delay);
-    }, []);
+            return () => clearTimeout(delay);
+        }
+    }, [isLoading]);
 
     const handleDrag = (e: React.MouseEvent) => {
         e.preventDefault();
@@ -190,7 +192,7 @@ const RecommendBoard = () => {
     };
 
     // 로딩 시에는 null을 반환
-    if (loading || isLoading) return null;
+    // if (loading || isLoading) return null;
     if (error) return null;
 
     console.log(data)
@@ -214,7 +216,7 @@ const RecommendBoard = () => {
 
 
 
-    if (loading || showSkeleton) {
+    if (loading || showSkeleton || isLoading) {
         return <SkeletonRecBoard />;
     }
 
@@ -352,13 +354,14 @@ const RecommendBoard = () => {
                                     <div onClick={() => handleOotdItemClick(item.post.id)}>
                                         {window.innerWidth < 500 && (
                                             <div className="flex absolute items-center mt-[1rem] pl-[2rem] pr-[1rem] z-10">
-                                                <div className="relative w-[24px] h-[24px]">
+                                                <div className="relative w-[24px] h-[24px] object-cover">
                                                     <Image
                                                         src={item.member.profileUrl || DefaultImage}
                                                         alt="Profile"
-                                                        layout="fill"
                                                         objectFit="cover"
-                                                        className="rounded-full"
+                                                        width={24}
+                                                        height={24}
+                                                        className="rounded-[4.5rem] w-[2.4rem] h-[2.4rem]"
                                                     />
                                                 </div>
                                                 <div className="flex-1 overflow-hidden">
@@ -374,12 +377,12 @@ const RecommendBoard = () => {
                                         {window.innerWidth < 500 ? (
                                             <div className={`relative w-full rounded-xl `} style={{ aspectRatio: '273 / 303' }}>
                                                 <Image
-                                                    className="absolute top-0 left-0 h-full object-cover rounded-xl"
+                                                    className="absolute top-0 left-0 h-full object-cover rounded-xl filter brightness-90"
                                                     src={item.ticket.image?.accessUri}
                                                     alt="TICKET"
                                                     layout="fill"
                                                 />
-                                                <div className="absolute px-[1.7rem] flex-1 mt-[13rem]">
+                                                <div className="absolute px-[1.7rem] flex-1 mt-[12rem]">
                                                     <h1 className="font-semibold text-[1.7rem] text-white font-medium theboki text-ellipsis overflow-hidden">{item.post.title}</h1>
                                                     <span className="font-normal text-[1.4rem] text-white font-normal text-ellipsis overflow-hidden theboki1">{bodyText}</span>
                                                 </div>
@@ -387,7 +390,7 @@ const RecommendBoard = () => {
                                         ) : (
                                             <div className={`relative w-full rounded-xl ${colorTicket[item.ticket.ticketColor] ? `bg-[${colorTicket[item.ticket.ticketColor]}]` : ''}`} style={{ aspectRatio: '273 / 303' }}>
                                                 <Image
-                                                    className="absolute top-0 left-0 h-full object-cover rounded-xl p-[1rem]"
+                                                    className="absolute top-0 left-0 h-full object-cover rounded-xl p-[1rem] "
                                                     src={item.ticket.image?.accessUri}
                                                     alt="TICKET"
                                                     layout="fill"
@@ -425,9 +428,10 @@ const RecommendBoard = () => {
                                                         <Image
                                                             src={item.member.profileUrl || DefaultImage}
                                                             alt="Profile"
-                                                            layout="fill"
                                                             objectFit="cover"
-                                                            className="rounded-full"
+                                                            width={24}
+                                                            height={24}
+                                                            className="rounded-[4.5rem] w-[2.4rem] h-[2.4rem]"
                                                         />
                                                     </div>
                                                     <div className="flex-1 overflow-hidden">

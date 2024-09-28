@@ -107,12 +107,14 @@ function RecentPost({ allPosts, setAllPosts, boardData, boardRefetch, PAGE_SIZE,
     const [showSkeleton, setShowSkeleton] = useState(true);
 
     useEffect(() => {
-        const delay = setTimeout(() => {
-            setShowSkeleton(false);
-        }, 1000); // 1000ms = 1초, 지연 시간을 원하는 시간으로 설정
+        if (typeof window !== 'undefined') { // 클라이언트에서만 실행되도록 체크
+            const delay = setTimeout(() => {
+                setShowSkeleton(false);
+            }, 1000); // 스켈레톤을 1초 동안 유지
 
-        return () => clearTimeout(delay);
-    }, []);
+            return () => clearTimeout(delay);
+        }
+    }, [loading]);
 
     if (loading || showSkeleton) {
         return <SkeletonBoard />;
@@ -140,7 +142,7 @@ function RecentPost({ allPosts, setAllPosts, boardData, boardRefetch, PAGE_SIZE,
             </div>
             {allPosts === 0 ? (
                 <div>
-                    <div className="grid grid-cols-1 lg:grid-cols-1 2xl:grid-cols-2 gap-x-[8rem] gap-y-[5.3rem] mt-[5rem]">
+                    <div className="grid grid-cols-1 lg:grid-cols-1 2xl:grid-cols-2 gap-x-[8rem] gap-y-[5.3rem]">
                         {sortedPosts().map((posts: any, index: number) => {
                             const BoardId = posts.post.id;
 
@@ -159,12 +161,12 @@ function RecentPost({ allPosts, setAllPosts, boardData, boardRefetch, PAGE_SIZE,
                             return (
                                 <Link
                                     href={`/board/${BoardId}`}
-                                    className="lg:h-[20rem] md:h-[27rem] h-[27rem] rounded-[1rem] px-[1.6rem] py-[2rem] cursor-pointer"
+                                    className="lg:h-[20rem] md:h-[27rem] h-[27rem] rounded-[1rem] px-[1.6rem] py-[2rem] cursor-pointer mt-[1.5rem]"
                                     key={index}
                                 >
                                     {window.innerWidth > 500 ? (
                                         <div className="flex w-full">
-                                            <Image className="w-[17rem] h-[17rem] rounded-[0.8rem]" src={posts.ticket.image.accessUri} alt="" width={170} height={170} />
+                                            <Image className="w-[17rem] h-[17rem] rounded-[0.8rem] object-cover" src={posts.ticket.image.accessUri} alt="" width={170} height={170} />
                                             <div className='flex flex-col w-full ml-[2.5rem]'>
                                                 <h1 className="text-[2rem] font-medium text-ellipsis overflow-hidden theboki">{posts.post.title}</h1>
                                                 <span className="text-[1.6rem] mt-[0.4rem] h-[5rem] font-normal text-[#6B6B6B] text-ellipsis overflow-hidden theboki1">{bodyText}</span>
@@ -208,8 +210,8 @@ function RecentPost({ allPosts, setAllPosts, boardData, boardRefetch, PAGE_SIZE,
                                         :
                                         (
                                             <div className="flex flex-col w-full rounded-[0.8rem] shadowall1">
-                                                <div className="absolute h-full text-[1.4rem] font-normal space-x-4 items-end">
-                                                    <div className='flex p-[1.2rem]'>
+                                                <div className="absolute h-full text-[1.4rem] font-normal space-x-4 items-end z-10">
+                                                    <div className='flex p-[1.2rem] text-white'>
                                                         <Image
                                                             src={posts.member.profileUrl || DefaultImage}
                                                             width={45}
@@ -218,12 +220,12 @@ function RecentPost({ allPosts, setAllPosts, boardData, boardRefetch, PAGE_SIZE,
                                                             className="h-[4.5rem] rounded-[4.5rem]" // 500px 이상에서만 보이도록 설정
                                                         />
                                                         <div className='flex flex-col text-white ml-[1rem]'>
-                                                            <span className={`text-[1.7rem] font-medium`}>{posts.member.nickName}</span>
+                                                            <span className={`text-[1.7rem] font-semibold`}>{posts.member.nickName}</span>
                                                             <span className="text-[1.2rem]">{formattedDate}</span>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <Image className="w-full h-[17rem] object-cover rounded-[0.8rem]" src={posts.ticket.image.accessUri} alt="" width={170} height={170} />
+                                                <Image className="w-full h-[17rem] object-cover rounded-[0.8rem] filter brightness-75" src={posts.ticket.image.accessUri} alt="" width={170} height={170} />
                                                 <div className='flex flex-col w-full  rounded-[0.8rem] pt-[1.6rem] px-[1.6rem]'>
                                                     <h1 className="text-[2rem] font-medium text-ellipsis overflow-hidden theboki">{posts.post.title}</h1>
                                                     <span className="text-[1.6rem] mt-[0.4rem] h-[5rem] font-normal text-[#6B6B6B] text-ellipsis overflow-hidden theboki1">{bodyText}</span>
@@ -256,7 +258,7 @@ function RecentPost({ allPosts, setAllPosts, boardData, boardRefetch, PAGE_SIZE,
                             );
                         })}
                     </div>
-                    <div className="flex w-full justify-center my-16">
+                    <div className="flex w-full justify-center my-16 mt-[10rem]">
                         {Array.from({ length: totalPages }, (_, index) => (
                             <button
                                 key={index}

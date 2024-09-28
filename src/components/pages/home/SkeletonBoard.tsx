@@ -11,18 +11,27 @@ const SkeletonBoard: React.FC = () => {
         }
     };
 
-    const [itemCount, setItemCount] = useState<number>(() => getItemCount(window.innerWidth));
+    const [itemCount, setItemCount] = useState<number>(() => {
+        if (typeof window !== 'undefined') {
+            return getItemCount(window.innerWidth);
+        }
+        return 4; // 서버 측에서는 기본값을 반환
+    });
 
     // 화면 크기에 따라 표시할 아이템 수를 설정하는 함수
     const updateItemCount = () => {
-        const width = window.innerWidth;
-        setItemCount(getItemCount(width));
+        if (typeof window !== 'undefined') {
+            const width = window.innerWidth;
+            setItemCount(getItemCount(width));
+        }
     };
 
     useEffect(() => {
-        updateItemCount(); // 처음 페이지 로드 시 실행
-        window.addEventListener('resize', updateItemCount); // 창 크기 변경 시 실행
-        return () => window.removeEventListener('resize', updateItemCount); // 이벤트 리스너 제거
+        if (typeof window !== 'undefined') {
+            updateItemCount(); // 처음 페이지 로드 시 실행
+            window.addEventListener('resize', updateItemCount); // 창 크기 변경 시 실행
+            return () => window.removeEventListener('resize', updateItemCount); // 이벤트 리스너 제거
+        }
     }, []);
 
     return (
@@ -38,7 +47,7 @@ const SkeletonBoard: React.FC = () => {
 
             {/* 스켈레톤 카드들 */}
             <div className="relative mx-auto">
-                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 gap-4">
                     {[...Array(itemCount)].map((_, index) => (
                         <div key={index} className="relative bg-gray-200 rounded-xl w-full h-80 animate-pulse" />
                     ))}
