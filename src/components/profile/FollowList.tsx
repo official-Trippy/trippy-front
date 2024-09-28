@@ -4,10 +4,9 @@ import { showFollows, showFollowings } from "@/services/follow";
 import { useUserStore } from "@/store/useUserStore";
 import { unfollow } from "@/services/follow";
 import { ACCESS_TOKEN } from "@/constants/general";
-import DefaultImage from '../../../public/defaultImage.svg';
+import DefaultImage from "../../../public/defaultImage.svg";
 import axios from "@/app/api/axios";
 import Swal from "sweetalert2";
-
 
 const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 const FollowList: React.FC<{
@@ -92,13 +91,13 @@ const FollowList: React.FC<{
   const handleAlert = async (userId: string) => {
     const result = await Swal.fire({
       title: "정말로 팔로우를 취소하시겠습니까?",
-      text: "팔로우를 취소하면 사용자의 비공개 게시물을 볼 수 없습니다.",
+      text: "팔로우를 취소해도 상대방에게 알림이 가지 않아요.",
       icon: "warning",
       showCancelButton: true, // 취소 버튼 추가
       confirmButtonColor: "#FB3463",
-      cancelButtonColor: "#6B6B6B",
-      confirmButtonText: "네, 팔로우 취소할래요",
-      cancelButtonText: "취소",
+      cancelButtonColor: "#CFCFCF",
+      confirmButtonText: "예",
+      cancelButtonText: "아니오",
     });
 
     if (result.isConfirmed) {
@@ -154,7 +153,7 @@ const FollowList: React.FC<{
                 </div>
                 {currentUserId === memberId && (
                   <button
-                    className="bg-red-500 text-white px-4 py-2 rounded rounded-lg"
+                    className="bg-[#FB3463] text-white px-4 py-2 rounded rounded-lg max-w-[200px] font-[10px]"
                     onClick={() => handleAlert(user.memberId)}
                   >
                     {type === "follower" ? "팔로우 삭제" : "팔로우 취소"}
