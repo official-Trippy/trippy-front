@@ -38,9 +38,9 @@ const SkeletonRecommendOotdPost: React.FC = () => {
     <div className="relative w-[90%] sm-700:w-[66%] mx-auto pt-[6rem] overflow-visible">
       <h1 className="flex items-center justify-center px-6 py-2 rounded-[20px] text-[12px] bg-gray-300 w-[300px] h-8 animate-pulse mb-4"></h1>
       <div className="flex items-center my-12 relative">
-        <div className="overflow-hidden w-full cursor-pointer">
-          <div className="flex flex-col space-x-4 transition-transform duration-300 flex-shrink-0 mr-auto justify-between sm-700:flex-row sm-700:mx-auto sm-700:items-center">
-            <h1 className="flex items-center justify-center px-6 py-2 rounded-[20px] text-[12px] bg-gray-300 w-[500px] h-8 animate-pulse mb-4"></h1>
+        <div className="w-full cursor-pointer">
+          <div className="w-full flex flex-col space-x-4 transition-transform duration-300 flex-shrink-0 mr-auto justify-between">
+            <h1 className="flex items-center justify-center py-2 rounded-[20px] text-[12px] bg-gray-300 h-8 animate-pulse mb-4"></h1>
           </div>
         </div>
       </div>
