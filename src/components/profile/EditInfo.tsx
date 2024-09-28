@@ -293,48 +293,64 @@ const EditInfo = () => {
     setIsProfileImageChanged(false);
   };
 
+  const [blogImageSrc, setBlogImageSrc] = useState<string | null>(null); // 크롭할 블로그 이미지 소스
+  const [isBlogImageModalOpen, setIsBlogImageModalOpen] = useState(false); // 크롭 모달 상태
+  const [blogCrop, setBlogCrop] = useState({ x: 0, y: 0 });
+  const [blogZoom, setBlogZoom] = useState(1);
+  const [croppedBlogAreaPixels, setCroppedBlogAreaPixels] = useState<Area | null>(null); // 크롭한 영역
+  const [isBlogCropping, setIsBlogCropping] = useState(false); // 크롭 상태
+
   const handleBlogImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0];
-      try {
-        const response = await uploadImage(file);
-        setBlogImage(response.result);
-        setImageBlogUploaded(true);
-        setIsBlogImageChanged(true);
-      } catch (error: unknown) {
-        console.error("Image upload failed:", error);
   
-        if (error instanceof AxiosError) {
-          if (error.response && error.response.status === 413) {
-            Swal.fire({
-              icon: 'error',
-              title: '이미지 용량이 너무 큽니다.',
-              text: '5MB 이하의 이미지를 선택해주세요.',
-              confirmButtonText: '확인',
-              confirmButtonColor: '#FB3463',
-              customClass: {
-                popup: 'swal-custom-popup',
-                icon: 'swal-custom-icon'
-              }
-            });
-          } else {
-            Swal.fire({
-              icon: 'error',
-              title: '이미지 업로드 실패',
-              text: '이미지 업로드에 실패했습니다. 다시 시도해주세요.',
-              confirmButtonText: '확인',
-              confirmButtonColor: '#FB3463',
-              customClass: {
-                popup: 'swal-custom-popup',
-                icon: 'swal-custom-icon'
-              }
-            });
-          }
+      // 이미지 크롭을 위한 모달을 표시하기 위해 FileReader 사용
+      const reader = new FileReader();
+      reader.onload = () => {
+        setBlogImageSrc(reader.result as string); // 이미지 소스를 설정하여 크롭 모달을 띄움
+        setIsBlogImageModalOpen(true); // 크롭 모달을 엽니다
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+  
+  const handleCropBlogImage = async () => {
+    if (!blogImageSrc || !croppedBlogAreaPixels) return;
+  
+    try {
+      const croppedBlob = await getCroppedImg(blogImageSrc, croppedBlogAreaPixels); // 크롭된 이미지 가져오기
+  
+      if (croppedBlob) {
+        const fileName = 'croppedBlogImage.jpg'; // 파일 이름 지정
+        const croppedFile = new File([croppedBlob], fileName, { type: 'image/jpeg' });
+  
+        // 크롭된 이미지 업로드
+        const response = await uploadImage(croppedFile); 
+        setBlogImage(response.result); // 업로드된 이미지를 상태에 설정
+        setIsBlogImageChanged(true); // 이미지 변경됨 설정
+        setIsBlogImageModalOpen(false); // 모달 닫기
+      }
+    } catch (error: unknown) {
+      console.error("Image upload failed:", error);
+  
+      if (error instanceof AxiosError) {
+        if (error.response && error.response.status === 413) {
+          Swal.fire({
+            icon: 'error',
+            title: '이미지 용량이 너무 큽니다.',
+            text: '5MB 이하의 이미지를 선택해주세요.',
+            confirmButtonText: '확인',
+            confirmButtonColor: '#FB3463',
+            customClass: {
+              popup: 'swal-custom-popup',
+              icon: 'swal-custom-icon'
+            }
+          });
         } else {
           Swal.fire({
             icon: 'error',
-            title: '알 수 없는 오류 발생',
-            text: '다시 시도해주세요.',
+            title: '이미지 업로드 실패',
+            text: '이미지 업로드에 실패했습니다. 다시 시도해주세요.',
             confirmButtonText: '확인',
             confirmButtonColor: '#FB3463',
             customClass: {
@@ -343,13 +359,25 @@ const EditInfo = () => {
             }
           });
         }
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: '알 수 없는 오류 발생',
+          text: '다시 시도해주세요.',
+          confirmButtonText: '확인',
+          confirmButtonColor: '#FB3463',
+          customClass: {
+            popup: 'swal-custom-popup',
+            icon: 'swal-custom-icon'
+          }
+        });
       }
     }
   };
   
 
   const handleBlogImageDelete = () => {
-    setBlogImage(null);
+    setBlogImage(null); // 블로그 이미지를 초기화
     setIsBlogImageChanged(true);
   };
 
@@ -1015,6 +1043,35 @@ const EditInfo = () => {
         </div>
       </div>
     )}
+    {isBlogImageModalOpen && (
+  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+    <div className="bg-white py-4 px-8 rounded-lg shadow-lg">
+      <h3 className="mb-4 text-center">이미지 영역 선택</h3>
+      <div className="relative w-[300px] h-[300px] bg-gray-200">
+        {blogImageSrc && (
+          <Cropper
+            image={blogImageSrc} // 이미지 소스 전달
+            crop={blogCrop}
+            zoom={blogZoom}
+            aspect={16 / 9} // 블로그 대표사진 비율 (예: 16:9)
+            onCropChange={setBlogCrop}
+            onCropComplete={(croppedArea, croppedAreaPixels) => setCroppedBlogAreaPixels(croppedAreaPixels)} // 크롭 완료 시 호출
+            onZoomChange={setBlogZoom}
+            objectFit="cover" // 이미지 여백을 없애고 화면에 맞춤
+          />
+        )}
+      </div>
+      <div className="flex justify-end mt-4">
+                <div className="bg-btn-color text-white px-4 py-2 font-medium font-['Pretendard'] rounded mr-2 cursor-pointer" onClick={handleCropImage}>
+                  완료
+                </div>
+                <div className="border border-[#cfcfcf] text-[#cfcfcf] px-4 py-2 font-medium font-['Pretendard'] rounded cursor-pointer" onClick={() => setIsBlogImageModalOpen(false)}>
+                  취소
+                </div>
+              </div>
+    </div>
+  </div>
+)}
       </div></>
   );
 };
