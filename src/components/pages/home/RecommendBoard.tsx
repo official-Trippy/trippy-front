@@ -412,7 +412,7 @@ const RecommendBoard = () => {
                                         </div>
                                         {window.innerWidth > 500 ? (
                                             <div className="px-[1.7rem] flex-1">
-                                                <h1 className="font-semibold text-[2.4rem] theboki text-ellipsis overflow-hidden">{item.post.title}</h1>
+                                                <h1 className="font-semibold text-[2.4rem] text-[#292929] theboki text-ellipsis overflow-hidden">{item.post.title}</h1>
                                                 <span className="font-normal text-[2rem] text-[#6B6B6B] text-ellipsis overflow-hidden theboki">{bodyText}</span>
                                             </div>
                                         ) : (
