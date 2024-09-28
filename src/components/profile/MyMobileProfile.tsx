@@ -18,9 +18,7 @@ const TABS = {
   FOLLOWING: "FOLLOWING",
 };
 
-const MyMobileProfile: React.FC<{ setActiveTab: (tab: string) => void }> = ({
-  setActiveTab,
-}) => {
+const MyMobileProfile: React.FC<{ setActiveTab: (tab: string) => void }> = ({ setActiveTab }) => {
   const accessToken = Cookies.get("accessToken");
   const router = useRouter();
 
@@ -33,15 +31,14 @@ const MyMobileProfile: React.FC<{ setActiveTab: (tab: string) => void }> = ({
     enabled: !!accessToken, // accessToken이 있을 때만 쿼리 실행
   });
 
-  // 이미지 모달 상태 관리
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleImageClick = () => {
-    setIsModalOpen(true); // 이미지 클릭 시 모달 열기
+    setIsModalOpen(true);
   };
 
   const handleCloseModal = () => {
-    setIsModalOpen(false); // 모달 닫기
+    setIsModalOpen(false);
   };
 
   useEffect(() => {
@@ -55,16 +52,16 @@ const MyMobileProfile: React.FC<{ setActiveTab: (tab: string) => void }> = ({
 
   const userData = data?.result;
 
+  const handleGoEditPage = () => {
+    console.log("하하하하");
+    router.push("/editProfile");
+  };
+
   const { resetUserInfo } = useUserStore();
 
   const handleLogoutClick = async () => {
-    // 쿠키에서 accessToken 제거
     Cookies.remove("accessToken");
-
-    // 전역 상태 초기화
     resetUserInfo();
-
-    // 로그아웃 후 원하는 페이지로 리디렉션 (예: 로그인 페이지)
     router.push("/login");
   };
 
@@ -78,8 +75,8 @@ const MyMobileProfile: React.FC<{ setActiveTab: (tab: string) => void }> = ({
               alt="Profile"
               width={48}
               height={48}
-              className="cursor-pointer rounded-full object-cover" // 커서 포인터 추가
-              onClick={handleImageClick} // 이미지 클릭 시 모달 열림
+              className="cursor-pointer rounded-full object-cover"
+              onClick={handleImageClick}
               style={{
                 width: "48px",
                 height: "48px",
@@ -92,8 +89,8 @@ const MyMobileProfile: React.FC<{ setActiveTab: (tab: string) => void }> = ({
           <span className="text-xl text-white text-gray-600 mt-2">{userData?.blogIntroduce}</span>
           <div className="flex items-center mt-[10px]">
             <button
-              className="bg-[#FB3463] text-white text-base font-semibold px-[2rem] py-[0.5rem] rounded-[8px]"
-              onClick={() => router.push("/editProfile")}
+              className="bg-[#FB3463] text-white text-base font-semibold px-[2rem] py-[0.5rem] rounded-[8px] z-[9999] cursor-pointer"
+              onClick={handleGoEditPage}
             >
               내 정보 수정
             </button>
@@ -118,9 +115,6 @@ const MyMobileProfile: React.FC<{ setActiveTab: (tab: string) => void }> = ({
               <span className="text-white"> {userData?.followingCnt}</span>
             </div>
           </div>
-        </div>
-        <div className="absolute top-[-240px] left-1/2 transform -translate-x-1/2 w-full h-[240px] px-[3rem] py-4 flex flex-col">
-        <h1 className="ml-auto text-xl text-white font-bold" onClick={handleLogoutClick}>로그아웃</h1>
         </div>
       </div>
 
