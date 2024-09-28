@@ -550,10 +550,13 @@ const handleEditSubmit = () => {
   };
 
   const handleGoProfile = (memberId) => {
-    router.push(`/user/${memberId}`);
+    if (memberId) {
+      router.push(`/user/${memberId}`);
+    } else {
+      router.push('/mypage'); // memberId가 없을 경우 내 페이지로 이동
+    }
   };
-
-
+  
   const renderLikeList = (likes: any[]) => {
     if (!Array.isArray(likes)) {
       return null;
