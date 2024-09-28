@@ -206,9 +206,9 @@ const RecommendedSpot: React.FC<RecommendedSpotProps> = ({ recommendedSpots, loc
         </>
       ) : (
         // 추천 장소가 없을 때 중앙에 메시지를 표시
-        <div className="flex justify-center items-center font-bold text-2xl">
-          <span className='text-[#FB3463]'>{location}</span>에 대한 추천 관광지 데이터가 없습니다!
-        </div>
+        <div className="flex justify-center items-center font-bold text-2xl whitespace-nowrap">
+        <span className='text-[#FB3463]'>{location}</span>에 대한 추천 관광지 데이터가 없습니다!
+      </div>
       )}
     </div>
   );
