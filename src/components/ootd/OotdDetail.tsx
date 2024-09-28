@@ -163,6 +163,15 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
     }
   };
 
+  const handleLocationClick = (location: string) => {
+    if (!location) return;
+    
+    const encodedLocation = encodeURIComponent(location);
+    const kakaoMapUrl = `https://map.kakao.com/link/search/${encodedLocation}`;
+    
+    window.open(kakaoMapUrl, '_blank'); // 새 창으로 카카오맵 열기
+  };
+
 
   if (isLoading) {
     return null;
@@ -251,7 +260,12 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
                   <Image width={16} height={16} src={LocationIcon} alt="location" />
                 </div>
                 <div className="whitespace-nowrap overflow-hidden text-ellipsis">
-                  <span className="block text-[#9D9D9D] truncate">{ootdItem.post.location  || '정보 없음'}</span>
+                <span
+                    className="block text-[#9D9D9D] truncate cursor-pointer"
+                    onClick={() => handleLocationClick(ootdItem.post.location || '정보 없음')}
+                  >
+                    {ootdItem.post.location || '정보 없음'}
+                  </span>
                 </div>
               </div>
               <div className="flex items-center gap-2 whitespace-nowrap overflow-hidden text-ellipsis">

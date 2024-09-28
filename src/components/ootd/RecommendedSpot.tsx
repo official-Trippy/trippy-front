@@ -62,10 +62,12 @@ const RecommendedSpot: React.FC<RecommendedSpotProps> = ({ recommendedSpots }) =
   };
 
   const handleSpotClick = (title: string) => {
-    const kakaoMapUrl = `https://map.kakao.com/link/search/${encodeURIComponent(title)}`;
+    // URL 인코딩을 강화하여 특수 문자 및 공백 처리
+    const encodedTitle = encodeURIComponent(title);
+    const kakaoMapUrl = `https://map.kakao.com/link/search/${encodedTitle}`;
+    
     window.open(kakaoMapUrl, '_blank');
   };
-
   // 호버 상태 관리
   const [hoveredSpot, setHoveredSpot] = useState<number | null>(null);
 
@@ -91,7 +93,7 @@ const RecommendedSpot: React.FC<RecommendedSpotProps> = ({ recommendedSpots }) =
             width: '30px',
             height: '30px',
             position: 'absolute',
-            top: '60%',
+            top: '59%',
             transform: 'translateY(-50%)',
             zIndex: 999,
             left: '-10px',
@@ -189,7 +191,7 @@ const RecommendedSpot: React.FC<RecommendedSpotProps> = ({ recommendedSpots }) =
             width: '30px',
             height: '30px',
             position: 'absolute',
-            top: '60%',
+            top: '59%',
             transform: 'translateY(-50%)',
             right: '-10px',
             zIndex: 999,
