@@ -749,3 +749,26 @@ body {
   background-color: transparent !important;
   color: #cfcfcf;
 }
+
+.left-button {
+  /* 기본 스타일 */
+  left: -30px;
+}
+
+@media (max-width: 700px) {
+  .left-button {
+    left: -10px !important; /* 화면 너비가 700px 이하일 때 */
+  }
+}
+
+
+.right-button {
+  /* 기본 스타일 */
+  right: -30px;
+}
+
+@media (max-width: 700px) {
+  .right-button {
+    right: -10px !important; /* 화면 너비가 700px 이하일 때 */
+  }
+}
