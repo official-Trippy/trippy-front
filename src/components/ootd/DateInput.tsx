@@ -38,12 +38,12 @@ const DateInput: React.FC<DateInputProps> = ({ onDateChange, initialDate }) => {
   };
 
   return (
-    <div className="relative w-full h-[4rem] rounded-[8px] border border-[#cfcfcf] flex items-center text-neutral-500 text-lg">
+    <div className="relative w-full h-[4rem] rounded-[8px] border border-[#cfcfcf] flex items-center text-lg">
       <input
         type="text"
         value={selectedDate ? format(selectedDate, 'yyyyMMdd') : ''}
         readOnly
-        className="datepicker-input h-full py-0 px-4 border-none text-neutral-500 rounded-[8px] placeholder:text-[#cfcfcf]"
+        className="datepicker-input h-full py-0 px-4 border-none text-[#cfcfcf] rounded-[8px] placeholder:text-[#cfcfcf]"
         placeholder="날짜 선택"
       />
       <Image
