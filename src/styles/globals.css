@@ -72,18 +72,18 @@ body {
 @media (prefers-color-scheme: dark) {
   input[type="text"],
   textarea {
-    color: white; /* 다크 모드에서 글씨 색상을 흰색으로 설정 */
+    color: black; /* 다크 모드에서 글씨 색상을 흰색으로 설정 */
   }
 }
 
 
 @media (prefers-color-scheme: dark) {
   input[type="text"] {
-    color: white; /* 글씨 색상을 흰색으로 설정 */
+    color: black; /* 글씨 색상을 흰색으로 설정 */
   }
 
   .comment-section {
-    color: white; /* 댓글 섹션의 글씨 색상을 흰색으로 설정 */
+    color: black; /* 댓글 섹션의 글씨 색상을 흰색으로 설정 */
   }
 }
 
