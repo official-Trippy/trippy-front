@@ -94,7 +94,7 @@ const Header = () => {
       cancelButtonText: '아니오',
       confirmButtonColor: '#FB3463',
       customClass: {
-        popup: 'swal-custom-popup',
+        popup: 'swal-custom-popup custom-swal-zindex', // custom-swal-zindex 클래스 추가
         icon: 'swal-custom-icon',
       },
     });

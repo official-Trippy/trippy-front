@@ -66,7 +66,7 @@ const MyMobileProfile: React.FC<{ setActiveTab: (tab: string) => void }> = ({ se
   };
 
   return (
-    <div className="w-full mx-auto flex flex-col items-center relative z-[9989]">
+    <div className="w-full mx-auto flex flex-col items-center relative z-[999]">
       <div className="relative w-full">
         <div className="absolute top-[-240px] left-1/2 transform -translate-x-1/2 w-full h-[240px] px-8 py-4 flex flex-col items-center">
           <div className="relative mb-4">
@@ -89,7 +89,7 @@ const MyMobileProfile: React.FC<{ setActiveTab: (tab: string) => void }> = ({ se
           <span className="text-xl text-white text-gray-600 mt-2">{userData?.blogIntroduce}</span>
           <div className="flex items-center mt-[10px]">
             <button
-              className="bg-[#FB3463] text-white text-base font-semibold px-[2rem] py-[0.5rem] rounded-[8px] z-[9999] cursor-pointer"
+              className="bg-[#FB3463] text-white text-base font-semibold px-[2rem] py-[0.5rem] rounded-[8px] z-[999] cursor-pointer"
               onClick={handleGoEditPage}
             >
               내 정보 수정
