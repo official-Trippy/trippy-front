@@ -82,6 +82,7 @@ const RecommendedSpot: React.FC<RecommendedSpotProps> = ({ recommendedSpots }) =
   return (
     <div className="relative w-[90%] sm-700:w-[66%] sm-700:max-w-7xl mx-auto pt-[2rem] overflow-visible">
       <h2 className="font-bold text-2xl mb-4">추천 장소를 알려드릴게요!</h2>
+      {/* 왼쪽 버튼 */}
       {itemsPerSlide < recommendedSpots.length && (
         <Image
           src={SwiperLeftButton}
@@ -93,7 +94,7 @@ const RecommendedSpot: React.FC<RecommendedSpotProps> = ({ recommendedSpots }) =
             width: '30px',
             height: '30px',
             position: 'absolute',
-            top: '59%',
+            top: '56%', // 이미지 영역의 세로 정가운데
             transform: 'translateY(-50%)',
             zIndex: 999,
             left: '-10px',
@@ -118,28 +119,27 @@ const RecommendedSpot: React.FC<RecommendedSpotProps> = ({ recommendedSpots }) =
                 >
                   {spot.imgList && spot.imgList.length > 0 ? (
                     <div className="relative w-[158px] h-[100px] flex justify-center items-center rounded-[8px] overflow-hidden">
-                    <Image
-                      src={spot.imgList[0].galWebImageUrl}
-                      alt={spot.title}
-                      width={158}
-                      height={100}
-                      className="rounded-[8px] object-cover"
-                      style={{ width: '158px', height: '100px' }}
-                    />
-                    {/* 호버 시 "위치 확인하기" 텍스트 */}
-                    {hoveredSpot === index && (
-                      <div
-                        className="absolute inset-0 bg-black bg-opacity-50 flex justify-center items-center"
-                        style={{ 
-                          WebkitMaskImage: 'linear-gradient(white, white)',  // mask 속성으로 테두리를 둥글게 적용
-                          maskImage: 'linear-gradient(white, white)',        // 다양한 브라우저 지원을 위해 prefix 사용
-                          borderRadius: '8px',                              // 둥근 모서리
-                        }}
-                      >
-                        <span className="text-white text-sm font-bold">위치 확인하기</span>
-                      </div>
-                    )}
-                  </div>
+                      <Image
+                        src={spot.imgList[0].galWebImageUrl}
+                        alt={spot.title}
+                        width={158}
+                        height={100}
+                        className="rounded-[8px] object-cover"
+                        style={{ width: '158px', height: '100px' }}
+                      />
+                      {hoveredSpot === index && (
+                        <div
+                          className="absolute inset-0 bg-black bg-opacity-50 flex justify-center items-center"
+                          style={{ 
+                            WebkitMaskImage: 'linear-gradient(white, white)', 
+                            maskImage: 'linear-gradient(white, white)',  
+                            borderRadius: '8px',
+                          }}
+                        >
+                          <span className="text-white text-sm font-bold">위치 확인하기</span>
+                        </div>
+                      )}
+                    </div>
                   ) : (
                     <div className="relative w-[158px] h-[100px] flex justify-center items-center">
                       <Image
@@ -151,17 +151,17 @@ const RecommendedSpot: React.FC<RecommendedSpotProps> = ({ recommendedSpots }) =
                         style={{ width: '158px', height: '100px' }}
                       />
                       {hoveredSpot === index && (
-                      <div
-                        className="absolute inset-0 bg-black bg-opacity-50 flex justify-center items-center"
-                        style={{ 
-                          WebkitMaskImage: 'linear-gradient(white, white)',  // mask 속성으로 테두리를 둥글게 적용
-                          maskImage: 'linear-gradient(white, white)',        // 다양한 브라우저 지원을 위해 prefix 사용
-                          borderRadius: '8px',                              // 둥근 모서리
-                        }}
-                      >
-                        <span className="text-white text-sm font-bold">위치 확인하기</span>
-                      </div>
-                    )}
+                        <div
+                          className="absolute inset-0 bg-black bg-opacity-50 flex justify-center items-center"
+                          style={{ 
+                            WebkitMaskImage: 'linear-gradient(white, white)', 
+                            maskImage: 'linear-gradient(white, white)',  
+                            borderRadius: '8px',
+                          }}
+                        >
+                          <span className="text-white text-sm font-bold">위치 확인하기</span>
+                        </div>
+                      )}
                     </div>
                   )}
                 </div>
@@ -180,6 +180,7 @@ const RecommendedSpot: React.FC<RecommendedSpotProps> = ({ recommendedSpots }) =
           )}
         </Swiper>
       </div>
+      {/* 오른쪽 버튼 */}
       {itemsPerSlide < recommendedSpots.length && (
         <Image
           src={SwiperRightButton}
@@ -191,7 +192,7 @@ const RecommendedSpot: React.FC<RecommendedSpotProps> = ({ recommendedSpots }) =
             width: '30px',
             height: '30px',
             position: 'absolute',
-            top: '59%',
+            top: '56%', // 이미지 영역의 세로 정가운데
             transform: 'translateY(-50%)',
             right: '-10px',
             zIndex: 999,

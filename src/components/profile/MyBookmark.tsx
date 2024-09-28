@@ -50,21 +50,26 @@ const MyBookmark = () => {
 
   const renderPagination = (totalCount: number, currentPage: number) => {
     const totalPages = Math.ceil(totalCount / PAGE_SIZE);
+  
+    // totalPages가 1보다 클 때만 페이지네이션 렌더링
     return (
-      <div className="flex justify-center mt-8">
-        {Array.from({ length: totalPages }, (_, index) => (
-          <button
-            key={index}
-            onClick={() => handlePageClick(index)}
-            className={`mx-1 py-2 px-4 ${currentPage === index ? 'text-[#fa3463] font-semibold' : 'text-[#cfcfcf] font-normal'}`}
-          >
-            {index + 1}
-          </button>
-        ))}
-      </div>
+      <>
+        {totalPages > 1 && (
+          <div className="flex justify-center mt-8">
+            {Array.from({ length: totalPages }, (_, index) => (
+              <button
+                key={index}
+                onClick={() => handlePageClick(index)}
+                className={`mx-1 py-2 px-4 ${currentPage === index ? 'text-[#fa3463] font-semibold' : 'text-[#cfcfcf] font-normal'}`}
+              >
+                {index + 1}
+              </button>
+            ))}
+          </div>
+        )}
+      </>
     );
   };
-
   return (
     <div className="h-[400px]">
       <div className="flex">
