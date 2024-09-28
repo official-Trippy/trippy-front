@@ -519,3 +519,114 @@ body {
   white-space: nowrap;
 }
 
+.react-datepicker__header {
+  background-color: white !important; /* 배경 색상 흰색 */
+  border: none !important;
+  padding: 0 !important; /* padding 제거 */
+}
+
+.react-datepicker__month {
+  margin: 0 !important; /* margin 제거 */
+}
+
+.react-datepicker__month-container {
+  width: 100% !important;
+  margin: 0 auto !important; /* 가운데 정렬 */
+  float: none !important;
+}
+
+.react-datepicker {
+  width: 100% !important;
+  margin: 0 auto !important; /* 가운데 정렬 */
+  border: none !important; /* 테두리 제거 */
+}
+
+.react-datepicker__navigation--next {
+  right: 80px !important; /* 화살표 위치 조정 */
+  top: 3px !important;
+}
+
+.react-datepicker__navigation--previous {
+  left: 80px !important; /* 화살표 위치 조정 */
+  top: 3px !important;
+}
+
+.react-datepicker__day-name, .react-datepicker__day, .react-datepicker__time-name {
+  margin-right: 16px !important; /* 날짜와 시간 간격 조정 */
+  margin-top: 6px !important;
+}
+
+/* 선택된 날짜에 대한 스타일 */
+.react-datepicker__day--selected, 
+.react-datepicker__day--in-selecting-range, 
+.react-datepicker__day--in-range, 
+.react-datepicker__month-text--selected, 
+.react-datepicker__month-text--in-selecting-range, 
+.react-datepicker__month-text--in-range, 
+.react-datepicker__quarter-text--selected, 
+.react-datepicker__quarter-text--in-selecting-range, 
+.react-datepicker__quarter-text--in-range, 
+.react-datepicker__year-text--selected, 
+.react-datepicker__year-text--in-selecting-range, 
+.react-datepicker__year-text--in-range {
+  border-radius: 1rem !important; /* 선택된 날짜 둥글게 */
+  background-color: #FB3463 !important; /* 메인 색상 */
+  color: white !important; /* 선택된 날짜 글자색을 흰색으로 변경 */
+}
+
+/* 월과 요일 텍스트 색상 */
+.react-datepicker__current-month,
+.react-datepicker__day-name {
+  color: #333 !important; /* 월과 요일 텍스트 색상 */
+}
+
+/* 기본 날짜 텍스트 색상 */
+.react-datepicker__day {
+  color: #000 !important; /* 기본 날짜 텍스트 색상 */
+}
+
+/* 현재 날짜 이후의 날짜에 대한 스타일 */
+.react-datepicker__day--disabled,
+.react-datepicker__day--disabled:hover {
+  color: #d3d3d3 !important; /* 회색 텍스트 색상 */
+  pointer-events: none; /* 클릭 불가 */
+}
+
+/* 날짜에 마우스 호버 시 둥근 배경 */
+.react-datepicker__day:hover {
+  background-color: #FFBACA !important; /* Hover 시 배경 색상 */
+  border-radius: 1rem !important; /* Hover 시 둥근 배경 */
+}
+
+
+/* 선택된 날짜에 대한 스타일 */
+.react-datepicker__day--selected {
+  border-radius: 1rem !important; /* 선택된 날짜 둥글게 */
+  background-color: #FB3463 !important; /* 메인 색상 */
+  color: white !important; /* 선택된 날짜 글자색을 흰색으로 변경 */
+}
+
+/* 오늘 날짜에 대한 스타일을 분리 */
+.react-datepicker__day--today {
+  background-color: transparent !important; /* 오늘 날짜의 배경색 제거 */
+  color: #000 !important; /* 오늘 날짜 글자색 유지 */
+  font-weight: bold !important; /* 오늘 날짜는 볼드 처리 */
+}
+
+/* 날짜에 마우스 호버 시 둥근 배경 */
+.react-datepicker__day:hover {
+  background-color: #FFBACA !important; /* Hover 시 배경 색상 */
+  border-radius: 1rem !important; /* Hover 시 둥근 배경 */
+}
+
+.react-datepicker__day--selected-custom {
+  border-radius: 1rem !important;
+  background-color: #FB3463 !important;
+  color: white !important;
+}
+
+
+.react-datepicker__day--keyboard-selected, .react-datepicker__month-text--keyboard-selected, .react-datepicker__quarter-text--keyboard-selected, .react-datepicker__year-text--keyboard-selected {
+  background-color: transparent !important;
+  color: inherit !important;
+}

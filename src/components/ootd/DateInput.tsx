@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
-import { format, isValid, parse } from 'date-fns';
+import React, { useState, useEffect } from 'react';
+import { format, parse, isValid } from 'date-fns';
 import Image from 'next/image';
 import CalendarIcon from '../../../public/icon_calendar.svg';
+import CalendarModal from './CalendarModal';
 
 interface DateInputProps {
   onDateChange: (date: string) => void;
@@ -12,10 +11,10 @@ interface DateInputProps {
 
 const DateInput: React.FC<DateInputProps> = ({ onDateChange, initialDate }) => {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false); // 모달 상태 관리
 
   useEffect(() => {
     if (initialDate) {
-      // 'yyyyMMdd' 형식으로 파싱
       const parsedDate = parse(initialDate, 'yyyyMMdd', new Date());
       if (isValid(parsedDate)) {
         setSelectedDate(parsedDate);
@@ -29,26 +28,37 @@ const DateInput: React.FC<DateInputProps> = ({ onDateChange, initialDate }) => {
     if (date) {
       const formattedDate = format(date, 'yyyyMMdd');
       setSelectedDate(date);
-      onDateChange(formattedDate);
+      onDateChange(formattedDate); // 상위 컴포넌트에 변경된 날짜 전달
+      setIsModalOpen(false); // 날짜 선택 후 모달 닫기
     }
   };
 
+  const handleCalendarClick = () => {
+    setIsModalOpen(true); // 모달 열기
+  };
+
   return (
-    <div className="datepicker-container w-full h-[4rem] rounded-[8px] border border-[#cfcfcf] flex items-center text-neutral-500 text-lg">
-      <DatePicker
-        selected={selectedDate}
-        onChange={handleDateChange}
-        dateFormat="yyyyMMdd"
-        placeholderText="날짜 선택"
-        className="datepicker-input h-full py-0 px-4 border-none text-neutral-500 rounded-[8px] placeholder:text-[#cfcfcf]" // 추가된 placeholder 색상
-        maxDate={new Date()} 
-        popperClassName="custom-datepicker-popover"
+    <div className="relative w-full h-[4rem] rounded-[8px] border border-[#cfcfcf] flex items-center text-neutral-500 text-lg">
+      <input
+        type="text"
+        value={selectedDate ? format(selectedDate, 'yyyyMMdd') : ''}
+        readOnly
+        className="datepicker-input h-full py-0 px-4 border-none text-neutral-500 rounded-[8px] placeholder:text-[#cfcfcf]"
+        placeholder="날짜 선택"
       />
       <Image
         src={CalendarIcon}
         alt="Calendar Icon"
-        className="datepicker-icon"
-        layout="fixed"
+        className="absolute right-4 cursor-pointer"
+        onClick={handleCalendarClick} 
+      />
+
+      {/* 모달 컴포넌트 */}
+      <CalendarModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        selectedDate={selectedDate}
+        onDateChange={handleDateChange}
       />
     </div>
   );

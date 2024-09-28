@@ -94,7 +94,7 @@ const RecommendedSpot: React.FC<RecommendedSpotProps> = ({ recommendedSpots }) =
             width: '30px',
             height: '30px',
             position: 'absolute',
-            top: '56%', // 이미지 영역의 세로 정가운데
+            top: '58%', // 이미지 영역의 세로 정가운데
             transform: 'translateY(-50%)',
             zIndex: 999,
             left: '-10px',
@@ -192,7 +192,7 @@ const RecommendedSpot: React.FC<RecommendedSpotProps> = ({ recommendedSpots }) =
             width: '30px',
             height: '30px',
             position: 'absolute',
-            top: '56%', // 이미지 영역의 세로 정가운데
+            top: '58%', // 이미지 영역의 세로 정가운데
             transform: 'translateY(-50%)',
             right: '-10px',
             zIndex: 999,
