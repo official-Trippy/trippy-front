@@ -47,7 +47,7 @@ const UserInformation: React.FC<{ setActiveTab: (tab: string) => void }> = ({
   const userData = data?.result;
 
   return (
-    <div className="w-full flex flex-col relative">
+    <div className="w-full flex flex-col relative z-20">
       <div className="w-[80%]">
         <div className="absolute top-[-150px] w-[200px] h-auto bg-white px-8 py-6 rounded-lg shadow-lg flex flex-col items-center">
           <div className="relative my-4">
