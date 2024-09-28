@@ -235,6 +235,7 @@ const UserPage = ({ params }: { params: { id: string } }) => {
                   className={activeTab === TABS.TICKET ? "text-[#fa3463]" : ""}
                 >
                   티켓
+                  <span className="text-[#fa3463] ml-1">{userBoardCount}</span>
                 </span>
               </button>
               <button
