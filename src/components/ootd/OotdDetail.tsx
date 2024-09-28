@@ -135,6 +135,7 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
   };
 
   const handleDeleteClick = async () => {
+    setIsMenuOpen(false);
     if (!data || !data.result) {
       await Swal.fire(
         "오류 발생",

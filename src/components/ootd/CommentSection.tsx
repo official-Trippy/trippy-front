@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useQuery, useMutation } from 'react-query';
 import Image from 'next/image';
 import { useUserStore } from '@/store/useUserStore';
@@ -55,6 +55,40 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
         setReplyToNickname(mention.substring(1)); // '@'를 제거하고 설정
     }
 };
+  const menuRefs = useRef<{ [key: number]: HTMLDivElement | null }>({}); // 각 메뉴의 ref
+
+  // 메뉴 열기/닫기
+  const handleCabapIconClick = (commentId: number) => {
+    setIsMenuOpen((prev) => ({
+      ...prev,
+      [commentId]: !prev[commentId], // 현재 메뉴를 토글
+    }));
+  };
+
+  // 메뉴 외부 클릭 감지
+  const handleClickOutside = (event: MouseEvent) => {
+    Object.keys(menuRefs.current).forEach((commentId) => {
+      const ref = menuRefs.current[Number(commentId)];
+      if (ref && !ref.contains(event.target as Node)) {
+        setIsMenuOpen((prev) => ({
+          ...prev,
+          [Number(commentId)]: false, // 메뉴 닫기
+        }));
+      }
+    });
+  };
+
+  useEffect(() => {
+    if (Object.values(isMenuOpen).some((open) => open)) {
+      document.addEventListener('mousedown', handleClickOutside);
+    } else {
+      document.removeEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isMenuOpen]);
 
 // 수정 제출 시 멘션 추가
 const handleEditSubmit = () => {
@@ -303,12 +337,6 @@ const handleEditSubmit = () => {
     router.push('/login');
   };
   
-  const handleCabapIconClick = (commentId: number) => {
-    setIsMenuOpen((prev) => ({
-      ...prev,
-      [commentId]: !prev[commentId], 
-    }));
-  };
 
   const handleDelete = async (commentId: number) => {
     const result = await Swal.fire({
@@ -397,17 +425,22 @@ const handleEditSubmit = () => {
                   height={10}
                   className="mx-auto cursor-pointer"
                 />
-                {isMenuOpen[comment.id] && (
-                  <div className="absolute w-[60px] right-[4px] mt-[5px] bg-white rounded shadow-lg z-10">
-                    <div className="pt-3 pb-2 px-4 text-[#fa3463] cursor-pointer text-center flex-shrink-0" onClick={() => handleDelete(comment.id)}>
-                      삭제
-                    </div>
-                    <div className="border-t border-gray-300 my-2" /> 
-                    <div className="pt-2 pb-3 px-4 text-black cursor-pointer text-center flex-shrink-0" onClick={() => handleEditClick(comment)}>
-                      수정
-                    </div>
-                  </div>
-                )}
+             {isMenuOpen[comment.id] && (
+            <div 
+              ref={(el) => {
+                menuRefs.current[comment.id] = el; // 반환하지 않음
+              }} 
+              className="absolute w-[60px] right-[4px] mt-[5px] bg-white rounded shadow-lg z-10"
+            >
+              <div className="pt-3 pb-2 px-4 text-[#fa3463] cursor-pointer text-center flex-shrink-0" onClick={() => handleDelete(comment.id)}>
+                삭제
+              </div>
+              <div className="border-t border-gray-300 my-2" /> 
+              <div className="pt-2 pb-3 px-4 text-black cursor-pointer text-center flex-shrink-0" onClick={() => handleEditClick(comment)}>
+                수정
+              </div>
+            </div>
+          )}
               </div>
             )}
           </div>
