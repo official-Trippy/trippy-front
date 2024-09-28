@@ -88,6 +88,7 @@ const EditInfo = () => {
       updateUserInfo(data); // 전역 상태를 최신화
     } catch (error) {
       console.error('내 정보 조회 중 오류 발생:', error);
+      router.push("/login");
     }
   };
 

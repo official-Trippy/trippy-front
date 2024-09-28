@@ -38,9 +38,15 @@ const PostOotd: React.FC = () => {
   const [date, setDate] = useState<string>('');
   const [weather, setWeather] = useState<any>(null);
   const router = useRouter();
-
   const userInfo = useUserStore((state) => state.userInfo);
   const userMemberId = userInfo?.memberId;
+
+  useEffect(() => {
+    // Redirect to login if not authenticated
+    if (!userInfo) {
+      router.push("/login");
+    }
+  }, [userInfo, router]);
 
   const dateInputRef = useRef<HTMLInputElement>(null); 
 
