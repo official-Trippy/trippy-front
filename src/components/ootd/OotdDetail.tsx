@@ -367,7 +367,7 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
                       </div>
                       <div className="border-t border-gray-300 my-2" />
                       <div
-                        className="pb-3 pt-2 px-4 text-neutral-900 cursor-pointer text-center"
+                        className="pb-3 pt-2 px-4 text-neutral-900 dark:text-white  cursor-pointer text-center"
                         onClick={() => router.push(`/edit/${id}`)}
                       >
                         수정

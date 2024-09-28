@@ -72,12 +72,12 @@ const Account = () => {
     <div>
     <div className="text-center text-neutral-400 text-2xl text-base font-normal font-['Pretendard'] mt-[2rem] mb-2">
       {accountFound && (
-        <div className="text-center text-neutral-900 text-xl font-bold font-['Pretendard']" style={{ fontSize: "1.2rem" }}>
+        <div className="text-center text-neutral-900 dark:text-white  text-xl font-bold font-['Pretendard']" style={{ fontSize: "1.2rem" }}>
           {maskedEmail}
         </div>
       )}
       {badRequest && (
-        <div className="text-center text-neutral-900 text-xl font-bold font-['Pretendard']" style={{ fontSize: "1.2rem" }}>
+        <div className="text-center text-neutral-900 dark:text-white  text-xl font-bold font-['Pretendard']" style={{ fontSize: "1.2rem" }}>
           가입된 이력이 없습니다.
         </div>
           )}

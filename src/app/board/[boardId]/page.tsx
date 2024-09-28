@@ -414,7 +414,7 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
                 onClick={handleProfileClick}
               />
               <div className="flex flex-col text-[2rem] ml-[2rem]">
-                <span className="font-medium text-neutral-900">
+                <span className="font-medium text-neutral-900 dark:text-white">
                   {postData?.result.member.nickName}
                 </span>
                 <span className="text-[#9D9D9D] font-normal">

@@ -450,7 +450,7 @@ const handleEditSubmit = () => {
                 삭제
               </div>
               <div className="border-t border-gray-300 my-2" /> 
-              <div className="pt-2 pb-3 px-4 text-neutral-900 cursor-pointer text-center flex-shrink-0" onClick={() => handleEditClick(comment)}>
+              <div className="pt-2 pb-3 px-4 text-neutral-900 dark:text-white  cursor-pointer text-center flex-shrink-0" onClick={() => handleEditClick(comment)}>
                 수정
               </div>
             </div>
@@ -636,7 +636,7 @@ const handleEditSubmit = () => {
           </div>
         </div>
         {showLikes && (
-          <div className='flex flex-col space-y-4 w-full h-[200px] my-4 p-4 bg-neutral-100 rounded-lg shadow-md items-center text-neutral-900 justify-center'>
+          <div className='flex flex-col space-y-4 w-full h-[200px] my-4 p-4 bg-neutral-100 rounded-lg shadow-md items-center text-neutral-900 dark:text-white  justify-center'>
             <div className="text-2xl font-medium">
               트리피 회원이면 좋아요를 달 수 있어요
             </div>
@@ -646,7 +646,7 @@ const handleEditSubmit = () => {
           </div>
         )}
         {showComments && (
-          <div className='flex flex-col space-y-4 w-full h-[200px] my-4 p-4 bg-neutral-100 rounded-lg shadow-md items-center text-neutral-900 justify-center'>
+          <div className='flex flex-col space-y-4 w-full h-[200px] my-4 p-4 bg-neutral-100 rounded-lg shadow-md items-center text-neutral-900 dark:text-white  justify-center'>
             <div className="text-2xl font-medium">
               트리피 회원이면 댓글을 달 수 있어요
             </div>

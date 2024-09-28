@@ -341,7 +341,7 @@ const RecentOotdPost: React.FC = () => {
           ))
         ) : (
           // 팔로우한 유저가 없거나 게시물이 없을 때 메시지 표시
-          <div className="h-full flex flex-col text-[2rem] text-neutral-900 my-auto items-center justify-center font-medium font-['Pretendard'] py-[50px]">
+          <div className="h-full flex flex-col text-[2rem] text-neutral-900 dark:text-white  my-auto items-center justify-center font-medium font-['Pretendard'] py-[50px]">
             {userInfo ? (
               <div className="flex flex-row">
                 <span className="text-[#FB3463]">팔로우</span>한 유저의 OOTD가
@@ -350,7 +350,7 @@ const RecentOotdPost: React.FC = () => {
             ) : (
               <>
                 <div className="flex flex-row">
-                  <span className="text-neutral-900">
+                  <span className="text-neutral-900 dark:text-white ">
                     트리피 로그인 후 팔로잉 게시글을 확인하세요!
                   </span>
                 </div>

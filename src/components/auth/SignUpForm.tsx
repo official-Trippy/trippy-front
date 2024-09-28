@@ -367,7 +367,7 @@ const SignUpForm = () => {
           onChange={handleAgreementChange}
           className="mr-2"
         />
-        <label className="text-neutral-900">
+        <label className="text-neutral-900 dark:text-white ">
           <span
             onClick={(event) => {
               event.stopPropagation();
