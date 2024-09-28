@@ -3,7 +3,11 @@
 import React, { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import Slider from "react-slick";
-import { deleteOotdPost, fetchOotdPostDetail, fetchRecommendedSpots } from "@/services/ootd.ts/ootdGet";
+import {
+  deleteOotdPost,
+  fetchOotdPostDetail,
+  fetchRecommendedSpots,
+} from "@/services/ootd.ts/ootdGet";
 import { OotdDetailGetResponse } from "@/types/ootd";
 import { useUserStore } from "@/store/useUserStore";
 import "slick-carousel/slick/slick.css";
@@ -21,12 +25,17 @@ import Swal from "sweetalert2";
 import CabapIcon from "../../../public/cabap-icon2.svg";
 import BookmarkIcon from "../../../public/icon_bookmark.svg";
 import BookmarkedIcon from "../../../public/bookmark-fill.svg";
-import { addBookmark, deleteBookmark, fetchIsBookmarked } from "@/services/bookmark/bookmark";
+import {
+  addBookmark,
+  deleteBookmark,
+  fetchIsBookmarked,
+} from "@/services/bookmark/bookmark";
 import WeatherIcon from "../../../public/WeatherIcon.svg";
 import DefaultImage from "../../../public/defaultImage.svg";
 import { getWeatherStatusInfo } from "@/constants/weatherTransition";
 import RecommendedSpots from "./RecommendedSpot";
 import RecommendedSpot from "./RecommendedSpot";
+import { searchTag } from "@/services/search";
 
 interface OotdDetailProps {
   id: number;
@@ -37,23 +46,23 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
     ["ootdPostDetail", id],
     () => fetchOotdPostDetail(id),
     {
-      refetchOnWindowFocus: true, 
-      refetchOnMount: true,       
-      staleTime: 0,              
+      refetchOnWindowFocus: true,
+      refetchOnMount: true,
+      staleTime: 0,
     }
   );
 
-  console.log('Current post id:', id);
+  console.log("Current post id:", id);
 
-  const { data: recommendedSpots, isLoading: isSpotsLoading, error: spotsError } = useQuery(
-    ['recommendedSpots', id],
-    () => fetchRecommendedSpots(id),
-    {
-      enabled: !!id,
-      refetchOnWindowFocus: false,
-    }
-  );
-  console.log('추천', recommendedSpots);
+  const {
+    data: recommendedSpots,
+    isLoading: isSpotsLoading,
+    error: spotsError,
+  } = useQuery(["recommendedSpots", id], () => fetchRecommendedSpots(id), {
+    enabled: !!id,
+    refetchOnWindowFocus: false,
+  });
+  console.log("추천", recommendedSpots);
 
   const [isBookmarked, setIsBookmarked] = useState<boolean>(false);
 
@@ -80,11 +89,11 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
       }
       await refetch();
     } catch (error) {
-      console.error('북마크 처리 중 오류가 발생했습니다:', error);
+      console.error("북마크 처리 중 오류가 발생했습니다:", error);
     }
   };
-  
-  const accessToken = Cookies.get('accessToken');
+
+  const accessToken = Cookies.get("accessToken");
 
   const userInfo = useUserStore((state) => state.userInfo);
 
@@ -114,52 +123,50 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
   const handleDeleteClick = async () => {
     if (!data || !data.result) {
       await Swal.fire(
-        '오류 발생',
-        '게시물 데이터를 불러오는 중 문제가 발생했습니다. 다시 시도해주세요.',
-        'error'
+        "오류 발생",
+        "게시물 데이터를 불러오는 중 문제가 발생했습니다. 다시 시도해주세요.",
+        "error"
       );
       return;
     }
-      
+
     const result = await Swal.fire({
-      title: '정말 삭제하시겠습니까?',
-      icon: 'warning',
-      iconColor: '#FB3463', 
+      title: "정말 삭제하시겠습니까?",
+      icon: "warning",
+      iconColor: "#FB3463",
       showCancelButton: true,
-      confirmButtonText: '네',
-      cancelButtonText: '아니오',
-      confirmButtonColor: '#FB3463', 
+      confirmButtonText: "네",
+      cancelButtonText: "아니오",
+      confirmButtonColor: "#FB3463",
       customClass: {
-        popup: 'swal-custom-popup',
-        icon: 'swal-custom-icon'
-      }
+        popup: "swal-custom-popup",
+        icon: "swal-custom-icon",
+      },
     });
-  
+
     if (result.isConfirmed) {
       try {
         await deleteOotdPost(data.result.post.id);
         await Swal.fire({
-          icon: 'success',
-          title: '게시글을 삭제하였습니다.',
-          confirmButtonText: '확인',
-          confirmButtonColor: '#FB3463', 
+          icon: "success",
+          title: "게시글을 삭제하였습니다.",
+          confirmButtonText: "확인",
+          confirmButtonColor: "#FB3463",
           customClass: {
-            popup: 'swal-custom-popup',
-            icon: 'swal-custom-icon'
-          }
-        }    
-        );
-        router.push('/ootd');
+            popup: "swal-custom-popup",
+            icon: "swal-custom-icon",
+          },
+        });
+        router.push("/ootd");
       } catch (error) {
         await Swal.fire(
-          '오류 발생',
-          '삭제하는 중 문제가 발생했습니다. 다시 시도해주세요.',
-          'error'
+          "오류 발생",
+          "삭제하는 중 문제가 발생했습니다. 다시 시도해주세요.",
+          "error"
         );
       }
     }
   };
-
 
   if (isLoading) {
     return null;
@@ -176,7 +183,6 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
   const ootdItem = data.result;
 
   const weatherInfo = getWeatherStatusInfo(ootdItem.ootd.weatherStatus);
-
 
   const SampleNextArrow = (props: any) => {
     const { className, style, onClick, currentSlide, slideCount } = props;
@@ -219,123 +225,157 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
     prevArrow: <SamplePrevArrow />,
   };
 
+  const handleTagClick = (tag: string) => {
+    router.push(`/search/${encodeURIComponent(tag)}`); // Redirect to the search page with the clicked tag
+  };
+
   return (
     <>
       <div className="w-[90%] sm-700:w-[66%] sm-700:max-w-7xl mx-auto">
         <div className="w-full mx-auto">
-        <div className="py-12 flex items-center justify-between">
-          {/* 왼쪽 사용자 정보 및 location/weather 부분 */}
-          <div className="flex items-center flex-shrink min-w-0 mr-auto">
-            <div className="relative w-[55px] h-[55px] flex-shrink-0">
-              <Image
-                src={ootdItem.member.profileUrl || DefaultImage}
-                alt="사용자 프로필"
-                layout="fill"
-                objectFit="cover"
-                className="rounded-full cursor-pointer"
-                onClick={handleProfileClick}
-              />
-            </div>
-            <div className="ml-4 min-w-0">
-              <span
-                className="block font-bold text-[16px] ml-[2px] cursor-pointer truncate"
-                onClick={handleProfileClick}
-              >
-                {ootdItem.member.nickName}
-              </span>
-              <div className="flex items-center gap-2">
-                <div className="flex-shrink-0">
-                  <Image width={16} height={16} src={LocationIcon} alt="location" />
-                </div>
-                <div className="whitespace-nowrap overflow-hidden text-ellipsis">
-                  <span className="block text-[#9D9D9D] truncate">{ootdItem.post.location  || '정보 없음'}</span>
-                </div>
-              </div>
-              <div className="flex items-center gap-2 whitespace-nowrap overflow-hidden text-ellipsis">
-                <Image width={16} height={16} src={weatherInfo.icon} alt="weather" />
-                <span className="block text-[#9D9D9D] truncate">
-                {weatherInfo.label === '정보 없음' ? (
-                  '정보 없음'
-                ) : (
-                  <>
-                    {weatherInfo.label}, {ootdItem.ootd.weatherTemp}°C {' '} l {' '}
-                    {formatDate(ootdItem.ootd.date)}
-                  </>
-                )}
-                </span>
-              </div>
-            </div>
-          </div>
-
-          {/* 오른쪽 팔로우 버튼 및 아이콘들 */}
-          <div className="mt-auto flex items-center space-x-4">
-            <FollowButton postMemberId={data.result.member.memberId} userMemberId={userMemberId} />
-            {/* 북마크 및 메뉴 아이콘 */}
-            <div className="min-w-[35px] flex items-center">
-              <Image
-                src={isBookmarked ? BookmarkedIcon : BookmarkIcon}
-                alt="bookmark"
-                width={24}
-                height={24}
-                className="cursor-pointer"
-                onClick={handleBookmarkClick}
-              />
-              <div className="text-[#9d9d9d] min-w-[10px] text-center">
-                {data.result.post.bookmarkCount}
-              </div>
-            </div>
-
-            {userMemberId === data.result.member.memberId && (
-              <div className="relative flex-shrink-0">
+          <div className="py-12 flex items-center justify-between">
+            {/* 왼쪽 사용자 정보 및 location/weather 부분 */}
+            <div className="flex items-center flex-shrink min-w-0 mr-auto">
+              <div className="relative w-[55px] h-[55px] flex-shrink-0">
                 <Image
-                  src={CabapIcon}
-                  alt="cabap"
+                  src={ootdItem.member.profileUrl || DefaultImage}
+                  alt="사용자 프로필"
+                  layout="fill"
+                  objectFit="cover"
+                  className="rounded-full cursor-pointer"
+                  onClick={handleProfileClick}
+                />
+              </div>
+              <div className="ml-4 min-w-0">
+                <span
+                  className="block font-bold text-[16px] ml-[2px] cursor-pointer truncate"
+                  onClick={handleProfileClick}
+                >
+                  {ootdItem.member.nickName}
+                </span>
+                <div className="flex items-center gap-2">
+                  <div className="flex-shrink-0">
+                    <Image
+                      width={16}
+                      height={16}
+                      src={LocationIcon}
+                      alt="location"
+                    />
+                  </div>
+                  <div className="whitespace-nowrap overflow-hidden text-ellipsis">
+                    <span className="block text-[#9D9D9D] truncate">
+                      {ootdItem.post.location || "정보 없음"}
+                    </span>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2 whitespace-nowrap overflow-hidden text-ellipsis">
+                  <Image
+                    width={16}
+                    height={16}
+                    src={weatherInfo.icon}
+                    alt="weather"
+                  />
+                  <span className="block text-[#9D9D9D] truncate">
+                    {weatherInfo.label === "정보 없음" ? (
+                      "정보 없음"
+                    ) : (
+                      <>
+                        {weatherInfo.label}, {ootdItem.ootd.weatherTemp}°C l{" "}
+                        {formatDate(ootdItem.ootd.date)}
+                      </>
+                    )}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* 오른쪽 팔로우 버튼 및 아이콘들 */}
+            <div className="mt-auto flex items-center space-x-4">
+              <FollowButton
+                postMemberId={data.result.member.memberId}
+                userMemberId={userMemberId}
+              />
+              {/* 북마크 및 메뉴 아이콘 */}
+              <div className="min-w-[35px] flex items-center">
+                <Image
+                  src={isBookmarked ? BookmarkedIcon : BookmarkIcon}
+                  alt="bookmark"
                   width={24}
                   height={24}
-                  onClick={handleCabapIconClick}
                   className="cursor-pointer"
+                  onClick={handleBookmarkClick}
                 />
-                {isMenuOpen && (
-                 <div className="absolute top-full right-0 mt-4 w-32 bg-white rounded shadow-2xl z-10">
-                 <div className="pb-2 pt-3 px-4 text-[#ff4f4f] cursor-pointer text-center" onClick={handleDeleteClick}>
-                   삭제
-                 </div>
-                 <div className="border-t border-gray-300 my-2" />
-                 <div className="pb-3 pt-2 px-4 text-black cursor-pointer text-center" onClick={() => router.push(`/edit/${id}`)}>
-                   수정
-                 </div>
-               </div>
-               
-                )}
-              </div>
-            )}
-          </div>
-        </div>
-          <div className="relative">
-          <Slider {...settings}>
-            {ootdItem.post.images.map((image, index) => (
-              <div key={index}>
-                <div className="relative w-full" style={{ aspectRatio: '1 / 1' }}>
-                  <Image
-                    src={image.accessUri}
-                    alt={`OOTD Image ${index + 1}`}
-                    className="absolute inset-0 w-full h-full object-cover rounded-xl"
-                    width={720}
-                    height={720}
-                  />
+                <div className="text-[#9d9d9d] min-w-[10px] text-center">
+                  {data.result.post.bookmarkCount}
                 </div>
               </div>
-            ))}
-          </Slider>
 
+              {userMemberId === data.result.member.memberId && (
+                <div className="relative flex-shrink-0">
+                  <Image
+                    src={CabapIcon}
+                    alt="cabap"
+                    width={24}
+                    height={24}
+                    onClick={handleCabapIconClick}
+                    className="cursor-pointer"
+                  />
+                  {isMenuOpen && (
+                    <div className="absolute top-full right-0 mt-4 w-32 bg-white rounded shadow-2xl z-10">
+                      <div
+                        className="pb-2 pt-3 px-4 text-[#ff4f4f] cursor-pointer text-center"
+                        onClick={handleDeleteClick}
+                      >
+                        삭제
+                      </div>
+                      <div className="border-t border-gray-300 my-2" />
+                      <div
+                        className="pb-3 pt-2 px-4 text-black cursor-pointer text-center"
+                        onClick={() => router.push(`/edit/${id}`)}
+                      >
+                        수정
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
           </div>
-          <div className="py-[50px] text-[#292929] text-xl" dangerouslySetInnerHTML={{ __html: ootdItem.post.body.replace(/\n/g, '<br />') }}></div>
+          <div className="relative">
+            <Slider {...settings}>
+              {ootdItem.post.images.map((image, index) => (
+                <div key={index}>
+                  <div
+                    className="relative w-full"
+                    style={{ aspectRatio: "1 / 1" }}
+                  >
+                    <Image
+                      src={image.accessUri}
+                      alt={`OOTD Image ${index + 1}`}
+                      className="absolute inset-0 w-full h-full object-cover rounded-xl"
+                      width={720}
+                      height={720}
+                    />
+                  </div>
+                </div>
+              ))}
+            </Slider>
+          </div>
+          <div
+            className="py-[50px] text-[#292929] text-xl"
+            dangerouslySetInnerHTML={{
+              __html: ootdItem.post.body.replace(/\n/g, "<br />"),
+            }}
+          ></div>
           <div className="flex pt-4">
             <div className="flex flex-wrap gap-2">
               {ootdItem.post.tags.map((tag: string, index: number) => (
                 <span
                   key={index}
-                  className="px-4 py-1 bg-neutral-100 rounded-3xl text-xl justify-center items-center gap-2.5 inline-flex text-[#9d9d9d]"
+                  className=" cursor-pointer px-4 py-1 bg-neutral-100 rounded-3xl text-xl justify-center items-center gap-2.5 inline-flex text-[#9d9d9d]"
+                  onClick={() => {
+                    handleTagClick(tag);
+                  }}
                 >
                   {tag}
                 </span>

@@ -92,7 +92,7 @@ const SearchPage = () => {
       setNicknameList(nicknameListData);
       setBlogList(blogListData);
 
-      // 초기 선택 타입 설정 (우선순위: POST -> OOTD -> NICKNAME -> BLOG)
+      console.log(ootdListData);
       if (postListData.length > 0) {
         setPosts(postListData);
         setSelectedSearchType("POST");
