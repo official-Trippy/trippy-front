@@ -5,7 +5,7 @@ import useUserInfo from "@/hooks/useUserInfo";
 import { checkBlogNameDuplicate, checkNickNameDuplicate, uploadImage } from "@/services/blog";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useUserStore } from "@/store/useUserStore";
 import { blogInterests } from "@/constants/blogPreference";
 import { getMyInfo, updateMemberInfo } from "@/services/auth";
@@ -21,6 +21,8 @@ import { AxiosError } from "axios";
 import DefaultImage from '../../../public/defaultImage.svg';
 import { getByteLength } from "@/constants/getByteLength";
 import OOtdDeleteImage from '../../../public/ootdImageDelete.svg';
+import Cropper, { Area } from "react-easy-crop";
+import { getCroppedImg } from "@/utils/getCroppedImg";
 
 const EditInfo = () => {
   const { updateUserInfo } = useUserStore(); // userInfo를 전역상태에서 가져오지 않고 API 호출로 처리
@@ -32,12 +34,6 @@ const EditInfo = () => {
       inputFileRef.current.click(); 
     }
   };
-
-  const [profileImage, setProfileImage] = useState<{
-    accessUri: string;
-    authenticateId: string;
-    imgUrl: string;
-  } | null>(null); 
 
   const [blogImage, setBlogImage] = useState<{
     accessUri: string;
@@ -64,17 +60,39 @@ const EditInfo = () => {
   const [followScope, setFollowScope] = useState<"public" | "private" | "protected">("public");
   const [tempSelectedInterests, setTempSelectedInterests] = useState<string[]>([]);
 
-  const [isProfileImageChanged, setIsProfileImageChanged] = useState(false);
   const [isBlogImageChanged, setIsBlogImageChanged] = useState(false);
-
-
   const [warningMessage, setWarningMessage] = useState('');
+
+   // 초기 이미지 저장
+   const [initialProfileImage, setInitialProfileImage] = useState<{
+    accessUri: string;
+    authenticateId: string;
+    imgUrl: string;
+  } | null>(null);
+
+  // 현재 표시되는 프로필 이미지
+  const [profileImage, setProfileImage] = useState<{
+    accessUri: string;
+    authenticateId: string;
+    imgUrl: string;
+  } | null>(null);
+
+  const [isProfileImageChanged, setIsProfileImageChanged] = useState(false); // 이미지가 변경되었는지 여부
+
+  const [imageSrc, setImageSrc] = useState<string | null>(null); // 크롭할 이미지 소스
+  const [isImageModalOpen, setIsImageModalOpen] = useState(false); // 크롭 모달 상태
+  const [crop, setCrop] = useState({ x: 0, y: 0 });
+  const [zoom, setZoom] = useState(1);
+  const [croppedAreaPixels, setCroppedAreaPixels] = useState<Area | null>(null); // 크롭한 영역
+  const [isCropping, setIsCropping] = useState(false); // 크롭 상태
 
   const fetchUserInfo = async () => {
     try {
       const data = await getMyInfo(); 
-      setProfileImage(data.profileImageUrl || null)
-      setBlogImage(data.blogTitleImgUrl || null);
+      const profileImgData = data.profileImageUrl || null;
+      setInitialProfileImage(profileImgData); // 처음 유저 이미지를 저장
+      setProfileImage(profileImgData); // 현재 표시될 이미지도 초기화
+      // 나머지 유저 정보 초기화
       setNickName(data.nickName || '');
       setBlogName(data.blogName || '');
       setBlogIntroduce(data.blogIntroduce || '');
@@ -148,9 +166,9 @@ const EditInfo = () => {
   };
 
   const validateNickName = (nickName: string) => {
-    const regex = /^[가-힣a-zA-Z0-9]{2,16}$/;
+    const regex = /^[가-힣a-zA-Z0-9 ]{2,16}$/; // 공백을 허용하기 위해 ' ' 추가
     return regex.test(nickName);
-  };
+  };  
 
   const handleBlogName = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -190,7 +208,7 @@ const EditInfo = () => {
   };
 
   const validateBlogName = (blogName: string) => {
-    const regex = /^[가-힣a-zA-Z0-9]{2,30}$/;
+    const regex = /^[가-힣a-zA-Z0-9 ]{2,28}$/; // 공백을 허용하기 위해 ' ' 추가
     return regex.test(blogName);
   };
 
@@ -198,45 +216,54 @@ const EditInfo = () => {
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0];
-      try {
-        const response = await uploadImage(file);
-        setProfileImage(response.result);
-        setImageUploaded(true);
-        setIsProfileImageChanged(true);
-      } catch (error: unknown) {
-        console.error("Image upload failed:", error);
+      
+      // 이미지 크롭을 위한 모달을 표시하기 위해 FileReader 사용
+      const reader = new FileReader();
+      reader.onload = () => {
+        setImageSrc(reader.result as string); // 이미지 소스를 설정하여 크롭 모달을 띄움
+        setIsImageModalOpen(true); // 크롭 모달을 엽니다
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleCropImage = async () => {
+    if (!imageSrc || !croppedAreaPixels) return;
   
-        if (error instanceof AxiosError) {
-          if (error.response && error.response.status === 413) {
-            Swal.fire({
-              icon: 'error',
-              title: '이미지 용량이 너무 큽니다.',
-              text: '5MB 이하의 이미지를 선택해주세요.',
-              confirmButtonText: '확인',
-              confirmButtonColor: '#FB3463',
-              customClass: {
-                popup: 'swal-custom-popup',
-                icon: 'swal-custom-icon'
-              }
-            });
-          } else {
-            Swal.fire({
-              icon: 'error',
-              title: '이미지 업로드 실패',
-              text: '이미지 업로드에 실패했습니다. 다시 시도해주세요.',
-              confirmButtonText: '확인',
-              confirmButtonColor: '#FB3463',
-              customClass: {
-                popup: 'swal-custom-popup',
-                icon: 'swal-custom-icon'
-              }
-            });
-          }
+    try {
+      const croppedBlob = await getCroppedImg(imageSrc, croppedAreaPixels); // 크롭된 이미지 가져오기
+  
+      if (croppedBlob) {
+        const fileName = 'croppedImage.jpg'; // 파일 이름 지정
+        const croppedFile = new File([croppedBlob], fileName, { type: 'image/jpeg' });
+  
+        // 크롭된 이미지 업로드
+        const response = await uploadImage(croppedFile); 
+        setProfileImage(response.result); // 업로드된 이미지를 상태에 설정
+        setIsProfileImageChanged(true); // 이미지 변경됨 설정
+        setIsImageModalOpen(false); // 모달 닫기
+      }
+    } catch (error) {
+      console.error("Image upload failed:", error);
+  
+      if (error instanceof AxiosError) {
+        if (error.response && error.response.status === 413) {
+          Swal.fire({
+            icon: 'error',
+            title: '이미지 용량이 너무 큽니다.',
+            text: '5MB 이하의 이미지를 선택해주세요.',
+            confirmButtonText: '확인',
+            confirmButtonColor: '#FB3463',
+            customClass: {
+              popup: 'swal-custom-popup',
+              icon: 'swal-custom-icon'
+            }
+          });
         } else {
           Swal.fire({
             icon: 'error',
-            title: '알 수 없는 오류 발생',
-            text: '다시 시도해주세요.',
+            title: '이미지 업로드 실패',
+            text: '이미지 업로드에 실패했습니다. 다시 시도해주세요.',
             confirmButtonText: '확인',
             confirmButtonColor: '#FB3463',
             customClass: {
@@ -245,58 +272,85 @@ const EditInfo = () => {
             }
           });
         }
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: '알 수 없는 오류 발생',
+          text: '다시 시도해주세요.',
+          confirmButtonText: '확인',
+          confirmButtonColor: '#FB3463',
+          customClass: {
+            popup: 'swal-custom-popup',
+            icon: 'swal-custom-icon'
+          }
+        });
       }
     }
   };
-  
 
   const handleImageDelete = () => {
-    setProfileImage(null);
-    setIsProfileImageChanged(true);
+    setProfileImage(initialProfileImage); // 처음 받아온 유저 이미지로 되돌림
+    setIsProfileImageChanged(false);
   };
+
+  const [blogImageSrc, setBlogImageSrc] = useState<string | null>(null); // 크롭할 블로그 이미지 소스
+  const [isBlogImageModalOpen, setIsBlogImageModalOpen] = useState(false); // 크롭 모달 상태
+  const [blogCrop, setBlogCrop] = useState({ x: 0, y: 0 });
+  const [blogZoom, setBlogZoom] = useState(1);
+  const [croppedBlogAreaPixels, setCroppedBlogAreaPixels] = useState<Area | null>(null); // 크롭한 영역
+  const [isBlogCropping, setIsBlogCropping] = useState(false); // 크롭 상태
 
   const handleBlogImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0];
-      try {
-        const response = await uploadImage(file);
-        setBlogImage(response.result);
-        setImageBlogUploaded(true);
-        setIsBlogImageChanged(true);
-      } catch (error: unknown) {
-        console.error("Image upload failed:", error);
   
-        if (error instanceof AxiosError) {
-          if (error.response && error.response.status === 413) {
-            Swal.fire({
-              icon: 'error',
-              title: '이미지 용량이 너무 큽니다.',
-              text: '5MB 이하의 이미지를 선택해주세요.',
-              confirmButtonText: '확인',
-              confirmButtonColor: '#FB3463',
-              customClass: {
-                popup: 'swal-custom-popup',
-                icon: 'swal-custom-icon'
-              }
-            });
-          } else {
-            Swal.fire({
-              icon: 'error',
-              title: '이미지 업로드 실패',
-              text: '이미지 업로드에 실패했습니다. 다시 시도해주세요.',
-              confirmButtonText: '확인',
-              confirmButtonColor: '#FB3463',
-              customClass: {
-                popup: 'swal-custom-popup',
-                icon: 'swal-custom-icon'
-              }
-            });
-          }
+      // 이미지 크롭을 위한 모달을 표시하기 위해 FileReader 사용
+      const reader = new FileReader();
+      reader.onload = () => {
+        setBlogImageSrc(reader.result as string); // 이미지 소스를 설정하여 크롭 모달을 띄움
+        setIsBlogImageModalOpen(true); // 크롭 모달을 엽니다
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+  
+  const handleCropBlogImage = async () => {
+    if (!blogImageSrc || !croppedBlogAreaPixels) return;
+  
+    try {
+      const croppedBlob = await getCroppedImg(blogImageSrc, croppedBlogAreaPixels); // 크롭된 이미지 가져오기
+  
+      if (croppedBlob) {
+        const fileName = 'croppedBlogImage.jpg'; // 파일 이름 지정
+        const croppedFile = new File([croppedBlob], fileName, { type: 'image/jpeg' });
+  
+        // 크롭된 이미지 업로드
+        const response = await uploadImage(croppedFile); 
+        setBlogImage(response.result); // 업로드된 이미지를 상태에 설정
+        setIsBlogImageChanged(true); // 이미지 변경됨 설정
+        setIsBlogImageModalOpen(false); // 모달 닫기
+      }
+    } catch (error: unknown) {
+      console.error("Image upload failed:", error);
+  
+      if (error instanceof AxiosError) {
+        if (error.response && error.response.status === 413) {
+          Swal.fire({
+            icon: 'error',
+            title: '이미지 용량이 너무 큽니다.',
+            text: '5MB 이하의 이미지를 선택해주세요.',
+            confirmButtonText: '확인',
+            confirmButtonColor: '#FB3463',
+            customClass: {
+              popup: 'swal-custom-popup',
+              icon: 'swal-custom-icon'
+            }
+          });
         } else {
           Swal.fire({
             icon: 'error',
-            title: '알 수 없는 오류 발생',
-            text: '다시 시도해주세요.',
+            title: '이미지 업로드 실패',
+            text: '이미지 업로드에 실패했습니다. 다시 시도해주세요.',
             confirmButtonText: '확인',
             confirmButtonColor: '#FB3463',
             customClass: {
@@ -305,13 +359,25 @@ const EditInfo = () => {
             }
           });
         }
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: '알 수 없는 오류 발생',
+          text: '다시 시도해주세요.',
+          confirmButtonText: '확인',
+          confirmButtonColor: '#FB3463',
+          customClass: {
+            popup: 'swal-custom-popup',
+            icon: 'swal-custom-icon'
+          }
+        });
       }
     }
   };
   
 
   const handleBlogImageDelete = () => {
-    setBlogImage(null);
+    setBlogImage(null); // 블로그 이미지를 초기화
     setIsBlogImageChanged(true);
   };
 
@@ -471,6 +537,12 @@ const EditInfo = () => {
   };
   
   
+ 
+  const onCropComplete = useCallback((croppedArea: Area, croppedAreaPixels: Area) => {
+    setCroppedAreaPixels(croppedAreaPixels);
+  }, []);
+
+
   return (
     <>
   <div className="relative w-full h-[240px]">
@@ -576,7 +648,7 @@ const EditInfo = () => {
                   프로필 사진 업로드
                 </label>
                 <div className="mt-[5px] h-[16px]">
-                {profileImage && (
+                {isProfileImageChanged && (
                     <button
                       onClick={handleImageDelete}
                       className="w-full mx-auto text-[1rem] text-gray-500 hover:text-gray-900"
@@ -942,6 +1014,64 @@ const EditInfo = () => {
           </div>
           </div>
         )}
+        {isImageModalOpen && (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+        <div className="bg-white py-4 px-8 rounded-lg shadow-lg">
+          <h3 className="mb-4 text-center">이미지 영역 선택</h3>
+          <div className="relative w-[300px] h-[300px] bg-gray-200">
+            {imageSrc && (
+              <Cropper
+                image={imageSrc}
+                crop={crop}
+                zoom={zoom}
+                aspect={1} // 1:1 비율로 설정
+                onCropChange={setCrop}
+                onCropComplete={onCropComplete}
+                onZoomChange={setZoom}
+                objectFit="cover" // 이미지 여백을 없애고 화면에 맞춤
+              />
+            )}
+          </div>
+          <div className="flex justify-end mt-4">
+                <div className="bg-btn-color text-white px-4 py-2 font-medium font-['Pretendard'] rounded mr-2 cursor-pointer" onClick={handleCropImage}>
+                  완료
+                </div>
+                <div className="border border-[#cfcfcf] text-[#cfcfcf] px-4 py-2 font-medium font-['Pretendard'] rounded cursor-pointer" onClick={() => setIsImageModalOpen(false)}>
+                  취소
+                </div>
+              </div>
+        </div>
+      </div>
+    )}
+    {isBlogImageModalOpen && (
+  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+    <div className="bg-white py-4 px-8 rounded-lg shadow-lg">
+      <h3 className="mb-4 text-center">이미지 영역 선택</h3>
+      <div className="relative w-[300px] h-[300px] bg-gray-200">
+        {blogImageSrc && (
+          <Cropper
+            image={blogImageSrc} // 이미지 소스 전달
+            crop={blogCrop}
+            zoom={blogZoom}
+            aspect={16 / 9} // 블로그 대표사진 비율 (예: 16:9)
+            onCropChange={setBlogCrop}
+            onCropComplete={(croppedArea, croppedAreaPixels) => setCroppedBlogAreaPixels(croppedAreaPixels)} // 크롭 완료 시 호출
+            onZoomChange={setBlogZoom}
+            objectFit="cover" // 이미지 여백을 없애고 화면에 맞춤
+          />
+        )}
+      </div>
+      <div className="flex justify-end mt-4">
+                <div className="bg-btn-color text-white px-4 py-2 font-medium font-['Pretendard'] rounded mr-2 cursor-pointer" onClick={handleCropBlogImage}>
+                  완료
+                </div>
+                <div className="border border-[#cfcfcf] text-[#cfcfcf] px-4 py-2 font-medium font-['Pretendard'] rounded cursor-pointer" onClick={() => setIsBlogImageModalOpen(false)}>
+                  취소
+                </div>
+              </div>
+    </div>
+  </div>
+)}
       </div></>
   );
 };

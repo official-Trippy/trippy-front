@@ -219,11 +219,20 @@ const handleEditSubmit = () => {
           setIsLiked(true); // 좋아요 상태 변경
           setLikeCount((prevCount) => prevCount + 1); // 좋아요 수 증가
           refetchPostDetail(); // 상위 데이터 다시 불러오기
+          
+          // 좋아요 리스트에 현재 유저 추가 (즉각 반영)
+          setLikeList((prevList) => [
+            ...prevList,
+            {
+              nickName: userInfo.nickName,  // 현재 유저의 닉네임
+              profileUrl: userInfo?.profileUrl, // 현재 유저의 프로필 이미지
+            }
+          ]);
         }
       },
     }
   );
-
+  
   const unlikeMutation = useMutation(
     () => unlikePost(postId),
     {
@@ -232,6 +241,11 @@ const handleEditSubmit = () => {
           setIsLiked(false); // 좋아요 취소 상태 변경
           setLikeCount((prevCount) => Math.max(prevCount - 1, 0)); // 좋아요 수 감소
           refetchPostDetail(); // 상위 데이터 다시 불러오기
+  
+          // 좋아요 리스트에서 현재 유저 제거 (즉각 반영)
+          setLikeList((prevList) =>
+            prevList.filter((user) => user.nickName !== userInfo.nickName)
+          );
         }
       },
     }
@@ -551,40 +565,45 @@ const handleEditSubmit = () => {
     const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
 
     return (
-      <div className='w-full bg-white rounded-lg shadow-md py-4 mt-8'>
-        <div className="grid grid-cols-3 gap-4">
-          {paginatedLikes.map((like, index) => (
-            <div key={index} className='my-4 like-section p-4'>
-              <div className="flex items-center justify-center py-2">
-                <div className="w-12 h-12 relative mr-4">
-                  <Image
-                    src={like.profileUrl || DefaultImage}
-                    alt="프로필 이미지"
-                    layout="fill"
-                    objectFit="cover"
-                    className='rounded-full'
-                  />
-                </div>
-                <div className="">
-                  <div className="text-gray-800">{like.nickName}</div>
-                  <div className="text-gray-800">{like.blogName}</div>
-                </div>
+      <div className="w-full bg-white rounded-lg shadow-md py-4 mt-8">
+      <div className="grid grid-cols-2 xs-400:grid-cols-3 gap-0">
+        {paginatedLikes.map((like, index) => (
+          <div key={index} className="my-4 like-section px-4 py-0 sm-700:px-4 sm-700:py-4">
+            <div className="flex items-center ml-[20px] xs-400:justify-center xs-400:ml-0 py-2">
+              <div className="min-w-12 min-h-12 w-12 h-12 sm-700:w-16 sm-700:h-16 relative mr-4">
+                <Image
+                  src={like.profileUrl || userInfo.profileImageUrl}
+                  alt="프로필 이미지"
+                  layout="fill"
+                  objectFit="cover"
+                  className="rounded-full"
+                />
+              </div>
+              <div>
+              <div className="text-gray-800 text-sm sm:text-base truncate whitespace-nowrap overflow-hidden">
+                {like.nickName}
+              </div>
               </div>
             </div>
-          ))}
-        </div>
-        <div className="flex justify-center">
-          {pages.map((pageNumber) => (
-            <button
-              key={pageNumber}
-              onClick={() => handlePageChange(pageNumber)}
-              className={`px-4 py-2 mx-1 rounded ${currentPage === pageNumber ? 'text-[#fa3463] font-semibold' : 'text-[#cfcfcf] font-normal'}`}
-            >
-              {pageNumber}
-            </button>
-          ))}
-        </div>
+          </div>
+        ))}
       </div>
+    
+      {/* 페이지네이션 버튼 */}
+      {totalPages > 1 && (
+      <div className="flex justify-center mt-4">
+        {pages.map((pageNumber) => (
+          <button
+            key={pageNumber}
+            onClick={() => handlePageChange(pageNumber)}
+            className={`px-4 py-2 mx-1 rounded ${currentPage === pageNumber ? 'text-[#fa3463] font-semibold' : 'text-[#cfcfcf] font-normal'}`}
+          >
+            {pageNumber}
+          </button>
+        ))}
+      </div>
+      )}
+    </div>
     );
   };
 

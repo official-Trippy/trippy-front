@@ -31,6 +31,13 @@ body {
   /* rgb(var(--background-start-rgb)); */
 }
 
+@media (prefers-color-scheme: dark) {
+  body {
+    color: #fff;
+    background-color: #121212;
+  }
+}
+
 @font-face {
   font-family: 'Akira Expanded';
   src: url('../../public/font/Akira Expanded Demo.otf') format('opentype');
@@ -771,4 +778,8 @@ body {
   .right-button {
     right: -10px !important; /* 화면 너비가 700px 이하일 때 */
   }
+}
+
+.custom-swal-zindex {
+  z-index: 1050 !important; /* 원하는 z-index 값 설정 */
 }

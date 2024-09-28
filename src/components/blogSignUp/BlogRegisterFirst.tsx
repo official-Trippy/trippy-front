@@ -15,6 +15,8 @@ import useUserInfo from "@/hooks/useUserInfo";
 import { swear_words_arr } from "@/constants/wearWordsArr";
 import { getByteLength } from "@/constants/getByteLength";
 import Cookies from "js-cookie";
+import Cropper, { Area } from "react-easy-crop";
+import { getCroppedImg } from "@/utils/getCroppedImg";
 
 const BlogRegisterFirst = () => {
   const [profileImage, setProfileImage] = useState<{
@@ -104,9 +106,9 @@ const BlogRegisterFirst = () => {
   };
 
   const validateNickName = (nickName: string) => {
-    const regex = /^[가-힣a-zA-Z0-9]{2,16}$/;
+    const regex = /^[가-힣a-zA-Z0-9 ]{2,16}$/; // 공백을 허용하기 위해 ' ' 추가
     return regex.test(nickName);
-  };
+  };  
 
   const handleBlogName = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -145,27 +147,58 @@ const BlogRegisterFirst = () => {
     }
   };
 
-  const validateBlogName = (blogName: string) => {
-    const regex = /^[가-힣a-zA-Z0-9]{2,30}$/;
-    return regex.test(blogName);
-  };
+// 블로그 이름 정규식을 띄어쓰기 포함하게 수정
+const validateBlogName = (blogName: string) => {
+  const regex = /^[가-힣a-zA-Z0-9 ]{2,28}$/; // 공백을 허용하기 위해 ' ' 추가
+  return regex.test(blogName);
+};
 
+  // 크롭 관련 상태
+  const [imageSrc, setImageSrc] = useState<string | null>(null); // 크롭할 이미지 소스
+  const [isImageModalOpen, setIsImageModalOpen] = useState(false); // 크롭 모달 상태
+  const [crop, setCrop] = useState({ x: 0, y: 0 });
+  const [zoom, setZoom] = useState(1);
+  const [croppedAreaPixels, setCroppedAreaPixels] = useState<Area | null>(null); // 크롭한 영역
+  const [isCropping, setIsCropping] = useState(false); // 크롭 상태
 
-  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0];
-      try {
-        const response = await uploadImage(file);
-        setProfileImage(response.result);
-        setImageUploaded(true);
-      } catch (error) {
-        console.error("Image upload failed:", error);
+
+      // 이미지 크롭을 위한 모달을 표시하기 위해 FileReader 사용
+      const reader = new FileReader();
+      reader.onload = () => {
+        setImageSrc(reader.result as string); // 이미지 소스를 설정하여 크롭 모달을 띄움
+        setIsImageModalOpen(true); // 크롭 모달을 엽니다
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleCropImage = async () => {
+    if (!imageSrc || !croppedAreaPixels) return;
+
+    try {
+      const croppedBlob = await getCroppedImg(imageSrc, croppedAreaPixels); // 크롭된 이미지 가져오기
+
+      if (croppedBlob) {
+        const fileName = 'croppedImage.jpg'; // 파일 이름 지정
+        const croppedFile = new File([croppedBlob], fileName, { type: 'image/jpeg' });
+
+        // 크롭된 이미지 업로드
+        const response = await uploadImage(croppedFile);
+        setProfileImage(response.result); // 업로드된 이미지를 상태에 설정
+        setImageUploaded(true); // 이미지 업로드 상태 설정
+        setIsImageModalOpen(false); // 모달 닫기
       }
+    } catch (error) {
+      console.error("Image upload failed:", error);
     }
   };
 
   const handleImageDelete = () => {
     setProfileImage(null);
+    setImageUploaded(false);
   };
 
   const handleBlogIntroduce = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -295,7 +328,7 @@ const BlogRegisterFirst = () => {
                 type="text"
                 value={blogName}
                 onChange={handleBlogName}
-                placeholder="한글 2-15자, 영어 4-30자 이내로 입력 가능합니다."
+                placeholder="한글 2-14자, 영어 4-28자 이내로 입력 가능합니다."
                 className="w-full px-4 py-2 mt-[2rem] mb-2 h-[4rem] rounded-xl border border-gray-300 focus:border-[#FB3463] focus:outline-none"
                 style={{ background: "var(--4, #F5F5F5)", fontSize: "1.2rem" }}
               />
@@ -356,6 +389,35 @@ const BlogRegisterFirst = () => {
             </button>
           </div>
           </div>
+          {isImageModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white py-4 px-8 rounded-lg shadow-lg">
+            <h3 className="mb-4 text-center">이미지 영역 선택</h3>
+            <div className="relative w-[300px] h-[300px] bg-gray-200">
+              {imageSrc && (
+                <Cropper
+                  image={imageSrc}
+                  crop={crop}
+                  zoom={zoom}
+                  aspect={1} // 1:1 비율로 설정
+                  onCropChange={setCrop}
+                  onCropComplete={(croppedArea, croppedAreaPixels) => setCroppedAreaPixels(croppedAreaPixels)}
+                  onZoomChange={setZoom}
+                  objectFit="cover" // 이미지 여백을 없애고 화면에 맞춤
+                />
+              )}
+            </div>
+            <div className="flex justify-end mt-4">
+                <div className="bg-btn-color text-white px-4 py-2 font-medium font-['Pretendard'] rounded mr-2 cursor-pointer" onClick={handleCropImage}>
+                  완료
+                </div>
+                <div className="border border-[#cfcfcf] text-[#cfcfcf] px-4 py-2 font-medium font-['Pretendard'] rounded cursor-pointer" onClick={() => setIsImageModalOpen(false)}>
+                  취소
+                </div>
+              </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

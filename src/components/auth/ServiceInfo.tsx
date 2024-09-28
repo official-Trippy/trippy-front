@@ -3,11 +3,11 @@ import LogoMain from "../../../public/LogoMain.svg";
 
 const ServiceInfo = () => {
     return (
-        <div className="w-[50%] mx-auto mt-[15rem] mb-8">
-            <Image src={LogoMain} alt="Logo" className="mx-auto" />
-            <div className="w-full mx-auto items-center mt-40 mb-8">
+        <div className="w-[90%] mx-auto mt-[4rem] mb-8 sm-700:max-w-[500px]">
+            <Image src={LogoMain} alt="Logo" className="mx-auto"width={130} height={40}/>
+            <div className="w-full mx-auto items-center mt-16 mb-4">
                 <span className="text-black text-[32px] font-semibold font-['Pretendard']">Trippy 서비스 이용약관<br/></span>
-                <span className="text-black text-[40px] font-semibold font-['Pretendard']"><br/></span>
+                <span className="text-black text-[20px] font-semibold font-['Pretendard']"><br/></span>
                 <span className="text-black text-xl font-semibold font-['Pretendard']">제 1조 목적<br/></span>
                 <span className="text-neutral-500 text-[15px] font-medium font-['Pretendard']"><br/>
                     본 약관은 회원(본 약관에 동의한 자를 말하며 이하 "회원"이라고 합니다)이 트리피(이하 "회사"라고 합니다)가 제공하는 서비스를 이용함에 있어 회사와 회원의 권리 의무 및 책임사항을 규정함을 목적으로 합니다.<br/></span>

@@ -47,7 +47,7 @@ const UserModal: React.FC<
       cancelButtonText: '아니오',
       confirmButtonColor: '#FB3463',
       customClass: {
-        popup: 'swal-custom-popup',
+        popup: 'swal-custom-popup custom-swal-zindex', // custom-swal-zindex 클래스 추가
         icon: 'swal-custom-icon',
       },
     });
@@ -58,8 +58,7 @@ const UserModal: React.FC<
         Cookies.remove("accessToken");
         resetUserInfo();
   
-        // 성공 메시지
-        await Swal.fire({
+        const successResult = await Swal.fire({
           icon: 'success',
           title: '성공적으로 로그아웃되었습니다.',
           confirmButtonText: '확인',
@@ -69,9 +68,12 @@ const UserModal: React.FC<
             icon: 'swal-custom-icon',
           },
         });
-  
-        // 로그인 페이지로 리디렉션
-        router.push("/login");
+    
+        // 확인 버튼을 눌렀을 때만 리다이렉트
+        if (successResult.isConfirmed) {
+          router.push("/login");
+        }
+        
       } catch (error) {
         console.error("로그아웃 중 오류 발생:", error);
         await Swal.fire(

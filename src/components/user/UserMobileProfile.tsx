@@ -70,6 +70,8 @@ const UserMobileProfile: React.FC<UserProfileProps> = ({
               className="cursor-pointer rounded-full"
               style={{
                 objectFit: "cover",
+                width: '48px',
+                height: '48px'
               }}
             />
           </div>
