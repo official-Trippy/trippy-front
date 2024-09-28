@@ -160,11 +160,11 @@ const CalendarModal: React.FC<CalendarModalProps> = ({
         />
         
         {/* 선택 및 취소 버튼 */}
-        <div className="w-full flex justify-around mt-4">
-          <button className="w-[115px] bg-btn-color text-white py-2 rounded-[6px]" onClick={handleConfirm}>
+        <div className="w-full flex justify-center gap-4 mt-4">
+          <button className="w-[60px] h-[35px] bg-btn-color text-white py-2 rounded-[6px]" onClick={handleConfirm}>
             선택
           </button>
-          <button className="w-[115px] border border-[#CFCFCF] text-[#CFCFCF] py-2 rounded-[6px]" onClick={onClose}>
+          <button className="w-[60px] h-[35px] border border-[#CFCFCF] text-[#CFCFCF] py-2 rounded-[6px]" onClick={onClose}>
             취소
           </button>
         </div>
