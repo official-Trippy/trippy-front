@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { useQuery } from "react-query";
 import air from '@/dummy/air.svg'
+import { MyAirSVG, MyBusSVG, MyBycicleSVG, MyCarSVG, MyTrainSVG } from "../transportsvg/mypage";
 
 
 interface userProps {
@@ -37,26 +38,42 @@ const UserTicket = ({ memberEmail, userBoardCount }: userProps) => {
   console.log(userTicketData)
   return (
     <div>
-      <div className="grid grid-cols-4 gap-12">
+      <div className="grid grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-12">
         {userTicketData?.result.map((ticektDatas: any) => {
+
+          const getTransportImage = (transport: string, ticketColor: any) => {
+            switch (transport) {
+              case 'Airplane':
+                return <MyAirSVG fillColor={colorTicket[ticketColor]} />;
+              case 'Car':
+                return <MyCarSVG fillColor={colorTicket[ticketColor]} />;
+              case 'Bus':
+                return <MyBusSVG fillColor={colorTicket[ticketColor]} />;
+              case 'Bicycle':
+                return <MyBycicleSVG fillColor={colorTicket[ticketColor]} />;
+              case 'Train':
+                return <MyTrainSVG fillColor={colorTicket[ticketColor]} />;
+              default:
+                return null; // 기본값 또는 대체 이미지
+            }
+          };
           console.log(colorTicket[ticektDatas.ticket.ticketColor])
           return (
             <div key={ticektDatas.ticket.id} className={`flex-1 cursor-pointer `} onClick={() => { handleBoardLink(ticektDatas.post.id) }} >
-              {ticektDatas.post.images.length > 0 && (
-                <div className={`relative w-full pb-[100%] rounded-[1rem] ${colorTicket[ticektDatas.ticket.ticketColor] ? `bg-[${colorTicket[ticektDatas.ticket.ticketColor]}]` : ''}`}> {/* 컨테이너를 정사각형으로 설정 */}
-                  <Image
-                    src={ticektDatas.post.images[0].accessUri}
-                    alt="OOTD"
-                    className="absolute inset-0 w-full h-full object-cover rounded-[1rem] p-[1.3rem]"
-                    width={200} // Width and height are for aspect ratio purposes
-                    height={200}
-                  />
-                </div>
-              )}
+              {/* {ticektDatas.post.images.length > 0 && ( */}
+              <div className={`relative w-full pb-[100%] rounded-[1rem] ${colorTicket[ticektDatas.ticket.ticketColor] ? `bg-[${colorTicket[ticektDatas.ticket.ticketColor]}]` : ''}`}> {/* 컨테이너를 정사각형으로 설정 */}
+                <Image
+                  src={ticektDatas?.ticket.image.accessUri}
+                  alt="OOTD"
+                  className="absolute inset-0 w-full h-full object-cover rounded-[1rem] p-[1.3rem]"
+                  width={200} // Width and height are for aspect ratio purposes
+                  height={200}
+                />
+              </div>
               <div className="font-normal font-['Pretendard'] shadowall rounded-[1rem] p-[1rem] flex">
                 <div className="mx-auto">
                   <div className="flex flex-col">
-                    <span className={`text-[1.2rem] font-extrabold font-akira`} style={{ color: colorTicket[ticektDatas.ticket.ticketColor] || 'inherit' }}>
+                    <span className={`text-[0.8rem] lg:text-[0.8rem] xl:text-[1.2rem] font-extrabold font-akira`} style={{ color: colorTicket[ticektDatas.ticket.ticketColor] || 'inherit' }}>
                       PASSENGER
                     </span>
                     <span className="text-[1.2rem] font-medium text-[#6B6B6B]">USERID</span>
@@ -71,10 +88,12 @@ const UserTicket = ({ memberEmail, userBoardCount }: userProps) => {
                   </div>
                 </div>
                 <div className="mx-auto border border-dashed border-[#CFCFCF]" />
-                <div className="flex flex-col text-[3.2rem] font-extrabold font-akira mx-auto">
-                  <span>KOR</span>
-                  <Image className="mx-auto my-[1rem]" src={air} width={15} height={15} alt="air" />
-                  <span>KOR</span>
+                <div className="flex flex-col font-extrabold font-akira mx-auto">
+                  <span className="text-[1.8rem] sm:text-[2.8rem] md:text-[2.4rem] lg:text-[1.8rem] xl:text-[3.2rem]">{ticektDatas.ticket.departureCode}</span>
+                  <div className="mx-auto">
+                    {getTransportImage(ticektDatas.ticket.transport, ticektDatas.ticket.ticketColor)}
+                  </div>
+                  <span className="text-[1.8rem] sm:text-[2.8rem] md:text-[2.4rem] lg:text-[1.8rem] xl:text-[3.2rem]">{ticektDatas.ticket.destinationCode}</span>
                 </div>
               </div>
 
