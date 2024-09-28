@@ -43,7 +43,7 @@ export default function RootLayout({
       <body className="flex flex-col">
         <QueryClientProvider client={queryClient}>
           <GoogleOAuthProvider clientId={clientId}>
-            {/* <NotificationComponent /> */}
+            <NotificationComponent />
             {/* <FallingContainer /> */}
             {children}
             <MobileFooter />

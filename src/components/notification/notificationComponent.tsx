@@ -1,75 +1,125 @@
-import React from "react";
-import Image from "next/image";
-import Link from "next/link";
-import { useNotificationSSE } from "@/hooks/useNotificationSSE";
+"use client";
 
-const NotificationComponent = () => {
-  const { notifications, error, loading } = useNotificationSSE();
+import React, { useEffect, useState } from "react";
+import Cookies from "js-cookie";
+import { EventSourcePolyfill, NativeEventSource } from "event-source-polyfill";
+import { useQueryClient } from "react-query";
 
-  // Determine content based on states
-  const renderContent = () => {
-    // if (loading) {
-    //   return <div className="p-4 text-gray-700">알림 기능 연결중</div>;
-    // }
+interface INotification {
+  notifyId: number;
+  title: string;
+  senderProfileImgUri: string | null;
+  senderNickName: string;
+  createdAt: string;
+  read: boolean;
+}
 
-    // if (error) {
-    //   return <div className="p-4 text-red-500">{error}</div>;
-    // }
+const Notification: React.FC = () => {
+  const [notifications, setNotifications] = useState<INotification[]>([]);
+  const [showNotification, setShowNotification] = useState(false);
+  const queryClient = useQueryClient();
+  const accessToken = Cookies.get("accessToken");
 
-    // if (notifications.length === 0) {
-    //   return <div className="p-4 text-gray-700"></div>;
-    // }
-
-    return (
-      <div className="p-4 ">
-        {notifications.map((notification) => (
-          <div
-            key={notification.notifyId}
-            className="mb-4 p-4 bg-gray-100 rounded-lg"
-          >
-            <div className="flex items-center">
-              <Image
-                src={
-                  notification.senderProfileImgAccessUri ||
-                  "/default-profile.png"
-                }
-                alt="Sender Profile"
-                width={40}
-                height={40}
-                className="rounded-full mr-4"
-              />
-              <div>
-                <p className="text-black">
-                  {notification.notificationType === "LIKE" &&
-                    `${notification.senderNickName}님이 회원님의 게시물에 좋아요를 눌렀습니다.`}
-                  {notification.notificationType === "COMMENT" &&
-                    `${notification.senderNickName}님이 회원님의 게시물에 댓글을 달았습니다.`}
-                  {notification.notificationType === "FOLLOW" &&
-                    `${notification.senderNickName}님이 회원님을 팔로우했습니다.`}
-                </p>
-                {notification.content && (
-                  <p className="text-gray-600 text-sm">
-                    {notification.content.length > 30
-                      ? `${notification.content.substring(0, 30)}...`
-                      : notification.content}
-                  </p>
-                )}
-              </div>
-            </div>
-          </div>
-        ))}
-        <Link href="/notifications">
-          <button className="text-blue-500">전체 알림보기</button>
-        </Link>
-      </div>
+  useEffect(() => {
+    const EventSource = EventSourcePolyfill || NativeEventSource;
+    const eventSource = new EventSource(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/notify/subscribe`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          Connection: "keep-alive",
+          Accept: "text/event-stream",
+        },
+        heartbeatTimeout: 86400000,
+      }
     );
+
+    eventSource.addEventListener("sse", (event: any) => {
+      try {
+        const data = JSON.parse(event.data);
+
+        const newNotification: INotification = data;
+        setNotifications((prev) => [...prev, newNotification]);
+        setShowNotification(true);
+
+        // 알림은 5초 후에 사라지도록 설정
+        setTimeout(() => {
+          setShowNotification(false);
+          setNotifications((prev) => prev.slice(1)); // 오래된 알림 하나씩 제거
+        }, 5000);
+      } catch (error) {
+        console.log("Invalid JSON data:", event.data);
+      }
+    });
+
+    return () => {
+      eventSource.close();
+      console.log("SSE CLOSED");
+    };
+  }, [accessToken]);
+
+  const formatTimeAgo = (createdAt: string) => {
+    const now = new Date();
+    const createdDate = new Date(createdAt);
+    const diffInSeconds = (now.getTime() - createdDate.getTime()) / 1000;
+
+    if (diffInSeconds < 60) return "방금";
+    if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}분 전`;
+    if (diffInSeconds < 86400)
+      return `${Math.floor(diffInSeconds / 3600)}시간 전`;
+    return `${Math.floor(diffInSeconds / 86400)}일 전`;
   };
 
   return (
-    <div className="fixed top-0 right-0 mt-16 mr-4 z-50 bg-white shadow-lg rounded-lg">
-      {renderContent()}
+    <div className="fixed top-4 right-4 z-50 space-y-4">
+      {showNotification &&
+        notifications.map((notification) => (
+          <div
+            key={notification.notifyId}
+            className="w-[390px] h-[402px] bg-white shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5 overflow-hidden animate-slide-in-down px-[24px] py-[28px]"
+          >
+            {/* 알림 박스 전체 레이아웃 */}
+            <div className="flex items-center">
+              {/* 왼쪽 이미지 섹션 */}
+              <div className="flex-shrink-0">
+                <img
+                  className="w-[60px] h-[60px] rounded-full"
+                  src={notification.senderProfileImgUri || "/default-image.png"}
+                  alt={notification.senderNickName}
+                />
+              </div>
+              {/* 텍스트 및 시간 정보 섹션 */}
+              <div className="ml-4 w-[325px]">
+                {/* 알림 타이틀 */}
+                <p className="text-base font-medium text-gray-900 leading-6">
+                  {notification.senderNickName}님이 {notification.title}
+                </p>
+                {/* 시간 정보 */}
+                <p className="mt-1 text-sm text-gray-500">
+                  {formatTimeAgo(notification.createdAt)}
+                </p>
+              </div>
+            </div>
+            {/* 닫기 버튼 섹션 */}
+            <div className="flex border-l border-gray-200">
+              <button
+                className="w-full border border-transparent rounded-none rounded-r-lg p-4 flex items-center justify-center text-sm font-medium text-red-600 hover:text-red-500 focus:outline-none focus:ring-2 focus:ring-red-500"
+                onClick={() => {
+                  // 해당 알림을 삭제하도록 설정
+                  setNotifications((prev) =>
+                    prev.filter(
+                      (item) => item.notifyId !== notification.notifyId
+                    )
+                  );
+                }}
+              >
+                닫기
+              </button>
+            </div>
+          </div>
+        ))}
     </div>
   );
 };
 
-export default NotificationComponent;
+export default Notification;

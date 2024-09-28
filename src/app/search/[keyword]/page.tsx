@@ -86,13 +86,12 @@ const SearchPage = () => {
         ? blogRes.data.result
         : [];
 
-      // 상태 업데이트
       setPostList(postListData);
       setOotdList(ootdListData);
       setNicknameList(nicknameListData);
       setBlogList(blogListData);
 
-      console.log(ootdListData);
+      console.log("OOTD데이터~~", ootdListData);
       if (postListData.length > 0) {
         setPosts(postListData);
         setSelectedSearchType("POST");
@@ -147,7 +146,6 @@ const SearchPage = () => {
           selectedSearchType={selectedSearchType}
           onSelectSearchType={(type) => {
             setSelectedSearchType(type);
-            // 타입 변경 시 해당 타입의 데이터로 변경
             if (type === "POST") setPosts(postList);
             else if (type === "OOTD") setPosts(ootdList);
             else if (type === "NICKNAME") setPosts(nicknameList);
