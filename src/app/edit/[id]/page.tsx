@@ -179,6 +179,8 @@ const EditOotd: React.FC = () => {
           icon: 'error',
           title: '게시글 수정 오류',
           text: '게시글을 수정하는 중 오류가 발생했습니다.',
+          confirmButtonText: '확인',
+          confirmButtonColor: '#FB3463', 
         });
       },
     }
