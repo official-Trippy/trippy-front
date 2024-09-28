@@ -33,12 +33,6 @@ const EditInfo = () => {
     }
   };
 
-  const [profileImage, setProfileImage] = useState<{
-    accessUri: string;
-    authenticateId: string;
-    imgUrl: string;
-  } | null>(null); 
-
   const [blogImage, setBlogImage] = useState<{
     accessUri: string;
     authenticateId: string;
@@ -64,17 +58,34 @@ const EditInfo = () => {
   const [followScope, setFollowScope] = useState<"public" | "private" | "protected">("public");
   const [tempSelectedInterests, setTempSelectedInterests] = useState<string[]>([]);
 
-  const [isProfileImageChanged, setIsProfileImageChanged] = useState(false);
   const [isBlogImageChanged, setIsBlogImageChanged] = useState(false);
 
 
   const [warningMessage, setWarningMessage] = useState('');
 
+   // 초기 이미지 저장
+   const [initialProfileImage, setInitialProfileImage] = useState<{
+    accessUri: string;
+    authenticateId: string;
+    imgUrl: string;
+  } | null>(null);
+
+  // 현재 표시되는 프로필 이미지
+  const [profileImage, setProfileImage] = useState<{
+    accessUri: string;
+    authenticateId: string;
+    imgUrl: string;
+  } | null>(null);
+
+  const [isProfileImageChanged, setIsProfileImageChanged] = useState(false); // 이미지가 변경되었는지 여부
+
   const fetchUserInfo = async () => {
     try {
       const data = await getMyInfo(); 
-      setProfileImage(data.profileImageUrl || null)
-      setBlogImage(data.blogTitleImgUrl || null);
+      const profileImgData = data.profileImageUrl || null;
+      setInitialProfileImage(profileImgData); // 처음 유저 이미지를 저장
+      setProfileImage(profileImgData); // 현재 표시될 이미지도 초기화
+      // 나머지 유저 정보 초기화
       setNickName(data.nickName || '');
       setBlogName(data.blogName || '');
       setBlogIntroduce(data.blogIntroduce || '');
@@ -200,9 +211,8 @@ const EditInfo = () => {
       const file = e.target.files[0];
       try {
         const response = await uploadImage(file);
-        setProfileImage(response.result);
-        setImageUploaded(true);
-        setIsProfileImageChanged(true);
+        setProfileImage(response.result); // 새로 업로드된 이미지를 표시
+        setIsProfileImageChanged(true); // 이미지가 변경되었음을 설정 (이미지 삭제 버튼 표시)
       } catch (error: unknown) {
         console.error("Image upload failed:", error);
   
@@ -251,8 +261,8 @@ const EditInfo = () => {
   
 
   const handleImageDelete = () => {
-    setProfileImage(null);
-    setIsProfileImageChanged(true);
+    setProfileImage(initialProfileImage); // 처음 받아온 유저 이미지로 되돌림
+    setIsProfileImageChanged(false);
   };
 
   const handleBlogImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -576,7 +586,7 @@ const EditInfo = () => {
                   프로필 사진 업로드
                 </label>
                 <div className="mt-[5px] h-[16px]">
-                {profileImage && (
+                {isProfileImageChanged && (
                     <button
                       onClick={handleImageDelete}
                       className="w-full mx-auto text-[1rem] text-gray-500 hover:text-gray-900"
