@@ -31,7 +31,7 @@ const RecommendedSpot: React.FC<RecommendedSpotProps> = ({ recommendedSpots }) =
   const updateItemsPerSlide = () => {
     if (typeof window !== 'undefined') {
       const width = window.innerWidth;
-      if (width < 500) {
+      if (width < 550) {
         setItemsPerSlide(2);
       } else if (width < 1000) {
         setItemsPerSlide(3);
@@ -64,7 +64,7 @@ const RecommendedSpot: React.FC<RecommendedSpotProps> = ({ recommendedSpots }) =
     }
   };
   return (
-    <div className="relative w-[90%] sm-700:w-[66%] sm-700:max-w-7xl  mx-auto pt-[5rem] overflow-visible">
+    <div className="relative w-[90%] sm-700:w-[66%] sm-700:max-w-7xl  mx-auto pt-[2rem] overflow-visible">
       <h2 className="font-bold text-2xl mb-4">추천 장소를 알려드릴게요!</h2>
       {itemsPerSlide < recommendedSpots.length && (
       <Image
@@ -77,9 +77,10 @@ const RecommendedSpot: React.FC<RecommendedSpotProps> = ({ recommendedSpots }) =
                       width: '30px',
                       height: '30px',
                       position: 'absolute',
-                      top: '62%',
+                      top: '60%',
                       transform: 'translateY(-50%)',
                       zIndex: 999,
+                      left: '-10px'
                   }}
                 />
       )}
@@ -101,7 +102,8 @@ const RecommendedSpot: React.FC<RecommendedSpotProps> = ({ recommendedSpots }) =
                       alt={spot.title}
                       width={158}
                       height={100}
-                      className="rounded-[8px] mt-2"
+                      className="rounded-[8px] mt-2 object-cover"
+                      style={{ width: '158px', height: '100px' }}
                     />
                   </div>
                 ) : (
@@ -111,12 +113,13 @@ const RecommendedSpot: React.FC<RecommendedSpotProps> = ({ recommendedSpots }) =
                       alt="이미지가 없습니다."
                       width={158}
                       height={100}
-                      className="rounded-[8px] mt-2"
+                      className="rounded-[8px] mt-2 object-cover"
+                      style={{ width: '158px', height: '100px' }}
                     />
                   </div>
                 )}
               </div>
-              <p className="text-xl font-medium mt-2">{spot.title}</p>
+              <p className="text-xl font-medium">{spot.title}</p>
             </SwiperSlide>
             ))
           ) : (
@@ -135,9 +138,9 @@ const RecommendedSpot: React.FC<RecommendedSpotProps> = ({ recommendedSpots }) =
                       width: '30px',
                       height: '30px',
                       position: 'absolute',
-                      top: '62%', 
+                      top: '60%', 
                       transform: 'translateY(-50%)',
-                      right: '0px',
+                      right: '-10px',
                       zIndex: 999,
                   }}
                 />
