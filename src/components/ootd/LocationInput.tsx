@@ -119,7 +119,7 @@ const LocationInput: React.FC<LocationInputProps> = ({ onLocationChange, selecte
       <Modal.Title id="contained-modal-title-vcenter">위치 선택</Modal.Title>
     </Modal.Header>
     <Modal.Body>
-      <div className="relative w-full h-[30rem] sm-700:h-[50rem] sm-700:py-[2rem]"> {/* 모바일에서 높이 조정 */}
+      <div className="relative w-full h-[30rem] sm-700:h-[50rem]"> {/* 모바일에서 높이 조정 */}
         {isLoaded ? (
           <>
             <input
