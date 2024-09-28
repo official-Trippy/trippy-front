@@ -39,7 +39,7 @@ const NotificationComponent = () => {
                 className="rounded-full mr-4"
               />
               <div>
-                <p className="text-black">
+                <p className="text-neutral-900">
                   {notification.notificationType === "LIKE" &&
                     `${notification.senderNickName}님이 회원님의 게시물에 좋아요를 눌렀습니다.`}
                   {notification.notificationType === "COMMENT" &&

@@ -69,6 +69,37 @@ body {
   }
 }
 
+@media (prefers-color-scheme: dark) {
+  input[type="text"],
+  textarea {
+    background-color: #121212; /* 다크 모드에서 인풋 배경을 어둡게 설정 */
+    color: #fff; /* 다크 모드에서 글씨 색상을 흰색으로 설정 */
+    border: 1px solid #555; /* 테두리 색상을 좀 더 눈에 띄게 설정 */
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  input[type="text"],
+  textarea {
+    background-color: #fff; /* 라이트 모드에서 배경을 흰색으로 설정 */
+    color: #000; /* 라이트 모드에서 글씨 색상을 검은색으로 설정 */
+    border: 1px solid #ccc; /* 라이트 모드에서 테두리 색상 설정 */
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  input[type="text"] {
+    background-color: #1e1e1e; /* 다크 모드에서 인풋 필드 배경을 어둡게 설정 */
+    color: #fff; /* 글씨 색상을 흰색으로 설정 */
+    border: 1px solid #555; /* 테두리 색상을 더 눈에 띄게 설정 */
+  }
+
+  .comment-section {
+    background-color: #2c2c2c; /* 다크 모드에서 댓글 섹션의 배경을 어둡게 설정 */
+    color: #fff; /* 댓글 섹션의 글씨 색상을 흰색으로 설정 */
+  }
+}
+
 .login-info {
   color: #292929;
   font-family: Pretendard;

@@ -132,7 +132,7 @@ const MobileFooter = () => {
                       alt=""
                     />
                     <div>
-                      <h1 className="text-[1.6rem] font-medium text-black">블로그 티켓 글쓰기</h1>
+                      <h1 className="text-[1.6rem] font-medium text-neutral-900">블로그 티켓 글쓰기</h1>
                       <span className="text-[0.9rem] font-normal text-[#9D9D9D]">여행에서 겪었던 이야기를 기록해 보세요.</span>
                     </div>
                   </div>
@@ -150,7 +150,7 @@ const MobileFooter = () => {
                       alt=""
                     />
                     <div>
-                      <h1 className="text-[1.6rem] font-medium text-black">OOTD 글쓰기</h1>
+                      <h1 className="text-[1.6rem] font-medium text-neutral-900">OOTD 글쓰기</h1>
                       <span className="text-[0.9rem] font-normal text-[#9D9D9D]">여행 중 나의 특별한 OOTD를 공유해보세요.</span>
                     </div>
                   </div>
