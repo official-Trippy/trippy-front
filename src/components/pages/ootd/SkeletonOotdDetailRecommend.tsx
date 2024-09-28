@@ -35,7 +35,7 @@ const SkeletonOotdDetailRecommend: React.FC = () => {
 
   return (
     <div className="relative w-[90%] sm-700:w-[66%] sm-700:max-w-7xl mx-auto pt-[2rem] overflow-visible">
-      <h2 className="font-bold text-2xl mb-4 animate-pulse bg-gray-300 w-[300px] h-8 rounded-md"></h2>
+      <h2 className="font-bold text-2xl mb-4 animate-pulse bg-gray-300 w-full h-8 rounded-md"></h2>
       {/* 스켈레톤 슬라이드 */}
       <div className="relative mx-auto">
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">

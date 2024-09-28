@@ -63,12 +63,11 @@ const RecommendedSpot: React.FC<RecommendedSpotProps> = ({ recommendedSpots, loc
   };
 
   const handleSpotClick = (title: string) => {
-    // URL 인코딩을 강화하여 특수 문자 및 공백 처리
     const encodedTitle = encodeURIComponent(title);
     const kakaoMapUrl = `https://map.kakao.com/link/search/${encodedTitle}`;
-    
     window.open(kakaoMapUrl, '_blank');
   };
+
   // 호버 상태 관리
   const [hoveredSpot, setHoveredSpot] = useState<number | null>(null);
 
@@ -82,123 +81,134 @@ const RecommendedSpot: React.FC<RecommendedSpotProps> = ({ recommendedSpots, loc
 
   return (
     <div className="relative w-[90%] sm-700:w-[66%] sm-700:max-w-7xl mx-auto pt-[4rem] overflow-visible">
-      <h2 className="font-bold text-2xl mb-4"><span className='text-[#FB3463]'>{location}</span>의 추천 관광지를 알려드릴게요!</h2>
-      {/* 왼쪽 버튼 */}
-      {itemsPerSlide < recommendedSpots.length && (
-        <Image
-          src={SwiperLeftButton}
-          alt="Previous"
-          width={30}
-          height={30}
-          onClick={() => handleScrollOotd('left')}
-          style={{
-            width: '30px',
-            height: '30px',
-            position: 'absolute',
-            top: '63%', // 이미지 영역의 세로 정가운데
-            transform: 'translateY(-50%)',
-            zIndex: 999,
-            left: '-10px',
-          }}
-        />
+      {/* 추천 장소가 있을 때만 <h2> 보여줌 */}
+      {recommendedSpots.length > 0 && (
+        <h2 className="font-bold text-2xl mb-4">
+          <span className='text-[#FB3463]'>{location}</span>의 추천 관광지를 알려드릴게요!
+        </h2>
       )}
-      <div className="relative mx-auto">
-        <Swiper
-          ref={swiperRef}
-          spaceBetween={20}
-          slidesPerView={itemsPerSlide}
-          className="mySwiper"
-        >
-          {recommendedSpots.length > 0 ? (
-            recommendedSpots.map((spot, index) => (
-              <SwiperSlide key={index} className="flex flex-col items-center justify-center text-center">
-                <div
-                  className="relative rounded-lg py-4 flex items-center justify-center cursor-pointer"
-                  onClick={() => handleSpotClick(spot.title)}
-                  onMouseEnter={() => handleMouseEnter(index)}
-                  onMouseLeave={handleMouseLeave}
-                >
-                  {spot.imgList && spot.imgList.length > 0 ? (
-                    <div className="relative w-[158px] h-[100px] flex justify-center items-center rounded-[8px] overflow-hidden">
-                      <Image
-                        src={spot.imgList[0].galWebImageUrl}
-                        alt={spot.title}
-                        width={158}
-                        height={100}
-                        className="rounded-[8px] object-cover"
-                        style={{ width: '158px', height: '100px' }}
-                      />
-                      {hoveredSpot === index && (
-                        <div
-                          className="absolute inset-0 bg-black bg-opacity-50 flex justify-center items-center"
-                          style={{ 
-                            WebkitMaskImage: 'linear-gradient(white, white)', 
-                            maskImage: 'linear-gradient(white, white)',  
-                            borderRadius: '8px',
-                          }}
-                        >
-                          <span className="text-white text-sm font-bold">위치 확인하기</span>
-                        </div>
-                      )}
-                    </div>
-                  ) : (
-                    <div className="relative w-[158px] h-[100px] flex justify-center items-center">
-                      <Image
-                        src={DefaultImage}
-                        alt="이미지가 없습니다."
-                        width={158}
-                        height={100}
-                        className="rounded-[8px] object-cover"
-                        style={{ width: '158px', height: '100px' }}
-                      />
-                      {hoveredSpot === index && (
-                        <div
-                          className="absolute inset-0 bg-black bg-opacity-50 flex justify-center items-center"
-                          style={{ 
-                            WebkitMaskImage: 'linear-gradient(white, white)', 
-                            maskImage: 'linear-gradient(white, white)',  
-                            borderRadius: '8px',
-                          }}
-                        >
-                          <span className="text-white text-sm font-bold">위치 확인하기</span>
-                        </div>
-                      )}
-                    </div>
-                  )}
-                </div>
-                <p
-                  className="text-xl font-medium cursor-pointer"
-                  onClick={() => handleSpotClick(spot.title)}
-                  onMouseEnter={() => handleMouseEnter(index)}
-                  onMouseLeave={handleMouseLeave}
-                >
-                  {spot.title}
-                </p>
-              </SwiperSlide>
-            ))
-          ) : (
-            <div className="text-center w-full">추천 장소가 없습니다.</div>
+
+      {recommendedSpots.length > 0 ? (
+        <>
+          {/* 왼쪽 버튼 */}
+          {itemsPerSlide < recommendedSpots.length && (
+            <Image
+              src={SwiperLeftButton}
+              alt="Previous"
+              width={30}
+              height={30}
+              onClick={() => handleScrollOotd('left')}
+              style={{
+                width: '30px',
+                height: '30px',
+                position: 'absolute',
+                top: '63%', // 이미지 영역의 세로 정가운데
+                transform: 'translateY(-50%)',
+                zIndex: 999,
+                left: '-10px',
+              }}
+            />
           )}
-        </Swiper>
-      </div>
-      {/* 오른쪽 버튼 */}
-      {itemsPerSlide < recommendedSpots.length && (
-        <Image
-          src={SwiperRightButton}
-          alt="Next"
-          width={30}
-          height={30}
-          onClick={() => handleScrollOotd('right')}
-          style={{
-            width: '30px',
-            height: '30px',
-            position: 'absolute',
-            top: '63%', // 이미지 영역의 세로 정가운데
-            transform: 'translateY(-50%)',
-            right: '-10px',
-            zIndex: 999,
-          }}
-        />
+          <div className="relative mx-auto">
+            <Swiper
+              ref={swiperRef}
+              spaceBetween={20}
+              slidesPerView={itemsPerSlide}
+              className="mySwiper"
+            >
+              {recommendedSpots.map((spot, index) => (
+                <SwiperSlide key={index} className="flex flex-col items-center justify-center text-center">
+                  <div
+                    className="relative rounded-lg py-4 flex items-center justify-center cursor-pointer"
+                    onClick={() => handleSpotClick(spot.title)}
+                    onMouseEnter={() => handleMouseEnter(index)}
+                    onMouseLeave={handleMouseLeave}
+                  >
+                    {spot.imgList && spot.imgList.length > 0 ? (
+                      <div className="relative w-[158px] h-[100px] flex justify-center items-center rounded-[8px] overflow-hidden">
+                        <Image
+                          src={spot.imgList[0].galWebImageUrl}
+                          alt={spot.title}
+                          width={158}
+                          height={100}
+                          className="rounded-[8px] object-cover"
+                          style={{ width: '158px', height: '100px' }}
+                        />
+                        {hoveredSpot === index && (
+                          <div
+                            className="absolute inset-0 bg-black bg-opacity-50 flex justify-center items-center"
+                            style={{ 
+                              WebkitMaskImage: 'linear-gradient(white, white)', 
+                              maskImage: 'linear-gradient(white, white)',  
+                              borderRadius: '8px',
+                            }}
+                          >
+                            <span className="text-white text-sm font-bold">위치 확인하기</span>
+                          </div>
+                        )}
+                      </div>
+                    ) : (
+                      <div className="relative w-[158px] h-[100px] flex justify-center items-center">
+                        <Image
+                          src={DefaultImage}
+                          alt="이미지가 없습니다."
+                          width={158}
+                          height={100}
+                          className="rounded-[8px] object-cover"
+                          style={{ width: '158px', height: '100px' }}
+                        />
+                        {hoveredSpot === index && (
+                          <div
+                            className="absolute inset-0 bg-black bg-opacity-50 flex justify-center items-center"
+                            style={{ 
+                              WebkitMaskImage: 'linear-gradient(white, white)', 
+                              maskImage: 'linear-gradient(white, white)',  
+                              borderRadius: '8px',
+                            }}
+                          >
+                            <span className="text-white text-sm font-bold">위치 확인하기</span>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                  <p
+                    className="text-xl font-medium cursor-pointer"
+                    onClick={() => handleSpotClick(spot.title)}
+                    onMouseEnter={() => handleMouseEnter(index)}
+                    onMouseLeave={handleMouseLeave}
+                  >
+                    {spot.title}
+                  </p>
+                </SwiperSlide>
+              ))}
+            </Swiper>
+          </div>
+          {/* 오른쪽 버튼 */}
+          {itemsPerSlide < recommendedSpots.length && (
+            <Image
+              src={SwiperRightButton}
+              alt="Next"
+              width={30}
+              height={30}
+              onClick={() => handleScrollOotd('right')}
+              style={{
+                width: '30px',
+                height: '30px',
+                position: 'absolute',
+                top: '63%', // 이미지 영역의 세로 정가운데
+                transform: 'translateY(-50%)',
+                right: '-10px',
+                zIndex: 999,
+              }}
+            />
+          )}
+        </>
+      ) : (
+        // 추천 장소가 없을 때 중앙에 메시지를 표시
+        <div className="flex justify-center items-center font-bold text-2xl">
+          <span className='text-[#FB3463]'>{location}</span>에 대한 추천 관광지 데이터가 없습니다!
+        </div>
       )}
     </div>
   );
