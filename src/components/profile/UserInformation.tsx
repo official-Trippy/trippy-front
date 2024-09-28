@@ -1,10 +1,11 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { useQuery } from "react-query";
 import { MemberInfo } from "@/services/auth";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 import DefaultImage from "../../../public/defaultImage.svg";
+import ImageModal from "@/utils/ImageModal";
 
 const TABS = {
   ALL: "ALL",
@@ -41,8 +42,18 @@ const UserInformation: React.FC<{ setActiveTab: (tab: string) => void }> = ({
     router.push("/editProfile");
   };
 
-  if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>Error occurred.</div>;
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleImageClick = () => {
+    setIsModalOpen(true); // 이미지 클릭 시 모달 열기
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false); // 모달 닫기
+  };
+
+  if (isLoading) return <div></div>;
+  if (error) return <div></div>;
 
   const userData = data?.result;
 
@@ -56,6 +67,7 @@ const UserInformation: React.FC<{ setActiveTab: (tab: string) => void }> = ({
               alt="Profile"
               width={80}
               height={80}
+              onClick={handleImageClick}
               style={{
                 width: "80px",
                 height: "80px",
@@ -97,9 +109,13 @@ const UserInformation: React.FC<{ setActiveTab: (tab: string) => void }> = ({
           >
             팔로우
           </button> */}
-
         </div>
       </div>
+      <ImageModal
+        isOpen={isModalOpen}
+        imageUrl={userData?.profileImageUrl || DefaultImage}
+        onClose={handleCloseModal}
+      />
     </div>
   );
 };
