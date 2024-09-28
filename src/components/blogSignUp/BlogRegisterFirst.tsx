@@ -106,9 +106,9 @@ const BlogRegisterFirst = () => {
   };
 
   const validateNickName = (nickName: string) => {
-    const regex = /^[가-힣a-zA-Z0-9]{2,16}$/;
+    const regex = /^[가-힣a-zA-Z0-9 ]{2,16}$/; // 공백을 허용하기 위해 ' ' 추가
     return regex.test(nickName);
-  };
+  };  
 
   const handleBlogName = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -147,10 +147,11 @@ const BlogRegisterFirst = () => {
     }
   };
 
-  const validateBlogName = (blogName: string) => {
-    const regex = /^[가-힣a-zA-Z0-9]{2,30}$/;
-    return regex.test(blogName);
-  };
+// 블로그 이름 정규식을 띄어쓰기 포함하게 수정
+const validateBlogName = (blogName: string) => {
+  const regex = /^[가-힣a-zA-Z0-9 ]{2,28}$/; // 공백을 허용하기 위해 ' ' 추가
+  return regex.test(blogName);
+};
 
   // 크롭 관련 상태
   const [imageSrc, setImageSrc] = useState<string | null>(null); // 크롭할 이미지 소스
@@ -327,7 +328,7 @@ const BlogRegisterFirst = () => {
                 type="text"
                 value={blogName}
                 onChange={handleBlogName}
-                placeholder="한글 2-15자, 영어 4-30자 이내로 입력 가능합니다."
+                placeholder="한글 2-14자, 영어 4-28자 이내로 입력 가능합니다."
                 className="w-full px-4 py-2 mt-[2rem] mb-2 h-[4rem] rounded-xl border border-gray-300 focus:border-[#FB3463] focus:outline-none"
                 style={{ background: "var(--4, #F5F5F5)", fontSize: "1.2rem" }}
               />

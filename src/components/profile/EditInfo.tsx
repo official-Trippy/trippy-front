@@ -166,9 +166,9 @@ const EditInfo = () => {
   };
 
   const validateNickName = (nickName: string) => {
-    const regex = /^[가-힣a-zA-Z0-9]{2,16}$/;
+    const regex = /^[가-힣a-zA-Z0-9 ]{2,16}$/; // 공백을 허용하기 위해 ' ' 추가
     return regex.test(nickName);
-  };
+  };  
 
   const handleBlogName = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -208,7 +208,7 @@ const EditInfo = () => {
   };
 
   const validateBlogName = (blogName: string) => {
-    const regex = /^[가-힣a-zA-Z0-9]{2,30}$/;
+    const regex = /^[가-힣a-zA-Z0-9 ]{2,28}$/; // 공백을 허용하기 위해 ' ' 추가
     return regex.test(blogName);
   };
 
