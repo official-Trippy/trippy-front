@@ -20,14 +20,17 @@ import EmptyHeartIcon from "../../../../public/heartIcon-default.svg";
 import CommentIcon1 from "../../../../public/commentIcon-default.svg";
 import { TagContainerProps } from "@/types/tag";
 import Cookies from "js-cookie";
+
 import SkeletonRecommendOotdPost from './SkeletonRecommendOotdPost';
 import SkeletonRecentOotdPost from './SkeletonRecentOotdPost';
+
 
 const PAGE_SIZE = 12;
 
 const TagContainer: React.FC<TagContainerProps> = ({ item }) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [visibleTags, setVisibleTags] = useState<string[]>(item.post.tags);
+  const router = useRouter();
 
   const calculateVisibleTags = () => {
     const container = containerRef.current;
@@ -59,6 +62,10 @@ const TagContainer: React.FC<TagContainerProps> = ({ item }) => {
     };
   }, [item.post.tags]);
 
+  const handleTagClick = (tag: string) => {
+    router.push(`/search/${encodeURIComponent(tag)}`); // Redirect to the search page with the clicked tag
+  };
+
   return (
     <div className="mt-4">
       <div className="text-[#6b6b6b] text-xl font-normal font-['Pretendard'] text-ellipsis overflow-hidden whitespace-nowrap">
@@ -67,6 +74,8 @@ const TagContainer: React.FC<TagContainerProps> = ({ item }) => {
       <div className="tag-container" ref={containerRef}>
         {visibleTags.map((tag, index) => (
           <span
+
+
             key={index}
             className="tag-item px-4 py-1 bg-neutral-100 rounded-3xl text-xl justify-center items-center gap-2.5 inline-flex text-[#9d9d9d]"
           >
@@ -190,23 +199,22 @@ const RecentOotdPost: React.FC = () => {
     router.push("/login");
   };
 
-  
   const [showSkeleton, setShowSkeleton] = useState(true);
 
   useEffect(() => {
-    if (typeof window !== 'undefined') { // 클라이언트에서만 실행되도록 체크
-        const delay = setTimeout(() => {
-            setShowSkeleton(false);
-        }, 1000); // 스켈레톤을 1초 동안 유지
-        
-        return () => clearTimeout(delay);
-    }
-}, [isLoading]);
-      
-      if (loading || showSkeleton || isLoading) {
-        return <SkeletonRecentOotdPost />;
-      }
+    if (typeof window !== "undefined") {
+      // 클라이언트에서만 실행되도록 체크
+      const delay = setTimeout(() => {
+        setShowSkeleton(false);
+      }, 1000); // 스켈레톤을 1초 동안 유지
 
+      return () => clearTimeout(delay);
+    }
+  }, [isLoading]);
+
+  if (loading || showSkeleton || isLoading) {
+    return <SkeletonRecentOotdPost />;
+  }
 
   return (
     <div className="w-[90%] sm-700:w-[66%]  mx-auto pt-[5rem] mb-[90px]">
@@ -218,26 +226,22 @@ const RecentOotdPost: React.FC = () => {
         </div>
       )}
 
-      
       <div className={`flex text-[1.6rem] py-12`}>
         {userInfo && (
-
-        <span
-          className={`pr-[1rem] cursor-pointer ${tab === "ALL" ? "font-bold text-[#fa3463]" : ""}`}
-          onClick={() => handleTabChange("ALL")}
-        >
-          전체글
-        </span>
-
+          <span
+            className={`pr-[1rem] cursor-pointer ${tab === "ALL" ? "font-bold text-[#fa3463]" : ""}`}
+            onClick={() => handleTabChange("ALL")}
+          >
+            전체글
+          </span>
         )}
-        { userInfo && (
-        <span
-          className={`px-[1rem] cursor-pointer ${tab === 'FOLLOWING' ? 'font-bold text-[#fa3463]' : ''}`}
-          onClick={() => handleTabChange('FOLLOWING')}
-        >
-          팔로잉
-        </span>
-
+        {userInfo && (
+          <span
+            className={`px-[1rem] cursor-pointer ${tab === "FOLLOWING" ? "font-bold text-[#fa3463]" : ""}`}
+            onClick={() => handleTabChange("FOLLOWING")}
+          >
+            팔로잉
+          </span>
         )}
         <div className="ml-auto">
           <CustomSelect
