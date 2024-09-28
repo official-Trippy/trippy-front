@@ -31,6 +31,13 @@ body {
   /* rgb(var(--background-start-rgb)); */
 }
 
+@media (prefers-color-scheme: dark) {
+  body {
+    color: #fff;
+    background-color: #121212;
+  }
+}
+
 @font-face {
   font-family: 'Akira Expanded';
   src: url('../../public/font/Akira Expanded Demo.otf') format('opentype');
