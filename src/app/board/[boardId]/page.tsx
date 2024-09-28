@@ -638,6 +638,9 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
                         const createDateTime = new Date(coData.createDateTime);
                         const formattedDateTime = `${createDateTime.getFullYear()}.${String(createDateTime.getMonth() + 1).padStart(2, '0')}.${String(createDateTime.getDate()).padStart(2, '0')} ${String(createDateTime.getHours()).padStart(2, '0')}:${String(createDateTime.getMinutes()).padStart(2, '0')}`;
 
+                        const isEditing = editingIndexes[coData.id] || false;
+                        const openEditing = myUpdateReply[coData.id] || false;
+
                         return (
                           <div className="mb-[2.5rem]" key={key}>
                             <div className={`pt-[1rem] py-[0.5rem] mr-[2rem]`}>
@@ -653,28 +656,63 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
                                   {coData.member.nickName}
                                 </span>
                                 {userInfo?.memberId === coData.member.memberId && (
-                                  <Image className="w-[2.8rem] h-[2.8rem] ml-auto cursor-pointer" src={menubars} alt="" />
+                                  <div className="flex ml-auto">
+                                    <Image className="w-[2.8rem] h-[2.8rem] cursor-pointer" width={28} height={28} src={menubars} alt="" onClick={() => toggleMyEdit(coData.id)} />
+                                    {openEditing && (
+                                      <div className="absolute flex flex-col ml-auto bg-white shadow-md rounded-md -ml-[4.5rem] mt-[2.3rem] animate-dropdown z-20 rounded-[0.8rem]" style={{ opacity: 0, transform: 'translateY(-10px)' }}>
+                                        <span className="px-[2rem] py-[1rem] cursor-pointer text-red-500" onClick={() => { deleteReplyHandler(coData.id); toggleMyEdit(coData.id) }}>삭제</span>
+                                        <span className="px-[2rem] py-[1rem] cursor-pointer" onClick={() => { handleEditContent(coData.id, coData.content); toggleMyEdit(coData.id) }}>수정</span>
+                                      </div>
+                                    )}
+                                  </div>
                                 )}
                               </div>
-                              <div className="ml-[4rem] my-[0.5rem]">
-                                <span className="text-[1.4rem] font-normal text-[#292929]">
-                                  {coData.content}
-                                </span>
-                              </div>
-                              <div className="flex ml-[4rem] text-[1.2rem] text-[#9D9D9D] items-center">
-                                <span>{formattedDateTime}</span>
-                                <hr className="mx-[1rem] h-[1rem] w-[0.1rem] bg-[#9D9D9D]" />
-                                <span
-                                  className="cursor-pointer"
-                                  onClick={() => handleReplyToggle(index, coData.id, coData.member.nickName, coData.member.memberId)}
-                                >
-                                  {replyStates[index] ? '답글취소' : '답글달기'}
-                                </span>
-                                {userInfo?.memberId === coData.member.memberId && (
-                                  <span className="ml-[1rem] cursor-pointer" onClick={() => deleteReplyHandler(coData.id)}>삭제</span>
-                                )}
+                              {isEditing ? (
+                                <div className="w-full ml-[2.5rem] mt-[0.5rem]">
+                                  <div className="w-[95%] h-[3.3rem] relative shadowall flex flex-col border border-[#CFCFCF] bg-white rounded-[0.8rem]">
+                                    <input
+                                      className="w-full h-fit outline-none text-[1.4rem] font-normal mt-[0.5rem] pl-[1.5rem]"
+                                      type="text"
+                                      placeholder={`블로그가 훈훈해지는 댓글 부탁드립니다.`}
+                                      value={updateReply}
+                                      onChange={(e) => setUpdateReply(e.target.value)}
+                                    />
+                                  </div>
+                                  <div className="w-full flex mt-[1rem] ml-auto pr-[2rem]">
+                                    <button
+                                      className="ml-auto hover:bg-[#292929] hover:text-white bg-[#FB3463] text-white rounded-[0.8rem] text-[1.6rem] font-semibold w-[6.6rem] h-[2.5rem] flex mr-[1.4rem] items-center justify-center"
+                                      onClick={() => { commentReplyHandler(replymemId, replyNickname, replyId); commentEditHandler(coData.id) }}
+                                    >
+                                      수정
+                                    </button>
+                                    <button
+                                      className="hover:bg-[#292929] hover:text-white bg-[#9D9D9D] text-white rounded-[0.8rem] text-[1.6rem] font-semibold w-[6.6rem] h-[2.5rem] flex mr-[1.4rem] items-center justify-center"
+                                      onClick={() => { commentReplyHandler(replymemId, replyNickname, replyId); handleEditContent(coData.id, coData.content) }}
+                                    >
+                                      취소
+                                    </button>
+                                  </div>
+                                </div>
+                              ) : (
+                                <div>
+                                  <div className="ml-[4rem] my-[0.5rem]">
+                                    <span className="text-[1.4rem] font-normal text-[#292929]">
+                                      {coData.content}
+                                    </span>
+                                  </div>
+                                  <div className="flex ml-[4rem] text-[1.2rem] text-[#9D9D9D] items-center">
+                                    <span>{formattedDateTime}</span>
+                                    <hr className="mx-[1rem] h-[1rem] w-[0.1rem] bg-[#9D9D9D]" />
+                                    <span
+                                      className="cursor-pointer"
+                                      onClick={() => handleReplyToggle(index, coData.id, coData.member.nickName, coData.member.memberId)}
+                                    >
+                                      {replyStates[index] ? '답글취소' : '답글달기'}
+                                    </span>
+                                  </div>
+                                </div>
+                              )}
 
-                              </div>
                               {replyStates[index] && (
                                 <div className="w-[95%] h-[9.3rem] shadowall mt-[2rem] ml-[4rem] pl-[1.7rem] pt-[1.4rem] flex border border-[#CFCFCF] rounded-[0.8rem] relative">
                                   <div className="w-full">
@@ -734,7 +772,7 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
                                       <div className="flex ml-auto">
                                         <Image className="w-[2.8rem] h-[2.8rem] cursor-pointer" width={28} height={28} src={menubars} alt="" onClick={() => toggleMyEdit(childData.id)} />
                                         {openEditing && (
-                                          <div className="absolute flex flex-col ml-auto bg-white shadow-md rounded-md -ml-[9rem] mt-[2.3rem] animate-dropdown z-20 rounded-[0.8rem]" style={{ opacity: 0, transform: 'translateY(-10px)' }}>
+                                          <div className="absolute flex flex-col ml-auto bg-white shadow-md rounded-md -ml-[4.5rem] mt-[2.3rem] animate-dropdown z-20 rounded-[0.8rem]" style={{ opacity: 0, transform: 'translateY(-10px)' }}>
                                             <span className="px-[2rem] py-[1rem] cursor-pointer text-red-500" onClick={() => { deleteReplyHandler(childData.id); toggleMyEdit(childData.id) }}>삭제</span>
                                             <span className="px-[2rem] py-[1rem] cursor-pointer" onClick={() => { handleEditContent(childData.id, childData.content); toggleMyEdit(childData.id) }}>수정</span>
                                           </div>
@@ -744,7 +782,7 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
 
                                   </div>
                                   {isEditing ? (
-                                    <div className="w-[95%] h-[3.3rem] shadowall my-[1rem] ml-[4rem] pt-[0.6rem] flex flex-col border border-[#CFCFCF] bg-white rounded-[0.8rem] relative">
+                                    <div className="w-[90%] h-[3.3rem] shadowall my-[1rem] ml-[4rem] pt-[0.6rem] flex flex-col border border-[#CFCFCF] bg-white rounded-[0.8rem] relative">
                                       <div className="w-full">
                                         <div className="relative">
                                           <input
