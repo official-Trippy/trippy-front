@@ -87,40 +87,41 @@ const TagContainer: React.FC<TagContainerProps> = ({ item }) => {
     const router = useRouter();
     const scrollRef = useRef<HTMLDivElement | null>(null);
     const swiperRef = useRef<SwiperRef | null>(null);
-    const [currentSlide, setCurrentSlide] = useState(0); // 현재 슬라이드 위치 추적
+    const [currentSlide, setCurrentSlide] = useState(0);
 
     const { data, isLoading, refetch } = useQuery(
         ['recommendOotdPost', selectedInterest],
         () => fetchRecommendOotdPost(selectedInterest),
         {
             keepPreviousData: true,
+            onSuccess: () => {
+                // 데이터 로드 후 스크롤 버튼 체크
+                checkScroll();
+            },
         }
     );
 
     const totalCount = data?.result?.ootdList?.length ?? 0;
-    const totalSlides = Math.ceil(totalCount / itemsPerSlide); // 총 슬라이드 수 계산
+    const totalSlides = Math.ceil(totalCount / itemsPerSlide);
 
     useEffect(() => {
         if (userInfo) {
             fetchLikedPosts().then(setLikedPosts);
-            fetchUserInterests(); // 관심사 정보 가져오기
+            fetchUserInterests();
         }
     }, [userInfo]);
 
-    // 사용자 정보에서 관심사 가져오기
     const fetchUserInterests = async () => {
         try {
-            const userInterests = userInfo?.koreanInterestedTypes || []; // 유저의 관심사 추출
+            const userInterests = userInfo?.koreanInterestedTypes || [];
             const userName = userInfo?.nickName;
-
-            console.log('유저 관심사', userInterests);
             setUserName(userName);
 
             if (userInterests.length > 0) {
-                setFilteredInterests(blogInterests.filter(interest => userInterests.includes(interest))); // 관심사로 필터링
-                setSelectedInterest(userInterests[0]); // 유저의 첫 번째 관심사로 설정
+                setFilteredInterests(blogInterests.filter(interest => userInterests.includes(interest)));
+                setSelectedInterest(userInterests[0]);
             } else {
-                setSelectedInterest(blogInterests[0]); // 유저가 관심사를 설정하지 않았으면 기본값 유지
+                setSelectedInterest(blogInterests[0]);
             }
         } catch (error) {
             console.error('Error fetching user interests:', error);
@@ -141,47 +142,35 @@ const TagContainer: React.FC<TagContainerProps> = ({ item }) => {
     };
 
     useEffect(() => {
-        if (typeof window !== 'undefined') {
-            // 페이지가 로드될 때, 그리고 창 크기가 변경될 때마다 슬라이드 개수 업데이트
-            updateItemsPerSlide();
-            window.addEventListener('resize', updateItemsPerSlide);
+        updateItemsPerSlide();
+        window.addEventListener('resize', updateItemsPerSlide);
 
-            return () => {
-                window.removeEventListener('resize', updateItemsPerSlide);
-            };
-        }
+        return () => {
+            window.removeEventListener('resize', updateItemsPerSlide);
+        };
     }, []);
 
-    const [showScrollButtons, setShowScrollButtons] = useState(false); // 버튼 표시 여부
+    const [showScrollButtons, setShowScrollButtons] = useState(false);
 
     // 스크롤 가능 여부를 확인하는 함수
     const checkScroll = () => {
         if (scrollRef.current) {
             const { scrollWidth, clientWidth } = scrollRef.current;
-            setShowScrollButtons(scrollWidth > clientWidth); // 스크롤이 가능하면 true, 아니면 false
+            setShowScrollButtons(scrollWidth > clientWidth);
         }
     };
 
-    // 관심분야가 변경될 때마다 스크롤 버튼 상태를 초기화하고, 다시 렌더링되도록 설정
     useEffect(() => {
-        setCurrentSlide(0); // 첫 슬라이드로 이동
-        refetch(); // 관심분야 변경 시 데이터를 다시 가져옴
-        checkScroll(); // 관심분야 변경 시 스크롤 상태 확인
-    }, [selectedInterest, refetch]); // 관심분야가 변경될 때마다 실행
+        // 컴포넌트가 처음 로드될 때, 그리고 데이터 로드 후 스크롤 가능 여부 체크
+        checkScroll();
+    }, [filteredInterests, data]); // 데이터 로드 후에도 스크롤 상태 체크
 
-    // 처음 로드될 때 및 윈도우 리사이즈 시 스크롤 버튼 표시 여부 확인
     useEffect(() => {
-        checkScroll(); // 처음 로드 시 호출
-        if (typeof window !== 'undefined') {
-            window.addEventListener('resize', checkScroll); // 리사이즈 시에도 호출
-        }
+        setCurrentSlide(0);
+        refetch();
+        checkScroll();
+    }, [selectedInterest, refetch]);
 
-        return () => {
-            window.removeEventListener('resize', checkScroll); // 리스너 제거
-        };
-    }, []);
-
-    // 스크롤이 끝난 후 버튼 표시 여부 확인
     const handleScrollEnd = () => {
         checkScroll();
     };
@@ -228,7 +217,6 @@ const TagContainer: React.FC<TagContainerProps> = ({ item }) => {
         router.push("/editProfile");
     };
 
-    // 데이터 슬라이드 생성
     const slides = [];
     if (data?.result?.ootdList) {
         for (let i = 0; i < data.result.ootdList.length; i += itemsPerSlide) {
@@ -236,7 +224,6 @@ const TagContainer: React.FC<TagContainerProps> = ({ item }) => {
         }
     }
 
-    // 슬라이드 이동 처리
     const handleScrollOotd = (direction: string) => {
         if (swiperRef.current) {
             const swiper = swiperRef.current.swiper;
@@ -245,24 +232,22 @@ const TagContainer: React.FC<TagContainerProps> = ({ item }) => {
             } else {
                 swiper.slideNext();
             }
-            setCurrentSlide(swiper.activeIndex); // 현재 슬라이드 인덱스 업데이트
+            setCurrentSlide(swiper.activeIndex);
         }
     };
 
-    const isAtFirstSlide = currentSlide === 0; // 첫 번째 슬라이드에 있을 때
-    const isAtLastSlide = currentSlide === totalSlides - 1; // 마지막 슬라이드에 있을 때
-    const shouldShowButtons = itemsPerSlide < totalCount; // 원래 버튼이 뜨는 조건
+    const isAtFirstSlide = currentSlide === 0;
+    const isAtLastSlide = currentSlide === totalSlides - 1;
+    const shouldShowButtons = itemsPerSlide < totalCount;
 
     const [windowWidth, setWindowWidth] = useState<number | null>(null);
 
     useEffect(() => {
-        // 클라이언트 사이드에서만 실행되도록 처리
         if (typeof window !== 'undefined') {
             const handleResize = () => {
                 setWindowWidth(window.innerWidth);
             };
 
-            // 처음 로딩 시와 리사이즈 이벤트 처리
             handleResize();
             window.addEventListener('resize', handleResize);
 
@@ -272,15 +257,14 @@ const TagContainer: React.FC<TagContainerProps> = ({ item }) => {
         }
     }, []);
 
-    // windowWidth가 null이면 아직 클라이언트에서 실행되지 않았으므로 초기값을 설정
     const leftPosition = windowWidth && windowWidth < 700 ? '0px' : '-30px';
 
     const [showSkeleton, setShowSkeleton] = useState(true);
     useEffect(() => {
-        if (typeof window !== 'undefined') { // 클라이언트에서만 실행되도록 체크
+        if (typeof window !== 'undefined') {
             const delay = setTimeout(() => {
                 setShowSkeleton(false);
-            }, 1000); // 스켈레톤을 1초 동안 유지
+            }, 1000);
 
             return () => clearTimeout(delay);
         }
@@ -289,7 +273,6 @@ const TagContainer: React.FC<TagContainerProps> = ({ item }) => {
     if (loading || showSkeleton || isLoading) {
         return <SkeletonRecommendOotdPost />;
     }
-
 
     return (
         <div className="relative w-[90%] sm-700:w-[66%] mx-auto pt-[5rem] overflow-visible">
@@ -316,7 +299,7 @@ const TagContainer: React.FC<TagContainerProps> = ({ item }) => {
             )}
 
             <div className="flex items-center my-12 relative">
-                {showScrollButtons && (
+            {(!userInfo || showScrollButtons) && (
                     <Image
                     src={SwiperLeftButton}
                     alt="Previous"
@@ -356,7 +339,7 @@ const TagContainer: React.FC<TagContainerProps> = ({ item }) => {
                         </div>
                     </div>
                 </div>
-                {showScrollButtons && (
+                {(!userInfo || showScrollButtons) && (
                     <Image
                         src={SwiperRightButton}
                         alt="Next"
