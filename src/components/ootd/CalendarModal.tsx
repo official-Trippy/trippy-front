@@ -88,7 +88,7 @@ const CalendarModal: React.FC<CalendarModalProps> = ({
                   {/* 커스텀 연도 선택 드롭다운 */}
                   <div className="relative">
                     <button
-                      className="mx-2 border border-gray-300 rounded-lg px-2 py-1"
+                      className="mx-2 border border-gray-300 rounded-lg px-2 py-1 font-bold"
                       onClick={() => setIsYearDropdownOpen(!isYearDropdownOpen)}
                     >
                       {date.getFullYear()}년
@@ -114,7 +114,7 @@ const CalendarModal: React.FC<CalendarModalProps> = ({
                   {/* 커스텀 월 선택 드롭다운 */}
                   <div className="relative">
                     <button
-                      className="mx-2 border border-gray-300 rounded-lg px-2 py-1"
+                      className="mx-2 border border-gray-300 rounded-lg px-2 py-1 font-bold"
                       onClick={() => setIsMonthDropdownOpen(!isMonthDropdownOpen)}
                     >
                       {months[date.getMonth()]}

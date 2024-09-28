@@ -552,7 +552,8 @@ body {
 }
 
 .react-datepicker__day-name, .react-datepicker__day, .react-datepicker__time-name {
-  margin-right: 16px !important; /* 날짜와 시간 간격 조정 */
+  margin-right: 8px !important; /* 날짜와 시간 간격 조정 */
+  margin-left: 8px !important; 
   margin-top: 6px !important;
 }
 
@@ -629,4 +630,13 @@ body {
 .react-datepicker__day--keyboard-selected, .react-datepicker__month-text--keyboard-selected, .react-datepicker__quarter-text--keyboard-selected, .react-datepicker__year-text--keyboard-selected {
   background-color: transparent !important;
   color: inherit !important;
+}
+
+.react-datepicker__day-names {
+  padding-bottom: 10px;
+}
+
+.react-datepicker__day-name {
+  font-weight: 700;
+  font-size: 10px;
 }
