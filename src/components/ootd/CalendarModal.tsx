@@ -88,7 +88,7 @@ const CalendarModal: React.FC<CalendarModalProps> = ({
                   {/* 커스텀 연도 선택 드롭다운 */}
                   <div className="relative">
                     <button
-                      className="mx-2 border border-gray-300 rounded-lg px-2 py-1 font-bold"
+                      className="mx-2 border border-gray-300 rounded-lg px-2 py-1 font-bold text-[12px]"
                       onClick={() => setIsYearDropdownOpen(!isYearDropdownOpen)}
                     >
                       {date.getFullYear()}년
@@ -98,7 +98,7 @@ const CalendarModal: React.FC<CalendarModalProps> = ({
                         {years.map((year) => (
                           <div
                             key={year}
-                            className="px-2 py-1 hover:bg-gray-200 cursor-pointer"
+                            className="px-2 py-1 hover:bg-gray-200 cursor-pointer text-[10px]"
                             onClick={() => {
                               setIsYearDropdownOpen(false);
                               changeYear(year); // 여기서 changeYear 호출
@@ -114,7 +114,7 @@ const CalendarModal: React.FC<CalendarModalProps> = ({
                   {/* 커스텀 월 선택 드롭다운 */}
                   <div className="relative">
                     <button
-                      className="mx-2 border border-gray-300 rounded-lg px-2 py-1 font-bold"
+                      className="mx-2 border border-gray-300 rounded-lg px-2 py-1 font-bold text-[12px]"
                       onClick={() => setIsMonthDropdownOpen(!isMonthDropdownOpen)}
                     >
                       {months[date.getMonth()]}
@@ -124,7 +124,7 @@ const CalendarModal: React.FC<CalendarModalProps> = ({
                         {months.map((month, index) => (
                           <div
                             key={month}
-                            className="px-2 py-1 hover:bg-gray-200 cursor-pointer"
+                            className="px-2 py-1 hover:bg-gray-200 cursor-pointer text-[10px]"
                             onClick={() => {
                               setIsMonthDropdownOpen(false);
                               changeMonth(index); // 여기서 changeMonth 호출
