@@ -26,7 +26,6 @@ const SearchPage = () => {
   const PAGE_SIZE = 10;
   const RealKeyword = decodeURIComponent(keyword as string);
 
-
   // Fetching Posts
   useEffect(() => {
     fetchPosts(RealKeyword, selectedSearchType);
@@ -34,7 +33,6 @@ const SearchPage = () => {
 
   // Fetching keywords and popular searches
   useEffect(() => {
-
     fetchPopularSearches();
   }, []);
 
@@ -44,32 +42,41 @@ const SearchPage = () => {
         params: {
           searchType: searchType,
           page: 0,
-          size: PAGE_SIZE,
+          size: 0,
           keyword: searchTerm,
         },
       });
 
-      console.log("API Response:", response.data);
+      console.log("API Response:", response.data.result.postList);
+      console.log("API Response2 :", response.data.result.ootdList);
+      console.log("API Response3 : ", response.data.result[0].memberId);
 
       const postsData = response.data.result;
-      if (Array.isArray(postsData)) {
-        // 블로그 또는 닉네임 검색일 경우, 데이터가 다르게 올 수 있음
+      const postsDataPost = response.data.result.postList;
+      const postsDataOotd = response.data.result.ootdList;
+
+      if (
+        Array.isArray(postsDataPost) ||
+        Array.isArray(postsDataOotd) ||
+        Array.isArray(postsData)
+      ) {
         if (
           selectedSearchType === "BLOG" ||
           selectedSearchType === "NICKNAME"
         ) {
           const transformedData = postsData.map((item: any) => ({
-            member: {
-              nickName: item.nickName,
-              profileUrl: item.profileImgUrl,
-            },
-            blogIntroduction: item.blogIntroduction, // 블로그 소개
-            blogName: item.blogName, // 블로그 이름
-            memberId: item.memberId, // 유저 ID
+            memberId: item.memberId,
+            nickName: item.nickName,
+            profileImgUrl: item.profileImgUrl,
+            blogName: item.blogName || "", // 블로그 이름이 없으면 빈 문자열
+            blogIntroduction: item.blogIntroduction || "", // 블로그 소개가 없으면 빈 문자열
           }));
+          console.log("변환데이터", transformedData);
           setPosts(transformedData);
+        } else if (selectedSearchType === "OOTD") {
+          setPosts(postsDataOotd);
         } else {
-          setPosts(postsData); // 일반 게시물일 경우 기존 로직 유지
+          setPosts(postsDataPost); // 일반 게시물일 경우 기존 로직 유지
         }
       } else {
         setPosts([]);
@@ -80,6 +87,7 @@ const SearchPage = () => {
       setIsLoading(false);
     }
   };
+  console.log(posts.length);
 
   const fetchPopularSearches = async () => {
     try {
@@ -99,7 +107,6 @@ const SearchPage = () => {
 
   const count = posts.length;
 
-
   return (
     <div className="w-full min-h-screen bg-white">
       <Header />
@@ -107,7 +114,6 @@ const SearchPage = () => {
       <div className="w-[90%] lg:w-[68%] mx-auto mt-8 px-4 lg:px-10">
         {/* 검색 결과 제목 */}
         <h1 className="text-2xl lg:text-4xl font-semibold mb-6">
-
           <span className="text-[#FB3463]">{RealKeyword}</span>에 대한{" "}
           <span className="text-[#FB3463]"> {count}</span>건의 검색 결과입니다.
         </h1>
@@ -120,27 +126,21 @@ const SearchPage = () => {
           onSelectSortOrder={setSelectedSortOrder}
         />
 
-
         <div className="flex flex-col lg:flex-row">
-
           <div className="flex-grow w-full">
             {/* Posts Section */}
             {isLoading ? (
               <p>Loading...</p>
             ) : posts.length > 0 ? (
-
               <div className="flex flex-wrap justify-start items-start gap-[15px] lg:gap-[25px]">
-
                 <PostAllCard
                   posts={posts}
                   selectedSearchType={selectedSearchType}
                 />
-
               </div>
             ) : (
               <div className="flex-grow max-w-full lg:max-w-[790px]">
                 <h1 className="text-lg lg:text-2xl font-semibold mb-6">
-
                   <span className="text-[#FB3463]">{RealKeyword}</span>에 대한
                   검색 결과가 없습니다
                 </h1>
@@ -150,9 +150,7 @@ const SearchPage = () => {
 
           {/* Sidebar Section */}
 
-
           <div className="flex-none w-full lg:w-[300px] mt-8 lg:mt-0 lg:ml-8 hidden md:block">
-
             <PopularSearches popularSearches={popularSearches} />
           </div>
         </div>

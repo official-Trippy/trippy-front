@@ -14,6 +14,11 @@ interface PostCardProps {
       id: number;
       email: string;
     };
+    ticket?: {
+      image: {
+        accessUri: string;
+      };
+    };
 
     ootd?: {
       images: string;
@@ -30,7 +35,7 @@ interface PostCardProps {
     blogTitleImgUrl?: string;
     memberId?: string;
     nickName?: string;
-    profileImgUrl: { accessUri2: string }[];
+    profileImgUrl: string;
 
     email?: string;
   }[];
@@ -57,6 +62,7 @@ const PostAllCard: React.FC<PostCardProps> = ({
         const {
           post: postDetails,
           ootd: ootdDetails,
+          ticket: ticketDetails,
           member,
           blogIntroduction,
           blogName,
@@ -121,7 +127,7 @@ const PostAllCard: React.FC<PostCardProps> = ({
                 ) : selectedSearchType === "BLOG" ||
                   selectedSearchType === "NICKNAME" ? (
                   <img
-                    src={post.member?.profileUrl || "/placeholder.png"}
+                    src={profileImgUrl || "/placeholder.png"}
                     alt={blogName || "Blog Image"}
                     className={`object-cover ${
                       isBlogOrNickname
@@ -134,9 +140,7 @@ const PostAllCard: React.FC<PostCardProps> = ({
                   />
                 ) : (
                   <img
-                    src={
-                      postDetails?.images[0]?.accessUri || "/placeholder.png"
-                    }
+                    src={ticketDetails?.image.accessUri || "/placeholder.png"}
                     alt={postDetails?.title || "Post Image"}
                     className="w-full h-full object-cover rounded-lg"
                   />
@@ -157,28 +161,56 @@ const PostAllCard: React.FC<PostCardProps> = ({
                     </h2>
 
                     <p className="text-[1rem] text-#9D9D9D pt-2">
-                      회원명: {member?.nickName || "Anonymous"}
+                      @{memberId || "Anonymous"}
                     </p>
                   </>
                 ) : selectedSearchType === "NICKNAME" ? (
                   <>
                     <h2 className="text-[2.4rem] font-semibold pb-2">
-                      {member?.nickName || "데이터 실패"}
+                      {nickName || "데이터 실패"}
                     </h2>
 
                     <p className="text-[1rem] text-#9D9D9D pt-2">
-                      {blogIntroduction || "Unnamed Blog"}
+                      @{memberId || "Unnamed Blog"}
                     </p>
                   </>
                 ) : selectedSearchType === "OOTD" ? (
                   <>
-                    <h2 className="text-3xl font-semibold mb-3">OOTD</h2>
-                    <p className="text-gray-800 mb-3">
+                    <div className="flex items-center space-x-2 my-[1rem]">
+                      <img
+                        src={member?.profileUrl || "/default-profile.png"}
+                        alt={member?.nickName || "Profile"}
+                        className="sm:w-[30px] sm:h-[30px] w-[2rem] h-[2rem] rounded-full"
+                      />
+                      <p className="text-gray-800 font-semibold">
+                        {member?.nickName || "Anonymous"}
+                      </p>
+                    </div>
+
+                    <p className="text-gray-800 my-[0.5rem] sm:my-[1rem]">
                       {truncateText(
-                        ootdDetails?.description || "No description available",
+                        postDetails?.body || "No description available",
                         100
                       )}
                     </p>
+                    <div className="flex flex-wrap gap-1 my-[0.5rem] mt-[0rem] sm:mt-[3rem]">
+                      {postDetails?.tags?.slice(0, 4).map((tag, tagIndex) => (
+                        <span
+                          key={tagIndex}
+                          className="bg-gray-200 text-gray-800 px-2 py-0 rounded-full sm:text-sm sm:px-4 sm:py-2 sm:gap-px text-xs" // 크기 조정
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                    <div className="flex space-x-4">
+                      <p className="text-gray-600 text-[1rem] sm:text-[1.5rem]">
+                        ❤️ {postDetails?.likeCount || 0}
+                      </p>
+                      <p className="text-gray-600 text-[1rem] sm:text-[1.5rem]">
+                        💬 {postDetails?.viewCount || 0}
+                      </p>
+                    </div>
                   </>
                 ) : (
                   <>
@@ -204,6 +236,14 @@ const PostAllCard: React.FC<PostCardProps> = ({
                     </div>
 
                     <div className="flex items-center space-x-6 justify-between mt-4">
+                      <div className="flex space-x-4">
+                        <p className="text-gray-600 text-[1rem] sm:text-[1.5rem]">
+                          ❤️ {postDetails?.likeCount || 0}
+                        </p>
+                        <p className="text-gray-600 text-[1rem] sm:text-[1.5rem]">
+                          💬 {postDetails?.viewCount || 0}
+                        </p>
+                      </div>
                       <div className="flex items-center space-x-2">
                         <img
                           src={member?.profileUrl || "/default-profile.png"}
@@ -212,14 +252,6 @@ const PostAllCard: React.FC<PostCardProps> = ({
                         />
                         <p className="text-gray-800 font-semibold">
                           {member?.nickName || "Anonymous"}
-                        </p>
-                      </div>
-                      <div className="flex space-x-4">
-                        <p className="text-gray-600 text-[1rem] sm:text-[1.5rem]">
-                          ❤️ {postDetails?.likeCount || 0}
-                        </p>
-                        <p className="text-gray-600 text-[1rem] sm:text-[1.5rem]">
-                          💬 {postDetails?.viewCount || 0}
                         </p>
                       </div>
                     </div>
