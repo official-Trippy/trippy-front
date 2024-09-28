@@ -3,19 +3,18 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import Header from "@/components/shared/header/Header";
-import Keywords from "@/components/search/Keywords";
 import PopularSearches from "@/components/search/popularSearches";
-
 import axios from "axios";
-import { useRouter } from "next/navigation";
 import SortingBar from "@/components/search/sortingBar";
-// import PostAllCard from "@/components/search/PostAllCard";
-
-import { useQuery } from "react-query";
 import PostAllCard from "@/components/search/postAllCard";
 
 const SearchPage = () => {
-  const [posts, setPosts] = useState<any[]>([]);
+  const [posts, setPosts] = useState<any[]>([]); // 보여줄 포스트
+  const [postList, setPostList] = useState<any[]>([]); // POST 타입 데이터
+  const [ootdList, setOotdList] = useState<any[]>([]); // OOTD 타입 데이터
+  const [nicknameList, setNicknameList] = useState<any[]>([]); // NICKNAME 타입 데이터
+  const [blogList, setBlogList] = useState<any[]>([]); // BLOG 타입 데이터
+
   const [keywords, setKeywords] = useState<string>("");
   const [popularSearches, setPopularSearches] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -26,60 +25,88 @@ const SearchPage = () => {
   const PAGE_SIZE = 10;
   const RealKeyword = decodeURIComponent(keyword as string);
 
-  // Fetching Posts
+  // 검색 결과 가져오기 (처음 4개 타입에 대해 요청)
   useEffect(() => {
-    fetchPosts(RealKeyword, selectedSearchType);
-  }, [keyword, selectedSearchType]);
+    fetchAllPosts(RealKeyword);
+  }, [keyword]);
 
-  // Fetching keywords and popular searches
+  // 인기 검색어 가져오기
   useEffect(() => {
     fetchPopularSearches();
   }, []);
 
-  const fetchPosts = async (searchTerm: string, searchType: string) => {
+  // 4개의 타입에 대한 데이터 요청
+  const fetchAllPosts = async (searchTerm: string) => {
     try {
-      const response = await axios.get(`https://trippy-api.store/api/search`, {
-        params: {
-          searchType: searchType,
-          page: 0,
-          size: 0,
-          keyword: searchTerm,
-        },
-      });
+      setIsLoading(true);
 
-      console.log("API Response:", response.data.result.postList);
-      console.log("API Response2 :", response.data.result.ootdList);
-      console.log("API Response3 : ", response.data.result[0].memberId);
+      // 4개의 타입에 대한 API 요청을 동시에 보냄
+      const [postRes, ootdRes, nicknameRes, blogRes] = await Promise.all([
+        axios.get(`https://trippy-api.store/api/search`, {
+          params: {
+            searchType: "POST",
+            page: 0,
+            size: PAGE_SIZE,
+            keyword: searchTerm,
+          },
+        }),
+        axios.get(`https://trippy-api.store/api/search`, {
+          params: {
+            searchType: "OOTD",
+            page: 0,
+            size: PAGE_SIZE,
+            keyword: searchTerm,
+          },
+        }),
+        axios.get(`https://trippy-api.store/api/search`, {
+          params: {
+            searchType: "NICKNAME",
+            page: 0,
+            size: PAGE_SIZE,
+            keyword: searchTerm,
+          },
+        }),
+        axios.get(`https://trippy-api.store/api/search`, {
+          params: {
+            searchType: "BLOG",
+            page: 0,
+            size: PAGE_SIZE,
+            keyword: searchTerm,
+          },
+        }),
+      ]);
 
-      const postsData = response.data.result;
-      const postsDataPost = response.data.result.postList;
-      const postsDataOotd = response.data.result.ootdList;
+      // 각 타입의 데이터 추출
+      const postListData = postRes.data.result?.postList || [];
+      const ootdListData = ootdRes.data.result?.ootdList || [];
+      const nicknameListData = Array.isArray(nicknameRes.data.result)
+        ? nicknameRes.data.result
+        : [];
+      const blogListData = Array.isArray(blogRes.data.result)
+        ? blogRes.data.result
+        : [];
 
-      if (
-        Array.isArray(postsDataPost) ||
-        Array.isArray(postsDataOotd) ||
-        Array.isArray(postsData)
-      ) {
-        if (
-          selectedSearchType === "BLOG" ||
-          selectedSearchType === "NICKNAME"
-        ) {
-          const transformedData = postsData.map((item: any) => ({
-            memberId: item.memberId,
-            nickName: item.nickName,
-            profileImgUrl: item.profileImgUrl,
-            blogName: item.blogName || "", // 블로그 이름이 없으면 빈 문자열
-            blogIntroduction: item.blogIntroduction || "", // 블로그 소개가 없으면 빈 문자열
-          }));
-          console.log("변환데이터", transformedData);
-          setPosts(transformedData);
-        } else if (selectedSearchType === "OOTD") {
-          setPosts(postsDataOotd);
-        } else {
-          setPosts(postsDataPost); // 일반 게시물일 경우 기존 로직 유지
-        }
+      // 상태 업데이트
+      setPostList(postListData);
+      setOotdList(ootdListData);
+      setNicknameList(nicknameListData);
+      setBlogList(blogListData);
+
+      // 초기 선택 타입 설정 (우선순위: POST -> OOTD -> NICKNAME -> BLOG)
+      if (postListData.length > 0) {
+        setPosts(postListData);
+        setSelectedSearchType("POST");
+      } else if (ootdListData.length > 0) {
+        setPosts(ootdListData);
+        setSelectedSearchType("OOTD");
+      } else if (nicknameListData.length > 0) {
+        setPosts(nicknameListData);
+        setSelectedSearchType("NICKNAME");
+      } else if (blogListData.length > 0) {
+        setPosts(blogListData);
+        setSelectedSearchType("BLOG");
       } else {
-        setPosts([]);
+        setPosts([]); // 모든 타입에 데이터가 없을 경우 빈 배열 설정
       }
     } catch (error) {
       console.error("Error fetching posts:", error);
@@ -87,18 +114,15 @@ const SearchPage = () => {
       setIsLoading(false);
     }
   };
-  console.log(posts.length);
 
   const fetchPopularSearches = async () => {
     try {
       const response = await axios.get(
         "https://trippy-api.store/api/search/popular"
       );
-
       const fetchedPopularSearches = Array.isArray(response.data.result)
         ? response.data.result.map((item: string) => decodeURIComponent(item))
         : [];
-
       setPopularSearches(fetchedPopularSearches);
     } catch (error) {
       console.error("Error fetching popular searches:", error);
@@ -121,7 +145,14 @@ const SearchPage = () => {
         {/* Sorting Bar */}
         <SortingBar
           selectedSearchType={selectedSearchType}
-          onSelectSearchType={setSelectedSearchType}
+          onSelectSearchType={(type) => {
+            setSelectedSearchType(type);
+            // 타입 변경 시 해당 타입의 데이터로 변경
+            if (type === "POST") setPosts(postList);
+            else if (type === "OOTD") setPosts(ootdList);
+            else if (type === "NICKNAME") setPosts(nicknameList);
+            else if (type === "BLOG") setPosts(blogList);
+          }}
           selectedSortOrder={selectedSortOrder}
           onSelectSortOrder={setSelectedSortOrder}
         />
@@ -149,7 +180,6 @@ const SearchPage = () => {
           </div>
 
           {/* Sidebar Section */}
-
           <div className="flex-none w-full lg:w-[300px] mt-8 lg:mt-0 lg:ml-8 hidden md:block">
             <PopularSearches popularSearches={popularSearches} />
           </div>

@@ -156,11 +156,11 @@ const PostAllCard: React.FC<PostCardProps> = ({
               >
                 {selectedSearchType === "BLOG" ? (
                   <>
-                    <h2 className="text-[2.4rem] font-semibold pb-2 md:text-[1.7rem]">
+                    <h2 className="text-[2.4rem] font-semibold pb-2">
                       {blogName || "Unnamed Blog"}
                     </h2>
 
-                    <p className="text-[1rem] text-#9D9D9D pt-2">
+                    <p className="text-[1.2rem] text-[#9D9D9D] pt-2">
                       @{memberId || "Anonymous"}
                     </p>
                   </>
@@ -170,7 +170,7 @@ const PostAllCard: React.FC<PostCardProps> = ({
                       {nickName || "데이터 실패"}
                     </h2>
 
-                    <p className="text-[1rem] text-#9D9D9D pt-2">
+                    <p className="text-[1.2rem] text-[#9D9D9D] pt-2">
                       @{memberId || "Unnamed Blog"}
                     </p>
                   </>
