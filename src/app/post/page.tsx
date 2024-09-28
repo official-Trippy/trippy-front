@@ -198,8 +198,8 @@ function PostWrite() {
             memberNum: Number(passengerCount),
             startDate: formatDates(startDate),
             endDate: formatDates(endDate),
-            ticketColor: ticketColor,
-            transport: transportStr
+            ticketColor: ticketColor || 'Aquamarine',
+            transport: transportStr || "Airplane"
         }
         try {
             console.log(postRequest, ticketRequest)
@@ -248,6 +248,10 @@ function PostWrite() {
                 setInputValue(''); // 입력 필드 초기화
             }
         }
+    };
+
+    const handleTagRemove = (index: number) => {
+        setTags((prevTags) => prevTags.filter((_, i) => i !== index)); // 해당 인덱스의 태그를 삭제
     };
 
     const { getLocationData } = getCountry({ setResult });
@@ -304,7 +308,7 @@ function PostWrite() {
                                     <input
                                         className='w-[12rem] text-[1.6rem] outline-none'
                                         type='text'
-                                        placeholder='검색 1'
+                                        placeholder='출발지'
                                         value={inputValue1} // 첫 번째 입력 값 상태
                                         onChange={(e) => setInputValue1(e.target.value)} // 입력 값 변경 시 핸들러
                                         onKeyDown={(e) => {
@@ -344,7 +348,7 @@ function PostWrite() {
                                     <input
                                         className='w-[12rem] text-[1.6rem] outline-none'
                                         type='text'
-                                        placeholder='검색 2'
+                                        placeholder='도착지'
                                         value={inputValue2} // 두 번째 입력 값 상태
                                         onChange={(e) => setInputValue2(e.target.value)} // 입력 값 변경 시 핸들러
                                         onKeyDown={(e) => {
@@ -465,10 +469,16 @@ function PostWrite() {
                             value={inputValue}
                             onChange={handleInputChange}
                             onKeyDown={handleKeyDown} />
-                        <div className='ml-[6rem] mt-[1rem]'>
+                        <div className='flex ml-[6rem] mt-[1rem]'>
                             {tags.map((tag, index) => (
-                                <span key={index} className='inline-block bg-[#F5F5F5] text-[#9D9D9D] rounded-[1.6rem] text-[1.6rem] px-[0.8rem] py-[0.4rem] mr-2'>
+                                <span key={index} className='flex items-center bg-[#fa3463] text-white rounded-[1.6rem] text-[1.6rem] px-[0.8rem] py-[0.4rem] mr-2'>
                                     {tag}
+                                    <button
+                                        className='ml-2 text-white cursor-pointer pb-[0.3rem] text-[1.4rem]' // X 버튼 스타일
+                                        onClick={() => handleTagRemove(index)} // 클릭 시 해당 태그 삭제
+                                    >
+                                        x
+                                    </button>
                                 </span>
                             ))}
                         </div>

@@ -210,15 +210,29 @@ export const fetchRecommendOotdPost = async (interestType: string) => {
   try {
     const response = await axios.get(`${backendUrl}/api/recommend/interest`, {
       params: {
-        interestedType: interestType, // No need to encode here
+        interestedType: interestType,
         postType: 'OOTD'
       }
     });
     console.log('Received data:', response.data);
-    return response.data;
+    return response.data; // Always return data
   } catch (error) {
     console.error(`Error fetching OOTD posts for interest ${interestType}:`, error);
-    throw error;
+
+    if (axios.isAxiosError(error)) {
+      // AxiosError 타입 체크 후 처리
+      const message = error.response?.data?.message || 'Unknown error occurred';
+      return {
+        isSuccess: false,
+        message: message
+      };
+    } else {
+      // 일반 오류 처리
+      return {
+        isSuccess: false,
+        message: 'Error occurred while fetching data'
+      };
+    }
   }
 };
 

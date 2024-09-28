@@ -71,6 +71,9 @@ const Header = () => {
 
   const handleModalToggle = () => {
     setModalVisible(!modalVisible);
+    if (isDropdownOpen) {
+      setIsDropdownOpen(false);
+    }
   };
 
   const handleNotificationsToggle = () => {
@@ -138,12 +141,12 @@ const Header = () => {
             <>
               {userInfo && accessToken ? (
                 <div className="flex relative items-center gap-8">
-                  <div className="w-[30px] h-[30px] relative">
+                  <div className="w-[18px] h-[18px] relative">
                     <Image
                       src={alertIconMobile}
                       alt="alert"
-                      width={30}
-                      height={30}
+                      width={18}
+                      height={18}
                       onClick={handleNotificationsToggle}
                       className="cursor-pointer"
                     />
@@ -154,7 +157,7 @@ const Header = () => {
                     )}
                   </div>
                   <div className="w-[32px] my-auto relative">
-                    <div onClick={handleModalToggle}>
+                    <div onClick={() => { handleModalToggle(); setIsDropdownOpen(false); }}>
                       <div
                         style={{
                           width: "32px",
@@ -183,8 +186,8 @@ const Header = () => {
                       userInfo={userInfo}
                       style={{
                         position: "absolute",
-                        bottom: "-260px",
-                        left: "-290px",
+                        bottom: "-200px",
+                        left: "-210px",
                       }}
                       handleLogout={async () => {
                         Cookies.remove("accessToken");
@@ -195,13 +198,18 @@ const Header = () => {
                   </div>
                   {isDropdownOpen && (
                     <div
-                      className="absolute w-[31rem] mt-[1rem] ml-[1rem] top-[3.6rem] rounded-[0.8rem] bg-white shadowalltop rounded-lg animate-dropdown z-20"
-                      style={{ opacity: 0, transform: "translateY(-10px)" }}
-                      onMouseEnter={() => setIsDropdownOpen(true)} // 드롭다운에 마우스가 올라가면 열려있도록 유지
+
+                      className="absolute w-[27rem] mt-[1rem] ml-[1rem] top-[3.6rem] rounded-[0.8rem] bg-white shadowalltop rounded-lg animate-dropdown z-20"
+                      style={{ opacity: 0, transform: 'translateY(-10px)' }}
+                      onMouseEnter={() => {
+                        setIsDropdownOpen(true);
+
+                      }} // 드롭다운에 마우스가 올라가면 열려있도록 유지
+
                       onMouseLeave={() => setIsDropdownOpen(false)}
                     >
                       <Link href="/post">
-                        <div className="px-[1.3rem] pt-[1.2rem] rounded-lg border-b border-white">
+                        <div className="px-[1rem] pt-[1.4rem] rounded-lg border-b border-white">
                           <div className="hover:bg-gray-200 px-[1.3rem] py-[1.2rem]">
                             <div className="flex items-start">
                               <Image
@@ -212,19 +220,17 @@ const Header = () => {
                                 alt=""
                               />
                               <div>
-                                <h1 className="text-[1.6rem] font-medium text-black">
-                                  블로그 티켓 글쓰기
-                                </h1>
-                                <span className="text-[1.4rem] font-normal text-[#9D9D9D]">
-                                  여행에서 겪었던 이야기를 기록해 보세요.
-                                </span>
+
+                                <h1 className="text-[1.6rem] font-medium text-black">블로그 티켓 글쓰기</h1>
+                                <span className="text-[0.9rem] font-normal text-[#9D9D9D]">여행에서 겪었던 이야기를 기록해 보세요.</span>
+
                               </div>
                             </div>
                           </div>
                         </div>
                       </Link>
                       <Link href="/write">
-                        <div className="px-[1.3rem] pb-[1.2rem] rounded-lg border-b border-white">
+                        <div className="px-[1rem] pb-[1.4rem] rounded-lg border-b border-white">
                           <div className="hover:bg-gray-200 px-[1.3rem] py-[1.2rem]">
                             <div className="flex items-start">
                               <Image
@@ -235,12 +241,10 @@ const Header = () => {
                                 alt=""
                               />
                               <div>
-                                <h1 className="text-[1.6rem] font-medium text-black">
-                                  OOTD 글쓰기
-                                </h1>
-                                <span className="text-[1.4rem] font-normal text-[#9D9D9D]">
-                                  여행 중 나의 특별한 OOTD를 공유해보세요.
-                                </span>
+
+                                <h1 className="text-[1.6rem] font-medium text-black">OOTD 글쓰기</h1>
+                                <span className="text-[0.9rem] font-normal text-[#9D9D9D]">여행 중 나의 특별한 OOTD를 공유해보세요.</span>
+
                               </div>
                             </div>
                           </div>
@@ -250,7 +254,7 @@ const Header = () => {
                   )}
                   <button
                     className="w-[8.6rem] h-[32px] bg-btn-color text-white text-2xl rounded-[8px] ml-4 font-semibold"
-                    onMouseEnter={() => setIsDropdownOpen(true)}
+                    onMouseEnter={() => { setIsDropdownOpen(true); setModalVisible(false); }}
                   >
                     글쓰기
                   </button>

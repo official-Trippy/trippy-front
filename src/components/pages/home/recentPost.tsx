@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import React, { ReactNode, useState } from 'react'
+import React, { ReactNode, useEffect, useState } from 'react'
 import Link from "next/link";
 import nonheartImg from "@/dummy/heartbin.svg"
 import heartImg from "@/dummy/heart.svg";
@@ -7,12 +7,13 @@ import moment from "@/dummy/moment.svg"
 import { useQuery } from 'react-query';
 import { getAllBoardCount, getFollowBoard } from '@/services/board/get/getBoard';
 import DefaultImage from '../../../../public/defaultImage.svg';
+import { useUserStore } from '@/store/useUserStore';
+import SkeletonBoard from './SkeletonBoard';
 
 interface HomeRecentProps {
     allPosts: number;
     setAllPosts: any;
     boardData: any;
-    userInfo: any;
     boardRefetch: any;
     PAGE_SIZE: any;
     pages: number;
@@ -20,13 +21,17 @@ interface HomeRecentProps {
 }
 
 
-function RecentPost({ allPosts, setAllPosts, boardData, userInfo, boardRefetch, PAGE_SIZE, pages, setPages }: HomeRecentProps) {
+function RecentPost({ allPosts, setAllPosts, boardData, boardRefetch, PAGE_SIZE, pages, setPages }: HomeRecentProps) {
     const [sortOrder, setSortOrder] = useState('최신순');
     // const [sortOrders, setSortOrders] = useState('최신순');
+
+    const [isClicked, setIsClicked] = useState(false);
+    const { userInfo, loading } = useUserStore((state) => ({
+        userInfo: state.userInfo,
+        loading: state.loading,
+    }));
+
     const memberIds = userInfo && userInfo?.memberId;
-    const [isClicked, setIsClicked] = useState(false)
-
-
     const { data: followData } = useQuery({
         queryKey: ['followData'],
         queryFn: () => getFollowBoard(memberIds)
@@ -99,12 +104,27 @@ function RecentPost({ allPosts, setAllPosts, boardData, userInfo, boardRefetch, 
         }, 100)
     };
 
+    const [showSkeleton, setShowSkeleton] = useState(true);
+
+    useEffect(() => {
+        if (typeof window !== 'undefined') { // 클라이언트에서만 실행되도록 체크
+            const delay = setTimeout(() => {
+                setShowSkeleton(false);
+            }, 1000); // 스켈레톤을 1초 동안 유지
+
+            return () => clearTimeout(delay);
+        }
+    }, [loading]);
+
+    if (loading || showSkeleton) {
+        return <SkeletonBoard />;
+    };
+
 
     return (
         <div className='w-[90%] sm-700:w-[66%] mx-auto py-[5rem]'>
             <div>
-                <h1 className='font-bold text-[2rem]'>최근 여행 여정을
-                    함께 해보세요! </h1>
+                <h1 className='font-bold text-[2rem]'>트리피의 다양한 여정을 함께 해보세요!</h1>
                 <div className='flex text-[1.6rem] pt-[5rem] px-[1rem]'>
                     <span className={`px-[2rem] cursor-pointer transition-all duration-300 ${allPosts === 0 ? "font-bold border-b-2 border-black" : ""}`} onClick={() => setAllPosts(0)}>전체글</span>
                     <span className={`px-[2rem] cursor-pointer transition-all duration-300 ${allPosts === 1 ? "font-bold border-b-2 border-black" : ""}`} onClick={() => setAllPosts(1)}>팔로잉</span>
@@ -122,7 +142,7 @@ function RecentPost({ allPosts, setAllPosts, boardData, userInfo, boardRefetch, 
             </div>
             {allPosts === 0 ? (
                 <div>
-                    <div className="grid grid-cols-1 lg:grid-cols-1 2xl:grid-cols-2 gap-x-[8rem] gap-y-[5.3rem] mt-[5rem]">
+                    <div className="grid grid-cols-1 lg:grid-cols-1 2xl:grid-cols-2 gap-x-[8rem] gap-y-[5.3rem]">
                         {sortedPosts().map((posts: any, index: number) => {
                             const BoardId = posts.post.id;
 
@@ -141,12 +161,12 @@ function RecentPost({ allPosts, setAllPosts, boardData, userInfo, boardRefetch, 
                             return (
                                 <Link
                                     href={`/board/${BoardId}`}
-                                    className="lg:h-[20rem] md:h-[27rem] h-[27rem] rounded-[1rem] px-[1.6rem] py-[2rem] cursor-pointer"
+                                    className="lg:h-[20rem] md:h-[27rem] h-[27rem] rounded-[1rem] px-[1.6rem] py-[2rem] cursor-pointer mt-[1.5rem]"
                                     key={index}
                                 >
                                     {window.innerWidth > 500 ? (
                                         <div className="flex w-full">
-                                            <Image className="w-[17rem] h-[17rem] rounded-[0.8rem]" src={posts.ticket.image.accessUri} alt="" width={170} height={170} />
+                                            <Image className="w-[17rem] h-[17rem] rounded-[0.8rem] object-cover" src={posts.ticket.image.accessUri} alt="" width={170} height={170} />
                                             <div className='flex flex-col w-full ml-[2.5rem]'>
                                                 <h1 className="text-[2rem] font-medium text-ellipsis overflow-hidden theboki">{posts.post.title}</h1>
                                                 <span className="text-[1.6rem] mt-[0.4rem] h-[5rem] font-normal text-[#6B6B6B] text-ellipsis overflow-hidden theboki1">{bodyText}</span>
@@ -167,7 +187,7 @@ function RecentPost({ allPosts, setAllPosts, boardData, userInfo, boardRefetch, 
                                                             width={24}
                                                             height={24}
                                                             alt=""
-                                                            className="hidden md:block" // 500px 이상에서만 보이도록 설정
+                                                            className="hidden md:block rounded-[4.5rem] w-[2.4rem] h-[2.4rem]" // 500px 이상에서만 보이도록 설정
                                                         />
                                                         <span className={`hidden md:block`}>{posts.member.nickName}</span>
                                                         {/* <span className="">{formattedDate}</span> */}
@@ -190,8 +210,8 @@ function RecentPost({ allPosts, setAllPosts, boardData, userInfo, boardRefetch, 
                                         :
                                         (
                                             <div className="flex flex-col w-full rounded-[0.8rem] shadowall1">
-                                                <div className="absolute h-full text-[1.4rem] font-normal space-x-4 items-end">
-                                                    <div className='flex p-[1.2rem]'>
+                                                <div className="absolute h-full text-[1.4rem] font-normal space-x-4 items-end z-10">
+                                                    <div className='flex p-[1.2rem] text-white'>
                                                         <Image
                                                             src={posts.member.profileUrl || DefaultImage}
                                                             width={45}
@@ -200,12 +220,12 @@ function RecentPost({ allPosts, setAllPosts, boardData, userInfo, boardRefetch, 
                                                             className="h-[4.5rem] rounded-[4.5rem]" // 500px 이상에서만 보이도록 설정
                                                         />
                                                         <div className='flex flex-col text-white ml-[1rem]'>
-                                                            <span className={`text-[1.7rem] font-medium`}>{posts.member.nickName}</span>
+                                                            <span className={`text-[1.7rem] font-semibold`}>{posts.member.nickName}</span>
                                                             <span className="text-[1.2rem]">{formattedDate}</span>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <Image className="w-full h-[17rem] object-cover rounded-[0.8rem]" src={posts.ticket.image.accessUri} alt="" width={170} height={170} />
+                                                <Image className="w-full h-[17rem] object-cover rounded-[0.8rem] filter brightness-75" src={posts.ticket.image.accessUri} alt="" width={170} height={170} />
                                                 <div className='flex flex-col w-full  rounded-[0.8rem] pt-[1.6rem] px-[1.6rem]'>
                                                     <h1 className="text-[2rem] font-medium text-ellipsis overflow-hidden theboki">{posts.post.title}</h1>
                                                     <span className="text-[1.6rem] mt-[0.4rem] h-[5rem] font-normal text-[#6B6B6B] text-ellipsis overflow-hidden theboki1">{bodyText}</span>
@@ -238,7 +258,7 @@ function RecentPost({ allPosts, setAllPosts, boardData, userInfo, boardRefetch, 
                             );
                         })}
                     </div>
-                    <div className="flex w-full justify-center my-16">
+                    <div className="flex w-full justify-center my-16 mt-[10rem]">
                         {Array.from({ length: totalPages }, (_, index) => (
                             <button
                                 key={index}

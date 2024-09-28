@@ -20,7 +20,10 @@ import EmptyHeartIcon from "../../../../public/heartIcon-default.svg";
 import CommentIcon1 from "../../../../public/commentIcon-default.svg";
 import { TagContainerProps } from "@/types/tag";
 import Cookies from "js-cookie";
-import { searchTag } from "@/services/search";
+
+import SkeletonRecommendOotdPost from './SkeletonRecommendOotdPost';
+import SkeletonRecentOotdPost from './SkeletonRecentOotdPost';
+
 
 const PAGE_SIZE = 12;
 
@@ -182,8 +185,23 @@ const RecentOotdPost: React.FC = () => {
     router.push("/login");
   };
 
-  if (!isTabInitialized || isLoading) return null;
-  if (loading || isLoading) return null;
+  
+  const [showSkeleton, setShowSkeleton] = useState(true);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') { // 클라이언트에서만 실행되도록 체크
+        const delay = setTimeout(() => {
+            setShowSkeleton(false);
+        }, 1000); // 스켈레톤을 1초 동안 유지
+        
+        return () => clearTimeout(delay);
+    }
+}, [isLoading]);
+      
+      if (loading || showSkeleton || isLoading) {
+        return <SkeletonRecentOotdPost />;
+      }
+
 
   return (
     <div className="w-[90%] sm-700:w-[66%]  mx-auto pt-[5rem] mb-[90px]">
@@ -195,20 +213,26 @@ const RecentOotdPost: React.FC = () => {
         </div>
       )}
 
-      <div className="flex text-[1.6rem] py-12">
+      
+      <div className={`flex text-[1.6rem] py-12`}>
+        {userInfo && (
+
         <span
           className={`pr-[1rem] cursor-pointer ${tab === "ALL" ? "font-bold text-[#fa3463]" : ""}`}
           onClick={() => handleTabChange("ALL")}
         >
           전체글
         </span>
-        {userInfo && (
-          <span
-            className={`px-[1rem] cursor-pointer ${tab === "FOLLOWING" ? "font-bold text-[#fa3463]" : ""}`}
-            onClick={() => handleTabChange("FOLLOWING")}
-          >
-            팔로잉
-          </span>
+
+        )}
+        { userInfo && (
+        <span
+          className={`px-[1rem] cursor-pointer ${tab === 'FOLLOWING' ? 'font-bold text-[#fa3463]' : ''}`}
+          onClick={() => handleTabChange('FOLLOWING')}
+        >
+          팔로잉
+        </span>
+
         )}
         <div className="ml-auto">
           <CustomSelect
@@ -217,6 +241,7 @@ const RecentOotdPost: React.FC = () => {
           />
         </div>
       </div>
+
       {/* 게시글이 있을 때와 없을 때 조건부 렌더링 */}
       <div
         className={`${ootdList.length > 0 ? "grid grid-cols-2 sm-700:grid-cols-3 lg:grid-cols-4 gap-8" : "flex justify-center items-center"}`}

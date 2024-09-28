@@ -18,6 +18,7 @@ import 'swiper/swiper-bundle.css';
 import SwiperLeftButton from '../../../../public/SwiperLeftBtn.svg';
 import SwiperRightButton from '../../../../public/SwiperRightBtn.svg';
 import { useUserStore } from '@/store/useUserStore'; // Zustand 전역 상태 사용
+import SkeletonRecommendOotdPost from './SkeletonRecommendOotdPost';
 
 const TagContainer: React.FC<TagContainerProps> = ({ item }) => {
     const containerRef = useRef<HTMLDivElement | null>(null);
@@ -62,7 +63,6 @@ const TagContainer: React.FC<TagContainerProps> = ({ item }) => {
 
 
 const RecommendOotdPost = () => {
-    // Zustand에서 유저 정보와 로딩 상태를 가져옵니다
     const { userInfo, loading } = useUserStore((state) => ({
         userInfo: state.userInfo,
         loading: state.loading,
@@ -77,11 +77,16 @@ const RecommendOotdPost = () => {
     const scrollRef = useRef<HTMLDivElement | null>(null);
     const swiperRef = useRef<SwiperRef | null>(null);
 
-    const { data, isLoading, error } = useQuery(['recommendOotdPost', selectedInterest], () => fetchRecommendOotdPost(selectedInterest), {
-        keepPreviousData: true,
-    });
+    const { data, isLoading } = useQuery(
+        ['recommendOotdPost', selectedInterest],
+        () => fetchRecommendOotdPost(selectedInterest),
+        {
+            keepPreviousData: true
+        }
+    );
 
-    const totalCount = data?.result.totalCnt;
+
+    const totalCount = data?.result?.totalCnt ?? 0;
 
     useEffect(() => {
         if (userInfo) {
@@ -110,26 +115,29 @@ const RecommendOotdPost = () => {
         }
     };
 
-    // 화면 크기에 따라 itemsPerSlide를 설정하는 함수
     const updateItemsPerSlide = () => {
-        const width = window.innerWidth;
-        if (width < 700) {
-            setItemsPerSlide(2);
-        } else if (width < 1000) {
-            setItemsPerSlide(3);
-        } else {
-            setItemsPerSlide(4);
+        if (typeof window !== 'undefined') {
+            const width = window.innerWidth;
+            if (width < 700) {
+                setItemsPerSlide(2);
+            } else if (width < 1000) {
+                setItemsPerSlide(3);
+            } else {
+                setItemsPerSlide(4);
+            }
         }
     };
 
     useEffect(() => {
-        // 페이지가 로드될 때, 그리고 창 크기가 변경될 때마다 슬라이드 개수 업데이트
-        updateItemsPerSlide();
-        window.addEventListener('resize', updateItemsPerSlide);
+        if (typeof window !== 'undefined') {
+            // 페이지가 로드될 때, 그리고 창 크기가 변경될 때마다 슬라이드 개수 업데이트
+            updateItemsPerSlide();
+            window.addEventListener('resize', updateItemsPerSlide);
 
-        return () => {
-            window.removeEventListener('resize', updateItemsPerSlide);
-        };
+            return () => {
+                window.removeEventListener('resize', updateItemsPerSlide);
+            };
+        }
     }, []);
 
     const handleScroll = (direction: string) => {
@@ -174,10 +182,6 @@ const RecommendOotdPost = () => {
         router.push("/editProfile");
     };
 
-    // 로딩 시에는 null을 반환
-    if (loading || isLoading) return null;
-    if (error) return null;
-
     // 데이터 슬라이드 생성
     const slides = [];
     if (data?.result?.ootdList) {
@@ -196,40 +200,54 @@ const RecommendOotdPost = () => {
         }
     };
 
+    const [showSkeleton, setShowSkeleton] = useState(true);
+    useEffect(() => {
+        if (typeof window !== 'undefined') { // 클라이언트에서만 실행되도록 체크
+            const delay = setTimeout(() => {
+                setShowSkeleton(false);
+            }, 1000); // 스켈레톤을 1초 동안 유지
+
+            return () => clearTimeout(delay);
+        }
+    }, [isLoading]);
+
+    if (loading || showSkeleton || isLoading) {
+        return <SkeletonRecommendOotdPost />;
+    }
+
     return (
         <div className="relative w-[90%] sm-700:w-[66%] mx-auto pt-[5rem] overflow-visible">
-            {!userInfo && (    
-            <h1 className="font-bold text-[2rem] mb-4">
-                관심분야에 따른 OOTD를 확인해보세요!
-            </h1>
+            {!userInfo && (
+                <h1 className="font-bold text-[2rem] mb-4">
+                    관심분야에 따른 OOTD를 확인해보세요!
+                </h1>
             )}
-            {userInfo && (    
-            <h1 className="font-bold text-[2rem] mb-4">
-                {userName}님, 이런 스타일 어때요?
-            </h1>
+            {userInfo && (
+                <h1 className="font-bold text-[2rem] mb-4">
+                    {userName}님, 이런 스타일 어때요?
+                </h1>
             )}
-
 
             <div className="flex items-center my-12 relative">
                 {!userInfo && (
-                <Image
-                    src={SwiperLeftButton}
-                    alt="Previous"
-                    width={25}
-                    height={25}
-                    onClick={() => handleScroll('left')}
-                    style={{
-                        width: '25px',
-                        height: '25px',
-                        position: 'absolute',
-                        top: '50%',
-                        transform: 'translateY(-50%)',
-                        left: '-30px',
-                        zIndex: 999,
-                    }}
-                />
+                    <Image
+                        src={SwiperLeftButton}
+                        alt="Previous"
+                        width={25}
+                        height={25}
+                        onClick={() => handleScroll('left')}
+                        style={{
+                            width: '25px',
+                            height: '25px',
+                            position: 'absolute',
+                            top: '50%',
+                            transform: 'translateY(-50%)',
+                            left: '-30px',
+                            zIndex: 999,
+                        }}
+                    />
                 )}
-                <div 
+                <div
                     className="overflow-hidden w-full cursor-pointer"
                     ref={scrollRef}
                     onMouseDown={handleDrag}
@@ -237,10 +255,10 @@ const RecommendOotdPost = () => {
                     <div className="flex flex-col space-x-4 transition-transform duration-300 flex-shrink-0 mr-auto justify-between sm-700:flex-row sm-700:mx-auto sm-700:items-center">
                         <div className="flex space-x-4">
                             {filteredInterests.map(interest => (
-                                <button 
-                                    key={interest} 
+                                <button
+                                    key={interest}
                                     className={`flex items-center justify-center px-6 py-2 rounded-[20px] text-[12px] font-medium border-[1px] transition duration-300 flex-shrink-0
-                                                ${selectedInterest === interest ? 'border border-[#FB3463] text-[#FB3463] bg-[#FFE3EA] text-bold' : 'border-[#CFCFCF] text-[#6B6B6B] hover:bg-gray-200'}`} 
+                                                ${selectedInterest === interest ? 'border border-[#FB3463] text-[#FB3463] bg-[#FFE3EA] text-bold' : 'border-[#CFCFCF] text-[#6B6B6B] hover:bg-gray-200'}`}
                                     onClick={() => setSelectedInterest(interest)}
                                 >
                                     {interest}
@@ -248,37 +266,37 @@ const RecommendOotdPost = () => {
                             ))}
                         </div>
 
-                        {userInfo && ( 
+                        {userInfo && (
                             <div className='flex mr-auto mt-[10px] sm-700:ml-auto sm-700:mt-0' onClick={handleGoEditPage}>
-                            <div className="text-right text-[#9d9d9d]">관심 키워드 설정</div>
-                            <Image
-                                src={RightIcon}
-                                alt="keyword"
-                                width={14}
-                                height={14}
-                             />
-                            <div/> 
+                                <div className="text-right text-[#9d9d9d]">관심 키워드 설정</div>
+                                <Image
+                                    src={RightIcon}
+                                    alt="keyword"
+                                    width={14}
+                                    height={14}
+                                />
+                                <div />
                             </div>
                         )}
+                    </div>
                 </div>
-                </div>
-                {!userInfo && (          
-                <Image
-                    src={SwiperRightButton}
-                    alt="Next"
-                    width={25}
-                    height={25}
-                    onClick={() => handleScroll('right')}
-                    style={{
-                        width: '25px',
-                        height: '25px',
-                        position: 'absolute',
-                        top: '50%', 
-                        transform: 'translateY(-50%)',
-                        right: '-30px',
-                        zIndex: 999,
-                    }}
-                />
+                {!userInfo && (
+                    <Image
+                        src={SwiperRightButton}
+                        alt="Next"
+                        width={25}
+                        height={25}
+                        onClick={() => handleScroll('right')}
+                        style={{
+                            width: '25px',
+                            height: '25px',
+                            position: 'absolute',
+                            top: '50%',
+                            transform: 'translateY(-50%)',
+                            right: '-30px',
+                            zIndex: 999,
+                        }}
+                    />
                 )}
             </div>
             {itemsPerSlide < totalCount && (
@@ -291,6 +309,7 @@ const RecommendOotdPost = () => {
                     className="absolute left-[-30px] top-[60%] transform -translate-y-1/2 z-10"
                 />
             )}
+
             <div className='relative mx-auto '>
                 <Swiper
                     ref={swiperRef}
@@ -313,8 +332,8 @@ const RecommendOotdPost = () => {
                                         </div>
                                         <div className="flex-1 overflow-hidden">
                                             <span className="text-[#292929] font-normal font-['Pretendard'] ml-[5px] overflow-hidden text-ellipsis whitespace-nowrap" style={{
-                                                whiteSpace: 'nowrap', 
-                                                overflow: 'hidden',   
+                                                whiteSpace: 'nowrap',
+                                                overflow: 'hidden',
                                                 textOverflow: 'ellipsis'
                                             }}>{item.member.nickName}</span>
                                         </div>
@@ -362,8 +381,7 @@ const RecommendOotdPost = () => {
                             </SwiperSlide>
                         ))
                     ) : (
-                        <div className="h-full flex flex-col text-[2rem] text-black my-auto items-center justify-center font-medium font-['Pretendard'] py-[50px]">
-                            
+                        <div className="h-full w-full mx-auto flex flex-col text-[2rem] text-black my-auto items-center justify-center font-medium font-['Pretendard'] py-[50px]">
                             <div className='flex flex-row'>
                                 <span className="text-[#FB3463]">{selectedInterest} </span>{"\u00A0"}관련 OOTD가 없어요!
                             </div>

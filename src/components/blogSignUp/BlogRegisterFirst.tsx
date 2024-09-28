@@ -14,6 +14,7 @@ import {
 import useUserInfo from "@/hooks/useUserInfo";
 import { swear_words_arr } from "@/constants/wearWordsArr";
 import { getByteLength } from "@/constants/getByteLength";
+import Cookies from "js-cookie";
 
 const BlogRegisterFirst = () => {
   const [profileImage, setProfileImage] = useState<{
@@ -33,6 +34,32 @@ const BlogRegisterFirst = () => {
   const { setUserInfo } = useUserInfo();
   const router = useRouter();
   
+  useEffect(() => {
+    // 페이지 진입 시 로그인 상태 및 role 값을 확인
+    checkLoginStatus();
+  }, []);
+
+  const checkLoginStatus = () => {
+    const accessToken = Cookies.get("accessToken");
+    const refreshToken = Cookies.get("refreshToken");
+    const role = Cookies.get("role");
+
+    // 로그인이 된 상태에서 role이 GUEST일 경우, 회원가입 페이지에 머물도록 함
+    if (accessToken && refreshToken && role === "GUEST") {
+      // GUEST 사용자이므로 회원가입 페이지에 머물게 합니다.
+      return;
+    }
+
+    // 로그인이 되었지만 role이 MEMBER 또는 ADMIN인 경우 리다이렉트
+    if (role === "MEMBER" || role === "ADMIN") {
+      router.push("/");
+      return;
+    }
+
+    // 로그인하지 않은 사용자는 이 페이지에 접근할 수 있도록 허용
+  };
+
+
   const checkSwearWords = (value: string) => {
     const lowerValue = value.toLowerCase();
     return swear_words_arr.some((swearWord: string) =>
@@ -197,6 +224,7 @@ const BlogRegisterFirst = () => {
                   className="object-cover w-full h-full"
                   width={100}
                   height={100}
+                  unoptimized={true}
                 />
               ) : (
                 <Image
@@ -314,7 +342,7 @@ const BlogRegisterFirst = () => {
                 !blogNameError.includes("사용 가능") ||
                 !imageUploaded
                   ? "cursor-not-allowed bg-[#cfcfcf] hover:bg-[#cfcfcf]"
-                  : ""
+                  : "bg-btn-color"
               }`}
               onClick={handleSubmit}
               style={{ fontSize: "1.2rem" }}

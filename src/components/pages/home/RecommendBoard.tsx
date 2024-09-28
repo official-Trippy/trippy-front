@@ -21,6 +21,8 @@ import { colorTicket } from '@/types/board';
 import nonheartImg from "@/dummy/heartbin.svg"
 import heartImg from "@/dummy/heart.svg";
 import moment from "@/dummy/moment.svg"
+import SkeletonRecommendOotdPost from '../ootd/SkeletonRecommendOotdPost';
+import SkeletonRecBoard from './SkeletonRecBoard';
 
 const TagContainer: React.FC<TagContainerProps> = ({ item }) => {
     const containerRef = useRef<HTMLDivElement | null>(null);
@@ -79,19 +81,15 @@ const RecommendBoard = () => {
     const router = useRouter();
     const scrollRef = useRef<HTMLDivElement | null>(null);
     const swiperRef = useRef<SwiperRef | null>(null);
+    const [showSkeleton, setShowSkeleton] = useState(true);
 
     const { data, isLoading, error } = useQuery(['recommendOotdPost', selectedInterest], () => fetchRecommendBoard(selectedInterest), {
         keepPreviousData: true,
     });
-    console.log(data)
-    const totalCount = data?.result.totalCnt;
+    console.log(data, selectedInterest)
+    const totalCount = data?.result?.totalCnt;
 
-    useEffect(() => {
-        if (userInfo) {
-            fetchLikedPosts().then(setLikedPosts);
-            fetchUserInterests(); // 관심사 정보 가져오기
-        }
-    }, [userInfo]);
+
 
     // 사용자 정보에서 관심사 가져오기
     const fetchUserInterests = async () => {
@@ -110,6 +108,13 @@ const RecommendBoard = () => {
             console.error('Error fetching user interests:', error);
         }
     };
+
+    useEffect(() => {
+        if (userInfo) {
+            fetchLikedPosts().then(setLikedPosts);
+            fetchUserInterests(); // 관심사 정보 가져오기
+        }
+    }, [userInfo]);
 
     // 화면 크기에 따라 itemsPerSlide를 설정하는 함수
     const updateItemsPerSlide = () => {
@@ -139,6 +144,17 @@ const RecommendBoard = () => {
             scrollRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
         }
     };
+
+
+    useEffect(() => {
+        if (typeof window !== 'undefined') { // 클라이언트에서만 실행되도록 체크
+            const delay = setTimeout(() => {
+                setShowSkeleton(false);
+            }, 1000); // 스켈레톤을 1초 동안 유지
+
+            return () => clearTimeout(delay);
+        }
+    }, [isLoading]);
 
     const handleDrag = (e: React.MouseEvent) => {
         e.preventDefault();
@@ -176,7 +192,7 @@ const RecommendBoard = () => {
     };
 
     // 로딩 시에는 null을 반환
-    if (loading || isLoading) return null;
+    // if (loading || isLoading) return null;
     if (error) return null;
 
     console.log(data)
@@ -197,6 +213,12 @@ const RecommendBoard = () => {
             }
         }
     };
+
+
+
+    if (loading || showSkeleton || isLoading) {
+        return <SkeletonRecBoard />;
+    }
 
     return (
         <div className="relative w-[90%] sm-700:w-[66%] mx-auto mt-[5rem] overflow-visible">
@@ -332,17 +354,18 @@ const RecommendBoard = () => {
                                     <div onClick={() => handleOotdItemClick(item.post.id)}>
                                         {window.innerWidth < 500 && (
                                             <div className="flex absolute items-center mt-[1rem] pl-[2rem] pr-[1rem] z-10">
-                                                <div className="relative w-[24px] h-[24px]">
+                                                <div className="relative w-[24px] h-[24px] object-cover">
                                                     <Image
                                                         src={item.member.profileUrl || DefaultImage}
                                                         alt="Profile"
-                                                        layout="fill"
                                                         objectFit="cover"
-                                                        className="rounded-full"
+                                                        width={24}
+                                                        height={24}
+                                                        className="rounded-[4.5rem] w-[2.4rem] h-[2.4rem]"
                                                     />
                                                 </div>
                                                 <div className="flex-1 overflow-hidden">
-                                                    <span className="text-white font-normal font-['Pretendard'] ml-[5px] overflow-hidden text-ellipsis whitespace-nowrap" style={{
+                                                    <span className="text-white font-normal text-[1.4rem] font-['Pretendard'] ml-[5px] overflow-hidden text-ellipsis whitespace-nowrap" style={{
                                                         whiteSpace: 'nowrap',
                                                         overflow: 'hidden',
                                                         textOverflow: 'ellipsis'
@@ -354,12 +377,12 @@ const RecommendBoard = () => {
                                         {window.innerWidth < 500 ? (
                                             <div className={`relative w-full rounded-xl `} style={{ aspectRatio: '273 / 303' }}>
                                                 <Image
-                                                    className="absolute top-0 left-0 h-full object-cover rounded-xl"
+                                                    className="absolute top-0 left-0 h-full object-cover rounded-xl filter brightness-90"
                                                     src={item.ticket.image?.accessUri}
                                                     alt="TICKET"
                                                     layout="fill"
                                                 />
-                                                <div className="absolute px-[1.7rem] flex-1 mt-[13rem]">
+                                                <div className="absolute px-[1.7rem] flex-1 mt-[12rem]">
                                                     <h1 className="font-semibold text-[1.7rem] text-white font-medium theboki text-ellipsis overflow-hidden">{item.post.title}</h1>
                                                     <span className="font-normal text-[1.4rem] text-white font-normal text-ellipsis overflow-hidden theboki1">{bodyText}</span>
                                                 </div>
@@ -367,7 +390,7 @@ const RecommendBoard = () => {
                                         ) : (
                                             <div className={`relative w-full rounded-xl ${colorTicket[item.ticket.ticketColor] ? `bg-[${colorTicket[item.ticket.ticketColor]}]` : ''}`} style={{ aspectRatio: '273 / 303' }}>
                                                 <Image
-                                                    className="absolute top-0 left-0 h-full object-cover rounded-xl p-[1rem]"
+                                                    className="absolute top-0 left-0 h-full object-cover rounded-xl p-[1rem] "
                                                     src={item.ticket.image?.accessUri}
                                                     alt="TICKET"
                                                     layout="fill"
@@ -379,11 +402,11 @@ const RecommendBoard = () => {
                                         <div className={`w-full flex font-extrabold font-akira mx-auto justify-center items-center `}>
                                             {item.ticket.departureCode && (
                                                 <>
-                                                    <span className={`2xl:text-[3.2rem] xl:text-[2.6rem] lg:text-[2rem] md:text-[1.4rem] text-[1.4rem] ${window.innerWidth < 500 ? 'hidden' : ''}`}>{item.ticket.departureCode}</span>
+                                                    <span className={`text-[1.4rem] 2xl:text-[3.2rem] xl:text-[2.2rem] lg:text-[1.6rem] md:text-[1.4rem] ${window.innerWidth < 500 ? 'hidden' : ''}`}>{item.ticket.departureCode}</span>
                                                     <div className={`mx-[0.5rem] ${window.innerWidth < 500 ? 'hidden' : ''}`}>
                                                         {getTransportImage(item.ticket.transport, item.ticket.ticketColor)}
                                                     </div>
-                                                    <span className={`2xl:text-[3.2rem] xl:text-[2.6rem] lg:text-[2rem] md:text-[1.4rem] text-[1.4rem] ${window.innerWidth < 500 ? 'hidden' : ''}`}>{item.ticket.destinationCode}</span>
+                                                    <span className={`2xl:text-[3.2rem] xl:text-[2.2rem] lg:text-[1.6rem] md:text-[1.4rem] text-[1.4rem] ${window.innerWidth < 500 ? 'hidden' : ''}`}>{item.ticket.destinationCode}</span>
                                                 </>
                                             )}
                                         </div>
@@ -405,9 +428,10 @@ const RecommendBoard = () => {
                                                         <Image
                                                             src={item.member.profileUrl || DefaultImage}
                                                             alt="Profile"
-                                                            layout="fill"
                                                             objectFit="cover"
-                                                            className="rounded-full"
+                                                            width={24}
+                                                            height={24}
+                                                            className="rounded-[4.5rem] w-[2.4rem] h-[2.4rem]"
                                                         />
                                                     </div>
                                                     <div className="flex-1 overflow-hidden">
