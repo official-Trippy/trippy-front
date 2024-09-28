@@ -310,6 +310,7 @@ const Header = () => {
             onClick={handleNotificationsToggle}
             className="cursor-pointer"
           />
+                  {/* <div className="ml-[5px] my-auto">로그아웃</div> */}
         </div>
         {searchModalVisible && (
           <div className="fixed inset-0 z-50 bg-white flex flex-col items-center pt-2">

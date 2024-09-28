@@ -394,7 +394,7 @@ const RecommendOotdPost = () => {
                             </SwiperSlide>
                         ))
                     ) : (
-                        <div className="h-full w-full mx-auto flex flex-col text-[2rem] text-black my-auto items-center justify-center font-medium font-['Pretendard'] py-[50px]">
+                        <div className="h-full w-full mx-auto flex flex-col text-[2rem] text-black my-auto items-center justify-center font-medium py-[50px]">
                             <div className='flex flex-row'>
                                 <span className="text-[#FB3463]">{selectedInterest} </span>{"\u00A0"}관련 OOTD가 없어요!
                             </div>

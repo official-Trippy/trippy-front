@@ -72,6 +72,7 @@ const PostOotd: React.FC = () => {
         Swal.fire({
           icon: 'success',
           title: 'OOTD 게시글을 올렸습니다.',
+          iconColor: "#FB3463",
           confirmButtonText: '확인',
           confirmButtonColor: '#FB3463',
         }).then(() => {
@@ -146,6 +147,17 @@ const PostOotd: React.FC = () => {
         icon: 'error',
         title: '태그 오류',
         text: '태그를 3개 이상 등록해주세요.',
+        confirmButtonText: '확인',
+        confirmButtonColor: '#FB3463',
+      });
+      return;
+    }
+
+    if (!location) {
+      Swal.fire({
+        icon: 'error',
+        title: '위치 오류',
+        text: '위치 정보를 입력해주세요.',
         confirmButtonText: '확인',
         confirmButtonColor: '#FB3463',
       });
