@@ -10,7 +10,7 @@ import { useUserStore } from "@/store/useUserStore";
 import { blogInterests } from "@/constants/blogPreference";
 import { getMyInfo, updateMemberInfo } from "@/services/auth";
 import { UpdateMemberInfoRequest } from "@/types/auth";
-import backgroundImg from "../../../public/DefaultBackground.svg";
+import backgroundImg from "../../../public/DefaultBlogImg.svg";
 import backgroundAddIcon from "../../../public/AddBlogImageIcon.svg";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import RightIcon from '../../../public/icon_right.svg';
@@ -20,6 +20,7 @@ import Swal from "sweetalert2";
 import { AxiosError } from "axios";
 import DefaultImage from '../../../public/defaultImage.svg';
 import { getByteLength } from "@/constants/getByteLength";
+import OOtdDeleteImage from '../../../public/ootdImageDelete.svg';
 
 const EditInfo = () => {
   const { updateUserInfo } = useUserStore(); // userInfo를 전역상태에서 가져오지 않고 API 호출로 처리
@@ -87,6 +88,7 @@ const EditInfo = () => {
       updateUserInfo(data); // 전역 상태를 최신화
     } catch (error) {
       console.error('내 정보 조회 중 오류 발생:', error);
+      router.push("/login");
     }
   };
 
@@ -250,6 +252,7 @@ const EditInfo = () => {
 
   const handleImageDelete = () => {
     setProfileImage(null);
+    setIsProfileImageChanged(true);
   };
 
   const handleBlogImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -309,6 +312,7 @@ const EditInfo = () => {
 
   const handleBlogImageDelete = () => {
     setBlogImage(null);
+    setIsBlogImageChanged(true);
   };
 
   const handleBlogIntroduce = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -450,7 +454,8 @@ const EditInfo = () => {
       koreanInterestedTypes: selectedInterests,
       ...(isProfileImageChanged && { profileImage }), // 이미지가 수정된 경우에만 추가
       ...(isBlogImageChanged && { blogImage }), // 이미지가 수정된 경우에만 추가
-  
+      // profileImage: profileImage || null,
+      // blogImage: blogImage || null,
       likeAlert,
       commentAlert,
       ticketScope,
@@ -468,42 +473,73 @@ const EditInfo = () => {
   
   return (
     <>
-    <div className="relative w-full h-[240px]">
-    {blogImage ? (
-  <Image
-    src={(typeof blogImage === 'string' ? blogImage : blogImage?.accessUri) || backgroundImg}
-    alt="Background"
-    objectFit="cover"
-    layout="fill"  // 'fill'로 이미지 크기를 부모 요소에 맞게
-    className="z-0"
-  />
-) : (
-  <Image
-    src={backgroundImg}
-    alt="Backgrounded"
-    objectFit="cover"
-    layout="fill"  // 'fill'로 이미지 크기를 부모 요소에 맞게
-    className="z-0"
-  />
-)}
-  <div className="absolute inset-0 flex flex-col items-center justify-center z-10 ">
-  <input
-        type="file"
-        accept="image/*"
-        ref={inputFileRef}
-        style={{ display: 'none' }}  // input을 숨김
-        onChange={handleBlogImageUpload}  // 파일이 선택되면 실행
-      />
-    <div className="flex flex-col cursor-pointer justify-center items-center" onClick={handleImageUploadClick}>
-    <Image 
-      src={backgroundAddIcon}
-      alt="Add Blog Image Icon" 
-      width={50} 
-      height={50} 
-      className="cursor-pointer"
+  <div className="relative w-full h-[240px]">
+  {/* Blog Image */}
+  {blogImage ? (
+    <Image
+      src={(typeof blogImage === 'string' ? blogImage : blogImage?.accessUri) || backgroundImg}
+      alt="Background"
+      objectFit="cover"
+      layout="fill"
+      className="z-0"
     />
-    <div className="text-white text-2xl font-semibold font-['Pretendard'] mt-[10px] cursor-pointer" onClick={handleImageUploadClick}>대표사진 추가</div>
-    <div className="text-[#cfcfcf] text-base font-semibold font-['Pretendard'] mt-[5px] cursor-pointer" onClick={handleImageUploadClick}>최적치수 1920 x 240 px</div>
+  ) : (
+    <Image
+      src={backgroundImg}
+      alt="Backgrounded"
+      objectFit="cover"
+      layout="fill"
+      className="z-0"
+    />
+  )}
+
+  {/* Dark Overlay */}
+  <div className="absolute inset-0 bg-black bg-opacity-50 z-10" />
+
+  {/* Text and Upload Section */}
+  <div className="absolute inset-0 flex flex-col items-center justify-center z-20">
+    <input
+      type="file"
+      accept="image/*"
+      ref={inputFileRef}
+      style={{ display: 'none' }}
+      onChange={handleBlogImageUpload}
+    />
+    <div
+      className="flex flex-col cursor-pointer justify-center items-center mt-[30px]"
+      onClick={handleImageUploadClick}
+    >
+      <Image
+        src={backgroundAddIcon}
+        alt="Add Blog Image Icon"
+        width={50}
+        height={50}
+        className="cursor-pointer"
+      />
+      <div
+        className="text-white text-2xl font-semibold font-['Pretendard'] mt-[10px] cursor-pointer"
+        onClick={handleImageUploadClick}
+      >
+        대표사진 추가
+      </div>
+      <div
+        className="text-white text-base font-semibold font-['Pretendard'] mt-[5px] cursor-pointer"
+        onClick={handleImageUploadClick}
+      >
+        최적치수 1920 x 240 px
+      </div>
+    </div>
+    <div className="h-[30px]">
+      {blogImage && (
+        <Image
+          src={OOtdDeleteImage}
+          alt="블로그이미지 삭제"
+          width={20}
+          height={20}
+          className="cursor-pointer mt-[10px]"
+          onClick={handleBlogImageDelete}
+        />
+      )}
     </div>
   </div>
     </div><div className="w-[90%] mb-[100px] mx-auto sm-700:max-w-[400px] sm-700:mb-0">

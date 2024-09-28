@@ -494,7 +494,7 @@ const handleEditSubmit = () => {
   
         {/* 대댓글이 있는 경우 */}
         {comment.children.length > 0 && (
-          <div className="mr-4 ml-4 sm-700:ml-12 sm-700:mr-12 my-4 bg-neutral-100 rounded-lg">
+          <div className="mr-4 ml-4 sm-700:ml-12 sm-700:mr-12 mb-4 bg-neutral-100 rounded-lg">
             {renderComments(comment.children, depth + 1)}
           </div>
         )}

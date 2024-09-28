@@ -20,10 +20,8 @@ import EmptyHeartIcon from "../../../../public/heartIcon-default.svg";
 import CommentIcon1 from "../../../../public/commentIcon-default.svg";
 import { TagContainerProps } from "@/types/tag";
 import Cookies from "js-cookie";
-
 import SkeletonRecommendOotdPost from './SkeletonRecommendOotdPost';
 import SkeletonRecentOotdPost from './SkeletonRecentOotdPost';
-
 
 const PAGE_SIZE = 12;
 
@@ -31,7 +29,7 @@ const TagContainer: React.FC<TagContainerProps> = ({ item }) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [visibleTags, setVisibleTags] = useState<string[]>(item.post.tags);
 
-  useEffect(() => {
+  const calculateVisibleTags = () => {
     const container = containerRef.current;
     if (!container) return;
 
@@ -40,15 +38,25 @@ const TagContainer: React.FC<TagContainerProps> = ({ item }) => {
     let visibleCount = 0;
 
     tags.forEach((tag, index) => {
-      totalWidth +=
-        tag.offsetWidth + parseInt(getComputedStyle(tag).marginRight);
-
+      totalWidth += tag.offsetWidth + parseInt(getComputedStyle(tag).marginRight);
       if (totalWidth <= container.offsetWidth) {
         visibleCount = index + 1;
       }
     });
 
     setVisibleTags(item.post.tags.slice(0, visibleCount));
+  };
+
+  useEffect(() => {
+    // DOM이 완전히 로드된 후 태그 계산
+    setTimeout(calculateVisibleTags, 100);
+
+    // 창 크기 변경 시 태그 계산
+    window.addEventListener('resize', calculateVisibleTags);
+
+    return () => {
+      window.removeEventListener('resize', calculateVisibleTags);
+    };
   }, [item.post.tags]);
 
   return (
@@ -59,9 +67,6 @@ const TagContainer: React.FC<TagContainerProps> = ({ item }) => {
       <div className="tag-container" ref={containerRef}>
         {visibleTags.map((tag, index) => (
           <span
-            onClick={() => {
-              searchTag(tag);
-            }}
             key={index}
             className="tag-item px-4 py-1 bg-neutral-100 rounded-3xl text-xl justify-center items-center gap-2.5 inline-flex text-[#9d9d9d]"
           >

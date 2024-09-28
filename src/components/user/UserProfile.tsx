@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import { useQuery } from "react-query";
 import { fetchUserProfile } from "@/services/ootd.ts/ootdGet";
@@ -6,6 +6,7 @@ import { UserProfileResponse } from "@/types/ootd";
 import { useUserStore } from "@/store/useUserStore";
 import FollowButton from "../followControl/followButton";
 import DefaultImage from '../../../public/defaultImage.svg';
+import ImageModal from "@/utils/ImageModal";
 
 const TABS = {
   FOLLOWER: "FOLLOWER",
@@ -38,8 +39,18 @@ const UserProfile: React.FC<UserProfileProps> = ({
   console.log(userMemberId);
   console.log("받은 데이터", memberId);
 
-  if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>Error loading data</div>;
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleImageClick = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
+  if (isLoading) return <div></div>;
+  if (error) return <div></div>;
   if (!data) return null;
 
   const {
@@ -52,7 +63,7 @@ const UserProfile: React.FC<UserProfileProps> = ({
   } = data.result;
 
   return (
-    <div className="w-full flex flex-col relative">
+    <div className="w-full flex flex-col relative z-20">
       <div className="w-[80%]">
         <div className="absolute top-[-150px] w-[200px] h-[300px] bg-white px-8 py-4 rounded-lg shadow-lg flex flex-col items-center">
           <div className="relative my-4">
@@ -61,6 +72,7 @@ const UserProfile: React.FC<UserProfileProps> = ({
               alt="Profile"
               width={80}
               height={80}
+              onClick={handleImageClick} 
               style={{
                 width: "80px",
                 height: "80px",
@@ -101,6 +113,11 @@ const UserProfile: React.FC<UserProfileProps> = ({
           </div>
         </div>
       </div>
+      <ImageModal
+        isOpen={isModalOpen}
+        imageUrl={profileImageUrl || DefaultImage}
+        onClose={handleCloseModal}
+      />
     </div>
   );
 };

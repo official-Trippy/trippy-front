@@ -12,7 +12,7 @@ import MyBadge from "@/components/profile/MyBadge";
 import MyBookmark from "@/components/profile/MyBookmark";
 import FollowList from "@/components/profile/FollowList";
 import Image from "next/image";
-import backgroundImg from "../../../public/DefaultBackground.svg";
+import backgroundImg from "../../../public/DefaultBlogImg.svg";
 import { fetchOotdPostCount } from "@/services/ootd.ts/ootdGet";
 import { getTotalBoardCount } from "@/services/board/get/getBoard";
 import { fetchBookmarkCount } from "@/services/bookmark/bookmark";
@@ -95,8 +95,10 @@ const MyPage = () => {
           layout="fill"
           objectFit="cover"
         />
+         <div className="absolute inset-0 bg-black bg-opacity-10 z-10" />
       </div>
-      <div className="hidden sm-700:flex w-[74%] mx-auto p-4">
+      
+      <div className="hidden sm-700:flex w-[74%] mx-auto p-4 z-20">
         <div className="w-[250px] mb-4">
           <UserInformation setActiveTab={setActiveTab} />
         </div>
@@ -104,7 +106,7 @@ const MyPage = () => {
         <h1 className="absolute ml-[20px] text-left top-[230px] text-white text-4xl font-bold">
           {userData && userData.blogName}
         </h1>
-        <div className="absolute ml-[20px] text-left top-[260px] text-white text-xl font-normal font-['Pretendard']">
+        <div className="absolute ml-[20px] text-left top-[270px] text-white text-xl font-normal font-['Pretendard']">
           {userData && userData.blogIntroduce}
         </div>
           <div className="flex justify-between mb-4 ml-4 text-2xl">

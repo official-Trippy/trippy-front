@@ -27,6 +27,10 @@ import DefaultImage from "../../../public/defaultImage.svg";
 import { getWeatherStatusInfo } from "@/constants/weatherTransition";
 import RecommendedSpots from "./RecommendedSpot";
 import RecommendedSpot from "./RecommendedSpot";
+import { RecommendedSpotsResponse } from "@/types/recommend";
+import SkeletonRecommendOotdPost from "../pages/ootd/SkeletonRecommendOotdPost";
+import SkeletonOotdDetailRecommend from "../pages/ootd/SkeletonOotdDetailRecommend";
+import { isKoreanLocation } from "@/utils/locationInKorea";
 
 interface OotdDetailProps {
   id: number;
@@ -45,7 +49,7 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
 
   console.log('Current post id:', id);
 
-  const { data: recommendedSpots, isLoading: isSpotsLoading, error: spotsError } = useQuery(
+  const { data: recommendedSpots, isLoading: isSpotsLoading, error: spotsError } = useQuery<RecommendedSpotsResponse>(
     ['recommendedSpots', id],
     () => fetchRecommendedSpots(id),
     {
@@ -53,7 +57,7 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
       refetchOnWindowFocus: false,
     }
   );
-  console.log('추천', recommendedSpots);
+  
 
   const [isBookmarked, setIsBookmarked] = useState<boolean>(false);
 
@@ -160,6 +164,22 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
     }
   };
 
+  const handleLocationClick = (location: string) => {
+    if (!location) return;
+  
+    if (isKoreanLocation(location)) {
+      // 카카오맵으로 이동 (한국 주소)
+      const encodedLocation = encodeURIComponent(location);
+      const kakaoMapUrl = `https://map.kakao.com/link/search/${encodedLocation}`;
+      window.open(kakaoMapUrl, '_blank');
+    } else {
+      // 구글맵으로 이동 (해외 주소)
+      const encodedLocation = encodeURIComponent(location);
+      const googleMapUrl = `https://www.google.com/maps/search/?api=1&query=${encodedLocation}`;
+      window.open(googleMapUrl, '_blank');
+    }
+  };
+
 
   if (isLoading) {
     return null;
@@ -209,8 +229,8 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
   };
 
   const settings = {
-    dots: true,
-    infinite: ootdItem.post.images.length > 1,
+    dots: ootdItem.post.images.length > 1, 
+    infinite: ootdItem.post.images.length > 1, 
     speed: 500,
     slidesToShow: 1,
     slidesToScroll: 1,
@@ -248,7 +268,12 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
                   <Image width={16} height={16} src={LocationIcon} alt="location" />
                 </div>
                 <div className="whitespace-nowrap overflow-hidden text-ellipsis">
-                  <span className="block text-[#9D9D9D] truncate">{ootdItem.post.location  || '정보 없음'}</span>
+                <span
+                    className="block text-[#9D9D9D] truncate cursor-pointer"
+                    onClick={() => handleLocationClick(ootdItem.post.location || '정보 없음')}
+                  >
+                    {ootdItem.post.location || '정보 없음'}
+                  </span>
                 </div>
               </div>
               <div className="flex items-center gap-2 whitespace-nowrap overflow-hidden text-ellipsis">
@@ -268,7 +293,7 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
           </div>
 
           {/* 오른쪽 팔로우 버튼 및 아이콘들 */}
-          <div className="mt-auto flex items-center space-x-4">
+          <div className="flex items-center space-x-2 sm-700:space-x-4">
             <FollowButton postMemberId={data.result.member.memberId} userMemberId={userMemberId} />
             {/* 북마크 및 메뉴 아이콘 */}
             <div className="min-w-[35px] flex items-center">
@@ -286,7 +311,7 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
             </div>
 
             {userMemberId === data.result.member.memberId && (
-              <div className="relative flex-shrink-0">
+              <div className="relative flex-shrink-0 w-[24px]">
                 <Image
                   src={CabapIcon}
                   alt="cabap"
@@ -330,21 +355,21 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
 
           </div>
           <div className="py-[50px] text-[#292929] text-xl" dangerouslySetInnerHTML={{ __html: ootdItem.post.body.replace(/\n/g, '<br />') }}></div>
-          <div className="flex pt-4">
-            <div className="flex flex-wrap gap-2">
-              {ootdItem.post.tags.map((tag: string, index: number) => (
-                <span
-                  key={index}
-                  className="px-4 py-1 bg-neutral-100 rounded-3xl text-xl justify-center items-center gap-2.5 inline-flex text-[#9d9d9d]"
-                >
-                  {tag}
-                </span>
-              ))}
-            </div>
-            <div className="ml-auto text-neutral-400 text-base font-normal font-['Pretendard'] my-auto">
-              {formatDate(ootdItem.post.createDateTime)}
-            </div>
-          </div>
+          <div className="flex flex-wrap pt-4 gap-4">
+  <div className="flex flex-wrap gap-2 flex-grow">
+    {ootdItem.post.tags.map((tag: string, index: number) => (
+      <span
+        key={index}
+        className="px-4 py-1 bg-neutral-100 rounded-3xl text-xl justify-center items-center gap-2.5 inline-flex text-[#9d9d9d]"
+      >
+        {tag}
+      </span>
+    ))}
+  </div>
+  <div className="flex justify-end w-full sm:w-auto text-neutral-400 text-base font-normal font-['Pretendard'] my-auto flex-shrink-0 pr-[4px] sm-700:pr-0">
+    {formatDate(ootdItem.post.createDateTime)}
+  </div>
+</div>
         </div>
       </div>
       <div className="w-full mb-[120px]">
@@ -357,7 +382,13 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
             refetchPostDetail={refetch}
           />
         </div>
-        <RecommendedSpot postId={id} />
+        {
+          isSpotsLoading ? (
+            <SkeletonOotdDetailRecommend /> 
+          ) : (
+            <RecommendedSpot recommendedSpots={recommendedSpots?.result || []} />
+          )
+        }
       </div>
     </>
   );
