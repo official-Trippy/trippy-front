@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import { EventSourcePolyfill, NativeEventSource } from "event-source-polyfill";
 import { useQueryClient } from "react-query";
+import { useRouter } from "next/navigation";
 
 interface INotification {
   notifyId: number;
@@ -37,10 +38,23 @@ const Notification: React.FC = () => {
     eventSource.addEventListener("sse", (event: any) => {
       try {
         const data = JSON.parse(event.data);
+        const handleNotifications = (data: INotification) => {
+          setNotifications((prev) => {
+            // 이전 알림을 유지하고 새 알림을 추가
+            const updatedNotifications = [...prev, data];
 
-        const newNotification: INotification = data;
-        setNotifications((prev) => [...prev, newNotification]);
-        setShowNotification(true);
+            // 4개를 초과하면 가장 오래된 알림을 제거
+            return updatedNotifications.length > 4
+              ? updatedNotifications.slice(-4)
+              : updatedNotifications;
+          });
+          setShowNotification(true);
+        };
+
+        // const newNotification: INotification = data;
+
+        // setNotifications((prev) => [...prev, newNotification]);
+        // setShowNotification(true);
 
         // 알림은 5초 후에 사라지도록 설정
         setTimeout(() => {
@@ -70,17 +84,24 @@ const Notification: React.FC = () => {
     return `${Math.floor(diffInSeconds / 86400)}일 전`;
   };
 
+  const router = useRouter();
+  const goNotification = () => {
+    router.push(`/notifications`);
+  };
+
   return (
     <div className="fixed top-4 right-4 z-50 space-y-4">
       {showNotification &&
         notifications.map((notification) => (
           <div
             key={notification.notifyId}
-            className="w-[390px] h-[402px] bg-white shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5 overflow-hidden animate-slide-in-down px-[24px] py-[28px]"
+            className="w-[390px] h-[200px] bg-white shadow-lg rounded-lg pointer-events-auto ring-1 ring-black ring-opacity-5 overflow-hidden animate-slide-in-down px-[24px] py-[28px]"
           >
-            {/* 알림 박스 전체 레이아웃 */}
+            <div className="w-full text-center text-lg font-semibold text-gray-900 mb-4">
+              알림
+            </div>
+
             <div className="flex items-center">
-              {/* 왼쪽 이미지 섹션 */}
               <div className="flex-shrink-0">
                 <img
                   className="w-[60px] h-[60px] rounded-full"
@@ -88,32 +109,24 @@ const Notification: React.FC = () => {
                   alt={notification.senderNickName}
                 />
               </div>
-              {/* 텍스트 및 시간 정보 섹션 */}
+
               <div className="ml-4 w-[325px]">
-                {/* 알림 타이틀 */}
                 <p className="text-base font-medium text-gray-900 leading-6">
                   {notification.senderNickName}님이 {notification.title}
                 </p>
-                {/* 시간 정보 */}
+
                 <p className="mt-1 text-sm text-gray-500">
                   {formatTimeAgo(notification.createdAt)}
                 </p>
               </div>
             </div>
-            {/* 닫기 버튼 섹션 */}
+
             <div className="flex border-l border-gray-200">
               <button
                 className="w-full border border-transparent rounded-none rounded-r-lg p-4 flex items-center justify-center text-sm font-medium text-red-600 hover:text-red-500 focus:outline-none focus:ring-2 focus:ring-red-500"
-                onClick={() => {
-                  // 해당 알림을 삭제하도록 설정
-                  setNotifications((prev) =>
-                    prev.filter(
-                      (item) => item.notifyId !== notification.notifyId
-                    )
-                  );
-                }}
+                onClick={() => {}}
               >
-                닫기
+                더보기
               </button>
             </div>
           </div>
