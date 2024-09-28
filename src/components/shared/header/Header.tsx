@@ -103,7 +103,7 @@ const Header = () => {
           <div className="flex text-lg">
             <Link href="/">
               <div
-                className={`text-gray-800 no-underline ${pathname === "/" ? "font-bold" : ""}`}
+                className={`text-gray-800 no-underline font-['Pretendard'] ${pathname === "/" ? "font-bold" : ""}`}
                 style={{ fontSize: "1.4rem" }}
               >
                 HOME
@@ -111,7 +111,7 @@ const Header = () => {
             </Link>
             <Link href="/ootd">
               <div
-                className={`text-gray-800 pl-8 no-underline ${pathname === "/ootd" ? "font-bold" : ""}`}
+                className={`text-gray-800 pl-8 no-underline font-['Pretendard'] ${pathname === "/ootd" ? "font-bold" : ""}`}
                 style={{ fontSize: "1.4rem" }}
               >
                 OOTD
