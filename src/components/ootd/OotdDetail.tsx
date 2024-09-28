@@ -212,8 +212,8 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
   };
 
   const settings = {
-    dots: true,
-    infinite: ootdItem.post.images.length > 1,
+    dots: ootdItem.post.images.length > 1, 
+    infinite: ootdItem.post.images.length > 1, 
     speed: 500,
     slidesToShow: 1,
     slidesToScroll: 1,
