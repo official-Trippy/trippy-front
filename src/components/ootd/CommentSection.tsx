@@ -432,7 +432,7 @@ const handleEditSubmit = () => {
               </button>
               <button
                 onClick={() => setEditCommentId(null)}
-                className="mt-auto mb-[2px] px-8 py-1 rounded-lg justify-center items-center inline-flex text-center text-base font-semibold bg-[#6E7881] text-white flex-shrink-0"
+                className="mt-auto mb-[2px] px-8 py-1 rounded-lg justify-center items-center inline-flex text-center text-base font-semibold border border-[#cfcfcf] text-[#cfcfcf] flex-shrink-0"
               >
                 취소
               </button>

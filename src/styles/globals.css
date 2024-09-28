@@ -743,3 +743,9 @@ body {
 .swal2-success .swal2-success-ring {
   border: 0.25em solid #fb3463 !important;
 }
+
+.swal2-cancel {
+  border: 1px solid #cfcfcf !important;
+  background-color: transparent !important;
+  color: #cfcfcf;
+}
