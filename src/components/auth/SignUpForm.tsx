@@ -35,6 +35,7 @@ const SignUpForm = () => {
   const [serviceModalOpen, setServiceModalOpen] = useState(false);
   const [privacyModalOpen, setPrivacyModalOpen] = useState(false);
   const [authToken, setAuthToken] = useState<string | null>(null);
+  
 
 
   const isVerificationButtonDisabled = codeMessage === '인증이 완료되었습니다.' || isCodeVerified;
@@ -443,7 +444,7 @@ const SignUpForm = () => {
             onClick={(event) => event.stopPropagation()}
           >
             <ServiceInfo />
-            <div className="w-full flex justify-center mb-[50px]">
+            <div className="w-full flex justify-center mb-[80px]">
               <button
                 className="w-[8.6rem] h-[3.5rem] my-auto rounded-lg bg-black text-white hover:bg-gray-900 focus:outline-none focus:bg-gray-900"
                 onClick={(event) => {
@@ -468,7 +469,7 @@ const SignUpForm = () => {
             onClick={(event) => event.stopPropagation()}
           >
             <Privacy />
-            <div className="w-full flex justify-center mb-[50px]">
+            <div className="w-full flex justify-center mb-[80px]">
               <button
                 className="w-[8.6rem] h-[3.5rem] my-auto rounded-lg bg-black text-white hover:bg-gray-900 focus:outline-none focus:bg-gray-900"
                 onClick={(event) => {
