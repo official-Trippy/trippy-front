@@ -388,12 +388,14 @@ const RecommendBoard = () => {
                                                 </div>
                                             </div>
                                         ) : (
-                                            <div className={`relative w-full rounded-xl ${colorTicket[item.ticket.ticketColor] ? `bg-[${colorTicket[item.ticket.ticketColor]}]` : ''}`} style={{ aspectRatio: '273 / 303' }}>
+                                            <div className={`relative w-full rounded-xl ${colorTicket[item.ticket.ticketColor] ? `bg-[${colorTicket[item.ticket.ticketColor]}]` : ''}`} style={{ objectFit: 'cover', aspectRatio: '304 / 349', display: 'flex', justifyContent: 'center', alignItems: 'center', overflow: 'hidden' }}>
                                                 <Image
-                                                    className="absolute top-0 left-0 h-full object-cover rounded-xl p-[1rem] "
+                                                    className="rounded-xl w-[27rem] h-[30.9rem]"
                                                     src={item.ticket.image?.accessUri}
                                                     alt="TICKET"
-                                                    layout="fill"
+                                                    width={270}
+                                                    height={309}
+                                                    style={{ objectFit: 'cover' }} // 고정된 크기를 설정합니다.
                                                 />
                                             </div>
                                         )}

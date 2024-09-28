@@ -82,3 +82,12 @@ export async function getFollowBoard(memberId: string) {
         return null;
     }
 }
+
+export async function getBoardBookMark(postId: number) {
+    try {
+        const res = await axios.get(`${backendUrl}/api/bookmark/isBookMarked?postId=${postId}`);
+        return res.data;
+    } catch (e) {
+        return null;
+    }
+}
