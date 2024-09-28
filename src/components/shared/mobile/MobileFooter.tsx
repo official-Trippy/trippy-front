@@ -112,56 +112,50 @@ const MobileFooter = () => {
       </div>
 
       {isModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[10000]">
-          <div className="w-[300px] bg-white p-4 rounded-lg shadow-lg">
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[10000]" 
+          onClick={handleModalClose} // 모달 외부를 클릭하면 닫기
+        >
+          <div 
+            className="w-[300px] bg-white p-4 rounded-lg shadow-lg" 
+            onClick={(e) => e.stopPropagation()} // 모달 컨텐츠 클릭 시 이벤트 전파 방지
+          >
             <div className="flex flex-col gap-4">
-              <div className="px-[1rem] pt-[1.4rem] rounded-lg border-b border-white"   onClick={handlePostClick}>
-                          <div className="hover:bg-gray-200 px-[1.3rem] py-[1.2rem]">
-                            <div className="flex items-start">
-                              <Image
-                                className="mr-[1.7rem] mt-[0.5rem]"
-                                src={postwriteImg}
-                                width={24}
-                                height={24}
-                                alt=""
-                              />
-                              <div>
+              <div className="px-[1rem] pt-[1.4rem] rounded-lg border-b border-white" onClick={handlePostClick}>
+                <div className="hover:bg-gray-200 px-[1.3rem] py-[1.2rem]">
+                  <div className="flex items-start">
+                    <Image
+                      className="mr-[1.7rem] mt-[0.5rem]"
+                      src={postwriteImg}
+                      width={24}
+                      height={24}
+                      alt=""
+                    />
+                    <div>
+                      <h1 className="text-[1.6rem] font-medium text-black">블로그 티켓 글쓰기</h1>
+                      <span className="text-[0.9rem] font-normal text-[#9D9D9D]">여행에서 겪었던 이야기를 기록해 보세요.</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
 
-                                <h1 className="text-[1.6rem] font-medium text-black">블로그 티켓 글쓰기</h1>
-                                <span className="text-[0.9rem] font-normal text-[#9D9D9D]">여행에서 겪었던 이야기를 기록해 보세요.</span>
-
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-
-              <div className="px-[1rem] pb-[1.4rem] rounded-lg border-b border-white"  onClick={handleOotdClick}>
-                          <div className="hover:bg-gray-200 px-[1.3rem] py-[1.2rem]">
-                            <div className="flex items-start">
-                              <Image
-                                className="mr-[1.7rem] mt-[0.5rem]"
-                                src={postwriteImg}
-                                width={24}
-                                height={24}
-                                alt=""
-                              />
-                              <div>
-
-                                <h1 className="text-[1.6rem] font-medium text-black">OOTD 글쓰기</h1>
-                                <span className="text-[0.9rem] font-normal text-[#9D9D9D]">여행 중 나의 특별한 OOTD를 공유해보세요.</span>
-
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-             
-            </div>
-            <div className="flex justify-end mt-4">
-            <button
-                onClick={handleModalClose}
-                className="py-2 px-4 bg-gray-300 rounded-lg">
-                닫기
-            </button>
+              <div className="px-[1rem] pb-[1.4rem] rounded-lg border-b border-white" onClick={handleOotdClick}>
+                <div className="hover:bg-gray-200 px-[1.3rem] py-[1.2rem]">
+                  <div className="flex items-start">
+                    <Image
+                      className="mr-[1.7rem] mt-[0.5rem]"
+                      src={postwriteImg}
+                      width={24}
+                      height={24}
+                      alt=""
+                    />
+                    <div>
+                      <h1 className="text-[1.6rem] font-medium text-black">OOTD 글쓰기</h1>
+                      <span className="text-[0.9rem] font-normal text-[#9D9D9D]">여행 중 나의 특별한 OOTD를 공유해보세요.</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
