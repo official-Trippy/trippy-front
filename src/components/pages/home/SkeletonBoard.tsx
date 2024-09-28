@@ -47,7 +47,7 @@ const SkeletonBoard: React.FC = () => {
 
             {/* 스켈레톤 카드들 */}
             <div className="relative mx-auto">
-                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 gap-4">
                     {[...Array(itemCount)].map((_, index) => (
                         <div key={index} className="relative bg-gray-200 rounded-xl w-full h-80 animate-pulse" />
                     ))}
