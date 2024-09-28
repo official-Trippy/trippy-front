@@ -30,6 +30,7 @@ import RecommendedSpot from "./RecommendedSpot";
 import { RecommendedSpotsResponse } from "@/types/recommend";
 import SkeletonRecommendOotdPost from "../pages/ootd/SkeletonRecommendOotdPost";
 import SkeletonOotdDetailRecommend from "../pages/ootd/SkeletonOotdDetailRecommend";
+import { isKoreanLocation } from "@/utils/locationInKorea";
 
 interface OotdDetailProps {
   id: number;
@@ -165,11 +166,18 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
 
   const handleLocationClick = (location: string) => {
     if (!location) return;
-    
-    const encodedLocation = encodeURIComponent(location);
-    const kakaoMapUrl = `https://map.kakao.com/link/search/${encodedLocation}`;
-    
-    window.open(kakaoMapUrl, '_blank'); // 새 창으로 카카오맵 열기
+  
+    if (isKoreanLocation(location)) {
+      // 카카오맵으로 이동 (한국 주소)
+      const encodedLocation = encodeURIComponent(location);
+      const kakaoMapUrl = `https://map.kakao.com/link/search/${encodedLocation}`;
+      window.open(kakaoMapUrl, '_blank');
+    } else {
+      // 구글맵으로 이동 (해외 주소)
+      const encodedLocation = encodeURIComponent(location);
+      const googleMapUrl = `https://www.google.com/maps/search/?api=1&query=${encodedLocation}`;
+      window.open(googleMapUrl, '_blank');
+    }
   };
 
 
