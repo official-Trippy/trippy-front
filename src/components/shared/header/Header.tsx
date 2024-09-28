@@ -159,7 +159,7 @@ const Header = () => {
                 className={`text-gray-800 no-underline font-['Pretendard'] ${pathname === "/" ? "font-bold" : ""}`}
                 style={{ fontSize: "1.4rem" }}
               >
-                HOME
+                TICKET
               </div>
             </Link>
             <Link href="/ootd">

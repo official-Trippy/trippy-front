@@ -57,7 +57,7 @@ const Account = () => {
     <div className="min-h-[calc(100dvh-60px)] flex flex-col justify-between flex-col-reverse mb-[60px] sm:flex-col sm-700:min-h-[100vh] sm-700:justify-center sm-700:mb-0 items-center w-full">
       <div className="w-[100%] max-w-[400px] mx-auto">
        <div className="w-[90%] max-w-[400px] mx-auto">
-       <Image src={LogoMain} alt="Logo" className="mx-auto mt-[2rem]" width={170} height={57} />
+       <Image src={LogoMain} alt="Logo" className="mx-auto mt-[2rem]" width={130} height={40}  />
       </div>
       <div className="w-[100%] max-w-[400px] mx-auto flex flex-col justify-between">
   <div className="flex flex-col mt-[200px] sm:h-[300px] sm:mt-0 justify-center">
