@@ -10,3 +10,12 @@ export default async function postBoard(postRequest: any, ticketRequest: any) {
         // console.error(error);
     }
 }
+
+// export async function postBoardBookMark(memberId: string, postId: number) {
+//     try {
+//         const res = await axios.post(`${backendUrl}/api/bookmark`, { null, postId })
+//         return res.data;
+//     } catch (error) {
+//         // console.error(error);
+//     }
+// }

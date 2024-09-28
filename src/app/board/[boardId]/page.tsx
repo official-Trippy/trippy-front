@@ -13,7 +13,7 @@ import {
 } from "next/navigation";
 import Header from "@/components/shared/header/Header";
 import { useQuery } from "react-query";
-import { getPost } from "@/services/board/get/getBoard";
+import { getBoardBookMark, getPost } from "@/services/board/get/getBoard";
 import heartImg from "@/dummy/heart.svg";
 import bottomimg from "@/dummy/sebu.svg";
 import nonheartImg from "@/dummy/heartbin.svg";
@@ -39,6 +39,10 @@ import deleteReply from "@/services/board/delete/deleteReply";
 import { PostAirSVG, PostBusSVG, PostBycicleSVG, PostCarSVG, PostTrainSVG } from "@/components/transportsvg/post";
 import backbutton from "@/dummy/backbutton.svg"
 import { updatePostComment } from "@/services/board/patch/editComments";
+import BookmarkIcon from "../../../../public/icon_bookmark.svg";
+import BookmarkedIcon from "../../../../public/bookmark-fill.svg";
+import { addBookmark, deleteBookmark } from "@/services/bookmark/bookmark";
+// import { postBoardBookMark } from "@/services/board/post/postBoard";
 
 export default function BoardPage({ params }: { params: { boardId: number } }) {
   const accessToken = Cookies.get("accessToken");
@@ -117,7 +121,13 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
     },
   });
 
-  console.log(postData);
+  const { data: bookmark, refetch: bookmarkRefetch } = useQuery({
+    queryKey: ['bookmark'],
+    queryFn: () => getBoardBookMark(Number(params.boardId)),
+    enabled: !!Number(params.boardId)
+  })
+
+  console.log(bookmark);
 
   console.log(postData?.result.member.memberId);
   console.log(memberDatas);
@@ -362,6 +372,22 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
     }
   };
 
+  const bookMarkHandler = async () => {
+    try {
+      if (bookmark.result) {
+        await deleteBookmark(Number(params.boardId))
+      } else {
+        await addBookmark(Number(params.boardId))
+      }
+
+      postRefetch();
+      bookmarkRefetch();
+    } catch (e) {
+
+    } finally {
+
+    }
+  }
   // const router = useRouter();
 
   const handleBackButtonClick = () => {
@@ -427,8 +453,8 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
                   userMemberId={userMemberId}
                 />
                 <div className="ml-[4rem] flex">
-                  <Image src={plused} alt="" />
-                  <span className="text-[#9D9D9D] text-[1.6rem]">136</span>
+                  <Image className="cursor-pointer" src={bookmark.result ? BookmarkedIcon : BookmarkIcon} alt="" onClick={() => { bookMarkHandler(); }} />
+                  <span className="text-[#9D9D9D] text-[1.6rem]">{postData?.result.post.bookmarkCount}</span>
                 </div>
               </div>
             </div>
@@ -447,7 +473,7 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
                     </span>
                   </div>
                 </div>
-                <div className="relative flex bg-white mt-0 xl:mt-[3rem] lg:mt-[0.8rem] sm:mt-0 w-[1.7rem] lg:w-[2.4rem] sm:w-[1.7rem] h-[1.7rem] lg:h-[2.4rem] sm:h-[1.7rem] z-10 mx-[3%]">
+                <div className="relative flex bg-white mt-0 xl:mt-[3rem] lg:mt-[0.8rem] sm:mt-0 w-[1.7rem] lg:w-[2.8rem] sm:w-[1.7rem] h-[1.7rem] lg:h-[2.8rem] sm:h-[1.7rem] z-10 mx-[3%] xl:mx-[9%] sm:mx-[3%]">
                   {getTransportImage(postData?.result.ticket.transport, postData?.result.ticket.ticketColor)}
                 </div>
                 <div className="">
@@ -482,7 +508,7 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
               </div>
             </div>
             <div
-              className={`w-[15rem] xl:w-[28.5rem] lg:w-[20rem] sm:w-[15rem] h-full ${colorTicket[postData.result.ticket.ticketColor] ? `bg-[${colorTicket[postData.result.ticket.ticketColor]}]` : ''}  rounded-r-[1rem] ml-auto`}
+              className={`w-[15rem] xl:w-[40rem] lg:w-[20rem] sm:w-[15rem] h-full ${colorTicket[postData.result.ticket.ticketColor] ? `bg-[${colorTicket[postData.result.ticket.ticketColor]}]` : ''}  rounded-r-[1rem] ml-auto`}
             >
               <div className="absolute">
                 <div className="relative bg-white w-[1.3rem] xl:w-[4rem] sm:w-[1.3rem] h-[1.3rem] xl:h-[4rem] sm:h-[1.3rem] rounded-full -mt-[0.6rem] xl:-mt-[2rem] sm:-mt-[0.6rem] -ml-[0.8rem] xl:-ml-[2rem] sm:-ml-[0.8rem]"></div>
@@ -491,7 +517,7 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
               <label className="w-full h-full flex" htmlFor="input-file">
                 <div className="flex flex-col m-auto">
                   <Image
-                    className="w-[9rem] xl:w-[26rem] lg:w-[18rem] sm:w-[9rem] h-[9rem] xl:h-[26rem] lg:h-[18rem] sm:h-[9rem] rounded-[1rem] object-cover"
+                    className="w-[9rem] xl:w-[22rem] lg:w-[18rem] sm:w-[9rem] h-[9rem] xl:h-[26rem] lg:h-[18rem] sm:h-[9rem] rounded-[1rem] object-cover"
                     src={postData?.result.ticket.image.accessUri}
                     alt=""
                     width={230}
