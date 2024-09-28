@@ -73,9 +73,7 @@ const TagContainer: React.FC<TagContainerProps> = ({ item }) => {
     );
   };
   
-
-
-const RecommendOotdPost = () => {
+  const RecommendOotdPost = () => {
     const { userInfo, loading } = useUserStore((state) => ({
         userInfo: state.userInfo,
         loading: state.loading,
@@ -89,17 +87,18 @@ const RecommendOotdPost = () => {
     const router = useRouter();
     const scrollRef = useRef<HTMLDivElement | null>(null);
     const swiperRef = useRef<SwiperRef | null>(null);
+    const [currentSlide, setCurrentSlide] = useState(0); // 현재 슬라이드 위치 추적
 
-    const { data, isLoading } = useQuery(
+    const { data, isLoading, refetch } = useQuery(
         ['recommendOotdPost', selectedInterest],
         () => fetchRecommendOotdPost(selectedInterest),
         {
-            keepPreviousData: true
+            keepPreviousData: true,
         }
     );
 
-
-    const totalCount = data?.result?.totalCnt ?? 0;
+    const totalCount = data?.result?.ootdList?.length ?? 0;
+    const totalSlides = Math.ceil(totalCount / itemsPerSlide); // 총 슬라이드 수 계산
 
     useEffect(() => {
         if (userInfo) {
@@ -155,31 +154,37 @@ const RecommendOotdPost = () => {
 
     const [showScrollButtons, setShowScrollButtons] = useState(false); // 버튼 표시 여부
 
-  // 스크롤 가능 여부를 확인하는 함수
-  const checkScroll = () => {
-    if (scrollRef.current) {
-      const { scrollWidth, clientWidth } = scrollRef.current;
-      setShowScrollButtons(scrollWidth > clientWidth); // 스크롤이 가능하면 true, 아니면 false
-    }
-  };
-
-  // 처음 로드될 때 및 윈도우 리사이즈 시 스크롤 버튼 표시 여부 확인
-  useEffect(() => {
-    checkScroll(); // 처음 로드 시 호출
-    if (typeof window !== 'undefined') {
-      window.addEventListener('resize', checkScroll); // 리사이즈 시에도 호출
-    }
-
-    return () => {
-      window.removeEventListener('resize', checkScroll); // 리스너 제거
+    // 스크롤 가능 여부를 확인하는 함수
+    const checkScroll = () => {
+        if (scrollRef.current) {
+            const { scrollWidth, clientWidth } = scrollRef.current;
+            setShowScrollButtons(scrollWidth > clientWidth); // 스크롤이 가능하면 true, 아니면 false
+        }
     };
-  }, []);
 
-  // 스크롤이 끝난 후 버튼 표시 여부 확인
-  const handleScrollEnd = () => {
-    checkScroll();
-  };
+    // 관심분야가 변경될 때마다 스크롤 버튼 상태를 초기화하고, 다시 렌더링되도록 설정
+    useEffect(() => {
+        setCurrentSlide(0); // 첫 슬라이드로 이동
+        refetch(); // 관심분야 변경 시 데이터를 다시 가져옴
+        checkScroll(); // 관심분야 변경 시 스크롤 상태 확인
+    }, [selectedInterest, refetch]); // 관심분야가 변경될 때마다 실행
 
+    // 처음 로드될 때 및 윈도우 리사이즈 시 스크롤 버튼 표시 여부 확인
+    useEffect(() => {
+        checkScroll(); // 처음 로드 시 호출
+        if (typeof window !== 'undefined') {
+            window.addEventListener('resize', checkScroll); // 리사이즈 시에도 호출
+        }
+
+        return () => {
+            window.removeEventListener('resize', checkScroll); // 리스너 제거
+        };
+    }, []);
+
+    // 스크롤이 끝난 후 버튼 표시 여부 확인
+    const handleScrollEnd = () => {
+        checkScroll();
+    };
 
     const handleScroll = (direction: string) => {
         if (scrollRef.current) {
@@ -231,39 +236,44 @@ const RecommendOotdPost = () => {
         }
     }
 
+    // 슬라이드 이동 처리
     const handleScrollOotd = (direction: string) => {
         if (swiperRef.current) {
+            const swiper = swiperRef.current.swiper;
             if (direction === 'left') {
-                swiperRef.current.swiper.slidePrev();
+                swiper.slidePrev();
             } else {
-                swiperRef.current.swiper.slideNext();
+                swiper.slideNext();
             }
+            setCurrentSlide(swiper.activeIndex); // 현재 슬라이드 인덱스 업데이트
         }
     };
 
+    const isAtFirstSlide = currentSlide === 0; // 첫 번째 슬라이드에 있을 때
+    const isAtLastSlide = currentSlide === totalSlides - 1; // 마지막 슬라이드에 있을 때
+    const shouldShowButtons = itemsPerSlide < totalCount; // 원래 버튼이 뜨는 조건
+
     const [windowWidth, setWindowWidth] = useState<number | null>(null);
 
-  useEffect(() => {
-    // 클라이언트 사이드에서만 실행되도록 처리
-    if (typeof window !== 'undefined') {
-      const handleResize = () => {
-        setWindowWidth(window.innerWidth);
-      };
+    useEffect(() => {
+        // 클라이언트 사이드에서만 실행되도록 처리
+        if (typeof window !== 'undefined') {
+            const handleResize = () => {
+                setWindowWidth(window.innerWidth);
+            };
 
-      // 처음 로딩 시와 리사이즈 이벤트 처리
-      handleResize();
-      window.addEventListener('resize', handleResize);
+            // 처음 로딩 시와 리사이즈 이벤트 처리
+            handleResize();
+            window.addEventListener('resize', handleResize);
 
-      return () => {
-        window.removeEventListener('resize', handleResize);
-      };
-    }
-  }, []);
+            return () => {
+                window.removeEventListener('resize', handleResize);
+            };
+        }
+    }, []);
 
-  // windowWidth가 null이면 아직 클라이언트에서 실행되지 않았으므로 초기값을 설정
-  const leftPosition = windowWidth && windowWidth < 700 ? '0px' : '-30px';
-
-
+    // windowWidth가 null이면 아직 클라이언트에서 실행되지 않았으므로 초기값을 설정
+    const leftPosition = windowWidth && windowWidth < 700 ? '0px' : '-30px';
 
     const [showSkeleton, setShowSkeleton] = useState(true);
     useEffect(() => {
@@ -279,6 +289,7 @@ const RecommendOotdPost = () => {
     if (loading || showSkeleton || isLoading) {
         return <SkeletonRecommendOotdPost />;
     }
+
 
     return (
         <div className="relative w-[90%] sm-700:w-[66%] mx-auto pt-[5rem] overflow-visible">
@@ -365,7 +376,7 @@ const RecommendOotdPost = () => {
                     />
                 )}
             </div>
-            {itemsPerSlide < totalCount && (
+            {!isAtFirstSlide && shouldShowButtons && (
            <Image
            src={SwiperLeftButton}
            alt="Previous"
@@ -458,7 +469,7 @@ const RecommendOotdPost = () => {
                     )}
                 </Swiper>
             </div>
-            {itemsPerSlide < totalCount && (
+            {!isAtLastSlide && shouldShowButtons && (
                 <Image
                     src={SwiperRightButton}
                     alt="Next"
