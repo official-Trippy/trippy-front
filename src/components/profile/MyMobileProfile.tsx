@@ -59,7 +59,7 @@ const MyMobileProfile: React.FC<{ setActiveTab: (tab: string) => void }> = ({ se
 
   const { resetUserInfo } = useUserStore();
 
-  const handleLogoutClick = async () => {
+  const handleLogoutClick = () => {
     Cookies.remove("accessToken");
     resetUserInfo();
     router.push("/login");
