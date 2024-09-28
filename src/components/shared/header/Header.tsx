@@ -17,6 +17,7 @@ import SearchBar from "@/components/search/searchBar";
 import NotificationComponent from "@/components/notification/notificationComponent"; 
 import SearchBarMobileBar from "@/components/search/searchMobileBar";
 import postwriteImg from "@/dummy/postwrite.svg";
+import Swal from "sweetalert2";
 
 const Header = () => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -83,10 +84,50 @@ const Header = () => {
 
   const { resetUserInfo } = useUserStore();
 
-  const handleLogoutClick = () => {
-    Cookies.remove("accessToken");
-    resetUserInfo();
-    router.push("/login");
+  const handleLogoutClick = async () => {
+    const result = await Swal.fire({
+      title: '정말 로그아웃 하시겠습니까?',
+      icon: 'warning',
+      iconColor: '#FB3463',
+      showCancelButton: true,
+      confirmButtonText: '네',
+      cancelButtonText: '아니오',
+      confirmButtonColor: '#FB3463',
+      customClass: {
+        popup: 'swal-custom-popup',
+        icon: 'swal-custom-icon',
+      },
+    });
+  
+    if (result.isConfirmed) {
+      try {
+        // 로그아웃 처리
+        Cookies.remove("accessToken");
+        resetUserInfo();
+  
+        // 성공 메시지
+        await Swal.fire({
+          icon: 'success',
+          title: '성공적으로 로그아웃되었습니다.',
+          confirmButtonText: '확인',
+          confirmButtonColor: '#FB3463',
+          customClass: {
+            popup: 'swal-custom-popup',
+            icon: 'swal-custom-icon',
+          },
+        });
+  
+        // 로그인 페이지로 리디렉션
+        router.push("/login");
+      } catch (error) {
+        console.error("로그아웃 중 오류 발생:", error);
+        await Swal.fire(
+          '오류 발생',
+          '로그아웃 중 문제가 발생했습니다. 다시 시도해주세요.',
+          'error'
+        );
+      }
+    }
   };
 
   if (isLoading) {
