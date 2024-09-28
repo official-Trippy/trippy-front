@@ -551,40 +551,45 @@ const handleEditSubmit = () => {
     const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
 
     return (
-      <div className='w-full bg-white rounded-lg shadow-md py-4 mt-8'>
-        <div className="grid grid-cols-3 gap-4">
-          {paginatedLikes.map((like, index) => (
-            <div key={index} className='my-4 like-section p-4'>
-              <div className="flex items-center justify-center py-2">
-                <div className="w-12 h-12 relative mr-4">
-                  <Image
-                    src={like.profileUrl || DefaultImage}
-                    alt="프로필 이미지"
-                    layout="fill"
-                    objectFit="cover"
-                    className='rounded-full'
-                  />
-                </div>
-                <div className="">
-                  <div className="text-gray-800">{like.nickName}</div>
-                  <div className="text-gray-800">{like.blogName}</div>
-                </div>
+      <div className="w-full bg-white rounded-lg shadow-md py-4 mt-8">
+      <div className="grid grid-cols-2 xs-400:grid-cols-3 gap-0">
+        {paginatedLikes.map((like, index) => (
+          <div key={index} className="my-4 like-section px-4 py-0 sm-700:px-4 sm-700:py-4">
+            <div className="flex items-center ml-[20px] xs-400:justify-center xs-400:ml-0 py-2">
+              <div className="min-w-12 min-h-12 w-12 h-12 sm-700:w-16 sm-700:h-16 relative mr-4">
+                <Image
+                  src={like.profileUrl || DefaultImage}
+                  alt="프로필 이미지"
+                  layout="fill"
+                  objectFit="cover"
+                  className="rounded-full"
+                />
+              </div>
+              <div>
+              <div className="text-gray-800 text-sm sm:text-base truncate whitespace-nowrap overflow-hidden">
+                {like.nickName}
+              </div>
               </div>
             </div>
-          ))}
-        </div>
-        <div className="flex justify-center">
-          {pages.map((pageNumber) => (
-            <button
-              key={pageNumber}
-              onClick={() => handlePageChange(pageNumber)}
-              className={`px-4 py-2 mx-1 rounded ${currentPage === pageNumber ? 'text-[#fa3463] font-semibold' : 'text-[#cfcfcf] font-normal'}`}
-            >
-              {pageNumber}
-            </button>
-          ))}
-        </div>
+          </div>
+        ))}
       </div>
+    
+      {/* 페이지네이션 버튼 */}
+      {totalPages > 1 && (
+      <div className="flex justify-center mt-4">
+        {pages.map((pageNumber) => (
+          <button
+            key={pageNumber}
+            onClick={() => handlePageChange(pageNumber)}
+            className={`px-4 py-2 mx-1 rounded ${currentPage === pageNumber ? 'text-[#fa3463] font-semibold' : 'text-[#cfcfcf] font-normal'}`}
+          >
+            {pageNumber}
+          </button>
+        ))}
+      </div>
+      )}
+    </div>
     );
   };
 
