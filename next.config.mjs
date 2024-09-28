@@ -40,7 +40,7 @@ const nextConfig = {
   //   ];
   // },
   images: {
-    domains: ['axjoaeuyezzj.objectstorage.ap-chuncheon-1.oci.customer-oci.com'],
+    domains: ['axjoaeuyezzj.objectstorage.ap-chuncheon-1.oci.customer-oci.com', 'tong.visitkorea.or.kr'],
   },
   reactStrictMode: true,
   async headers() {

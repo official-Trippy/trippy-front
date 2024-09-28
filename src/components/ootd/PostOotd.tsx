@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import ImageUploader from './ImageUploader';
 import PostInput from './PostInput';
@@ -38,9 +38,17 @@ const PostOotd: React.FC = () => {
   const [date, setDate] = useState<string>('');
   const [weather, setWeather] = useState<any>(null);
   const router = useRouter();
-
   const userInfo = useUserStore((state) => state.userInfo);
   const userMemberId = userInfo?.memberId;
+
+  useEffect(() => {
+    // Redirect to login if not authenticated
+    if (!userInfo) {
+      router.push("/login");
+    }
+  }, [userInfo, router]);
+
+  const dateInputRef = useRef<HTMLInputElement>(null); 
 
   const weatherMutation = useMutation(
     (variables: { latitude: number; longitude: number; date: string }) =>
@@ -101,7 +109,7 @@ const PostOotd: React.FC = () => {
                     resolve();
                   }
                 });
-              });
+              })
             },
           });
         }
@@ -290,13 +298,13 @@ const PostOotd: React.FC = () => {
             <LocationInput onLocationChange={handleLocationChange} selectedLocationName={location} />
             <DateInput onDateChange={handleDateChange} />
             {weather ? (
-              <div className="w-full bg-neutral-100 rounded-lg flex justify-center items-center py-4 text-neutral-500 text-lg">
+              <div className="w-full bg-neutral-100 rounded-[8px] flex justify-center items-center py-4 text-neutral-500 text-lg">
                 <div>{weather.avgTemp === '정보 없음' ? '정보 없음' : weather.avgTemp}°C, {getWeatherStatusInKorean(weather.status)}</div>
               </div>
             ) : (
               <button
                 onClick={handleFetchWeather}
-                className="w-full bg-neutral-100 rounded-lg flex justify-center items-center py-4 text-neutral-500 text-lg"
+                className="w-full bg-neutral-100 rounded-[8px] flex justify-center items-center py-4 text-neutral-500 text-lg"
               >
                 날씨 불러오기
               </button>

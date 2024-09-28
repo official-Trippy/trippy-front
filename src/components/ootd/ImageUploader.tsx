@@ -3,7 +3,7 @@ import Slider from 'react-slick';
 import Cropper from 'react-easy-crop';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-import OotdDefault from '../../../public/ootdDefaultImg.svg';
+import OotdDefault from '../../../public/OotdPostAddImg.svg';
 import OotdAddImage from '../../../public/ootdImageAdd.svg';
 import OOtdDeleteImage from '../../../public/ootdImageDelete.svg';
 import { uploadImage } from '@/services/blog';
@@ -182,7 +182,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onImagesChange, initialIm
               <div className="bg-btn-color text-white px-4 py-2 font-medium font-['Pretendard'] rounded mr-2 cursor-pointer" onClick={handleCropImage}>
                 완료
               </div>
-              <div className="border border-[#cfcfcf] text-[#cfcfcf] px-4 py-2 font-medium font-['Pretendard'] rounded cursor-pointer" onClick={() => setIsModalOpen(false)}>
+              <div className="border  text-[#cfcfcf] px-4 py-2 font-medium font-['Pretendard'] rounded cursor-pointer" onClick={() => setIsModalOpen(false)}>
                 취소
               </div>
             </div>
@@ -190,32 +190,34 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onImagesChange, initialIm
           </div>
         )}
         {/* 기존 이미지 영역은 모달이 열려도 그대로 유지 */}
-        <div
-          onClick={() => displayImages.length === 0 && document.getElementById('image-upload-input')?.click()}
-          className={`relative cursor-pointer overflow-hidden bg-cover bg-center mx-auto ${
-            isModalOpen ? 'opacity-50' : '' // 모달이 열릴 때 투명도 조정으로만 시각적인 효과 적용
-          }`}
-          style={{
-            backgroundImage: displayImages.length > 0 ? 'none' : `url(${OotdDefault.src})`,
-            maxWidth: '460px',
-            aspectRatio: '1 / 1', // 1:1 비율 유지
-          }}
-        >
+          <div
+            onClick={() => displayImages.length === 0 && document.getElementById('image-upload-input')?.click()}
+            className={`relative cursor-pointer overflow-hidden bg-cover bg-center mx-auto ${
+              displayImages.length > 0 ? '' : 'border' // 이미지가 없을 때만 border를 적용
+            } rounded-[8px] ${
+              isModalOpen ? 'opacity-50' : '' // 모달이 열릴 때 투명도 조정
+            }`}
+            style={{
+              backgroundImage: displayImages.length > 0 ? 'none' : `url(${OotdDefault.src})`,
+              maxWidth: '460px',
+              aspectRatio: '1 / 1', // 1:1 비율 유지
+            }}
+          >
           {!isUploading && displayImages.length === 0 && (
-            <div className="flex items-center justify-center w-full h-full">
+            <div className="flex items-center justify-center w-full h-full ">
               <img
                 src={OotdDefault.src}
                 alt="Default Image"
-                className="object-cover w-full h-full"
+                className="object-cover w-full h-full "
               />
             </div>
           )}
           {displayImages.length === 1 && (
-            <div className="absolute inset-0 w-full h-full">
+            <div className="absolute inset-0 w-full h-full ">
               <Image
                 src={displayImages[0]}
                 alt="Uploaded Image"
-                className="object-cover w-full h-full rounded-lg"
+                className="object-cover w-full h-full rounded-[8px]"
                 width={200}
                 height={200}
               />
@@ -225,11 +227,11 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onImagesChange, initialIm
             <Slider {...settings}>
               {displayImages.map((image, index) => (
                 <div key={index}>
-                  <div className="relative w-full h-full rounded-lg">
+                  <div className="relative w-full h-full rounded-[8px]">
                     <Image
                       src={image}
                       alt={`Slide ${index}`}
-                      className="w-full h-auto object-cover rounded-lg"
+                      className="w-full h-auto object-cover rounded-[8px]"
                       width={200}
                       height={200}
                     />
@@ -244,7 +246,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onImagesChange, initialIm
             {(provided) => (
               <div
                 className={`flex w-full mx-auto mt-4 p-[2%] ${
-                  displayImages.length === 0 ? '' : 'rounded-lg border border-[#cfcfcf]'
+                  displayImages.length === 0 ? '' : 'rounded-[8px] border'
                 }`}
                 {...provided.droppableProps}
                 ref={provided.innerRef}

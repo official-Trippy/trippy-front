@@ -62,16 +62,17 @@ const PostInput: React.FC<PostInputProps> = ({ onPostChange, onTagsChange, tags,
     <div className="space-y-4">
       <textarea
         ref={textareaRef}
-        className="w-full h-64 text-lg border py-4 px-4 rounded resize-none"
+        className="w-full h-64 text-lg border py-4 px-4 rounded-[8px] resize-none placeholder:text-[#cfcfcf]" // placeholder 색상 추가
         onChange={handlePostChange}
         value={post}
         style={{ whiteSpace: 'pre-wrap' }} 
+        placeholder="특별한 OOTD를 소개하는 문구를 작성해보세요."
       />
-      <div className="relative w-full border py-4 px-4 rounded">
+      <div className="relative w-full border py-4 px-4 rounded-[8px]">
         <input
           type="text"
           placeholder="태그를 3개 이상 입력해주세요."
-          className="w-full h-12 border-none outline-none text-lg"
+          className="w-full h-12 border-none outline-none text-lg placeholder:text-[#cfcfcf]" // placeholder 색상 추가
           value={tagInput}
           onCompositionStart={handleCompositionEvent}
           onCompositionEnd={handleCompositionEvent}
@@ -85,7 +86,7 @@ const PostInput: React.FC<PostInputProps> = ({ onPostChange, onTagsChange, tags,
               <button
                 type="button"
                 onClick={() => handleTagDelete(tag)}
-                className="ml-2 text-white mb-[1.5px]"
+                className="ml-2 text-white mb-[1.7px]"
               >
                 x
               </button>

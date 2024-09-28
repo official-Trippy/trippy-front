@@ -1,10 +1,11 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { useQuery } from "react-query";
 import { MemberInfo } from "@/services/auth";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 import DefaultImage from '../../../public/defaultImage.svg';
+import ImageModal from "@/utils/ImageModal"; // ImageModal 임포트
 
 const TABS = {
   ALL: "ALL",
@@ -31,20 +32,30 @@ const MyMobileProfile: React.FC<{ setActiveTab: (tab: string) => void }> = ({
     enabled: !!accessToken, // accessToken이 있을 때만 쿼리 실행
   });
 
+  // 이미지 모달 상태 관리
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleImageClick = () => {
+    setIsModalOpen(true); // 이미지 클릭 시 모달 열기
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false); // 모달 닫기
+  };
+
   useEffect(() => {
     if (!accessToken) {
-      router.push('/login');
+      router.push("/login");
     }
   }, [accessToken, router]);
 
-  // 로딩 중일 때와 에러 발생 시 사용자에게 피드백 제공
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error occurred.</div>;
 
   const userData = data?.result;
 
   return (
-    <div className="w-full mx-auto flex flex-col items-center relative z-[9999]">
+    <div className="w-full mx-auto flex flex-col items-center relative z-[9989]">
       <div className="relative w-full">
         <div className="absolute top-[-240px] left-1/2 transform -translate-x-1/2 w-full h-[240px] px-8 py-4 flex flex-col items-center">
           <h1 className="text-4xl text-white font-bold mt-2">{userData?.blogName}</h1>
@@ -54,12 +65,12 @@ const MyMobileProfile: React.FC<{ setActiveTab: (tab: string) => void }> = ({
               alt="Profile"
               width={48}
               height={48}
-              className="rounded-full object-cover"
+              className="cursor-pointer rounded-full object-cover" // 커서 포인터 추가
+              onClick={handleImageClick} // 이미지 클릭 시 모달 열림
               style={{
                 width: "48px",
                 height: "48px",
                 objectFit: "cover",
-                borderRadius: "50%",
               }}
             />
           </div>
@@ -95,6 +106,13 @@ const MyMobileProfile: React.FC<{ setActiveTab: (tab: string) => void }> = ({
           </div>
         </div>
       </div>
+
+      {/* 이미지 모달 추가 */}
+      <ImageModal
+        isOpen={isModalOpen}
+        imageUrl={userData?.profileImageUrl || DefaultImage}
+        onClose={handleCloseModal}
+      />
     </div>
   );
 };

@@ -143,6 +143,7 @@ const MyOotd: React.FC<MyOotdProps> = ({ userInfo }) => {
         </div>
         ))}
       </div>
+      {totalPages > 1 && (
       <div className="flex justify-center mt-8">
         {Array.from({ length: totalPages }, (_, index) => (
           <button
@@ -154,6 +155,7 @@ const MyOotd: React.FC<MyOotdProps> = ({ userInfo }) => {
           </button>
         ))}
       </div>
+      )}
     </div>
   );
 };
