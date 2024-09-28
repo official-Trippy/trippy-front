@@ -70,7 +70,7 @@ const UserOotd: React.FC<UserOotdProps> = ({ memberId }) => {
         {ootdList.map((item) => (
           <div
             key={item.ootd.id}
-            className="flex-1 cursor-pointer"
+            className="flex-1 cursor-pointer overflow-hidden"
             onClick={() => handleOotdItemClick(item.post.id)}
           >
             <div className="flex items-center pb-4">
@@ -104,23 +104,7 @@ const UserOotd: React.FC<UserOotdProps> = ({ memberId }) => {
                 />
               </div>
             )}
-            <div className="flex items-center my-4 justify-end">
-              <Image
-                src={likedPosts.includes(item.post.id) ? HeartIcon : EmptyHeartIcon}
-                alt="좋아요"
-                width={20}
-                height={20}
-              />
-              <span className="mx-2 text-[#cfcfcf]"> {item.post.likeCount}</span>
-              <Image
-                src={CommentIcon1}
-                alt="댓글"
-                width={20}
-                height={20}
-              />
-              <span className="mx-2 text-[#cfcfcf]"> {item.post.commentCount}</span>
-            </div>
-            <div className="text-[#6b6b6b] text-xl font-normal font-['Pretendard'] text-ellipsis overflow-hidden whitespace-nowrap">
+          <div className="mt-4 text-[#6b6b6b] text-xl font-normal font-['Pretendard'] overflow-hidden text-ellipsis whitespace-nowrap">
               {item.post.body}
             </div>
             <div className="tag-container">
@@ -132,6 +116,30 @@ const UserOotd: React.FC<UserOotdProps> = ({ memberId }) => {
                   {tag}
                 </span>
               ))}
+            </div>
+            <div className="flex items-center mt-2 my-4 justify-start">
+              <Image
+                src={likedPosts.includes(item.post.id) ? HeartIcon : EmptyHeartIcon}
+                alt="좋아요"
+                width={20}
+                height={10}
+                style={{
+                    width: '20px',
+                    height: '18px',
+                }}
+              />
+              <span className="mx-2 text-[#cfcfcf]"> {item.post.likeCount}</span>
+              <Image
+                src={CommentIcon1}
+                alt="댓글"
+                width={20}
+                height={20}
+                style={{
+                    width: '20px',
+                    height: '18px',
+                }}
+              />
+              <span className="mx-2 text-[#cfcfcf]"> {item.post.commentCount}</span>
             </div>
           </div>
         ))}

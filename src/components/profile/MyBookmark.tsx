@@ -97,7 +97,7 @@ const MyBookmark = () => {
                   {ootdData?.result?.map((item: any) => (
                     <div 
                       key={item.ootd.id} 
-                      className="flex-1 cursor-pointer"
+                      className="flex-1 cursor-pointer overflow-hidden"
                       onClick={() => handlePostClick(item.post.id)} 
                     >
                         <div className="flex items-center pb-4">

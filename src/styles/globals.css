@@ -508,7 +508,6 @@ body {
 
 .tag-container {
   display: flex;
-  overflow-x: auto;
   white-space: nowrap;
   padding: 8px 0;
 }
