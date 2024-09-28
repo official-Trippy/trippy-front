@@ -13,6 +13,7 @@ import { UploadedImage } from '@/types/ootd';
 import Swal from 'sweetalert2';
 import { getWeatherStatusInKorean } from '@/constants/weatherTransition';
 import { useUserStore } from '@/store/useUserStore';
+import Cookies from 'js-cookie'; 
 
 const weatherOptions = [
   { value: 'rain', label: '비' },
@@ -41,12 +42,13 @@ const PostOotd: React.FC = () => {
   const userInfo = useUserStore((state) => state.userInfo);
   const userMemberId = userInfo?.memberId;
 
+
   useEffect(() => {
-    // Redirect to login if not authenticated
-    if (!userInfo) {
-      router.push("/login");
+    const accessToken = Cookies.get('accessToken'); // 쿠키에서 accessToken 가져오기
+    if (!accessToken) {
+      router.push('/login'); // accessToken 없으면 로그인 페이지로 리다이렉트
     }
-  }, [userInfo, router]);
+  }, [router]);
 
   const dateInputRef = useRef<HTMLInputElement>(null); 
 
