@@ -219,11 +219,20 @@ const handleEditSubmit = () => {
           setIsLiked(true); // 좋아요 상태 변경
           setLikeCount((prevCount) => prevCount + 1); // 좋아요 수 증가
           refetchPostDetail(); // 상위 데이터 다시 불러오기
+          
+          // 좋아요 리스트에 현재 유저 추가 (즉각 반영)
+          setLikeList((prevList) => [
+            ...prevList,
+            {
+              nickName: userInfo.nickName,  // 현재 유저의 닉네임
+              profileUrl: userInfo?.profileUrl, // 현재 유저의 프로필 이미지
+            }
+          ]);
         }
       },
     }
   );
-
+  
   const unlikeMutation = useMutation(
     () => unlikePost(postId),
     {
@@ -232,6 +241,11 @@ const handleEditSubmit = () => {
           setIsLiked(false); // 좋아요 취소 상태 변경
           setLikeCount((prevCount) => Math.max(prevCount - 1, 0)); // 좋아요 수 감소
           refetchPostDetail(); // 상위 데이터 다시 불러오기
+  
+          // 좋아요 리스트에서 현재 유저 제거 (즉각 반영)
+          setLikeList((prevList) =>
+            prevList.filter((user) => user.nickName !== userInfo.nickName)
+          );
         }
       },
     }
@@ -558,7 +572,7 @@ const handleEditSubmit = () => {
             <div className="flex items-center ml-[20px] xs-400:justify-center xs-400:ml-0 py-2">
               <div className="min-w-12 min-h-12 w-12 h-12 sm-700:w-16 sm-700:h-16 relative mr-4">
                 <Image
-                  src={like.profileUrl || DefaultImage}
+                  src={like.profileUrl || userInfo.profileImageUrl}
                   alt="프로필 이미지"
                   layout="fill"
                   objectFit="cover"
