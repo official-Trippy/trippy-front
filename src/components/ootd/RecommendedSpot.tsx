@@ -31,7 +31,7 @@ const RecommendedSpot: React.FC<RecommendedSpotProps> = ({ recommendedSpots }) =
   const updateItemsPerSlide = () => {
     if (typeof window !== 'undefined') {
       const width = window.innerWidth;
-      if (width < 700) {
+      if (width < 500) {
         setItemsPerSlide(2);
       } else if (width < 1000) {
         setItemsPerSlide(3);
@@ -63,9 +63,8 @@ const RecommendedSpot: React.FC<RecommendedSpotProps> = ({ recommendedSpots }) =
         }
     }
   };
-
   return (
-    <div className="relative w-[90%] sm-700:w-[66%] mx-auto pt-[5rem] overflow-visible">
+    <div className="relative w-[90%] sm-700:w-[66%] sm-700:max-w-7xl  mx-auto pt-[5rem] overflow-visible">
       <h2 className="font-bold text-2xl mb-4">추천 장소를 알려드릴게요!</h2>
       {itemsPerSlide < recommendedSpots.length && (
       <Image
@@ -74,7 +73,14 @@ const RecommendedSpot: React.FC<RecommendedSpotProps> = ({ recommendedSpots }) =
                     width={30}
                     height={30}
                     onClick={() => handleScrollOotd('left')}
-                    className="absolute left-[-6px] top-[66%] transform -translate-y-1/2 z-10"
+                    style={{
+                      width: '30px',
+                      height: '30px',
+                      position: 'absolute',
+                      top: '62%',
+                      transform: 'translateY(-50%)',
+                      zIndex: 999,
+                  }}
                 />
       )}
       <div className="relative mx-auto">
@@ -86,10 +92,10 @@ const RecommendedSpot: React.FC<RecommendedSpotProps> = ({ recommendedSpots }) =
         >
           {recommendedSpots.length > 0 ? (
             recommendedSpots.map((spot, index) => (
-              <SwiperSlide key={index} className="flex flex-col items-center justify-center cursor-pointer relative">
-              <div className="rounded-lg p-4">
+              <SwiperSlide key={index} className="flex flex-col items-center justify-center text-center">
+              <div className="rounded-lg py-4 flex items-center justify-center">
                 {spot.imgList && spot.imgList.length > 0 ? (
-                  <div className='w-[158px] h-[100px]'>
+                  <div className="w-[158px] h-[100px] flex justify-center items-center">
                     <Image
                       src={spot.imgList[0].galWebImageUrl}
                       alt={spot.title}
@@ -99,7 +105,7 @@ const RecommendedSpot: React.FC<RecommendedSpotProps> = ({ recommendedSpots }) =
                     />
                   </div>
                 ) : (
-                  <div className='w-[158px] h-[100px]'>
+                  <div className="w-[158px] h-[100px] flex justify-center items-center">
                     <Image
                       src={DefaultImage}
                       alt="이미지가 없습니다."
@@ -110,7 +116,7 @@ const RecommendedSpot: React.FC<RecommendedSpotProps> = ({ recommendedSpots }) =
                   </div>
                 )}
               </div>
-              <p className="text-center text-xl font-medium mt-2">{spot.title}</p>
+              <p className="text-xl font-medium mt-2">{spot.title}</p>
             </SwiperSlide>
             ))
           ) : (
@@ -125,7 +131,15 @@ const RecommendedSpot: React.FC<RecommendedSpotProps> = ({ recommendedSpots }) =
                     width={30}
                     height={30}
                     onClick={() => handleScrollOotd('right')}
-                    className="absolute right-[-6px] top-[66%] transform -translate-y-1/2 z-10"
+                    style={{
+                      width: '30px',
+                      height: '30px',
+                      position: 'absolute',
+                      top: '62%', 
+                      transform: 'translateY(-50%)',
+                      right: '0px',
+                      zIndex: 999,
+                  }}
                 />
       )}
 

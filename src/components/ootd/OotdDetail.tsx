@@ -270,7 +270,7 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
           </div>
 
           {/* 오른쪽 팔로우 버튼 및 아이콘들 */}
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-2 sm-700:space-x-4">
             <FollowButton postMemberId={data.result.member.memberId} userMemberId={userMemberId} />
             {/* 북마크 및 메뉴 아이콘 */}
             <div className="min-w-[35px] flex items-center">
@@ -288,7 +288,7 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
             </div>
 
             {userMemberId === data.result.member.memberId && (
-              <div className="relative flex-shrink-0">
+              <div className="relative flex-shrink-0 w-[24px]">
                 <Image
                   src={CabapIcon}
                   alt="cabap"
