@@ -142,7 +142,7 @@ function RecentPost({ allPosts, setAllPosts, boardData, boardRefetch, PAGE_SIZE,
             </div>
             {allPosts === 0 ? (
                 <div>
-                    <div className="grid grid-cols-1 lg:grid-cols-1 2xl:grid-cols-2 gap-x-[8rem] gap-y-[5.3rem] mt-[5rem]">
+                    <div className="grid grid-cols-1 lg:grid-cols-1 2xl:grid-cols-2 gap-x-[8rem] gap-y-[5.3rem]">
                         {sortedPosts().map((posts: any, index: number) => {
                             const BoardId = posts.post.id;
 
