@@ -548,8 +548,10 @@ const handleEditSubmit = () => {
       </div>
     ));
   };
-  
 
+  const handleGoProfile = (memberId) => {
+    router.push(`/user/${memberId}`);
+  };
 
 
   const renderLikeList = (likes: any[]) => {
@@ -569,7 +571,7 @@ const handleEditSubmit = () => {
       <div className="grid grid-cols-2 xs-400:grid-cols-3 gap-0">
         {paginatedLikes.map((like, index) => (
           <div key={index} className="my-4 like-section px-4 py-0 sm-700:px-4 sm-700:py-4">
-            <div className="flex items-center ml-[20px] xs-400:justify-center xs-400:ml-0 py-2">
+            <div className="flex items-center ml-[20px] xs-400:justify-center xs-400:ml-0 py-2 cursor-pointer" onClick={() => handleGoProfile(like.memberId)}>
               <div className="min-w-12 min-h-12 w-12 h-12 sm-700:w-16 sm-700:h-16 relative mr-4">
                 <Image
                   src={like.profileUrl || userInfo.profileImageUrl}
