@@ -738,3 +738,8 @@ body {
 #temperature-input {
   width: 60px !important; /* 온도 입력 필드와 드롭다운 필드 크기를 동일하게 맞춤 */
 }
+
+
+.swal2-success .swal2-success-ring {
+  border: 0.25em solid #fb3463 !important;
+}
