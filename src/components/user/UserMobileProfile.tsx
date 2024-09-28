@@ -56,7 +56,7 @@ const UserMobileProfle: React.FC<UserProfileProps> = ({
   <div className="relative w-full">
     <div className="absolute top-[-240px] left-1/2 transform -translate-x-1/2 w-full h-[240px] px-8 py-4 flex flex-col items-center">
     <h1 className="text-4xl text-white font-bold mt-2">{blogName}</h1>
-      <div className="relative mt-4 mb-4">
+      <div className="relative my-4">
         <Image
           src={profileImageUrl || DefaultImage}
           alt="Profile"

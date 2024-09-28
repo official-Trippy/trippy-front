@@ -44,7 +44,7 @@ const MyMobileProfile: React.FC<{ setActiveTab: (tab: string) => void }> = ({
   const userData = data?.result;
 
   return (
-    <div className="w-full mx-auto flex flex-col items-center relative z-[9999]">
+    <div className="w-full mx-auto flex flex-col items-center relative z-[9989]">
       <div className="relative w-full">
         <div className="absolute top-[-240px] left-1/2 transform -translate-x-1/2 w-full h-[240px] px-8 py-4 flex flex-col items-center">
           <h1 className="text-4xl text-white font-bold mt-2">{userData?.blogName}</h1>
