@@ -567,8 +567,8 @@ const handleEditSubmit = () => {
                   : (showLikes ? EmptyHeartIcon2 : EmptyHeartIcon)
               }
               alt={isLiked ? "좋아요" : "좋아요 취소"}
-              width={24}
-              height={24}
+              width={20}
+              height={20}
             />
             <span className={`mx-2 ${showLikes ? 'text-[#FB3463]' : ''}`}>{likeCount}</span>
           </button>

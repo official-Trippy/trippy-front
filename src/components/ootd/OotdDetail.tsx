@@ -39,6 +39,7 @@ import { RecommendedSpotsResponse } from "@/types/recommend";
 import SkeletonRecommendOotdPost from "../pages/ootd/SkeletonRecommendOotdPost";
 import SkeletonOotdDetailRecommend from "../pages/ootd/SkeletonOotdDetailRecommend";
 import { isKoreanLocation } from "@/utils/locationInKorea";
+import { extractCityDistrictNeighborhood } from "@/utils/extractCityDistrictNeighborhood";
 
 interface OotdDetailProps {
   id: number;
@@ -74,14 +75,17 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
 
   useEffect(() => {
     const checkIfBookmarked = async () => {
-      if (data?.result?.post?.id) {
+      const accessToken = Cookies.get('accessToken');
+  
+      // accessToken이 존재할 때만 실행
+      if (accessToken && data?.result?.post?.id) {
         const bookmarked = await fetchIsBookmarked(data.result.post.id);
         setIsBookmarked(bookmarked);
       }
     };
+  
     checkIfBookmarked();
-  }, [data]);
-
+  }, [data]); // data가 변경될 때만 실행
   const handleBookmarkClick = async () => {
     if (!data?.result?.post?.id) return;
 
@@ -209,6 +213,9 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
   const ootdItem = data.result;
 
   const weatherInfo = getWeatherStatusInfo(ootdItem.ootd.weatherStatus);
+
+  const formattedLocation = extractCityDistrictNeighborhood(ootdItem.post.location || "정보 없음");
+
 
   const SampleNextArrow = (props: any) => {
     const { className, style, onClick, currentSlide, slideCount } = props;
@@ -429,7 +436,10 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
         {isSpotsLoading ? (
           <SkeletonOotdDetailRecommend />
         ) : (
-          <RecommendedSpot recommendedSpots={recommendedSpots?.result || []} />
+          <RecommendedSpot 
+          recommendedSpots={recommendedSpots?.result || []}
+          location={formattedLocation}
+        />
         )}
       </div>
     </>

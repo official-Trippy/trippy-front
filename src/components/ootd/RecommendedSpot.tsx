@@ -21,9 +21,10 @@ interface RecommendedSpot {
 
 interface RecommendedSpotProps {
   recommendedSpots: RecommendedSpot[];
+  location: string; 
 }
 
-const RecommendedSpot: React.FC<RecommendedSpotProps> = ({ recommendedSpots }) => {
+const RecommendedSpot: React.FC<RecommendedSpotProps> = ({ recommendedSpots, location }) => {
   const [itemsPerSlide, setItemsPerSlide] = useState(4);
   const swiperRef = useRef<SwiperRef | null>(null);
 
@@ -80,8 +81,8 @@ const RecommendedSpot: React.FC<RecommendedSpotProps> = ({ recommendedSpots }) =
   };
 
   return (
-    <div className="relative w-[90%] sm-700:w-[66%] sm-700:max-w-7xl mx-auto pt-[2rem] overflow-visible">
-      <h2 className="font-bold text-2xl mb-4">추천 장소를 알려드릴게요!</h2>
+    <div className="relative w-[90%] sm-700:w-[66%] sm-700:max-w-7xl mx-auto pt-[4rem] overflow-visible">
+      <h2 className="font-bold text-2xl mb-4"><span className='text-[#FB3463]'>{location}</span>의 추천 관광지를 알려드릴게요!</h2>
       {/* 왼쪽 버튼 */}
       {itemsPerSlide < recommendedSpots.length && (
         <Image
@@ -94,7 +95,7 @@ const RecommendedSpot: React.FC<RecommendedSpotProps> = ({ recommendedSpots }) =
             width: '30px',
             height: '30px',
             position: 'absolute',
-            top: '58%', // 이미지 영역의 세로 정가운데
+            top: '63%', // 이미지 영역의 세로 정가운데
             transform: 'translateY(-50%)',
             zIndex: 999,
             left: '-10px',
@@ -192,7 +193,7 @@ const RecommendedSpot: React.FC<RecommendedSpotProps> = ({ recommendedSpots }) =
             width: '30px',
             height: '30px',
             position: 'absolute',
-            top: '58%', // 이미지 영역의 세로 정가운데
+            top: '63%', // 이미지 영역의 세로 정가운데
             transform: 'translateY(-50%)',
             right: '-10px',
             zIndex: 999,
