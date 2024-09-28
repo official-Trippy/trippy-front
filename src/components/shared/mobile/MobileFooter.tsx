@@ -121,7 +121,7 @@ const MobileFooter = () => {
             onClick={(e) => e.stopPropagation()} // 모달 컨텐츠 클릭 시 이벤트 전파 방지
           >
             <div className="flex flex-col gap-4">
-              <div className="px-[1rem] pt-[1.4rem] rounded-lg border-b border-white" onClick={handlePostClick}>
+              <div className="px-[1rem] pt-[1.4rem] rounded-lg border-b border-white cursor-pointer" onClick={handlePostClick}>
                 <div className="hover:bg-gray-200 px-[1.3rem] py-[1.2rem]">
                   <div className="flex items-start">
                     <Image
@@ -139,7 +139,7 @@ const MobileFooter = () => {
                 </div>
               </div>
 
-              <div className="px-[1rem] pb-[1.4rem] rounded-lg border-b border-white" onClick={handleOotdClick}>
+              <div className="px-[1rem] pb-[1.4rem] rounded-lg border-b border-white cursor-pointer" onClick={handleOotdClick}>
                 <div className="hover:bg-gray-200 px-[1.3rem] py-[1.2rem]">
                   <div className="flex items-start">
                     <Image

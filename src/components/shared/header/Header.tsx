@@ -262,7 +262,7 @@ const Header = () => {
                       onMouseLeave={() => setIsDropdownOpen(false)}
                     >
                       <Link href="/post">
-                        <div className="px-[1rem] pt-[1.4rem] rounded-lg border-b border-white">
+                        <div className="px-[1rem] pt-[1.4rem] rounded-lg border-b border-white cursor-pointer">
                           <div className="hover:bg-gray-200 px-[1.3rem] py-[1.2rem]">
                             <div className="flex items-start">
                               <Image
@@ -283,7 +283,7 @@ const Header = () => {
                         </div>
                       </Link>
                       <Link href="/write">
-                        <div className="px-[1rem] pb-[1.4rem] rounded-lg border-b border-white">
+                        <div className="px-[1rem] pb-[1.4rem] rounded-lg border-b border-white cursor-pointer">
                           <div className="hover:bg-gray-200 px-[1.3rem] py-[1.2rem]">
                             <div className="flex items-start">
                               <Image
