@@ -6,14 +6,15 @@ import Link from "next/link";
 import LogoHeader from "../../../../public/LogoHeader.svg";
 import AlertImg from "../../../../public/AlertImg.png";
 import DefaultImage from "../../../../public/defaultImage.svg";
-import searchIconMobile from "../../../../public/search_icon_mobile.svg"; // Mobile search icon
-import alertIconMobile from "../../../../public/alert_icon_mobile.svg"; // Mobile alert icon
+import searchIconMobile from "../../../../public/search_icon_mobile.svg"; 
+import alertIconMobile from "../../../../public/alert_icon_mobile.svg"; 
+import logoutImg from "../../../../public/LogoutImg.svg";
 import UserModal from "@/components/userInfo/userModal";
 import { useUserStore } from "@/store/useUserStore";
 import { useRouter, usePathname } from "next/navigation";
 import Cookies from "js-cookie";
 import SearchBar from "@/components/search/searchBar";
-import NotificationComponent from "@/components/notification/notificationComponent"; // Import NotificationComponent
+import NotificationComponent from "@/components/notification/notificationComponent"; 
 import SearchBarMobileBar from "@/components/search/searchMobileBar";
 import postwriteImg from "@/dummy/postwrite.svg";
 
@@ -78,6 +79,14 @@ const Header = () => {
 
   const handleNotificationsToggle = () => {
     setIsNotificationsVisible(!isNotificationsVisible); // Toggle notifications
+  };
+
+  const { resetUserInfo } = useUserStore();
+
+  const handleLogoutClick = () => {
+    Cookies.remove("accessToken");
+    resetUserInfo();
+    router.push("/login");
   };
 
   if (isLoading) {
@@ -308,6 +317,14 @@ const Header = () => {
             width={24}
             height={24}
             onClick={handleNotificationsToggle}
+            className="cursor-pointer"
+          />
+          <Image
+            src={logoutImg}
+            alt="Logout"
+            width={24}
+            height={24}
+            onClick={handleLogoutClick}
             className="cursor-pointer"
           />
                   {/* <div className="ml-[5px] my-auto">로그아웃</div> */}

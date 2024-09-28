@@ -542,7 +542,7 @@ const EditInfo = () => {
       )}
     </div>
   </div>
-    </div><div className="w-[90%] mb-[100px] mx-auto sm-700:max-w-[400px] sm-700:mb-0">
+    </div><div className="w-[90%] mb-[60px] mx-auto sm-700:max-w-[400px] sm-700:mb-0">
         <div className="mt-[4rem]">
           <div className="">
             <div className="sign-up-info">프로필 사진</div>
@@ -888,7 +888,7 @@ const EditInfo = () => {
             <div className="text-center">
               <button
                 type="submit"
-                className={`mx-auto w-full sm-700:w-[150px] h-[44px] mt-[2rem] mb-[2rem] text-white py-2 rounded-xl flex justify-center items-center  ${nickNameError.includes("다시") ||
+                className={`mx-auto w-[150px] h-[44px] mt-[2rem] mb-[2rem] text-white py-2 rounded-xl flex justify-center items-center  ${nickNameError.includes("다시") ||
                     blogNameError.includes("다시")
                     ? "cursor-not-allowed bg-[#cfcfcf] hover:bg-[#cfcfcf]"
                     : "bg-btn-color"}`}
