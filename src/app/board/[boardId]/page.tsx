@@ -773,8 +773,9 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
                                         <Image className="w-[2.8rem] h-[2.8rem] cursor-pointer" width={28} height={28} src={menubars} alt="" onClick={() => toggleMyEdit(childData.id)} />
                                         {openEditing && (
                                           <div className="absolute flex flex-col ml-auto bg-white shadow-md rounded-md -ml-[4.5rem] mt-[2.3rem] animate-dropdown z-20 rounded-[0.8rem]" style={{ opacity: 0, transform: 'translateY(-10px)' }}>
-                                            <span className="px-[2rem] py-[1rem] cursor-pointer text-red-500" onClick={() => { deleteReplyHandler(childData.id); toggleMyEdit(childData.id) }}>삭제</span>
                                             <span className="px-[2rem] py-[1rem] cursor-pointer" onClick={() => { handleEditContent(childData.id, childData.content); toggleMyEdit(childData.id) }}>수정</span>
+                                            <span className="px-[2rem] py-[1rem] cursor-pointer text-red-500" onClick={() => { deleteReplyHandler(childData.id); toggleMyEdit(childData.id) }}>삭제</span>
+
                                           </div>
                                         )}
                                       </div>
