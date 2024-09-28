@@ -79,7 +79,7 @@ body {
 
 @media (prefers-color-scheme: dark) {
   input[type="text"] {
-    color: white; /* 글씨 색상을 흰색으로 설정 *//
+    color: white; /* 글씨 색상을 흰색으로 설정 */
   }
 
   .comment-section {
