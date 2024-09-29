@@ -18,7 +18,7 @@ import UpIcon from '../../../public/arrow_up.svg';
 import DownIcon from '../../../public/arrow_down.svg';
 import Swal from "sweetalert2";
 import { AxiosError } from "axios";
-import DefaultImage from '../../../public/defaultImage.svg';
+import DefaultImage from '../../../public/DefaultProfile.svg';
 import { getByteLength } from "@/constants/getByteLength";
 import OOtdDeleteImage from '../../../public/ootdImageDelete.svg';
 import Cropper, { Area } from "react-easy-crop";
@@ -92,8 +92,10 @@ const EditInfo = () => {
     try {
       const data = await getMyInfo(); 
       const profileImgData = data.profileImageUrl || null;
+      const blogImgData = data.blogTitleImgUrl || null;
       setInitialProfileImage(profileImgData); // 처음 유저 이미지를 저장
       setProfileImage(profileImgData); // 현재 표시될 이미지도 초기화
+      setBlogImage(blogImgData);
       // 나머지 유저 정보 초기화
       setNickName(data.nickName || '');
       setBlogName(data.blogName || '');
