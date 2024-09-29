@@ -78,8 +78,8 @@ const NotificationPage = () => {
 
   return (
     <div>
-      <Header />
-      <FallingContainer />
+      {/* <Header /> */}
+      {/* <FallingContainer /> */}
       <div className="header flex justify-between items-center w-[50%] mx-auto relative">
         <h1 className="text-5xl">알림</h1>
         {/* 전체 삭제 버튼 */}

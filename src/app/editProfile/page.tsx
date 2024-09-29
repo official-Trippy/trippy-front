@@ -17,7 +17,7 @@ const EditProfile = () => {
 
   return (
     <>
-      <Header />
+      {/* <Header /> */}
       <EditInfo/>
     </>
   );

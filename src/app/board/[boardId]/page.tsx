@@ -396,7 +396,7 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
 
   return (
     <div>
-      {window.innerWidth > 600 && (<Header />)}
+      {/* {window.innerWidth > 600 && (<Header />)} */}
       <div className="w-[90%] sm-700:w-[50%] mx-auto">
         <div className="flex text-[#6B6B6B] font-semibold text-[2rem]">
           {window.innerWidth > 600 ? (

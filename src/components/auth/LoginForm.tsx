@@ -66,6 +66,7 @@ const LoginForm = () => {
         // accessToken과 refreshToken을 쿠키에 저장
         Cookies.set("accessToken", accessToken);
         Cookies.set("refreshToken", refreshToken);
+        Cookies.set("role", role);
 
         // 전역 상태에 유저 정보 저장
         await fetchUserInfo(); // 전역 상태에 유저 정보를 업데이트

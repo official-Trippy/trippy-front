@@ -287,7 +287,7 @@ function PostEdit({ params }: { params: { editNum: number } }) {
     console.log(result)
     return (
         <div>
-            <Header />
+            {/* <Header /> */}
             <div className='w-[66%] mx-auto'>
                 <div className='flex items-center mt-[5rem]'>
                     <button

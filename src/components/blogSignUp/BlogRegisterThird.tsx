@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import React, { useEffect } from "react";
 import Image from "next/image";
@@ -34,14 +34,12 @@ const BlogRegisterThird = () => {
       router.push("/");
       return;
     }
-
-    // 로그인하지 않은 사용자는 이 페이지에 접근할 수 있도록 허용
   };
 
   // 홈으로 버튼 클릭 시 쿠키 업데이트 로직
   const handleHomeClick = () => {
     const role = Cookies.get("role");
-
+    
     // role이 GUEST이면 MEMBER로 업데이트
     if (role === "GUEST") {
       Cookies.set("role", "MEMBER");
@@ -66,7 +64,7 @@ const BlogRegisterThird = () => {
       <div className="w-[90%] max-w-[400px] mx-auto mt-auto sm-700:mt-0">
         <Link href="/" onClick={handleHomeClick}>
           <button
-            className="mx-auto w-full sm-700:w-[150px] h-[44px] mt-[2rem] mb-[2rem] text-white py-2 rounded-xl flex justify-center items-center bg-btn-color"
+            className="mx-auto w-full sm-700:w-[120px] h-[44px] mt-[2rem] mb-[2rem] text-white py-2 rounded-xl flex justify-center items-center bg-btn-color"
             style={{ fontSize: "1.2rem" }}
           >
             홈으로

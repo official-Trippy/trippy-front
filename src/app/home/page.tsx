@@ -3,7 +3,7 @@ import Header from "@/components/shared/header/Header";
 const HomePage = () => {
   return (
     <>
-      <Header />
+      {/* <Header /> */}
       <div>홈인데요?</div>
     </>
   );

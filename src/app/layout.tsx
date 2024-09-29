@@ -8,13 +8,12 @@ import "@/styles/globals.css";
 import { QueryClient, QueryClientProvider } from "react-query";
 import Script from "next/script";
 import { GoogleOAuthProvider } from "@react-oauth/google";
-
+import { usePathname } from "next/navigation";  // 경로를 확인하는 훅
 import NotificationComponent from "@/components/notification/notificationComponent";
 import MobileFooter from "@/components/shared/mobile/MobileFooter";
 
 const inter = Inter({ subsets: ["latin"] });
 const queryClient = new QueryClient();
-
 const clientId = process.env.NEXT_PUBLIC_GOOGLE_OAUTH_ID || "";
 
 export default function RootLayout({
@@ -22,6 +21,12 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const pathname = usePathname();  // 현재 페이지 경로 가져오기
+
+  // 특정 페이지에서만 Header를 숨기기 (예시: "/login"과 "/signup"에서 Header 숨김)
+  const hideHeaderPages = ["/login", "/signUp", "/blogRegister" ,"/blogRegister2", "/blogRegister3", , "/findAccount", , "/findPassword", , "/privacy"];
+  const shouldShowHeader = !hideHeaderPages.includes(pathname);
+
   return (
     <html lang="en">
       <head>
@@ -44,7 +49,10 @@ export default function RootLayout({
         <QueryClientProvider client={queryClient}>
           <GoogleOAuthProvider clientId={clientId}>
             <NotificationComponent />
-            {/* <FallingContainer /> */}
+
+            {/* 조건에 따라 Header 표시 */}
+            {shouldShowHeader && <Header />}
+
             {children}
             <MobileFooter />
           </GoogleOAuthProvider>

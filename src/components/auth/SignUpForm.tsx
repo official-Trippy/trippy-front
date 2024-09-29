@@ -119,6 +119,7 @@ const SignUpForm = () => {
       const { accessToken, refreshToken } = response.result;
       Cookies.set("accessToken", accessToken);
       Cookies.set("refreshToken", refreshToken);
+      Cookies.set("role", "GUEST");
       console.log(accessToken);
       router.push("/blogRegister");
     } catch (error) {
@@ -404,7 +405,7 @@ const SignUpForm = () => {
       <div className="text-center">
               <button
                 type="submit"
-                className={`mx-auto w-full sm-700:w-[150px] h-[44px] mt-[2rem] mb-[2rem] text-white py-2 rounded-xl flex justify-center items-center mt-[4rem] mb-[2rem] ${!verificationClicked ||
+                className={`mx-auto w-full sm-700:w-[120px] h-[44px] mt-[2rem] mb-[2rem] text-white py-2 rounded-xl flex justify-center items-center mt-[4rem] mb-[2rem] ${!verificationClicked ||
                   !passwordValid ||
                   !passwordMatch ||
                   !agreementChecked ||
@@ -422,7 +423,6 @@ const SignUpForm = () => {
               >
                 다음
               </button>
-              
             </div>
             </div>
             {modalOpen && (

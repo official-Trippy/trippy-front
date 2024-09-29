@@ -132,7 +132,7 @@ const SearchPage = () => {
 
   return (
     <div className="w-full min-h-screen bg-white">
-      <Header />
+      {/* <Header /> */}
 
       <div className="w-[90%] lg:w-[68%] mx-auto mt-8 px-4 lg:px-10">
         {/* 검색 결과 제목 */}

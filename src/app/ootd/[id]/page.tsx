@@ -11,7 +11,7 @@ const OotdDetailPage: React.FC<OotdDetailPageProps> = ({ params }) => {
 
   return (
     <div>
-      <Header />
+      {/* <Header /> */}
       <OotdDetail id={Number(id)} />
     </div>
   );

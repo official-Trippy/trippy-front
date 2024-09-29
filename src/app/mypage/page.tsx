@@ -87,7 +87,7 @@ const MyPage = () => {
 
   return (
     <>
-      <Header />
+      {/* <Header /> */}
       <div className="relative w-full h-[240px]">
         <Image
           src={userData?.blogTitleImgUrl || backgroundImg}

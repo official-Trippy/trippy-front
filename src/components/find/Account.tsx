@@ -102,7 +102,7 @@ const Account = () => {
         {!accountFound && !badRequest && (
             <button
             onClick={handleFindAccount}
-            className={`mx-auto w-full sm-700:w-[150px] h-[44px] mt-[2rem] mb-[2rem] text-white py-2 rounded-xl flex justify-center items-center ${isNextButtonDisabled() ? "cursor-not-allowed bg-[#cfcfcf] hover:bg-[#cfcfcf]" : "bg-btn-color hover:bg-[#FB3463]"}`}
+            className={`mx-auto w-full sm-700:w-[120px] h-[44px] mt-[2rem] mb-[2rem] text-white py-2 rounded-xl flex justify-center items-center ${isNextButtonDisabled() ? "cursor-not-allowed bg-[#cfcfcf] hover:bg-[#cfcfcf]" : "bg-btn-color hover:bg-[#FB3463]"}`}
             style={{ fontSize: "1.2rem" }}
             disabled={isNextButtonDisabled()}
           >
@@ -113,7 +113,7 @@ const Account = () => {
              {badRequest && (
           <button
             onClick={handleTryAgain}
-            className={`mx-auto w-full sm-700:w-[150px] h-[44px] mt-[2rem] mb-[2rem] bg-btn-color text-white py-2 rounded-xl flex justify-center items-center bg-[#cfcfcf] hover:bg-[#cfcfcf]`}
+            className={`mx-auto w-full sm-700:w-[120px] h-[44px] mt-[2rem] mb-[2rem] bg-btn-color text-white py-2 rounded-xl flex justify-center items-center bg-[#cfcfcf] hover:bg-[#cfcfcf]`}
             style={{ fontSize: "1.2rem" }}
           >
             다시 시도하기
@@ -123,7 +123,7 @@ const Account = () => {
           <Link href='/login'>
             <div className="w-full">
               <button
-                className={`mx-auto w-full sm-700:w-[150px] h-[44px] mt-[2rem] mb-[2rem] bg-btn-color text-white py-2 rounded-xl flex justify-center items-center hover:bg-[#FB3463]`}
+                className={`mx-auto w-full sm-700:w-[120px] h-[44px] mt-[2rem] mb-[2rem] bg-btn-color text-white py-2 rounded-xl flex justify-center items-center hover:bg-[#FB3463]`}
                 style={{ fontSize: "1.2rem" }}
               >
                 로그인 하러가기

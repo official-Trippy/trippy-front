@@ -26,7 +26,6 @@ const BlogRegisterSecond = () => {
 
     // 로그인이 된 상태에서 role이 GUEST일 경우, 회원가입 페이지에 머물도록 함
     if (accessToken && refreshToken && role === "GUEST") {
-      // GUEST 사용자이므로 회원가입 페이지에 머물게 합니다.
       return;
     }
 
@@ -35,27 +34,33 @@ const BlogRegisterSecond = () => {
       router.push("/");
       return;
     }
-
-    // 로그인하지 않은 사용자는 이 페이지에 접근할 수 있도록 허용
   };
 
   const toggleInterest = (interest: string) => {
+    // 이미 선택된 관심사를 클릭하면 해제
     if (selectedInterests.includes(interest)) {
       setSelectedInterests(
         selectedInterests.filter((item) => item !== interest)
       );
-    } else {
+    } 
+    // 5개 초과로 선택되지 않도록 제한
+    else if (selectedInterests.length < 5) {
       setSelectedInterests([...selectedInterests, interest]);
     }
   };
+
+  // 선택된 관심사를 blogInterests의 순서대로 정렬
+  const sortedSelectedInterests = blogInterests.filter(interest =>
+    selectedInterests.includes(interest)
+  );
 
   const isButtonActive =
     selectedInterests.length >= 2 && selectedInterests.length <= 5;
 
   const handleSubmit = async () => {
-    console.log(selectedInterests);
+    console.log(sortedSelectedInterests); // 정렬된 관심사 출력
     try {
-      const result = await submitInterests(selectedInterests);
+      const result = await submitInterests(sortedSelectedInterests);
 
       if (result.success) {
         console.log("Successfully submitted interests!");
@@ -70,41 +75,42 @@ const BlogRegisterSecond = () => {
   return (
     <div className="min-h-[calc(100dvh-60px)] flex flex-col justify-between flex-col-reverse mb-[60px] sm:flex-col sm-700:min-h-[100vh] sm-700:justify-center sm-700:mb-0 items-center w-full">
       <div className="w-[90%] max-w-[400px] mx-auto">
-      <div className="w-full flex justify-center mt-[20px]">
-        <Image src={BlogStep2} alt="Logo" className="w-[30rem]" />
-      </div>
+        <div className="w-full flex justify-center mt-[20px]">
+          <Image src={BlogStep2} alt="Logo" className="w-[30rem]" />
+        </div>
       </div>
       <div className="w-[90%] max-w-[400px] mx-auto my-auto sm-700:my-0 sm-700:mt-[4rem]">
-      <div className="w-[90%] max-w-[400px] mx-auto flex flex-col justify-center">
-        <div className="mx-auto text-center">
-          <div className="sign-up-info">관심분야를 선택해주세요 (선택)</div>
-          <div className="mt-[.87rem] text-[1rem] text-[#9D9D9D]">
-            관심분야를 2개 이상 선택해주세요. (최대 5개까지)
+        <div className="w-[90%] max-w-[400px] mx-auto flex flex-col justify-center">
+          <div className="mx-auto text-center">
+            <div className="sign-up-info">관심분야를 선택해주세요 (선택)</div>
+            <div className="mt-[.87rem] text-[1rem] text-[#9D9D9D]">
+              관심분야를 2개 이상 선택해주세요. (최대 5개까지)
+            </div>
+          </div>
+          <div className="mx-auto grid grid-cols-5 gap-2 my-[4rem]">
+            {blogInterests.map((interest, index) => (
+              <button
+                key={index}
+                className={`favorite-btn-font ${selectedInterests.includes(interest)
+                  ? "favorite-btn-active"
+                  : "favorite-btn-inactive"
+                }`}
+                onClick={() => toggleInterest(interest)}
+                disabled={!selectedInterests.includes(interest) && selectedInterests.length >= 5} // 5개 선택 시 추가 선택 불가
+              >
+                {interest}
+              </button>
+            ))}
           </div>
         </div>
-        <div className="mx-auto grid grid-cols-5 gap-2 my-[4rem]">
-          {blogInterests.map((interest, index) => (
-            <button
-              key={index}
-              className={`favorite-btn-font ${selectedInterests.includes(interest)
-                ? "favorite-btn-active"
-                : "favorite-btn-inactive"
-                }`}
-              onClick={() => toggleInterest(interest)}
-            >
-              {interest}
-            </button>
-          ))}
-        </div>
-        </div>
-        </div>
-        <div className="w-[90%] max-w-[400px] mx-auto mt-auto sm-700:mt-0">
+      </div>
+      <div className="w-[90%] max-w-[400px] mx-auto mt-auto sm-700:mt-0">
         <div className="text-center">
           <Link href="/blogRegister3">
             <button
               type="submit"
               className={`mx-auto w-full ${isButtonActive ? "bg-btn-color" : "bg-[#cfcfcf]"
-                } sm-700:w-[150px] h-[44px] mt-[2rem] mb-[2rem] text-white py-2 rounded-xl flex justify-center items-center`}
+                } sm-700:w-[120px] h-[44px] mt-[2rem] mb-[2rem] text-white py-2 rounded-xl flex justify-center items-center`}
               onClick={handleSubmit}
               style={{ fontSize: "1.2rem" }}
               disabled={!isButtonActive}
@@ -113,7 +119,7 @@ const BlogRegisterSecond = () => {
             </button>
           </Link>
         </div>
-        </div>
+      </div>
     </div>
   );
 };
