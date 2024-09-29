@@ -8,6 +8,7 @@ import { submitInterests } from "@/services/blog"
 import { blogInterests } from "@/constants/blogPreference";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
+
 const BlogRegisterSecond = () => {
   const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
 
@@ -48,13 +49,18 @@ const BlogRegisterSecond = () => {
     }
   };
 
+  // 선택된 관심사를 blogInterests의 순서대로 정렬
+  const sortedSelectedInterests = blogInterests.filter(interest =>
+    selectedInterests.includes(interest)
+  );
+
   const isButtonActive =
     selectedInterests.length >= 2 && selectedInterests.length <= 5;
 
   const handleSubmit = async () => {
-    console.log(selectedInterests);
+    console.log(sortedSelectedInterests); // 정렬된 관심사 출력
     try {
-      const result = await submitInterests(selectedInterests);
+      const result = await submitInterests(sortedSelectedInterests);
 
       if (result.success) {
         console.log("Successfully submitted interests!");
