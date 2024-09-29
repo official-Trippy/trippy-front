@@ -75,8 +75,8 @@ const PostAllCard: React.FC<PostCardProps> = ({
         let linkPath = "#"; // 기본값은 빈 링크
         if (selectedSearchType === "POST" && postDetails?.id) {
           linkPath = `/board/${postDetails?.id}`;
-        } else if (selectedSearchType === "OOTD" && ootdDetails?.id) {
-          linkPath = `/ootd/${ootdDetails?.id}`;
+        } else if (selectedSearchType === "OOTD" && postDetails?.id) {
+          linkPath = `/ootd/${postDetails?.id}`;
         } else if (selectedSearchType === "NICKNAME" && memberId) {
           linkPath = `/user/${memberId}`;
         } else if (selectedSearchType === "BLOG" && memberId) {

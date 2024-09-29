@@ -173,8 +173,8 @@ const Header = () => {
           </div>
         </div>
 
-        <div className="flex items-center flex-grow max-w-[90%]">
-          <div className="flex mx-auto w-full">
+        <div className="flex items-center flex-grow max-w-[65%]">
+          <div className="flex mx-auto w-full justify-end">
             <SearchBar />
           </div>
 
@@ -210,7 +210,12 @@ const Header = () => {
                     )}
                   </div>
                   <div className="w-[32px] my-auto relative">
-                    <div onClick={() => { handleModalToggle(); setIsDropdownOpen(false); }}>
+                    <div
+                      onClick={() => {
+                        handleModalToggle();
+                        setIsDropdownOpen(false);
+                      }}
+                    >
                       <div
                         style={{
                           width: "32px",
@@ -251,14 +256,11 @@ const Header = () => {
                   </div>
                   {isDropdownOpen && (
                     <div
-
                       className="absolute w-[27rem] mt-[1rem] ml-[1rem] top-[3.6rem] rounded-[0.8rem] bg-white shadowalltop rounded-lg animate-dropdown z-20"
-                      style={{ opacity: 0, transform: 'translateY(-10px)' }}
+                      style={{ opacity: 0, transform: "translateY(-10px)" }}
                       onMouseEnter={() => {
                         setIsDropdownOpen(true);
-
                       }} // 드롭다운에 마우스가 올라가면 열려있도록 유지
-
                       onMouseLeave={() => setIsDropdownOpen(false)}
                     >
                       <Link href="/post">
@@ -274,8 +276,10 @@ const Header = () => {
                               />
                               <div>
 
+
                                 <h1 className="text-[1.6rem] font-medium text-neutral-900 dark:text-white ">블로그 티켓 글쓰기</h1>
                                 <span className="text-[0.9rem] font-normal text-[#9D9D9D]">여행에서 겪었던 이야기를 기록해 보세요.</span>
+
 
                               </div>
                             </div>
@@ -295,8 +299,10 @@ const Header = () => {
                               />
                               <div>
 
+
                                 <h1 className="text-[1.6rem] font-medium text-neutral-900 dark:text-white ">OOTD 글쓰기</h1>
                                 <span className="text-[0.9rem] font-normal text-[#9D9D9D]">여행 중 나의 특별한 OOTD를 공유해보세요.</span>
+
 
                               </div>
                             </div>
@@ -307,7 +313,10 @@ const Header = () => {
                   )}
                   <button
                     className="w-[8.6rem] h-[32px] bg-btn-color text-white text-2xl rounded-[8px] ml-4 font-semibold"
-                    onMouseEnter={() => { setIsDropdownOpen(true); setModalVisible(false); }}
+                    onMouseEnter={() => {
+                      setIsDropdownOpen(true);
+                      setModalVisible(false);
+                    }}
                   >
                     글쓰기
                   </button>

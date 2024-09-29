@@ -70,7 +70,7 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
       refetchOnWindowFocus: false,
     }
   );
-
+  const [tagSearch, setTagSearch] = useState<boolean>(false);
   const [isBookmarked, setIsBookmarked] = useState<boolean>(false);
 
   useEffect(() => {
@@ -118,7 +118,8 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
   const router = useRouter();
 
   const handleTagClick = (tag: string) => {
-    router.push(`/search/${encodeURIComponent(tag)}`); // Redirect to the search page with the clicked tag
+    setTagSearch(true);
+    router.push(`/search/${encodeURIComponent(tag)}`);
   };
 
   const handleProfileClick = () => {
