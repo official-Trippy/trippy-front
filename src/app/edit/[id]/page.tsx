@@ -284,7 +284,7 @@ const EditOotd: React.FC = () => {
 
   return (
     <>
-      <Header />
+      {/* <Header /> */}
       <div className="min-h-[calc(100dvh-60px)] mb-[60px] w-[90%] py-16 sm-700:w-[66%] sm-700:min-h-screen sm-700:mb-0 mx-auto">
         <div className="w-full flex justify-end mb-[20px]">
           <button

@@ -105,7 +105,7 @@ const UserPage = ({ params }: { params: { id: string } }) => {
   console.log(userBoardCount)
   return (
     <>
-      <Header />
+      {/* <Header /> */}
       <div className="relative w-full h-[240px]">
         <Image
           src={backgroundImg}

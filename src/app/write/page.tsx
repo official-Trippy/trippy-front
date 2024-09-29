@@ -7,7 +7,7 @@ const WritePage = () => {
 
   return (
     <div>
-      <Header />
+      {/* <Header /> */}
       <PostOotd />
     </div>
   );

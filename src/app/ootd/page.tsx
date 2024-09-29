@@ -6,7 +6,7 @@ import RecommendOotdPost from "@/components/pages/ootd/RecommendOotdPost";
 const OotdPage = () => {
   return (
     <div>
-      <Header />
+      {/* <Header /> */}
       <RecommendOotdPost />
       <RecentOotdPost />
     </div>

@@ -36,7 +36,7 @@ const OnBoradingPage = () => {
 
   return (
     <div>
-      <Header />
+      {/* <Header /> */}
       <div className="pages" ref={pagesRef}>
         <FirstBg className="page slide-up-animation">
           <div className="w-[66%] flex mx-auto">

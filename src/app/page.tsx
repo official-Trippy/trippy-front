@@ -63,7 +63,6 @@ export default function Home() {
   console.log(boardData)
   return (
     <div>
-      <Header />
       <RecommendBoard />
       <RecentPost allPosts={allPosts} setAllPosts={setAllPosts} boardData={boardData} boardRefetch={boardRefetch} PAGE_SIZE={PAGE_SIZE} pages={pages} setPages={setPages} />
 
