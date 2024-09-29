@@ -1063,7 +1063,7 @@ const EditInfo = () => {
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-8 rounded-lg w-[80%] max-w-[400px]">
             <h2 className="text-2xl font-bold mb-2 text-[#292929]">관심 분야 설정</h2>
-            <p className="text-sm text-[#6b6b6b] mb-4">관심분야를 2개 이상 설정해주세요</p>
+            <p className="text-sm text-[#6b6b6b] mb-4">관심분야를 2개 이상 선택해주세요. (최대 5개까지)</p>
             <div className="grid grid-cols-5 gap-2 justify-center">
               {blogInterests.map((interest, index) => (
                 <div
