@@ -7,6 +7,7 @@ import { ACCESS_TOKEN } from "@/constants/general";
 import DefaultImage from "../../../public/defaultImage.svg";
 import axios from "@/app/api/axios";
 import Swal from "sweetalert2";
+import { useRouter } from "next/navigation";
 
 const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
@@ -138,6 +139,11 @@ const FollowList: React.FC<{
     );
   }
 
+  const router = useRouter();
+  const goUserPage = (memberId: string) => {
+    router.push(`/user/${memberId}`);
+  };
+
   return (
     <div className="h-[400px]">
       <h3 className="text-2xl font-bold my-12">
@@ -156,7 +162,12 @@ const FollowList: React.FC<{
               key={user.idx}
               className="flex items-center justify-between p-4 border-b border-gray-200"
             >
-              <div className="flex items-center">
+              <div
+                className="flex items-center"
+                onClick={() => {
+                  goUserPage(user.memberId);
+                }}
+              >
                 <div className="w-16 h-16 rounded-full overflow-hidden">
                   <img
                     src={user.profileImageUrl || DefaultImage}
