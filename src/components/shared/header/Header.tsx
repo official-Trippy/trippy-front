@@ -372,6 +372,7 @@ const Header = () => {
             onClick={handleNotificationsToggle}
             className="cursor-pointer"
           />
+          {(accessToken &&
           <Image
             src={logoutImg}
             alt="Logout"
@@ -380,6 +381,7 @@ const Header = () => {
             onClick={handleLogoutClick}
             className="cursor-pointer"
           />
+          )}
                   {/* <div className="ml-[5px] my-auto">로그아웃</div> */}
         </div>
         {searchModalVisible && (
