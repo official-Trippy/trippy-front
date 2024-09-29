@@ -19,6 +19,7 @@
     "carousel": "^0.0.3",
     "cors": "^2.8.5",
     "date-fns": "^3.6.0",
+    "dayjs": "^1.11.13",
     "event-source-polyfill": "^1.0.31",
     "framer-motion": "^11.2.0",
     "http-proxy": "^1.18.1",
