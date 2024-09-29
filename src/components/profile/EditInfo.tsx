@@ -23,6 +23,7 @@ import { getByteLength } from "@/constants/getByteLength";
 import OOtdDeleteImage from '../../../public/ootdImageDelete.svg';
 import Cropper, { Area } from "react-easy-crop";
 import { getCroppedImg } from "@/utils/getCroppedImg";
+import { debounce } from 'lodash';  
 
 const EditInfo = () => {
   const { updateUserInfo } = useUserStore(); // userInfo를 전역상태에서 가져오지 않고 API 호출로 처리
@@ -128,26 +129,72 @@ const EditInfo = () => {
     );
   };
 
-  const handleNickName = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
 
+   // Debounce 적용: 2초 동안 입력이 없을 때 중복 체크
+   const debouncedNickNameCheck = useRef(
+    debounce(async (value: string) => {
+      if (!validateNickName(value)) return; 
+      await handleNickNameBlur(value);
+    }, 1000)
+  ).current;
+
+  const debouncedBlogNameCheck = useRef(
+    debounce(async (value: string) => {
+      if (!validateBlogName(value)) return;  
+      await handleBlogNameBlur(value);
+    }, 1000)
+  ).current;
+  const [isNickNameTouched, setIsNickNameTouched] = useState(false); // 닉네임 수정 여부
+  const [isBlogNameTouched, setIsBlogNameTouched] = useState(false); // 블로그 이름 수정 여부
+  
+  const handleNickName = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+  
     const byteLength = getByteLength(value);
     if (byteLength > 16) return;
-
+  
     setNickName(value);
-
+    setIsNickNameTouched(true); // 닉네임 필드가 수정되었음을 추적
+  
+    // 욕설 체크
     if (checkSwearWords(value)) {
       setNickNameError("욕설이 포함되었습니다. 다시 입력해주세요.");
       return;
     }
-
+  
+    // 닉네임 형식 체크
     if (!validateNickName(value)) {
       setNickNameError("형식이 올바르지 않습니다. 다시 입력해 주세요.");
     } else {
-      setNickNameError("");
-      await handleNickNameBlur(value);
+      setNickNameError(""); // 형식이 맞으면 에러 초기화
+      debouncedNickNameCheck(value); // 2초 후 중복 체크 실행
     }
   };
+  
+  const handleBlogName = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+  
+    const byteLength = getByteLength(value);
+    if (byteLength > 30) return;
+  
+    setBlogName(value);
+    setIsBlogNameTouched(true); // 블로그 이름 필드가 수정되었음을 추적
+  
+    // 욕설 체크
+    if (checkSwearWords(value)) {
+      setBlogNameError("욕설이 포함되었습니다. 다시 입력해주세요.");
+      return;
+    }
+  
+    // 블로그 이름 형식 체크
+    if (!validateBlogName(value)) {
+      setBlogNameError("형식이 올바르지 않습니다. 다시 입력해 주세요.");
+    } else {
+      setBlogNameError(""); // 형식이 맞으면 에러 초기화
+      debouncedBlogNameCheck(value); // 2초 후 중복 체크 실행
+    }
+  };
+  
 
   const handleNickNameBlur = async (value: string) => {
     try {
@@ -159,37 +206,15 @@ const EditInfo = () => {
       }
     } catch (error) {
       console.error("Error checking nickname duplication:", error);
-      setNickNameError(
-        "서버에서 오류가 발생했습니다. 잠시 후 다시 시도해주세요."
-      );
+      setNickNameError("서버에서 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
     }
   };
 
   const validateNickName = (nickName: string) => {
-    const regex = /^[가-힣a-zA-Z0-9 ]{2,16}$/; // 공백을 허용하기 위해 ' ' 추가
+    const regex = /^[가-힣a-zA-Z0-9 ]{2,16}$/;
     return regex.test(nickName);
-  };  
-
-  const handleBlogName = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-
-    const byteLength = getByteLength(value);
-    if (byteLength > 30) return;
-
-    setBlogName(value);
-
-    if (checkSwearWords(value)) {
-      setBlogNameError("욕설이 포함되었습니다. 다시 입력해주세요.");
-      return;
-    }
-
-    if (!validateBlogName(value)) {
-      setBlogNameError("형식이 올바르지 않습니다. 다시 입력해 주세요.");
-    } else {
-      setBlogNameError("");
-      await handleBlogNameBlur(value);
-    }
   };
+
 
   const handleBlogNameBlur = async (value: string) => {
     try {
@@ -201,16 +226,21 @@ const EditInfo = () => {
       }
     } catch (error) {
       console.error("Error checking blog name duplication:", error);
-      setBlogNameError(
-        "서버에서 오류가 발생했습니다. 잠시 후 다시 시도해주세요."
-      );
+      setBlogNameError("서버에서 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
     }
   };
 
   const validateBlogName = (blogName: string) => {
-    const regex = /^[가-힣a-zA-Z0-9 ]{2,28}$/; // 공백을 허용하기 위해 ' ' 추가
+    const regex = /^[가-힣a-zA-Z0-9 ]{2,28}$/;
     return regex.test(blogName);
   };
+
+  const isFormValid = 
+  (!isNickNameTouched && !isBlogNameTouched) || // 처음에는 필드 수정 여부에 상관없이 활성화
+  (isNickNameTouched && nickNameError === "사용 가능한 닉네임입니다." && // 닉네임이 사용 가능한 상태이고
+  (!isBlogNameTouched || blogNameError === "사용 가능한 블로그 이름입니다.")) || // 블로그 이름도 사용 가능해야 함 (수정된 경우에만 체크)
+  (isBlogNameTouched && blogNameError === "사용 가능한 블로그 이름입니다." && // 블로그 이름이 사용 가능한 상태이고
+  (!isNickNameTouched || nickNameError === "사용 가능한 닉네임입니다.")); // 닉네임도 사용 가능해야 함 (수정된 경우에만 체크)
 
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -541,6 +571,7 @@ const EditInfo = () => {
   const onCropComplete = useCallback((croppedArea: Area, croppedAreaPixels: Area) => {
     setCroppedAreaPixels(croppedAreaPixels);
   }, []);
+  
 
 
   return (
@@ -958,18 +989,19 @@ const EditInfo = () => {
             </div>
             <div className="w-[90%] max-w-[400px] mx-auto mt-[50px]">
             <div className="text-center">
-              <button
-                type="submit"
-                className={`mx-auto w-[150px] h-[44px] mt-[2rem] mb-[2rem] text-white py-2 rounded-xl flex justify-center items-center  ${nickNameError.includes("다시") ||
-                    blogNameError.includes("다시")
-                    ? "cursor-not-allowed bg-[#cfcfcf] hover:bg-[#cfcfcf]"
-                    : "bg-btn-color"}`}
-                onClick={handleSubmit}
-                style={{ fontSize: "1.2rem" }}
-                disabled={nickNameError.includes("다시") || blogNameError.includes("다시")}
-              >
-                수정
-              </button>
+            <button
+    type="submit"
+    className={`mx-auto w-[150px] h-[44px] mt-[2rem] mb-[2rem] text-white py-2 rounded-xl flex justify-center items-center ${
+      isFormValid
+        ? "bg-btn-color cursor-pointer"
+        : "cursor-not-allowed bg-[#cfcfcf] hover:bg-[#cfcfcf]"
+    }`}
+    onClick={handleSubmit}
+    style={{ fontSize: "1.2rem" }}
+    disabled={!isFormValid} // 조건이 충족되지 않으면 비활성화
+  >
+    수정
+  </button>
             </div>
             </div>
           </div>
