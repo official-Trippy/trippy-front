@@ -186,3 +186,23 @@ axios.interceptors.request.use(
     return Promise.reject(error);
   }
 );
+
+export async function withdrawMember() {
+  try {
+    const socialAccessToken = Cookies.get('accessToken'); // Cookie에서 accessToken을 가져옴
+    if (!socialAccessToken) {
+      throw new Error('소셜 액세스 토큰이 존재하지 않습니다.');
+    }
+
+    const response = await axios.delete(`${backendUrl}/api/member`, {
+      params: {
+        socialAccessToken,
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error('회원 탈퇴 중 오류 발생:', error);
+    throw error; // 컴포넌트에서 에러 처리를 위해 다시 던짐
+  }
+}

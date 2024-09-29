@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useUserStore } from "@/store/useUserStore";
 import { blogInterests } from "@/constants/blogPreference";
-import { getMyInfo, updateMemberInfo } from "@/services/auth";
+import { getMyInfo, updateMemberInfo, withdrawMember } from "@/services/auth";
 import { UpdateMemberInfoRequest } from "@/types/auth";
 import backgroundImg from "../../../public/DefaultBlogImg.svg";
 import backgroundAddIcon from "../../../public/AddBlogImageIcon.svg";
@@ -24,6 +24,7 @@ import OOtdDeleteImage from '../../../public/ootdImageDelete.svg';
 import Cropper, { Area } from "react-easy-crop";
 import { getCroppedImg } from "@/utils/getCroppedImg";
 import { debounce } from 'lodash';  
+import Cookies from "js-cookie";
 
 const EditInfo = () => {
   const { updateUserInfo } = useUserStore(); // userInfo를 전역상태에서 가져오지 않고 API 호출로 처리
@@ -510,6 +511,57 @@ const EditInfo = () => {
     });
   };
 
+  const handleWithdraw = async () => {
+    try {
+      const result = await Swal.fire({
+        title: '정말로 탈퇴하시겠습니까?',
+        icon: 'warning',
+        iconColor: '#FB3463',
+        showCancelButton: true,
+        confirmButtonText: '네',
+        cancelButtonText: '아니오',
+        confirmButtonColor: '#FB3463',
+        cancelButtonColor: '#999',
+        customClass: {
+          popup: 'swal-custom-popup',
+          icon: 'swal-custom-icon',
+        },
+      });
+
+      if (result.isConfirmed) {
+        await withdrawMember(); // 회원 탈퇴 API 호출
+        await Swal.fire({
+          icon: 'success',
+          title: '회원 탈퇴가 완료되었습니다. 그동안 트리피를 이용해주셔서 감사합니다.',
+          confirmButtonText: '확인',
+          confirmButtonColor: '#FB3463',
+          customClass: {
+            popup: 'swal-custom-popup',
+            icon: 'swal-custom-icon',
+          },
+        });
+
+        // 토큰 삭제 및 리다이렉트
+        Cookies.remove('accessToken');
+        Cookies.remove('refreshToken');
+        Cookies.remove('role');
+        router.push('/login');
+      }
+    } catch (error) {
+      await Swal.fire({
+        icon: 'error',
+        title: '탈퇴 실패',
+        text: '회원 탈퇴 중 오류가 발생했습니다. 다시 시도해주세요.',
+        confirmButtonText: '확인',
+        confirmButtonColor: '#FB3463',
+        customClass: {
+          popup: 'swal-custom-popup',
+          icon: 'swal-custom-icon',
+        },
+      });
+    }
+  };
+
   const [isTicketOpen, setIsTicketOpen] = useState(false);
   const [isOotdOpen, setIsOotdOpen] = useState(false);
   const [isBadgeOpen, setIsBadgeOpen] = useState(false);
@@ -986,22 +1038,23 @@ const EditInfo = () => {
                 </div>
               </div>
             </div>
+            <div className="mt-[40px] text-[#FB3463] cursor-pointer" onClick={handleWithdraw}>회원 탈퇴하기</div>
             </div>
             <div className="w-[90%] max-w-[400px] mx-auto mt-[50px]">
             <div className="text-center">
             <button
-    type="submit"
-    className={`mx-auto w-[150px] h-[44px] mt-[2rem] mb-[2rem] text-white py-2 rounded-xl flex justify-center items-center ${
-      isFormValid
-        ? "bg-btn-color cursor-pointer"
-        : "cursor-not-allowed bg-[#cfcfcf] hover:bg-[#cfcfcf]"
-    }`}
-    onClick={handleSubmit}
-    style={{ fontSize: "1.2rem" }}
-    disabled={!isFormValid} // 조건이 충족되지 않으면 비활성화
-  >
-    수정
-  </button>
+              type="submit"
+              className={`mx-auto w-[120px] h-[44px] mt-[2rem] mb-[2rem] text-white py-2 rounded-xl flex justify-center items-center ${
+                isFormValid
+                  ? "bg-btn-color cursor-pointer"
+                  : "cursor-not-allowed bg-[#cfcfcf] hover:bg-[#cfcfcf]"
+              }`}
+              onClick={handleSubmit}
+              style={{ fontSize: "1.2rem" }}
+              disabled={!isFormValid} // 조건이 충족되지 않으면 비활성화
+            >
+              수정
+            </button>
             </div>
             </div>
           </div>
