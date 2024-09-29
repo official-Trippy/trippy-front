@@ -318,11 +318,14 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
                       "정보 없음"
                     ) : (
                       <>
-                        {weatherInfo.label}, {ootdItem.ootd.weatherTemp}°C l{" "}
-                        {formatDate(ootdItem.ootd.date)}
+                        {weatherInfo.label},{" "}
+                        {ootdItem.ootd.weatherTemp.includes("°C")
+                          ? ootdItem.ootd.weatherTemp // 이미 °C가 포함되어 있으면 그대로 출력
+                          : `${ootdItem.ootd.weatherTemp}°C`} {/* °C가 없으면 추가 */}
+                        {" "}l {formatDate(ootdItem.ootd.date)}
                       </>
                     )}
-                  </span>
+                </span>
                 </div>
               </div>
             </div>
