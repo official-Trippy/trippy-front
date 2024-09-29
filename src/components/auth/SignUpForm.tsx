@@ -119,6 +119,7 @@ const SignUpForm = () => {
       const { accessToken, refreshToken } = response.result;
       Cookies.set("accessToken", accessToken);
       Cookies.set("refreshToken", refreshToken);
+      Cookies.set("role", "GEUST");
       console.log(accessToken);
       router.push("/blogRegister");
     } catch (error) {
@@ -422,7 +423,6 @@ const SignUpForm = () => {
               >
                 다음
               </button>
-              
             </div>
             </div>
             {modalOpen && (

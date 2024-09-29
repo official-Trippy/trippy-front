@@ -117,7 +117,7 @@ const RecentOotdPost: React.FC = () => {
       } else if (savedTab) {
         setTab(savedTab as "ALL" | "FOLLOWING");
       } else {
-        setTab(!isGuest ? "FOLLOWING" : "ALL");
+        setTab(!isGuest ? "ALL" : "FOLLOWING");
       }
     }
   }, [userInfo]);

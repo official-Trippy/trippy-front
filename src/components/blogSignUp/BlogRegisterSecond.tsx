@@ -58,6 +58,7 @@ const BlogRegisterSecond = () => {
       const result = await submitInterests(selectedInterests);
 
       if (result.success) {
+        Cookies.set("role", "MEMBER");
         console.log("Successfully submitted interests!");
       } else {
         console.error(result.message);

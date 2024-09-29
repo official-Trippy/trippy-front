@@ -29,7 +29,7 @@ const BlogRegisterThird = () => {
       return;
     }
 
-    // 로그인이 되었지만 role이 MEMBER 또는 ADMIN인 경우 리다이렉트
+    // // 로그인이 되었지만 role이 MEMBER 또는 ADMIN인 경우 리다이렉트
     if (role === "MEMBER" || role === "ADMIN") {
       router.push("/");
       return;
@@ -41,7 +41,7 @@ const BlogRegisterThird = () => {
   // 홈으로 버튼 클릭 시 쿠키 업데이트 로직
   const handleHomeClick = () => {
     const role = Cookies.get("role");
-
+    // Cookies.set("role", "MEMBER");
     // role이 GUEST이면 MEMBER로 업데이트
     if (role === "GUEST") {
       Cookies.set("role", "MEMBER");
