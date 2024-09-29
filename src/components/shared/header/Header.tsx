@@ -8,6 +8,8 @@ import AlertImg from "../../../../public/AlertImg.png";
 import DefaultImage from "../../../../public/defaultImage.svg";
 import searchIconMobile from "../../../../public/search_icon_mobile.svg"; 
 import alertIconMobile from "../../../../public/alert_icon_mobile.svg"; 
+import alertIcon from "../../../../public/icon_alarm.svg"; 
+
 import logoutImg from "../../../../public/LogoutImg.svg";
 import UserModal from "@/components/userInfo/userModal";
 import { useUserStore } from "@/store/useUserStore";
@@ -196,7 +198,7 @@ const Header = () => {
                 <div className="flex relative items-center gap-8">
                   <div className="w-[18px] h-[18px] relative">
                     <Image
-                      src={alertIconMobile}
+                      src={alertIcon}
                       alt="alert"
                       width={18}
                       height={18}

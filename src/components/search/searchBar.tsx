@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { FaSearch } from "react-icons/fa";
+import Image from "next/image";
+import searchIcon from "../../../public/icon_search2.svg";
 
 const SearchBar: React.FC = () => {
   const [query, setQuery] = useState("");
@@ -34,14 +36,22 @@ const SearchBar: React.FC = () => {
             }
           }}
         />
-        <FaSearch
+         <Image
+            src={searchIcon}
+            alt="search"
+            width={18}
+            height={18}
+            onClick={handleSearch}
+            className="absolute right-3 text-gray-600 cursor-pointer"
+          />
+        {/* <FaSearch
           className="absolute right-3 text-gray-600 cursor-pointer"
           style={{
             color: "#6B6B6B",
             fontSize: "14px",
           }}
           onClick={handleSearch}
-        />
+        /> */}
       </div>
     </div>
   );
