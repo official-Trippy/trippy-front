@@ -270,7 +270,7 @@ function PostWrite() {
     return (
         <div>
             <Header />
-            <div className='w-[66%] mx-auto'>
+            <div className='w-[90%] sm-700:w-[66%] mx-auto'>
                 <div className='flex items-center mt-[5rem]'>
                     <button
                         onClick={() => handleButtonClick('#55FBAF', 0)}
@@ -303,10 +303,10 @@ function PostWrite() {
                     <div className='w-full mt-[5rem] relative'>
                         <div className='flex justify-center'>
                             <div>
-                                <h1 className='h-[10rem] text-[6rem] font-extrabold font-akira'>{result?.result.isoAlp3}</h1>
-                                <div className='w-[18rem] h-[3.6rem] px-[2rem] shadowall rounded-[0.8rem] flex'>
+                                <h1 className='h-[10rem] text-[2rem] xl:text-[6rem] lg:text-[3rem] sm:text-[2rem] text-[#292929]  font-extrabold font-akira'>{result?.result.isoAlp3}</h1>
+                                <div className='w-[11rem] xl:w-[18rem] sm:w-[11rem] h-[3.6rem] px-[2rem] shadowall rounded-[0.8rem] flex'>
                                     <input
-                                        className='w-[12rem] text-[1.6rem] outline-none'
+                                        className='w-[5rem] xl:w-[12rem] sm:w-[5rem] text-[1.6rem] outline-none'
                                         type='text'
                                         placeholder='출발지'
                                         value={inputValue1} // 첫 번째 입력 값 상태
@@ -343,7 +343,7 @@ function PostWrite() {
                                 }
                             </div>
                             <div className='ml-[5rem]'>
-                                <h1 className='h-[9rem] text-[6rem] font-extrabold font-akira'>{result1?.result.isoAlp3}</h1>
+                                <h1 className='h-[9rem] text-[2rem] xl:text-[6rem] lg:text-[3rem] sm:text-[2rem] text-[#292929]  font-extrabold font-akira'>{result1?.result.isoAlp3}</h1>
                                 <div className='w-[18rem] h-[3.6rem] px-[2rem] shadowall rounded-[0.8rem] flex mt-4'>
                                     <input
                                         className='w-[12rem] text-[1.6rem] outline-none'

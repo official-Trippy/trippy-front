@@ -60,8 +60,7 @@ const UserMobileProfile: React.FC<UserProfileProps> = ({
     <div className="w-full mx-auto flex flex-col items-center relative z-[9989]">
       <div className="relative w-full">
         <div className="absolute top-[-240px] left-1/2 transform -translate-x-1/2 w-full h-[240px] px-8 py-4 flex flex-col items-center">
-          <h1 className="text-4xl text-white font-bold mt-2">{blogName}</h1>
-          <div className="relative my-4">
+          <div className="relative mb-4">
             <Image
               src={profileImageUrl || DefaultImage}
               alt="Profile"
@@ -71,11 +70,14 @@ const UserMobileProfile: React.FC<UserProfileProps> = ({
               className="cursor-pointer rounded-full"
               style={{
                 objectFit: "cover",
+                width: '48px',
+                height: '48px'
               }}
             />
           </div>
           <h1 className="text-2xl text-white font-bold">{nickName}</h1>
-          <span className="text-xl text-white text-gray-600 mt-[2px]">
+          <h1 className="text-4xl text-white font-bold mt-4">{blogName}</h1>
+          <span className="text-xl text-white text-gray-600 mt-2">
             {blogIntroduce}
           </span>
           <div className="flex items-center mt-[10px]">
@@ -83,7 +85,7 @@ const UserMobileProfile: React.FC<UserProfileProps> = ({
               <FollowButton postMemberId={data.result.email} userMemberId={userInfo.memberId} />
             )}
           </div>
-          <div className="flex px-4 gap-12 text-center mt-2">
+          <div className="flex px-4 gap-12 text-center mt-4">
             <div className="flex flex-col flex-1">
               <span
                 className="text-white text-base cursor-pointer"

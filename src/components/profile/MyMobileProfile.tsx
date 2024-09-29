@@ -6,6 +6,7 @@ import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 import DefaultImage from '../../../public/defaultImage.svg';
 import ImageModal from "@/utils/ImageModal"; // ImageModal 임포트
+import { useUserStore } from "@/store/useUserStore";
 
 const TABS = {
   ALL: "ALL",
@@ -17,9 +18,7 @@ const TABS = {
   FOLLOWING: "FOLLOWING",
 };
 
-const MyMobileProfile: React.FC<{ setActiveTab: (tab: string) => void }> = ({
-  setActiveTab,
-}) => {
+const MyMobileProfile: React.FC<{ setActiveTab: (tab: string) => void }> = ({ setActiveTab }) => {
   const accessToken = Cookies.get("accessToken");
   const router = useRouter();
 
@@ -32,15 +31,14 @@ const MyMobileProfile: React.FC<{ setActiveTab: (tab: string) => void }> = ({
     enabled: !!accessToken, // accessToken이 있을 때만 쿼리 실행
   });
 
-  // 이미지 모달 상태 관리
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleImageClick = () => {
-    setIsModalOpen(true); // 이미지 클릭 시 모달 열기
+    setIsModalOpen(true);
   };
 
   const handleCloseModal = () => {
-    setIsModalOpen(false); // 모달 닫기
+    setIsModalOpen(false);
   };
 
   useEffect(() => {
@@ -49,24 +47,36 @@ const MyMobileProfile: React.FC<{ setActiveTab: (tab: string) => void }> = ({
     }
   }, [accessToken, router]);
 
-  if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>Error occurred.</div>;
+  if (isLoading) return <div></div>;
+  if (error) return <div></div>;
 
   const userData = data?.result;
 
+  const handleGoEditPage = () => {
+    console.log("하하하하");
+    router.push("/editProfile");
+  };
+
+  const { resetUserInfo } = useUserStore();
+
+  const handleLogoutClick = () => {
+    Cookies.remove("accessToken");
+    resetUserInfo();
+    router.push("/login");
+  };
+
   return (
-    <div className="w-full mx-auto flex flex-col items-center relative z-[9989]">
+    <div className="w-full mx-auto flex flex-col items-center relative z-[999]">
       <div className="relative w-full">
         <div className="absolute top-[-240px] left-1/2 transform -translate-x-1/2 w-full h-[240px] px-8 py-4 flex flex-col items-center">
-          <h1 className="text-4xl text-white font-bold mt-2">{userData?.blogName}</h1>
-          <div className="relative my-4">
+          <div className="relative mb-4">
             <Image
               src={userData?.profileImageUrl || DefaultImage}
               alt="Profile"
               width={48}
               height={48}
-              className="cursor-pointer rounded-full object-cover" // 커서 포인터 추가
-              onClick={handleImageClick} // 이미지 클릭 시 모달 열림
+              className="cursor-pointer rounded-full object-cover"
+              onClick={handleImageClick}
               style={{
                 width: "48px",
                 height: "48px",
@@ -75,16 +85,17 @@ const MyMobileProfile: React.FC<{ setActiveTab: (tab: string) => void }> = ({
             />
           </div>
           <h1 className="text-2xl text-white font-bold">{userData?.nickName}</h1>
-          <span className="text-xl text-white text-gray-600 mt-[2px]">{userData?.blogIntroduce}</span>
+          <h1 className="text-4xl text-white font-bold mt-4">{userData?.blogName}</h1>
+          <span className="text-xl text-white text-gray-600 mt-2">{userData?.blogIntroduce}</span>
           <div className="flex items-center mt-[10px]">
             <button
-              className="bg-[#FB3463] text-white text-base font-semibold px-[2rem] py-[0.5rem] rounded-[8px]"
-              onClick={() => router.push("/editProfile")}
+              className="bg-[#FB3463] text-white text-base font-semibold px-[2rem] py-[0.5rem] rounded-[8px] z-[999] cursor-pointer"
+              onClick={handleGoEditPage}
             >
               내 정보 수정
             </button>
           </div>
-          <div className="flex px-4 gap-12 text-center mt-2">
+          <div className="flex px-4 gap-12 text-center mt-4">
             <div className="flex flex-col flex-1">
               <span
                 className="text-white text-base cursor-pointer"

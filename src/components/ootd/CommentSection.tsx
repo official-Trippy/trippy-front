@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useQuery, useMutation } from 'react-query';
 import Image from 'next/image';
 import { useUserStore } from '@/store/useUserStore';
@@ -55,6 +55,40 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
         setReplyToNickname(mention.substring(1)); // '@'를 제거하고 설정
     }
 };
+  const menuRefs = useRef<{ [key: number]: HTMLDivElement | null }>({}); // 각 메뉴의 ref
+
+  // 메뉴 열기/닫기
+  const handleCabapIconClick = (commentId: number) => {
+    setIsMenuOpen((prev) => ({
+      ...prev,
+      [commentId]: !prev[commentId], // 현재 메뉴를 토글
+    }));
+  };
+
+  // 메뉴 외부 클릭 감지
+  const handleClickOutside = (event: MouseEvent) => {
+    Object.keys(menuRefs.current).forEach((commentId) => {
+      const ref = menuRefs.current[Number(commentId)];
+      if (ref && !ref.contains(event.target as Node)) {
+        setIsMenuOpen((prev) => ({
+          ...prev,
+          [Number(commentId)]: false, // 메뉴 닫기
+        }));
+      }
+    });
+  };
+
+  useEffect(() => {
+    if (Object.values(isMenuOpen).some((open) => open)) {
+      document.addEventListener('mousedown', handleClickOutside);
+    } else {
+      document.removeEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isMenuOpen]);
 
 // 수정 제출 시 멘션 추가
 const handleEditSubmit = () => {
@@ -185,11 +219,20 @@ const handleEditSubmit = () => {
           setIsLiked(true); // 좋아요 상태 변경
           setLikeCount((prevCount) => prevCount + 1); // 좋아요 수 증가
           refetchPostDetail(); // 상위 데이터 다시 불러오기
+          
+          // 좋아요 리스트에 현재 유저 추가 (즉각 반영)
+          setLikeList((prevList) => [
+            ...prevList,
+            {
+              nickName: userInfo.nickName,  // 현재 유저의 닉네임
+              profileUrl: userInfo?.profileUrl, // 현재 유저의 프로필 이미지
+            }
+          ]);
         }
       },
     }
   );
-
+  
   const unlikeMutation = useMutation(
     () => unlikePost(postId),
     {
@@ -198,6 +241,11 @@ const handleEditSubmit = () => {
           setIsLiked(false); // 좋아요 취소 상태 변경
           setLikeCount((prevCount) => Math.max(prevCount - 1, 0)); // 좋아요 수 감소
           refetchPostDetail(); // 상위 데이터 다시 불러오기
+  
+          // 좋아요 리스트에서 현재 유저 제거 (즉각 반영)
+          setLikeList((prevList) =>
+            prevList.filter((user) => user.nickName !== userInfo.nickName)
+          );
         }
       },
     }
@@ -303,12 +351,6 @@ const handleEditSubmit = () => {
     router.push('/login');
   };
   
-  const handleCabapIconClick = (commentId: number) => {
-    setIsMenuOpen((prev) => ({
-      ...prev,
-      [commentId]: !prev[commentId], 
-    }));
-  };
 
   const handleDelete = async (commentId: number) => {
     const result = await Swal.fire({
@@ -397,17 +439,22 @@ const handleEditSubmit = () => {
                   height={10}
                   className="mx-auto cursor-pointer"
                 />
-                {isMenuOpen[comment.id] && (
-                  <div className="absolute w-[60px] right-[4px] mt-[5px] bg-white rounded shadow-lg z-10">
-                    <div className="pt-3 pb-2 px-4 text-[#fa3463] cursor-pointer text-center flex-shrink-0" onClick={() => handleDelete(comment.id)}>
-                      삭제
-                    </div>
-                    <div className="border-t border-gray-300 my-2" /> 
-                    <div className="pt-2 pb-3 px-4 text-black cursor-pointer text-center flex-shrink-0" onClick={() => handleEditClick(comment)}>
-                      수정
-                    </div>
-                  </div>
-                )}
+             {isMenuOpen[comment.id] && (
+            <div 
+              ref={(el) => {
+                menuRefs.current[comment.id] = el; // 반환하지 않음
+              }} 
+              className="absolute w-[60px] right-[4px] mt-[5px] bg-white rounded shadow-lg z-10"
+            >
+              <div className="pt-3 pb-2 px-4 text-[#fa3463] cursor-pointer text-center flex-shrink-0" onClick={() => handleDelete(comment.id)}>
+                삭제
+              </div>
+              <div className="border-t border-gray-300 my-2" /> 
+              <div className="pt-2 pb-3 px-4 text-neutral-900 dark:text-white  cursor-pointer text-center flex-shrink-0" onClick={() => handleEditClick(comment)}>
+                수정
+              </div>
+            </div>
+          )}
               </div>
             )}
           </div>
@@ -432,7 +479,7 @@ const handleEditSubmit = () => {
               </button>
               <button
                 onClick={() => setEditCommentId(null)}
-                className="mt-auto mb-[2px] px-8 py-1 rounded-lg justify-center items-center inline-flex text-center text-base font-semibold bg-[#6E7881] text-white flex-shrink-0"
+                className="mt-auto mb-[2px] px-8 py-1 rounded-lg justify-center items-center inline-flex text-center text-base font-semibold border border-[#cfcfcf] text-[#cfcfcf] flex-shrink-0"
               >
                 취소
               </button>
@@ -501,9 +548,14 @@ const handleEditSubmit = () => {
       </div>
     ));
   };
-  
 
-
+  const handleGoProfile = (memberId: string) => {
+    if (memberId) {
+      router.push(`/user/${memberId}`);
+    } else {
+      router.push('/mypage'); // memberId가 없을 경우 내 페이지로 이동
+    }
+  };
 
   const renderLikeList = (likes: any[]) => {
     if (!Array.isArray(likes)) {
@@ -518,40 +570,45 @@ const handleEditSubmit = () => {
     const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
 
     return (
-      <div className='w-full bg-white rounded-lg shadow-md py-4 mt-8'>
-        <div className="grid grid-cols-3 gap-4">
-          {paginatedLikes.map((like, index) => (
-            <div key={index} className='my-4 like-section p-4'>
-              <div className="flex items-center justify-center py-2">
-                <div className="w-12 h-12 relative mr-4">
-                  <Image
-                    src={like.profileUrl || DefaultImage}
-                    alt="프로필 이미지"
-                    layout="fill"
-                    objectFit="cover"
-                    className='rounded-full'
-                  />
-                </div>
-                <div className="">
-                  <div className="text-gray-800">{like.nickName}</div>
-                  <div className="text-gray-800">{like.blogName}</div>
-                </div>
+      <div className="w-full bg-white rounded-lg shadow-md py-4 mt-8">
+      <div className="grid grid-cols-2 xs-400:grid-cols-3 gap-0">
+        {paginatedLikes.map((like, index) => (
+          <div key={index} className="my-4 like-section px-4 py-0 sm-700:px-4 sm-700:py-4">
+            <div className="flex items-center ml-[20px] xs-400:justify-center xs-400:ml-0 py-2 cursor-pointer" onClick={() => handleGoProfile(like.memberId)}>
+              <div className="min-w-12 min-h-12 w-12 h-12 sm-700:w-16 sm-700:h-16 relative mr-4">
+                <Image
+                  src={like.profileUrl || userInfo.profileImageUrl}
+                  alt="프로필 이미지"
+                  layout="fill"
+                  objectFit="cover"
+                  className="rounded-full"
+                />
+              </div>
+              <div>
+              <div className="text-gray-800 text-sm sm:text-base truncate whitespace-nowrap overflow-hidden">
+                {like.nickName}
+              </div>
               </div>
             </div>
-          ))}
-        </div>
-        <div className="flex justify-center">
-          {pages.map((pageNumber) => (
-            <button
-              key={pageNumber}
-              onClick={() => handlePageChange(pageNumber)}
-              className={`px-4 py-2 mx-1 rounded ${currentPage === pageNumber ? 'text-[#fa3463] font-semibold' : 'text-[#cfcfcf] font-normal'}`}
-            >
-              {pageNumber}
-            </button>
-          ))}
-        </div>
+          </div>
+        ))}
       </div>
+    
+      {/* 페이지네이션 버튼 */}
+      {totalPages > 1 && (
+      <div className="flex justify-center mt-4">
+        {pages.map((pageNumber) => (
+          <button
+            key={pageNumber}
+            onClick={() => handlePageChange(pageNumber)}
+            className={`px-4 py-2 mx-1 rounded ${currentPage === pageNumber ? 'text-[#fa3463] font-semibold' : 'text-[#cfcfcf] font-normal'}`}
+          >
+            {pageNumber}
+          </button>
+        ))}
+      </div>
+      )}
+    </div>
     );
   };
 
@@ -567,8 +624,8 @@ const handleEditSubmit = () => {
                   : (showLikes ? EmptyHeartIcon2 : EmptyHeartIcon)
               }
               alt={isLiked ? "좋아요" : "좋아요 취소"}
-              width={24}
-              height={24}
+              width={20}
+              height={20}
             />
             <span className={`mx-2 ${showLikes ? 'text-[#FB3463]' : ''}`}>{likeCount}</span>
           </button>
@@ -584,7 +641,7 @@ const handleEditSubmit = () => {
           </div>
         </div>
         {showLikes && (
-          <div className='flex flex-col space-y-4 w-full h-[200px] my-4 p-4 bg-neutral-100 rounded-lg shadow-md items-center text-black justify-center'>
+          <div className='flex flex-col space-y-4 w-full h-[200px] my-4 p-4 bg-neutral-100 rounded-lg shadow-md items-center text-neutral-900 dark:text-white  justify-center'>
             <div className="text-2xl font-medium">
               트리피 회원이면 좋아요를 달 수 있어요
             </div>
@@ -594,7 +651,7 @@ const handleEditSubmit = () => {
           </div>
         )}
         {showComments && (
-          <div className='flex flex-col space-y-4 w-full h-[200px] my-4 p-4 bg-neutral-100 rounded-lg shadow-md items-center text-black justify-center'>
+          <div className='flex flex-col space-y-4 w-full h-[200px] my-4 p-4 bg-neutral-100 rounded-lg shadow-md items-center text-neutral-900 dark:text-white  justify-center'>
             <div className="text-2xl font-medium">
               트리피 회원이면 댓글을 달 수 있어요
             </div>

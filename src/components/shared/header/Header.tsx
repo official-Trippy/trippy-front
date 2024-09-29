@@ -6,16 +6,18 @@ import Link from "next/link";
 import LogoHeader from "../../../../public/LogoHeader.svg";
 import AlertImg from "../../../../public/AlertImg.png";
 import DefaultImage from "../../../../public/defaultImage.svg";
-import searchIconMobile from "../../../../public/search_icon_mobile.svg"; // Mobile search icon
-import alertIconMobile from "../../../../public/alert_icon_mobile.svg"; // Mobile alert icon
+import searchIconMobile from "../../../../public/search_icon_mobile.svg"; 
+import alertIconMobile from "../../../../public/alert_icon_mobile.svg"; 
+import logoutImg from "../../../../public/LogoutImg.svg";
 import UserModal from "@/components/userInfo/userModal";
 import { useUserStore } from "@/store/useUserStore";
 import { useRouter, usePathname } from "next/navigation";
 import Cookies from "js-cookie";
 import SearchBar from "@/components/search/searchBar";
-import NotificationComponent from "@/components/notification/notificationComponent"; // Import NotificationComponent
+import NotificationComponent from "@/components/notification/notificationComponent"; 
 import SearchBarMobileBar from "@/components/search/searchMobileBar";
 import postwriteImg from "@/dummy/postwrite.svg";
+import Swal from "sweetalert2";
 
 const Header = () => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -80,6 +82,57 @@ const Header = () => {
     setIsNotificationsVisible(!isNotificationsVisible); // Toggle notifications
   };
 
+  const { resetUserInfo } = useUserStore();
+
+  const handleLogoutClick = async () => {
+    const result = await Swal.fire({
+      title: '정말 로그아웃 하시겠습니까?',
+      icon: 'warning',
+      iconColor: '#FB3463',
+      showCancelButton: true,
+      confirmButtonText: '네',
+      cancelButtonText: '아니오',
+      confirmButtonColor: '#FB3463',
+      customClass: {
+        popup: 'swal-custom-popup custom-swal-zindex', // custom-swal-zindex 클래스 추가
+        icon: 'swal-custom-icon',
+      },
+    });
+  
+    if (result.isConfirmed) {
+      try {
+        // 로그아웃 처리
+        Cookies.remove("accessToken");
+        resetUserInfo();
+  
+        // 성공 메시지
+        const successResult = await Swal.fire({
+          icon: 'success',
+          title: '성공적으로 로그아웃되었습니다.',
+          confirmButtonText: '확인',
+          confirmButtonColor: '#FB3463',
+          customClass: {
+            popup: 'swal-custom-popup',
+            icon: 'swal-custom-icon',
+          },
+        });
+    
+        // 확인 버튼을 눌렀을 때만 리다이렉트
+        if (successResult.isConfirmed) {
+          router.push("/login");
+        }
+        
+      } catch (error) {
+        console.error("로그아웃 중 오류 발생:", error);
+        await Swal.fire(
+          '오류 발생',
+          '로그아웃 중 문제가 발생했습니다. 다시 시도해주세요.',
+          'error'
+        );
+      }
+    }
+  };
+
   if (isLoading) {
     return null;
   }
@@ -103,15 +156,15 @@ const Header = () => {
           <div className="flex text-lg">
             <Link href="/">
               <div
-                className={`text-gray-800 no-underline ${pathname === "/" ? "font-bold" : ""}`}
+                className={`text-gray-800 no-underline font-['Pretendard'] ${pathname === "/" ? "font-bold" : ""}`}
                 style={{ fontSize: "1.4rem" }}
               >
-                HOME
+                TICKET
               </div>
             </Link>
             <Link href="/ootd">
               <div
-                className={`text-gray-800 pl-8 no-underline ${pathname === "/ootd" ? "font-bold" : ""}`}
+                className={`text-gray-800 pl-8 no-underline font-['Pretendard'] ${pathname === "/ootd" ? "font-bold" : ""}`}
                 style={{ fontSize: "1.4rem" }}
               >
                 OOTD
@@ -211,7 +264,7 @@ const Header = () => {
                       onMouseLeave={() => setIsDropdownOpen(false)}
                     >
                       <Link href="/post">
-                        <div className="px-[1rem] pt-[1.4rem] rounded-lg border-b border-white">
+                        <div className="px-[1rem] pt-[1.4rem] rounded-lg border-b border-white cursor-pointer">
                           <div className="hover:bg-gray-200 px-[1.3rem] py-[1.2rem]">
                             <div className="flex items-start">
                               <Image
@@ -222,19 +275,19 @@ const Header = () => {
                                 alt=""
                               />
                               <div>
-                                <h1 className="text-[1.6rem] font-medium text-black">
-                                  블로그 티켓 글쓰기
-                                </h1>
-                                <span className="text-[0.9rem] font-normal text-[#9D9D9D]">
-                                  여행에서 겪었던 이야기를 기록해 보세요.
-                                </span>
+
+
+                                <h1 className="text-[1.6rem] font-medium text-neutral-900 dark:text-white ">블로그 티켓 글쓰기</h1>
+                                <span className="text-[0.9rem] font-normal text-[#9D9D9D]">여행에서 겪었던 이야기를 기록해 보세요.</span>
+
+
                               </div>
                             </div>
                           </div>
                         </div>
                       </Link>
                       <Link href="/write">
-                        <div className="px-[1rem] pb-[1.4rem] rounded-lg border-b border-white">
+                        <div className="px-[1rem] pb-[1.4rem] rounded-lg border-b border-white cursor-pointer">
                           <div className="hover:bg-gray-200 px-[1.3rem] py-[1.2rem]">
                             <div className="flex items-start">
                               <Image
@@ -245,12 +298,12 @@ const Header = () => {
                                 alt=""
                               />
                               <div>
-                                <h1 className="text-[1.6rem] font-medium text-black">
-                                  OOTD 글쓰기
-                                </h1>
-                                <span className="text-[0.9rem] font-normal text-[#9D9D9D]">
-                                  여행 중 나의 특별한 OOTD를 공유해보세요.
-                                </span>
+
+
+                                <h1 className="text-[1.6rem] font-medium text-neutral-900 dark:text-white ">OOTD 글쓰기</h1>
+                                <span className="text-[0.9rem] font-normal text-[#9D9D9D]">여행 중 나의 특별한 OOTD를 공유해보세요.</span>
+
+
                               </div>
                             </div>
                           </div>
@@ -319,6 +372,15 @@ const Header = () => {
             onClick={handleNotificationsToggle}
             className="cursor-pointer"
           />
+          <Image
+            src={logoutImg}
+            alt="Logout"
+            width={24}
+            height={24}
+            onClick={handleLogoutClick}
+            className="cursor-pointer"
+          />
+                  {/* <div className="ml-[5px] my-auto">로그아웃</div> */}
         </div>
         {searchModalVisible && (
           <div className="fixed inset-0 z-50 bg-white flex flex-col items-center pt-2">

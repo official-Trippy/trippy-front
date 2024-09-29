@@ -168,8 +168,8 @@ function RecentPost({ allPosts, setAllPosts, boardData, boardRefetch, PAGE_SIZE,
                                         <div className="flex w-full">
                                             <Image className="w-[17rem] h-[17rem] rounded-[0.8rem] object-cover" src={posts.ticket.image.accessUri} alt="" width={170} height={170} />
                                             <div className='flex flex-col w-full ml-[2.5rem]'>
-                                                <h1 className="text-[2rem] font-medium text-ellipsis overflow-hidden theboki">{posts.post.title}</h1>
-                                                <span className="text-[1.6rem] mt-[0.4rem] h-[5rem] font-normal text-[#6B6B6B] text-ellipsis overflow-hidden theboki1">{bodyText}</span>
+                                                <h1 className="text-[2rem] font-medium text-ellipsis overflow-hidden theboki font-['Pretendard']">{posts.post.title}</h1>
+                                                <span className="text-[1.6rem] mt-[0.4rem] h-[5rem] font-normal text-[#6B6B6B] text-ellipsis overflow-hidden theboki1 font-['Pretendard']">{bodyText}</span>
                                                 <div className="flex flex-wrap text-ellipsis overflow-hidden theboki">
                                                     {posts?.post.tags.map((tagData: string, index: number) => (
                                                         <span
@@ -189,7 +189,7 @@ function RecentPost({ allPosts, setAllPosts, boardData, boardRefetch, PAGE_SIZE,
                                                             alt=""
                                                             className="hidden md:block rounded-[4.5rem] w-[2.4rem] h-[2.4rem]" // 500px 이상에서만 보이도록 설정
                                                         />
-                                                        <span className={`hidden md:block`}>{posts.member.nickName}</span>
+                                                        <span className={`hidden md:block font-['Pretendard']`}>{posts.member.nickName}</span>
                                                         {/* <span className="">{formattedDate}</span> */}
                                                     </div>
                                                     <div className="flex items-end text-[#9D9D9D] ml-auto">

@@ -73,9 +73,7 @@ const TagContainer: React.FC<TagContainerProps> = ({ item }) => {
     );
   };
   
-
-
-const RecommendOotdPost = () => {
+  const RecommendOotdPost = () => {
     const { userInfo, loading } = useUserStore((state) => ({
         userInfo: state.userInfo,
         loading: state.loading,
@@ -89,39 +87,41 @@ const RecommendOotdPost = () => {
     const router = useRouter();
     const scrollRef = useRef<HTMLDivElement | null>(null);
     const swiperRef = useRef<SwiperRef | null>(null);
+    const [currentSlide, setCurrentSlide] = useState(0);
 
-    const { data, isLoading } = useQuery(
+    const { data, isLoading, refetch } = useQuery(
         ['recommendOotdPost', selectedInterest],
         () => fetchRecommendOotdPost(selectedInterest),
         {
-            keepPreviousData: true
+            keepPreviousData: true,
+            onSuccess: () => {
+                // 데이터 로드 후 스크롤 버튼 체크
+                checkScroll();
+            },
         }
     );
 
-
-    const totalCount = data?.result?.totalCnt ?? 0;
+    const totalCount = data?.result?.ootdList?.length ?? 0;
+    const totalSlides = Math.ceil(totalCount / itemsPerSlide);
 
     useEffect(() => {
         if (userInfo) {
             fetchLikedPosts().then(setLikedPosts);
-            fetchUserInterests(); // 관심사 정보 가져오기
+            fetchUserInterests();
         }
     }, [userInfo]);
 
-    // 사용자 정보에서 관심사 가져오기
     const fetchUserInterests = async () => {
         try {
-            const userInterests = userInfo?.koreanInterestedTypes || []; // 유저의 관심사 추출
+            const userInterests = userInfo?.koreanInterestedTypes || [];
             const userName = userInfo?.nickName;
-
-            console.log('유저 관심사', userInterests);
             setUserName(userName);
 
             if (userInterests.length > 0) {
-                setFilteredInterests(blogInterests.filter(interest => userInterests.includes(interest))); // 관심사로 필터링
-                setSelectedInterest(userInterests[0]); // 유저의 첫 번째 관심사로 설정
+                setFilteredInterests(blogInterests.filter(interest => userInterests.includes(interest)));
+                setSelectedInterest(userInterests[0]);
             } else {
-                setSelectedInterest(blogInterests[0]); // 유저가 관심사를 설정하지 않았으면 기본값 유지
+                setSelectedInterest(blogInterests[0]);
             }
         } catch (error) {
             console.error('Error fetching user interests:', error);
@@ -142,16 +142,38 @@ const RecommendOotdPost = () => {
     };
 
     useEffect(() => {
-        if (typeof window !== 'undefined') {
-            // 페이지가 로드될 때, 그리고 창 크기가 변경될 때마다 슬라이드 개수 업데이트
-            updateItemsPerSlide();
-            window.addEventListener('resize', updateItemsPerSlide);
+        updateItemsPerSlide();
+        window.addEventListener('resize', updateItemsPerSlide);
 
-            return () => {
-                window.removeEventListener('resize', updateItemsPerSlide);
-            };
-        }
+        return () => {
+            window.removeEventListener('resize', updateItemsPerSlide);
+        };
     }, []);
+
+    const [showScrollButtons, setShowScrollButtons] = useState(false);
+
+    // 스크롤 가능 여부를 확인하는 함수
+    const checkScroll = () => {
+        if (scrollRef.current) {
+            const { scrollWidth, clientWidth } = scrollRef.current;
+            setShowScrollButtons(scrollWidth > clientWidth);
+        }
+    };
+
+    useEffect(() => {
+        // 컴포넌트가 처음 로드될 때, 그리고 데이터 로드 후 스크롤 가능 여부 체크
+        checkScroll();
+    }, [filteredInterests, data]); // 데이터 로드 후에도 스크롤 상태 체크
+
+    useEffect(() => {
+        setCurrentSlide(0);
+        refetch();
+        checkScroll();
+    }, [selectedInterest, refetch]);
+
+    const handleScrollEnd = () => {
+        checkScroll();
+    };
 
     const handleScroll = (direction: string) => {
         if (scrollRef.current) {
@@ -195,7 +217,6 @@ const RecommendOotdPost = () => {
         router.push("/editProfile");
     };
 
-    // 데이터 슬라이드 생성
     const slides = [];
     if (data?.result?.ootdList) {
         for (let i = 0; i < data.result.ootdList.length; i += itemsPerSlide) {
@@ -205,20 +226,45 @@ const RecommendOotdPost = () => {
 
     const handleScrollOotd = (direction: string) => {
         if (swiperRef.current) {
+            const swiper = swiperRef.current.swiper;
             if (direction === 'left') {
-                swiperRef.current.swiper.slidePrev();
+                swiper.slidePrev();
             } else {
-                swiperRef.current.swiper.slideNext();
+                swiper.slideNext();
             }
+            setCurrentSlide(swiper.activeIndex);
         }
     };
 
+    const isAtFirstSlide = currentSlide === 0;
+    const isAtLastSlide = currentSlide === totalSlides - 1;
+    const shouldShowButtons = itemsPerSlide < totalCount;
+
+    const [windowWidth, setWindowWidth] = useState<number | null>(null);
+
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            const handleResize = () => {
+                setWindowWidth(window.innerWidth);
+            };
+
+            handleResize();
+            window.addEventListener('resize', handleResize);
+
+            return () => {
+                window.removeEventListener('resize', handleResize);
+            };
+        }
+    }, []);
+
+    const leftPosition = windowWidth && windowWidth < 700 ? '0px' : '-30px';
+
     const [showSkeleton, setShowSkeleton] = useState(true);
     useEffect(() => {
-        if (typeof window !== 'undefined') { // 클라이언트에서만 실행되도록 체크
+        if (typeof window !== 'undefined') {
             const delay = setTimeout(() => {
                 setShowSkeleton(false);
-            }, 1000); // 스켈레톤을 1초 동안 유지
+            }, 1000);
 
             return () => clearTimeout(delay);
         }
@@ -236,36 +282,49 @@ const RecommendOotdPost = () => {
                 </h1>
             )}
             {userInfo && (
-                <h1 className="font-bold text-[2rem] mb-4">
+                <div className='flex flex-col items-start sm-700:flex-row sm-700:items-center'>
+                <h1 className="font-bold text-[2rem]">
                     {userName}님, 이런 스타일 어때요?
                 </h1>
+                <div className='flex ml-auto mt-[10px] sm-700:mt-0' onClick={handleGoEditPage}>
+                        <div className="text-right text-[#9d9d9d]">관심 키워드 설정</div>
+                        <Image
+                            src={RightIcon}
+                            alt="keyword"
+                            width={14}
+                            height={14} />
+                        <div />
+                    </div>
+                </div>
             )}
 
             <div className="flex items-center my-12 relative">
-                {!userInfo && (
+            {(!userInfo || showScrollButtons) && (
                     <Image
-                        src={SwiperLeftButton}
-                        alt="Previous"
-                        width={25}
-                        height={25}
-                        onClick={() => handleScroll('left')}
-                        style={{
-                            width: '25px',
-                            height: '25px',
-                            position: 'absolute',
-                            top: '50%',
-                            transform: 'translateY(-50%)',
-                            left: '-30px',
-                            zIndex: 999,
-                        }}
-                    />
+                    src={SwiperLeftButton}
+                    alt="Previous"
+                    width={25}
+                    height={25}
+                    onClick={() => handleScroll('left')}
+                    style={{
+                      width: '25px',
+                      height: '25px',
+                      position: 'absolute',
+                      top: '50%',
+                      transform: 'translateY(-50%)',
+                      zIndex: 999,
+                      left: 'calc(-30px)', // 기본적으로 left가 -30px로 설정
+                    }}
+                    className="left-button" // 추가적인 CSS 클래스
+                  />
                 )}
                 <div
-                    className="overflow-hidden w-full cursor-pointer"
+                    className="overflow-hidden cursor-pointer sm-700:w-full"
                     ref={scrollRef}
                     onMouseDown={handleDrag}
+                    onScroll={handleScrollEnd} 
                 >
-                    <div className="flex flex-col space-x-4 transition-transform duration-300 flex-shrink-0 mr-auto justify-between sm-700:flex-row sm-700:mx-auto sm-700:items-center">
+                    <div className="flex flex-col transition-transform duration-300 flex-shrink-0 mr-auto justify-between md-850:flex-row md-850:mx-auto md-850:items-center">
                         <div className="flex space-x-4">
                             {filteredInterests.map(interest => (
                                 <button
@@ -278,22 +337,9 @@ const RecommendOotdPost = () => {
                                 </button>
                             ))}
                         </div>
-
-                        {userInfo && (
-                            <div className='flex mr-auto mt-[10px] sm-700:ml-auto sm-700:mt-0' onClick={handleGoEditPage}>
-                                <div className="text-right text-[#9d9d9d]">관심 키워드 설정</div>
-                                <Image
-                                    src={RightIcon}
-                                    alt="keyword"
-                                    width={14}
-                                    height={14}
-                                />
-                                <div />
-                            </div>
-                        )}
                     </div>
                 </div>
-                {!userInfo && (
+                {(!userInfo || showScrollButtons) && (
                     <Image
                         src={SwiperRightButton}
                         alt="Next"
@@ -306,21 +352,22 @@ const RecommendOotdPost = () => {
                             position: 'absolute',
                             top: '50%',
                             transform: 'translateY(-50%)',
-                            right: '-30px',
                             zIndex: 999,
-                        }}
+                            right: 'calc(-30px)', // 기본적으로 left가 -30px로 설정
+                          }}
+                          className="right-button" // 추가적인 CSS 클래스
                     />
                 )}
             </div>
-            {itemsPerSlide < totalCount && (
-                <Image
-                    src={SwiperLeftButton}
-                    alt="Previous"
-                    width={60}
-                    height={60}
-                    onClick={() => handleScrollOotd('left')}
-                    className="absolute left-[-30px] top-[60%] transform -translate-y-1/2 z-10"
-                />
+            {!isAtFirstSlide && shouldShowButtons && (
+           <Image
+           src={SwiperLeftButton}
+           alt="Previous"
+           width={40}
+           height={40}
+           onClick={() => handleScrollOotd('left')}
+          className="absolute left-[-22px] top-[63.5%] transform -translate-y-1/2 z-10"
+         />
             )}
 
             <div className='relative mx-auto '>
@@ -394,7 +441,7 @@ const RecommendOotdPost = () => {
                             </SwiperSlide>
                         ))
                     ) : (
-                        <div className="h-full w-full mx-auto flex flex-col text-[2rem] text-black my-auto items-center justify-center font-medium font-['Pretendard'] py-[50px]">
+                        <div className="h-full w-full mx-auto flex flex-col text-[2rem] text-neutral-900 dark:text-white  my-auto items-center justify-center font-medium py-[50px]">
                             <div className='flex flex-row'>
                                 <span className="text-[#FB3463]">{selectedInterest} </span>{"\u00A0"}관련 OOTD가 없어요!
                             </div>
@@ -405,14 +452,14 @@ const RecommendOotdPost = () => {
                     )}
                 </Swiper>
             </div>
-            {itemsPerSlide < totalCount && (
+            {!isAtLastSlide && shouldShowButtons && (
                 <Image
                     src={SwiperRightButton}
                     alt="Next"
-                    width={60}
-                    height={60}
+                    width={40}
+                    height={40}
                     onClick={() => handleScrollOotd('right')}
-                    className="absolute right-[-30px] top-[60%] transform -translate-y-1/2 z-10"
+                    className="absolute right-[-22px] top-[63.5%] transform -translate-y-1/2 z-10"
                 />
             )}
         </div>

@@ -10,6 +10,7 @@ import NaverLogo from "../../../public/NaverLogo.png";
 import KakaoLogo from "../../../public/KakaoLogo.svg";
 import GoogleLogo from "../../../public/GoogleLogo.svg";
 import { useUserStore } from "@/store/useUserStore";
+import Swal from "sweetalert2";
 
 const UserModal: React.FC<
   UserModalProps & {
@@ -36,19 +37,53 @@ const UserModal: React.FC<
     router.push("/mypage");
   };
 
-  // 로그아웃 로직
   const handleLogoutClick = async () => {
-    // 쿠키에서 accessToken 제거
-    Cookies.remove("accessToken");
-
-    // 전역 상태 초기화
-    resetUserInfo();
-
-    // 로그아웃 후 원하는 페이지로 리디렉션 (예: 로그인 페이지)
-    router.push("/login");
+    const result = await Swal.fire({
+      title: '정말 로그아웃 하시겠습니까?',
+      icon: 'warning',
+      iconColor: '#FB3463',
+      showCancelButton: true,
+      confirmButtonText: '네',
+      cancelButtonText: '아니오',
+      confirmButtonColor: '#FB3463',
+      customClass: {
+        popup: 'swal-custom-popup custom-swal-zindex', // custom-swal-zindex 클래스 추가
+        icon: 'swal-custom-icon',
+      },
+    });
+  
+    if (result.isConfirmed) {
+      try {
+        // 로그아웃 처리
+        Cookies.remove("accessToken");
+        resetUserInfo();
+  
+        const successResult = await Swal.fire({
+          icon: 'success',
+          title: '성공적으로 로그아웃되었습니다.',
+          confirmButtonText: '확인',
+          confirmButtonColor: '#FB3463',
+          customClass: {
+            popup: 'swal-custom-popup',
+            icon: 'swal-custom-icon',
+          },
+        });
+    
+        // 확인 버튼을 눌렀을 때만 리다이렉트
+        if (successResult.isConfirmed) {
+          router.push("/login");
+        }
+        
+      } catch (error) {
+        console.error("로그아웃 중 오류 발생:", error);
+        await Swal.fire(
+          '오류 발생',
+          '로그아웃 중 문제가 발생했습니다. 다시 시도해주세요.',
+          'error'
+        );
+      }
+    }
   };
-
-
   if (!isOpen || !userInfo) return null;
 
   return (

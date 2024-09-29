@@ -99,86 +99,86 @@ const LocationInput: React.FC<LocationInputProps> = ({ onLocationChange, selecte
   };
 
   return (
-    <div className="mt-[80px]">
-      <button
-        onClick={() => setModalIsOpen(true)}
-        className="w-full h-[4rem] rounded-[8px] border border-[#cfcfcf] flex items-center pl-4 pr-3 py-2 text-neutral-500 text-lg shadow-sm hover:bg-gray-100 transition"
-      >
-        <div className="flex-1 text-left text-[#cfcfcf]">{selectedLocationName || '지역 선택'}</div>
-        <img src={SearchIcon.src} alt="Search Icon" className="w-[24px] h-[24px] mr-1" />
-      </button>
-      <Modal
-        show={modalIsOpen}
-        onHide={() => setModalIsOpen(false)}
-        size="xl"
-        aria-labelledby="contained-modal-title-vcenter"
-        centered
-        dialogClassName="modal-dialog-centered"
-      >
-        <Modal.Header closeButton>
-          <Modal.Title id="contained-modal-title-vcenter">위치 선택</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <div className="relative w-full h-[50rem]">
-            {isLoaded ? (
-              <>
-                <input
-                  ref={inputRef}
-                  type="text"
-                  placeholder="장소를 검색하세요"
-                  className="absolute z-10 top-4 left-1/2 transform -translate-x-1/2 w-[80%] p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:border-blue-500"
-                  onChange={handleInputChange}
-                  onKeyDown={handleKeyDown}
-                />
-                {/* 검색 결과를 보여주는 리스트 */}
-                {autocompleteResults.length > 0 && (
-                  <ul className="absolute z-10 w-[80%] top-[4.7rem] pl-0 left-1/2 transform -translate-x-1/2 bg-white shadow-lg border rounded-lg">
-                    {autocompleteResults.map((result) => (
-                      <li
-                        key={result.place_id}
-                        className="p-3 hover:bg-gray-200 cursor-pointer"
-                        onClick={() => onPlaceSelect(result.place_id)}
-                      >
-                        {result.description}
-                      </li>
-                    ))}
-                  </ul>
-                )}
-                <GoogleMap
-                  mapContainerStyle={{ width: '100%', height: '100%' }}
-                  center={selectedLocation}
-                  zoom={12}
-                  onClick={onMapClick}
-                  options={{
-                    disableDefaultUI: true,
-                    zoomControl: true,
-                  }}
-                  onLoad={onMapLoad}
-                >
-                  <Marker position={selectedLocation} draggable={true} onDragEnd={onMapClick} />
-                </GoogleMap>
-              </>
-            ) : (
-              <div></div>
+<div className="mt-[80px]">
+  <button
+    onClick={() => setModalIsOpen(true)}
+    className="w-full h-[4rem] rounded-[8px] border border-[#cfcfcf] flex items-center pl-[1.4rem] pr-3 py-2 text-neutral-500 text-lg shadow-sm hover:bg-gray-100 transition"
+  >
+    <div className="flex-1 text-left text-[#cfcfcf]">{selectedLocationName || '위치 선택'}</div>
+    <img src={SearchIcon.src} alt="Search Icon" className="w-[24px] h-[24px] mr-1" />
+  </button>
+  <Modal
+    show={modalIsOpen}
+    onHide={() => setModalIsOpen(false)}
+    size="xl"
+    aria-labelledby="contained-modal-title-vcenter"
+    centered
+    dialogClassName="modal-dialog-centered"
+  >
+    <Modal.Header closeButton>
+      <Modal.Title id="contained-modal-title-vcenter">위치 선택</Modal.Title>
+    </Modal.Header>
+    <Modal.Body>
+      <div className="relative w-full h-[30rem] sm-700:h-[50rem]"> {/* 모바일에서 높이 조정 */}
+        {isLoaded ? (
+          <>
+            <input
+              ref={inputRef}
+              type="text"
+              placeholder="장소를 검색하세요"
+              className="absolute z-10 top-4 left-1/2 transform -translate-x-1/2 w-[80%] p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:border-blue-500"
+              onChange={handleInputChange}
+              onKeyDown={handleKeyDown}
+            />
+            {/* 검색 결과를 보여주는 리스트 */}
+            {autocompleteResults.length > 0 && (
+              <ul className="absolute z-10 w-[80%] top-[4.7rem] pl-0 left-1/2 transform -translate-x-1/2 bg-white shadow-lg border rounded-lg">
+                {autocompleteResults.map((result) => (
+                  <li
+                    key={result.place_id}
+                    className="p-3 hover:bg-gray-200 cursor-pointer"
+                    onClick={() => onPlaceSelect(result.place_id)}
+                  >
+                    {result.description}
+                  </li>
+                ))}
+              </ul>
             )}
-          </div>
-        </Modal.Body>
-        <Modal.Footer>
-          <button
-            onClick={handleConfirm}
-            className="mt-2 bg-rose-500 rounded-lg flex justify-center items-center px-8 py-3 text-white text-lg mr-2 hover:bg-rose-600 transition"
-          >
-            확인
-          </button>
-          <button
-            onClick={() => setModalIsOpen(false)}
-            className="mt-2 rounded-lg flex justify-center border border-[#cfcfcf] items-center px-8 py-3 text-[#9d9d9d] text-lg hover:bg-gray-200 transition"
-          >
-            취소
-          </button>
-        </Modal.Footer>
-      </Modal>
-    </div>
+            <GoogleMap
+              mapContainerStyle={{ width: '100%', height: '100%' }}
+              center={selectedLocation}
+              zoom={12}
+              onClick={onMapClick}
+              options={{
+                disableDefaultUI: true,
+                zoomControl: true,
+              }}
+              onLoad={onMapLoad}
+            >
+              <Marker position={selectedLocation} draggable={true} onDragEnd={onMapClick} />
+            </GoogleMap>
+          </>
+        ) : (
+          <div></div>
+        )}
+      </div>
+    </Modal.Body>
+    <Modal.Footer>
+      <button
+        onClick={handleConfirm}
+        className="mt-2 bg-rose-500 rounded-lg flex justify-center items-center px-8 py-3 text-white text-lg mr-2 hover:bg-rose-600 transition"
+      >
+        확인
+      </button>
+      <button
+        onClick={() => setModalIsOpen(false)}
+        className="mt-2 rounded-lg flex justify-center border border-[#cfcfcf] items-center px-8 py-3 text-[#9d9d9d] text-lg hover:bg-gray-200 transition"
+      >
+        취소
+      </button>
+    </Modal.Footer>
+  </Modal>
+</div>
   );
 };
 

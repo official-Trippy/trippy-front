@@ -7,7 +7,7 @@ import NaverLogin from "@/components/socialLogin/naverLogin";
 const LoginPage = () => {
   return (
     <div className="min-h-[calc(100dvh-60px)] sm-700:min-h-[100vh] flex flex-col justify-center items-center">
-      <FallingContainer />
+      {/* <FallingContainer /> */}
       <LoginForm />
       <KakaoLogin />
       <NaverLogin />

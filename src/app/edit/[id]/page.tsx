@@ -14,22 +14,7 @@ import { fetchWeather } from '@/services/ootd.ts/weather';
 import { getCoordinatesFromAddress } from '@/constants/geocode';
 import ImageChanger from '@/components/ootd/ImageChanger';
 import Header from '@/components//shared/header/Header';
-
-const weatherOptions = [
-  { value: 'rain', label: '비' },
-  { value: 'snow', label: '눈' },
-  { value: 'mostly_cloudy', label: '구름많음' },
-  { value: 'cloudy', label: '흐림' },
-  { value: 'sunny', label: '맑음' },
-  { value: 'unknown', label: '기억 안남' },
-];
-
-
-const temperatureOptions = Array.from({ length: 71 }, (_, i) => i - 20).map(temp => ({
-  value: temp === -100 ? 'unknown' : temp.toString(),
-  label: temp === -100 ? '기억 안남' : `${temp}°C`,
-}));
-
+import WeatherModal from '@/components/ootd/WeatherModal';
 
 const EditOotd: React.FC = () => {
   const router = useRouter();
@@ -45,9 +30,10 @@ const EditOotd: React.FC = () => {
   const [weather, setWeather] = useState<any>(null);
   const [postId, setPostId] = useState<number | null>(null);
   const [ootdId, setOotdId] = useState<number | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false); // 모달 상태
 
-  // 상태 변경 여부를 추적하는 상태
   const [hasChanges, setHasChanges] = useState<boolean>(false);
+  const [isFirstLoad, setIsFirstLoad] = useState(true);
 
   const { data, isLoading, error } = useQuery(['ootdPostDetail', id], () =>
     fetchOotdPostDetail(Number(id))
@@ -64,7 +50,6 @@ const EditOotd: React.FC = () => {
     }
     return dateString; // 형식이 다를 경우 원본 문자열 반환
   };
-  
 
   const formatDateForApi = (dateString: string | null) => {
     if (!dateString) return ''; // null이나 undefined일 경우 빈 문자열 반환
@@ -75,14 +60,11 @@ const EditOotd: React.FC = () => {
     const day = dateString.slice(6, 8);
     return `${year}-${month}-${day}`;
   };
-  
 
   useEffect(() => {
     if (data && data.isSuccess) {
       const postData = data.result.post;
       const ootdData = data.result.ootd;
-
-      console.log(postData.images);
 
       if (postData && ootdData) {
         setPostId(postData.id);
@@ -97,8 +79,6 @@ const EditOotd: React.FC = () => {
           status: ootdData.weatherStatus,
           avgTemp: ootdData.weatherTemp,
         });
-
-        console.log(formatDateString(ootdData.date)); // 변환된 날짜 확인
 
         // 주소를 좌표로 변환하여 latitude와 longitude를 설정합니다.
         getCoordinatesFromAddress(postData.location).then(coordinates => {
@@ -125,19 +105,15 @@ const EditOotd: React.FC = () => {
   }, [images]);
 
   useEffect(() => {
-    if (hasChanges && latitude !== null && longitude !== null && date) {
+    // 조건: latitude, longitude, date 값이 유효할 때만 날씨 정보를 불러옵니다.
+    if (!isFirstLoad && hasChanges && latitude !== null && longitude !== null && date && date.length === 8) {
       handleFetchWeather();
     }
-  }, [hasChanges, latitude, longitude, date]);
+  }, [hasChanges, latitude, longitude, date]);  // hasChanges 대신 date와 좌표 값을 직접 감시
 
-  // useEffect(() => {
-  //   if (data && data.isSuccess) {
-  //     const postData = data.result.post;
-  //     if (postData) {
-  //       setImages(postData.images); // 상태 업데이트
-  //     }
-  //   }
-  // }, [data]);
+  useEffect(() => {
+    setIsFirstLoad(false); // 첫 로드가 완료되면 상태를 false로 설정하여 이후에는 정상 동작
+  }, []);
 
   const weatherMutation = useMutation(
     (variables: { latitude: number; longitude: number; date: string }) =>
@@ -146,66 +122,22 @@ const EditOotd: React.FC = () => {
       onSuccess: (data) => {
         setWeather(data.result);
       },
-      onError: async (error) => {
-        console.error('Error fetching weather:', error);
-
-        // 클라이언트에서만 실행되도록 useEffect 사용
-        if (typeof window !== 'undefined') {
-          Swal.fire({
-            icon: 'error',
-            title: '날씨 정보를 불러올 수 없습니다.',
-            text: '날씨와 온도를 직접 선택해주세요.',
-            confirmButtonText: '확인',
-            confirmButtonColor: '#FB3463',
-            allowOutsideClick: false,
-            preConfirm: async () => {
-              // 요소에 접근하려면 useEffect 안에서 지정합니다
-              return new Promise<void>((resolve) => {
-                Swal.fire({
-                  title: '날씨와 온도를 선택하세요',
-                  html: `
-                    <label for="weather-select">날씨 상태:</label>
-                    <select id="weather-select" class="swal2-input">
-                      ${weatherOptions.map(option => `<option value="${option.value}">${option.label}</option>`).join('')}
-                    </select>
-                    <label for="temperature-select" style="margin-top: 1em;">온도:</label>
-                    <select id="temperature-select" class="swal2-input">
-                      ${temperatureOptions.map(option => `<option value="${option.value}">${option.label}</option>`).join('')}
-                    </select>
-                  `,
-                  confirmButtonText: '확인',
-                  confirmButtonColor: '#FB3463',
-                  cancelButtonText: '취소',
-                  showCancelButton: true,
-                  allowOutsideClick: false,
-                  preConfirm: () => {
-                    const weatherSelect = document.getElementById('weather-select') as HTMLSelectElement;
-                    const temperatureSelect = document.getElementById('temperature-select') as HTMLSelectElement;
-                    return {
-                      weather: weatherSelect.value,
-                      temperature: temperatureSelect.value,
-                    };
-                  },
-                }).then((result) => {
-                  if (result.isConfirmed) {
-                    const selected = result.value;
-                    if (selected) {
-                      setWeather({
-                        status: selected.weather,
-                        avgTemp: selected.temperature === 'unknown' ? '정보 없음' : selected.temperature,
-                      });
-                    }
-                    resolve();
-                  }
-                });
-              });
-            },
-          });
-        }
+      onError: async () => {
+        // Swal로 먼저 경고 메시지를 띄우고 나서 커스텀 모달을 엽니다.
+        Swal.fire({
+          icon: 'error',
+          title: '날씨 정보를 불러올 수 없습니다.',
+          text: '날씨와 온도를 직접 선택해주세요.',
+          confirmButtonText: '확인',
+          confirmButtonColor: '#FB3463',
+          allowOutsideClick: false,
+        }).then(() => {
+          // Swal이 닫힌 후 커스텀 모달을 엽니다.
+          setIsModalOpen(true);
+        });
       },
     }
   );
-
 
   const handleFetchWeather = () => {
     if (latitude === null || longitude === null || !date) {
@@ -247,6 +179,8 @@ const EditOotd: React.FC = () => {
           icon: 'error',
           title: '게시글 수정 오류',
           text: '게시글을 수정하는 중 오류가 발생했습니다.',
+          confirmButtonText: '확인',
+          confirmButtonColor: '#FB3463', 
         });
       },
     }
@@ -321,7 +255,6 @@ const EditOotd: React.FC = () => {
   
     updatePostMutation.mutate({ postRequest, ootdRequest });
   };
-  
 
   const handleLocationChange = (locationData: { address: string; lat: number; lng: number }) => {
     setLocation(locationData.address);
@@ -332,7 +265,13 @@ const EditOotd: React.FC = () => {
 
   const handleDateChange = (newDate: string) => {
     setDate(formatDateString(newDate));
-    setHasChanges(true);
+    setHasChanges(true); // 날짜가 변경되었을 때 상태를 업데이트
+  };
+  const handleSaveWeather = (selectedWeather: string, temperature: string | null) => {
+    setWeather({
+      status: selectedWeather,
+      avgTemp: temperature ? `${temperature}` : '정보 없음',
+    });
   };
 
   if (isLoading) {
@@ -344,53 +283,63 @@ const EditOotd: React.FC = () => {
   }
 
   return (
-    <><Header /><div className="min-h-[calc(100dvh-60px)] mb-[60px] w-[90%] py-16 sm-700:w-[66%] sm-700:min-h-screen sm-700:mb-0 mx-auto">
-      <div className="w-full flex justify-end mb-[20px]">
-        <button
-          onClick={handleUpdatePost}
-          className="bg-[#fa3463] rounded-lg flex justify-center items-center px-10 py-2 text-white text-lg"
-        >
-          수정하기
-        </button>
-      </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <ImageChanger onImagesChange={setImages} initialImages={images} />
-        <div className="">
-          <PostInput
-            onPostChange={setPost}
-            onTagsChange={setTags}
-            tags={tags}
-            initialPost={post} />
-          <div className="space-y-4">
-            <LocationInput
-              onLocationChange={handleLocationChange}
-              selectedLocationName={location} />
-            <DateInput
-              onDateChange={handleDateChange}
-              initialDate={date} />
-            {weather ? (
-              <div className="w-full bg-neutral-100 rounded-lg flex justify-center items-center py-4 text-neutral-500 text-lg">
-                <div>
-                  {weather.avgTemp === '정보 없음'
-                    ? '정보 없음'
-                    : `${weather.avgTemp}°C, ${getWeatherStatusInKorean(
-                      weather.status
-                    )}`}
-                </div>
+    <>
+      <Header />
+      <div className="min-h-[calc(100dvh-60px)] mb-[60px] w-[90%] py-16 sm-700:w-[66%] sm-700:min-h-screen sm-700:mb-0 mx-auto">
+        <div className="w-full flex justify-end mb-[20px]">
+          <button
+            onClick={handleUpdatePost}
+            className="bg-[#fa3463] rounded-lg flex justify-center items-center px-10 py-2 text-white text-lg"
+            >
+              수정하기
+            </button>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <ImageChanger onImagesChange={setImages} initialImages={images} />
+            <div className="">
+              <PostInput
+                onPostChange={setPost}
+                onTagsChange={setTags}
+                tags={tags}
+                initialPost={post}
+              />
+              <div className="space-y-4">
+                <LocationInput
+                  onLocationChange={handleLocationChange}
+                  selectedLocationName={location}
+                />
+                <DateInput onDateChange={handleDateChange} initialDate={date} />
+                {weather ? (
+                  <div className="w-full bg-neutral-100 rounded-lg flex justify-center items-center py-4 text-neutral-500 text-lg">
+                    <div>
+                      {weather.avgTemp === '정보 없음'
+                        ? '정보 없음'
+                        : `${weather.avgTemp}°C, ${getWeatherStatusInKorean(
+                          weather.status
+                        )}`}
+                    </div>
+                  </div>
+                ) : (
+                  <button
+                    onClick={handleFetchWeather}
+                    className="w-full bg-neutral-100 rounded-lg flex justify-center items-center py-4 text-neutral-500 text-lg"
+                  >
+                    날씨 불러오기
+                  </button>
+                )}
               </div>
-            ) : (
-              <button
-                onClick={handleFetchWeather}
-                className="w-full bg-neutral-100 rounded-lg flex justify-center items-center py-4 text-neutral-500 text-lg"
-              >
-                날씨 불러오기
-              </button>
-            )}
+            </div>
           </div>
         </div>
-      </div>
-    </div></>
-  );
-};
-
-export default EditOotd;
+  
+        {/* Weather Modal 컴포넌트 */}
+        <WeatherModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          onSave={handleSaveWeather}
+        />
+      </>
+    );
+  };
+  
+  export default EditOotd;

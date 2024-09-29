@@ -102,6 +102,7 @@ const Notification: React.FC = () => {
             </div>
 
             <div className="flex items-center">
+
               <div className="flex-shrink-0">
                 <img
                   className="w-[60px] h-[60px] rounded-full"
@@ -117,6 +118,7 @@ const Notification: React.FC = () => {
 
                 <p className="mt-1 text-sm text-gray-500">
                   {formatTimeAgo(notification.createdAt)}
+
                 </p>
               </div>
             </div>

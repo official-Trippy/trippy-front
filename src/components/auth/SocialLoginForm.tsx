@@ -86,7 +86,7 @@ const SocialLoginForm = () => {
   return (
     <div className="flex flex-col my-10 items-center">
       <div
-        className="bg-kakao-btn text-black px-4 rounded-md my-2 w-[320px] h-[44px] flex items-center justify-center"
+        className="bg-kakao-btn text-neutral-900 dark:text-white  px-4 rounded-md my-2 w-[320px] h-[44px] flex items-center justify-center"
         onClick={() => {
           handleSocialLogin("kakao");
         }}

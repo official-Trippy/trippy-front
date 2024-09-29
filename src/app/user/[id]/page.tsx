@@ -102,6 +102,7 @@ const UserPage = ({ params }: { params: { id: string } }) => {
   const userData = data && data.result;
   const memberEmail = userData?.email;
 
+  console.log(userBoardCount)
   return (
     <>
       <Header />
@@ -112,7 +113,7 @@ const UserPage = ({ params }: { params: { id: string } }) => {
           layout="fill"
           objectFit="cover"
         />
-      <div className="absolute inset-0 bg-black bg-opacity-10 z-10" />
+        <div className="absolute inset-0 bg-black bg-opacity-10 z-10" />
       </div>
       <div className="hidden sm-700:flex w-[66%] mx-auto p-4 z-20">
         <div className="w-[250px] mb-4">
@@ -130,11 +131,10 @@ const UserPage = ({ params }: { params: { id: string } }) => {
           <div className="flex justify-between mb-4 ml-4 text-2xl">
             <div className="flex space-x-4">
               <button
-                className={`px-8 py-2 rounded-[999px] justify-center items-center ${
-                  activeTab === TABS.TICKET
-                    ? "bg-[#ffe3ea] border-2 border-[#fa3463]"
-                    : "border border-[#cfcfcf]"
-                }`}
+                className={`px-8 py-2 rounded-[999px] justify-center items-center ${activeTab === TABS.TICKET
+                  ? "bg-[#ffe3ea] border-2 border-[#fa3463]"
+                  : "border border-[#cfcfcf]"
+                  }`}
                 onClick={() => setActiveTab(TABS.TICKET)}
               >
                 <span
@@ -142,13 +142,13 @@ const UserPage = ({ params }: { params: { id: string } }) => {
                 >
                   티켓
                 </span>
+                <span className="text-[#fa3463] ml-1">{userBoardCount}</span>
               </button>
               <button
-                className={`px-8 py-2 rounded-[999px] justify-center items-center ${
-                  activeTab === TABS.OOTD
-                    ? "bg-[#ffe3ea] border-2 border-[#fa3463]"
-                    : "border border-[#cfcfcf]"
-                }`}
+                className={`px-8 py-2 rounded-[999px] justify-center items-center ${activeTab === TABS.OOTD
+                  ? "bg-[#ffe3ea] border-2 border-[#fa3463]"
+                  : "border border-[#cfcfcf]"
+                  }`}
                 onClick={() => setActiveTab(TABS.OOTD)}
               >
                 <span
@@ -225,25 +225,24 @@ const UserPage = ({ params }: { params: { id: string } }) => {
           <div className="flex flex-col space-x-4">
             <div className="flex flex-row gap-10">
               <button
-                className={`px-8 py-2 rounded-[999px] justify-center items-center ${
-                  activeTab === TABS.TICKET
-                    ? "bg-[#ffe3ea] border-2 border-[#fa3463]"
-                    : "border border-[#cfcfcf]"
-                }`}
+                className={`px-8 py-2 rounded-[999px] justify-center items-center ${activeTab === TABS.TICKET
+                  ? "bg-[#ffe3ea] border-2 border-[#fa3463]"
+                  : "border border-[#cfcfcf]"
+                  }`}
                 onClick={() => setActiveTab(TABS.TICKET)}
               >
                 <span
                   className={activeTab === TABS.TICKET ? "text-[#fa3463]" : ""}
                 >
                   티켓
+                  <span className="text-[#fa3463] ml-1">{userBoardCount}</span>
                 </span>
               </button>
               <button
-                className={`px-8 py-2 rounded-[999px] justify-center items-center ${
-                  activeTab === TABS.OOTD
-                    ? "bg-[#ffe3ea] border-2 border-[#fa3463]"
-                    : "border border-[#cfcfcf]"
-                }`}
+                className={`px-8 py-2 rounded-[999px] justify-center items-center ${activeTab === TABS.OOTD
+                  ? "bg-[#ffe3ea] border-2 border-[#fa3463]"
+                  : "border border-[#cfcfcf]"
+                  }`}
                 onClick={() => setActiveTab(TABS.OOTD)}
               >
                 <span

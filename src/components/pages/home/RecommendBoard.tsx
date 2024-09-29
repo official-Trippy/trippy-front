@@ -388,12 +388,14 @@ const RecommendBoard = () => {
                                                 </div>
                                             </div>
                                         ) : (
-                                            <div className={`relative w-full rounded-xl ${colorTicket[item.ticket.ticketColor] ? `bg-[${colorTicket[item.ticket.ticketColor]}]` : ''}`} style={{ aspectRatio: '273 / 303' }}>
+                                            <div className={`relative w-full rounded-xl ${colorTicket[item.ticket.ticketColor] ? `bg-[${colorTicket[item.ticket.ticketColor]}]` : ''}`} style={{ objectFit: 'cover', aspectRatio: '304 / 349', display: 'flex', justifyContent: 'center', alignItems: 'center', overflow: 'hidden' }}>
                                                 <Image
-                                                    className="absolute top-0 left-0 h-full object-cover rounded-xl p-[1rem] "
+                                                    className="rounded-xl w-[27rem] h-[30.9rem]"
                                                     src={item.ticket.image?.accessUri}
                                                     alt="TICKET"
-                                                    layout="fill"
+                                                    width={270}
+                                                    height={309}
+                                                    style={{ objectFit: 'cover' }} // 고정된 크기를 설정합니다.
                                                 />
                                             </div>
                                         )}
@@ -412,7 +414,7 @@ const RecommendBoard = () => {
                                         </div>
                                         {window.innerWidth > 500 ? (
                                             <div className="px-[1.7rem] flex-1">
-                                                <h1 className="font-semibold text-[2.4rem] theboki text-ellipsis overflow-hidden">{item.post.title}</h1>
+                                                <h1 className="font-semibold text-[2.4rem] text-[#292929] theboki text-ellipsis overflow-hidden">{item.post.title}</h1>
                                                 <span className="font-normal text-[2rem] text-[#6B6B6B] text-ellipsis overflow-hidden theboki">{bodyText}</span>
                                             </div>
                                         ) : (
@@ -461,7 +463,7 @@ const RecommendBoard = () => {
                             )
                         })
                     ) : (
-                        <div className="h-full flex flex-col text-[2rem] text-black my-auto items-center justify-center font-medium font-['Pretendard'] py-[50px]">
+                        <div className="h-full flex flex-col text-[2rem] text-neutral-900 dark:text-white  my-auto items-center justify-center font-medium font-['Pretendard'] py-[50px]">
 
                             <div className='flex flex-row'>
                                 <span className="text-[#FB3463]">{selectedInterest} </span>{"\u00A0"}관련 게시글이 없어요!
