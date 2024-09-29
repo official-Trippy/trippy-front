@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import BlogStep1 from "../../../public/BlogStep1.svg";
@@ -17,6 +17,7 @@ import { getByteLength } from "@/constants/getByteLength";
 import Cookies from "js-cookie";
 import Cropper, { Area } from "react-easy-crop";
 import { getCroppedImg } from "@/utils/getCroppedImg";
+import { debounce } from 'lodash';  
 
 const BlogRegisterFirst = () => {
   const [profileImage, setProfileImage] = useState<{
@@ -35,9 +36,22 @@ const BlogRegisterFirst = () => {
 
   const { setUserInfo } = useUserInfo();
   const router = useRouter();
-  
+  // Debounced functions for checking nickname and blog name
+  const debouncedNickNameCheck = useRef(
+    debounce(async (value: string) => {
+      if (!validateNickName(value)) return;
+      await handleNickNameBlur(value);
+    }, 2000)
+  ).current;
+
+  const debouncedBlogNameCheck = useRef(
+    debounce(async (value: string) => {
+      if (!validateBlogName(value)) return;
+      await handleBlogNameBlur(value);
+    }, 2000)
+  ).current;
+
   useEffect(() => {
-    // 페이지 진입 시 로그인 상태 및 role 값을 확인
     checkLoginStatus();
   }, []);
 
@@ -46,21 +60,15 @@ const BlogRegisterFirst = () => {
     const refreshToken = Cookies.get("refreshToken");
     const role = Cookies.get("role");
 
-    // 로그인이 된 상태에서 role이 GUEST일 경우, 회원가입 페이지에 머물도록 함
     if (accessToken && refreshToken && role === "GUEST") {
-      // GUEST 사용자이므로 회원가입 페이지에 머물게 합니다.
       return;
     }
 
-    // 로그인이 되었지만 role이 MEMBER 또는 ADMIN인 경우 리다이렉트
     if (role === "MEMBER" || role === "ADMIN") {
       router.push("/");
       return;
     }
-
-    // 로그인하지 않은 사용자는 이 페이지에 접근할 수 있도록 허용
   };
-
 
   const checkSwearWords = (value: string) => {
     const lowerValue = value.toLowerCase();
@@ -69,7 +77,7 @@ const BlogRegisterFirst = () => {
     );
   };
 
-  const handleNickName = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleNickName = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     const byteLength = getByteLength(value);
     if (byteLength > 16) return;
@@ -85,7 +93,7 @@ const BlogRegisterFirst = () => {
       setNickNameError("형식이 올바르지 않습니다. 다시 입력해 주세요.");
     } else {
       setNickNameError("");
-      await handleNickNameBlur(value);
+      debouncedNickNameCheck(value); // 2초 뒤에 닉네임 중복 체크
     }
   };
 
@@ -98,21 +106,17 @@ const BlogRegisterFirst = () => {
         setNickNameError("사용 가능한 닉네임입니다.");
       }
     } catch (error) {
-      console.error("Error checking nickname duplication:", error);
-      setNickNameError(
-        "서버에서 오류가 발생했습니다. 잠시 후 다시 시도해주세요."
-      );
+      setNickNameError("서버에서 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
     }
   };
 
   const validateNickName = (nickName: string) => {
-    const regex = /^[가-힣a-zA-Z0-9 ]{2,16}$/; // 공백을 허용하기 위해 ' ' 추가
+    const regex = /^[가-힣a-zA-Z0-9 ]{2,16}$/;
     return regex.test(nickName);
-  };  
+  };
 
-  const handleBlogName = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleBlogName = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-
     const byteLength = getByteLength(value);
     if (byteLength > 30) return;
 
@@ -127,7 +131,7 @@ const BlogRegisterFirst = () => {
       setBlogNameError("형식이 올바르지 않습니다. 다시 입력해 주세요.");
     } else {
       setBlogNameError("");
-      await handleBlogNameBlur(value);
+      debouncedBlogNameCheck(value); // 2초 뒤에 블로그 이름 중복 체크
     }
   };
 
@@ -140,18 +144,27 @@ const BlogRegisterFirst = () => {
         setBlogNameError("사용 가능한 블로그 이름입니다.");
       }
     } catch (error) {
-      console.error("Error checking blog name duplication:", error);
-      setBlogNameError(
-        "서버에서 오류가 발생했습니다. 잠시 후 다시 시도해주세요."
-      );
+      setBlogNameError("서버에서 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
     }
   };
 
-// 블로그 이름 정규식을 띄어쓰기 포함하게 수정
-const validateBlogName = (blogName: string) => {
-  const regex = /^[가-힣a-zA-Z0-9 ]{2,28}$/; // 공백을 허용하기 위해 ' ' 추가
-  return regex.test(blogName);
-};
+  const validateBlogName = (blogName: string) => {
+    const regex = /^[가-힣a-zA-Z0-9 ]{2,28}$/;
+    return regex.test(blogName);
+  };
+
+  const handleBlogIntroduce = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setBlogIntroduce(value);
+
+    if (checkSwearWords(value)) {
+      setBlogIntroduceError("욕설이 포함되었습니다. 다시 입력해주세요.");
+      return;
+    }
+
+    setBlogIntroduceError("");
+  };
+
 
   // 크롭 관련 상태
   const [imageSrc, setImageSrc] = useState<string | null>(null); // 크롭할 이미지 소스
@@ -199,18 +212,6 @@ const validateBlogName = (blogName: string) => {
   const handleImageDelete = () => {
     setProfileImage(null);
     setImageUploaded(false);
-  };
-
-  const handleBlogIntroduce = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setBlogIntroduce(value);
-
-    if (checkSwearWords(value)) {
-      setBlogIntroduceError("욕설이 포함되었습니다. 다시 입력해주세요.");
-      return;
-    }
-
-    setBlogIntroduceError("");
   };
 
   const handleSubmit = async () => {
