@@ -34,6 +34,7 @@ const UserModal: React.FC<
   const { resetUserInfo } = useUserStore(); // 전역 상태 초기화 함수 가져오기
 
   const handleMyPage = () => {
+    onClose();
     router.push("/mypage");
   };
 
@@ -71,6 +72,7 @@ const UserModal: React.FC<
     
         // 확인 버튼을 눌렀을 때만 리다이렉트
         if (successResult.isConfirmed) {
+          onClose();
           router.push("/login");
         }
         
