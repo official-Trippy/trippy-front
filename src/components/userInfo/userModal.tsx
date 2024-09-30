@@ -103,67 +103,71 @@ const UserModal: React.FC<
   if (!isOpen || !userInfo) return null;
 
   return (
-    <div ref={modalRef} className="relative w-[24rem] bg-white rounded-lg shadow z-50" style={style}>
-      <div className="px-[2rem] pt-[1rem] pb-[1rem]">
-        <div className="flex-col justify-center items-start gap-3 inline-flex">
-          <div className="self-stretch justify-start items-center inline-flex gap-12 max-w-[170px]">
-            <div className="flex-col justify-start items-start gap-2 inline-flex">
-              <div className="text-zinc-800 text-2xl font-bold font-Pretendard break-words" style={{ overflowWrap: 'break-word' }}>
-                {userInfo.nickName}
+    <div ref={modalRef} className="relative  w-[24rem] bg-white rounded-lg shadow z-50" style={style}>
+    <div className="px-[2rem] pt-[1rem] pb-[1rem]">
+      <div className="flex-col justify-center items-start gap-3 inline-flex">
+        <div className="self-stretch justify-start items-center inline-flex gap-12">
+          <div className="flex-col justify-start items-start gap-2 inline-flex">
+            <div className="text-zinc-800 text-2xl font-bold font-Pretendard break-words" style={{ overflowWrap: 'break-word' }}>
+              {userInfo.nickName}
+            </div>
+            <div className="flex-col justify-start items-start gap-2 flex">
+              {/* 유저 이메일 부분 */}
+              <div className={`text-neutral-400 text-xl font-normal font-Pretendard ${userData?.socialType != 'local' ? 'max-w-[170px] break-words' : 'max-w-[200px] break-words'}`}>
+                {userInfo.email}
               </div>
-              <div className="flex-col justify-start items-start gap-2 flex">
-                <div className="text-neutral-400 text-xl font-normal font-Pretendard max-w-[170px] overflow-hidden whitespace-nowrap text-ellipsis">
-                  {userInfo.email}
-                </div>
-                <div className="justify-start items-center gap-[9px] inline-flex">
-                  <div className="justify-start items-start gap-1 flex">
-                    <div className="text-center text-neutral-400 font-normal font-Pretendard">
-                      팔로워 {userData?.followerCnt}
-                    </div>
+              <div className="justify-start items-center gap-[9px] inline-flex">
+                <div className="justify-start items-start gap-1 flex">
+                  <div className="text-center text-neutral-400 font-normal font-Pretendard">
+                    팔로워 {userData?.followerCnt}
                   </div>
-                  <div className="justify-start items-start gap-1 flex">
-                    <div className="text-center text-neutral-400 font-normal font-Pretendard">
-                      팔로잉 {userData?.followingCnt}
-                    </div>
+                </div>
+                <div className="justify-start items-start gap-1 flex">
+                  <div className="text-center text-neutral-400 font-normal font-Pretendard">
+                    팔로잉 {userData?.followingCnt}
                   </div>
                 </div>
               </div>
             </div>
-
+          </div>
+  
+          {/* 소셜 로그인 아이콘 */}
+          {userData?.socialType && (
             <div className="absolute top-5 right-5">
-              {userData?.socialType === "naver" && (
+              {userData.socialType === "naver" && (
                 <Image src={NaverLogo} alt="Naver Logo" width={46} height={46} />
               )}
-              {userData?.socialType === "kakao" && (
+              {userData.socialType === "kakao" && (
                 <Image src={KakaoLogo} alt="Kakao Logo" width={46} height={46} />
               )}
-              {userData?.socialType === "google" && (
+              {userData.socialType === "google" && (
                 <Image src={GoogleLogo} alt="Google Logo" width={46} height={46} />
               )}
             </div>
-          </div>
-          <div>
-            <span className="text-neutral-500 text-lg font-normal font-Pretendard cursor-pointer" onClick={handleMyPage}>
-              마이페이지
-            </span>
-            <span className="text-rose-500 text-lg font-normal font-Pretendard cursor-pointer ml-[10px]" onClick={handleLogoutClick}>
-              로그아웃
-            </span>
-          </div>
+          )}
         </div>
-      </div>
-      <hr className="border-CFCFCF mb-[1px]" />
-      <div className="pt-[1rem] px-[2rem] pb-[1rem]">
-        <div className="flex-col justify-center items-start inline-flex w-full">
-          <div className="text-zinc-800 text-2xl font-bold font-Pretendard">
-            {userInfo.blogName}
-          </div>
-          <div className="text-neutral-400 text-lg font-normal font-Pretendard pt-[2px]">
-            {userInfo.blogIntroduce}
-          </div>
+        <div>
+          <span className="text-neutral-500 text-lg font-normal font-Pretendard cursor-pointer" onClick={handleMyPage}>
+            마이페이지
+          </span>
+          <span className="text-rose-500 text-lg font-normal font-Pretendard cursor-pointer ml-[10px]" onClick={handleLogoutClick}>
+            로그아웃
+          </span>
         </div>
       </div>
     </div>
+    <hr className="border-CFCFCF mb-[1px]" />
+    <div className="pt-[1rem] px-[2rem] pb-[1rem]">
+      <div className="flex-col justify-center items-start inline-flex w-full">
+        <div className="text-zinc-800 text-2xl font-bold font-Pretendard">
+          {userInfo.blogName}
+        </div>
+        <div className="text-neutral-400 text-lg font-normal font-Pretendard pt-[2px]">
+          {userInfo.blogIntroduce}
+        </div>
+      </div>
+    </div>
+  </div>
   );
 };
 
