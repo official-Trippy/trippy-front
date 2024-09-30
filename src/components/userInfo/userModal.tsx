@@ -6,7 +6,7 @@ import { useQuery } from "react-query";
 import { MemberInfo } from "@/services/auth";
 
 import Image from "next/image";
-import NaverLogo from "../../../public/NaverLogo.png";
+import NaverLogo from "../../../public/NaverLogo1.svg";
 import KakaoLogo from "../../../public/KakaoLogo.svg";
 import GoogleLogo from "../../../public/GoogleLogo.svg";
 import { useUserStore } from "@/store/useUserStore";
@@ -31,7 +31,7 @@ const UserModal: React.FC<
   const userData = data?.result;
   console.log("user Data", userData);
   const router = useRouter();
-  const { resetUserInfo } = useUserStore(); // 전역 상태 초기화 함수 가져오기
+  const { resetUserInfo } = useUserStore(); 
 
   const handleMyPage = () => {
     onClose();
@@ -120,8 +120,8 @@ const UserModal: React.FC<
                 </div>
               </div>
             </div>
-            <div className="w-[36px] h-[36px]">
-              {userInfo.socialType === "naver" && (
+            <div className="w-[46px] h-[46px]">
+              {userData?.socialType === "naver" && (
                 <Image
                   src={NaverLogo}
                   alt="Naver Logo"
@@ -129,17 +129,17 @@ const UserModal: React.FC<
                   height={46}
                 />
               )}
-              {userInfo.socialType === "kakao" && (
+              {userData?.socialType === "kakao" && (
                 <Image
-                  src={NaverLogo}
+                  src={KakaoLogo}
                   alt="Kakao Logo"
                   width={46}
                   height={46}
                 />
               )}
-              {userInfo.socialType === "google" && (
+              {userData?.socialType === "google" && (
                 <Image
-                  src={NaverLogo}
+                  src={GoogleLogo}
                   alt="Google Logo"
                   width={46}
                   height={46}

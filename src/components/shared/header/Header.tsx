@@ -9,7 +9,7 @@ import DefaultImage from "../../../../public/defaultImage.svg";
 import searchIconMobile from "../../../../public/search_icon_mobile.svg"; 
 import alertIconMobile from "../../../../public/alert_icon_mobile.svg"; 
 import alertIcon from "../../../../public/icon_alarm.svg"; 
-
+import ootdWrite from "../../../../public/ootdWrite.svg"; 
 import logoutImg from "../../../../public/LogoutImg.svg";
 import UserModal from "@/components/userInfo/userModal";
 import { useUserStore } from "@/store/useUserStore";
@@ -294,7 +294,7 @@ const Header = () => {
                             <div className="flex items-start">
                               <Image
                                 className="mr-[1.7rem] mt-[0.5rem]"
-                                src={postwriteImg}
+                                src={ootdWrite}
                                 width={24}
                                 height={24}
                                 alt=""

@@ -14,6 +14,7 @@ import EditorActiveIcon from '../../../../public/mobile_editor_active.svg';
 import MyIcon from '../../../../public/mobile_my_inactive.svg';
 import MyActiveIcon from '../../../../public/mobile_my_active.svg';
 import postwriteImg from "@/dummy/postwrite.svg";
+import ootdWrite from "../../../../public/ootdWrite.svg"; 
 
 const MobileFooter = () => {
   const router = useRouter();
@@ -144,7 +145,7 @@ const MobileFooter = () => {
                   <div className="flex items-start">
                     <Image
                       className="mr-[1.7rem] mt-[0.5rem]"
-                      src={postwriteImg}
+                      src={ootdWrite}
                       width={24}
                       height={24}
                       alt=""
