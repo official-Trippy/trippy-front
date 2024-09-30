@@ -172,7 +172,7 @@ function RecentPost({ allPosts, setAllPosts, boardData, boardRefetch, PAGE_SIZE,
                                             <div className='flex flex-col w-full ml-[2.5rem]'>
                                                 <h1 className="text-[2rem] font-medium text-ellipsis overflow-hidden theboki font-['Pretendard']">{posts.post.title}</h1>
                                                 <span className="text-[1.6rem] mt-[0.4rem] h-[5rem] font-normal text-[#6B6B6B] text-ellipsis overflow-hidden theboki1 font-['Pretendard']">{bodyText}</span>
-                                                <div className="flex flex-wrap text-ellipsis overflow-hidden theboki">
+                                                <div className="flex items-center overflow-hidden whitespace-nowrap">
                                                     {posts?.post.tags.map((tagData: string, index: number) => (
                                                         <span
                                                             key={index}
@@ -181,6 +181,9 @@ function RecentPost({ allPosts, setAllPosts, boardData, boardRefetch, PAGE_SIZE,
                                                             {tagData}
                                                         </span>
                                                     ))}
+                                                    {posts?.post.tags.length > 2 && (
+                                                        <span className="text-ellipsis overflow-hidden whitespace-nowrap">...</span>
+                                                    )}
                                                 </div>
                                                 <div className="flex mt-[2rem]">
                                                     <div className="flex h-full text-[1.4rem] font-normal space-x-4 items-end mt-auto xl:appearance-none">
