@@ -55,7 +55,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onImagesChange, initialIm
     setIsUploading(true);
     try {
       const croppedBlob = await getCroppedImg(imageSrc, croppedAreaPixels);
-      
+
       if (croppedBlob) {
         const fileName = 'croppedImage.jpg'; // 파일 이름을 지정해 줍니다.
         const croppedFile = new File([croppedBlob], fileName, { type: 'image/jpeg' });
@@ -115,7 +115,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onImagesChange, initialIm
       )
     );
   };
-  
+
   const SamplePrevArrow = (props: any) => {
     const { className, style, onClick, currentSlide } = props;
     return (
@@ -166,43 +166,41 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onImagesChange, initialIm
               <h3 className="mb-4 text-center">이미지 영역 선택</h3>
               <div className="relative w-[300px] h-[300px] bg-gray-200">
                 {imageSrc && (
-                 <Cropper
-                 image={imageSrc}
-                 crop={crop}
-                 zoom={zoom}
-                 aspect={1} // 1:1 비율 유지
-                 onCropChange={setCrop}
-                 onCropComplete={onCropComplete}
-                 onZoomChange={setZoom}
-                 objectFit="cover" // 이미지 여백을 없애고, 화면에 맞춤
-               />
+                  <Cropper
+                    image={imageSrc}
+                    crop={crop}
+                    zoom={zoom}
+                    aspect={1} // 1:1 비율 유지
+                    onCropChange={setCrop}
+                    onCropComplete={onCropComplete}
+                    onZoomChange={setZoom}
+                    objectFit="cover" // 이미지 여백을 없애고, 화면에 맞춤
+                  />
                 )}
               </div>
               <div className="flex justify-end mt-4">
-              <div className="bg-btn-color text-white px-4 py-2 font-medium font-['Pretendard'] rounded mr-2 cursor-pointer" onClick={handleCropImage}>
-                완료
+                <div className="bg-btn-color text-white px-4 py-2 font-medium font-['Pretendard'] rounded mr-2 cursor-pointer" onClick={handleCropImage}>
+                  완료
+                </div>
+                <div className="border  text-[#cfcfcf] px-4 py-2 font-medium font-['Pretendard'] rounded cursor-pointer" onClick={() => setIsModalOpen(false)}>
+                  취소
+                </div>
               </div>
-              <div className="border  text-[#cfcfcf] px-4 py-2 font-medium font-['Pretendard'] rounded cursor-pointer" onClick={() => setIsModalOpen(false)}>
-                취소
-              </div>
-            </div>
             </div>
           </div>
         )}
         {/* 기존 이미지 영역은 모달이 열려도 그대로 유지 */}
-          <div
-            onClick={() => displayImages.length === 0 && document.getElementById('image-upload-input')?.click()}
-            className={`relative cursor-pointer overflow-hidden bg-cover bg-center mx-auto ${
-              displayImages.length > 0 ? '' : 'border' // 이미지가 없을 때만 border를 적용
-            } rounded-[8px] ${
-              isModalOpen ? 'opacity-50' : '' // 모달이 열릴 때 투명도 조정
+        <div
+          onClick={() => displayImages.length === 0 && document.getElementById('image-upload-input')?.click()}
+          className={`relative cursor-pointer overflow-hidden bg-cover bg-center mx-auto ${displayImages.length > 0 ? '' : 'border' // 이미지가 없을 때만 border를 적용
+            } rounded-[8px] ${isModalOpen ? 'opacity-50' : '' // 모달이 열릴 때 투명도 조정
             }`}
-            style={{
-              backgroundImage: displayImages.length > 0 ? 'none' : `url(${OotdDefault.src})`,
-              maxWidth: '460px',
-              aspectRatio: '1 / 1', // 1:1 비율 유지
-            }}
-          >
+          style={{
+            backgroundImage: displayImages.length > 0 ? 'none' : `url(${OotdDefault.src})`,
+            maxWidth: '460px',
+            aspectRatio: '1 / 1', // 1:1 비율 유지
+          }}
+        >
           {!isUploading && displayImages.length === 0 && (
             <div className="flex items-center justify-center w-full h-full ">
               <img
@@ -245,9 +243,8 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onImagesChange, initialIm
           <Droppable droppableId="droppable-images" direction="horizontal">
             {(provided) => (
               <div
-                className={`flex w-full mx-auto mt-4 p-[2%] ${
-                  displayImages.length === 0 ? '' : 'rounded-[8px] border'
-                }`}
+                className={`flex w-full mx-auto mt-4 p-[2%] ${displayImages.length === 0 ? '' : 'rounded-[8px] border'
+                  }`}
                 {...provided.droppableProps}
                 ref={provided.innerRef}
                 style={{
