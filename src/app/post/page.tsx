@@ -16,6 +16,9 @@ import { colorTicket } from '@/types/board'
 import MyTinyMCEEditor from '@/components/testEditor/textEditor2'
 import { getCountry, getCountry1 } from '@/services/board/get/getCountry'
 import { PostAirSVG, PostBusSVG, PostBycicleSVG, PostCarSVG, PostTrainSVG } from '@/components/transportsvg/post'
+import { useQuery } from 'react-query'
+import { MemberInfo } from '@/services/auth'
+import Cookies from "js-cookie"
 
 interface CountryResult {
     countryIsoAlp2: string;
@@ -60,7 +63,8 @@ function PostWrite() {
     });
     const [result, setResult] = useState<ApiResponse | null>(null);
     const [result1, setResult1] = useState<ApiResponse | null>(null);
-    const [transportStr, setTransportStr] = useState('')
+    const [transportStr, setTransportStr] = useState('');
+    const accessToken = Cookies.get("accessToken");
 
     useEffect(() => {
         setIsImageIdx([
@@ -94,6 +98,18 @@ function PostWrite() {
         return `${formatDate(startDate)} ~ ${formatDate(endDate)}`;
     };
 
+    const {
+        data: memberData,
+        error,
+        isLoading,
+    } = useQuery({
+        queryKey: ["member", accessToken],
+        queryFn: () => MemberInfo(accessToken),
+        onError: (error) => {
+            // 에러 처리 로직
+            console.error(error);
+        },
+    });
 
 
 
@@ -114,7 +130,7 @@ function PostWrite() {
         setTicketColor(selectedColor);
     };
 
-    console.log()
+    console.log(memberData)
 
 
     const selectTransport = (imgSrc: JSX.Element) => {
@@ -181,6 +197,85 @@ function PostWrite() {
 
     console.log(thumbnailPreview)
     const addPost = async () => {
+
+        if (inputValue1 === '' || inputValue2 === '') {
+            Swal.fire({
+                icon: 'error',
+                title: '입력 오류',
+                text: '출발지 또는 도착지를 작성해주세요.',
+                confirmButtonText: '확인',
+                confirmButtonColor: '#FB3463',
+            });
+            return;
+        }
+
+        if (!images[0]) {
+            Swal.fire({
+                icon: 'error',
+                title: '이미지 오류',
+                text: '티켓 이미지를 업로드해주세요.',
+                confirmButtonText: '확인',
+                confirmButtonColor: '#FB3463',
+            });
+            console.log(postRequests)
+            return;
+        }
+
+        if (title.trim() === '') {
+            Swal.fire({
+                icon: 'error',
+                title: '문구 작성 오류',
+                text: 'POST 제목을 작성해주세요.',
+                confirmButtonText: '확인',
+                confirmButtonColor: '#FB3463',
+            });
+            return;
+        }
+
+        if (postRequests.body.trim() === '') {
+            Swal.fire({
+                icon: 'error',
+                title: '문구 작성 오류',
+                text: 'POST 문구를 작성해주세요.',
+                confirmButtonText: '확인',
+                confirmButtonColor: '#FB3463',
+            });
+            return;
+        }
+
+        if (tags.length < 3) {
+            Swal.fire({
+                icon: 'error',
+                title: '태그 오류',
+                text: '태그를 3개 이상 등록해주세요.',
+                confirmButtonText: '확인',
+                confirmButtonColor: '#FB3463',
+            });
+            return;
+        }
+
+        if (!startDate || !endDate) {
+            Swal.fire({
+                icon: 'error',
+                title: '날짜 오류',
+                text: '날짜 정보를 입력해주세요.',
+                confirmButtonText: '확인',
+                confirmButtonColor: '#FB3463',
+            });
+            return;
+        }
+
+        if (Number(passengerCount) < 1) {
+            Swal.fire({
+                icon: 'error',
+                title: '인원 오류',
+                text: '인원 수를 입력해주세요.',
+                confirmButtonText: '확인',
+                confirmButtonColor: '#FB3463',
+            });
+            return;
+        }
+
         const postRequest = {
             title: title,
             body: postRequests.body,
@@ -188,7 +283,8 @@ function PostWrite() {
             location: '24.12342,12.12344',
             images: postRequests.images,
             tags: tags,
-        }
+        };
+
         const ticketRequest = {
             departure: inputValue1,
             departureCode: result?.result.isoAlp3,
@@ -200,10 +296,23 @@ function PostWrite() {
             endDate: formatDates(endDate),
             ticketColor: ticketColor || 'Aquamarine',
             transport: transportStr || "Airplane"
-        }
+        };
+
         try {
-            console.log(postRequest, ticketRequest)
+            // 로딩 시작
+            Swal.fire({
+                title: '로딩 중...',
+                html: '게시글을 올리는 중입니다.',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+
+            console.log(postRequest, ticketRequest);
             await postBoard(postRequest, ticketRequest);
+
+            // 로딩 완료 후 성공 메시지
             Swal.fire({
                 icon: 'success',
                 title: 'TICKET 게시글을 올렸습니다.',
@@ -218,10 +327,18 @@ function PostWrite() {
                     router.push('/');
                 }
             });
-        } catch (e) {
-
+        } catch (e: any) {
+            // 에러 처리 (예: 에러 메시지 표시)
+            Swal.fire({
+                icon: 'error',
+                title: '게시글 업로드에 실패했습니다.',
+                text: e.message || '알 수 없는 오류가 발생했습니다.',
+                confirmButtonText: '확인',
+                confirmButtonColor: '#FB3463',
+            });
         }
-    }
+    };
+
 
     console.log(images)
 
@@ -367,12 +484,12 @@ function PostWrite() {
                         <div className={`flex ml-[7rem] text-[1.4rem] font-extrabold font-akira`}
                             style={{ color: bgColor || 'inherit' }}
                         >
-                            <span className='w-[16rem]'>PASSENGER</span>
+                            <span className='w-[17.2rem]'>PASSENGER</span>
                             <span className='w-[25rem]'>DATE</span>
                             <span className='w-[8rem]'>GROUP</span>
                         </div>
                         <div className={`flex ml-[7rem] text-[1.4rem] font-extrabold text-[#6B6B6B] relative`}>
-                            <span className='w-[16rem] flex'>USERID</span>
+                            <span className='w-[17rem] flex mt-[0.3rem]'>{memberData?.result.memberId}</span>
                             {dateOpen ? (
                                 <div className='w-[25rem]'>
                                     <DatePicker

@@ -216,7 +216,7 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
       await postBoardLike(Number(params.boardId));
       LikeRefetch();
       postRefetch();
-    } catch (e) {}
+    } catch (e) { }
   };
 
   const LikeDeleteHandler = async () => {
@@ -224,7 +224,7 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
       await deleteLike(Number(params.boardId));
       LikeRefetch();
       postRefetch();
-    } catch (e) {}
+    } catch (e) { }
   };
 
   const commentHandler = async () => {
@@ -239,7 +239,7 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
       setComment("");
       commentRefetch();
       postRefetch();
-    } catch (e) {}
+    } catch (e) { }
   };
 
   const commentEditHandler = async (commentIds: number) => {
@@ -248,7 +248,7 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
       toggleEdit(commentIds);
       setUpdateReply("");
       commentRefetch();
-    } catch (e) {}
+    } catch (e) { }
   };
   const commentReplyHandler = async (
     replymemIds: string,
@@ -273,7 +273,7 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
       setReplyStates(Array(postCommentData?.result.length).fill(false));
       commentRefetch();
       postRefetch();
-    } catch (e) {}
+    } catch (e) { }
   };
 
   const toggleReply = (index: number) => {
@@ -423,7 +423,7 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
         <div className="flex text-[#6B6B6B] font-semibold text-[2rem]">
           {window.innerWidth > 600 ? (
             <span className="mt-[8rem]">
-              {postData?.result.member.blogName}의 블로그
+              {postData?.result.member.blogName}
             </span>
           ) : (
             <div className="flex w-full items-center justify-center mt-[1.2rem]">
@@ -431,44 +431,44 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
                 <Image src={backbutton} alt="" />
               </button>
               <span className="text-[#171717] flex mx-auto">
-                {postData?.result.member.blogName}의 블로그
+                {postData?.result.member.blogName}
               </span>
             </div>
           )}
           {memberDatas?.result.blogName ===
             postData?.result.member.blogName && (
-            <div className="flex ml-auto mt-[1rem] gap-[1rem]">
-              <Image
-                className="cursor-pointer"
-                src={menubars}
-                alt=""
-                onClick={() => {
-                  setIsOpenMenu(!isOpenMenu);
-                }}
-              />
-              {isOpenMenu && (
-                <div
-                  className="absolute bg-white shadow-md rounded-md mt-[3rem] -ml-[10rem] px-[1.5rem] py-[2rem] animate-dropdown z-20 rounded-[0.8rem]"
-                  style={{ opacity: 0, transform: "translateY(-10px)" }}
-                >
-                  {" "}
-                  {/* 스타일 추가 */}
-                  <span
-                    className="cursor-pointer bg-[#F5F5F5] text-[#292929] hover:bg-[#F5F5F5d] block p-[0.8rem] rounded-[0.8rem]"
-                    onClick={editBoardEdit}
+              <div className="flex ml-auto mt-[1rem] gap-[1rem]">
+                <Image
+                  className="cursor-pointer"
+                  src={menubars}
+                  alt=""
+                  onClick={() => {
+                    setIsOpenMenu(!isOpenMenu);
+                  }}
+                />
+                {isOpenMenu && (
+                  <div
+                    className="absolute bg-white shadow-md rounded-md mt-[3rem] -ml-[10rem] px-[1.5rem] py-[2rem] animate-dropdown z-20 rounded-[0.8rem]"
+                    style={{ opacity: 0, transform: "translateY(-10px)" }}
                   >
-                    수정하기
-                  </span>
-                  <span
-                    className="cursor-pointer bg-[#292929] text-white hover:bg-[#292929cc] block mt-[0.8rem] p-[0.8rem] rounded-[0.8rem]"
-                    onClick={deleteBoardHandler}
-                  >
-                    삭제하기
-                  </span>
-                </div>
-              )}
-            </div>
-          )}
+                    {" "}
+                    {/* 스타일 추가 */}
+                    <span
+                      className="cursor-pointer bg-[#F5F5F5] text-[#292929] hover:bg-[#F5F5F5d] block p-[0.8rem] rounded-[0.8rem]"
+                      onClick={editBoardEdit}
+                    >
+                      수정하기
+                    </span>
+                    <span
+                      className="cursor-pointer bg-[#292929] text-white hover:bg-[#292929cc] block mt-[0.8rem] p-[0.8rem] rounded-[0.8rem]"
+                      onClick={deleteBoardHandler}
+                    >
+                      삭제하기
+                    </span>
+                  </div>
+                )}
+              </div>
+            )}
         </div>
         <div className="flex items-center mt-[2.6rem]">
           <h1 className="text-[2.4rem] xl:text-[3.6rem] sm-700:text-[2.4rem] font-bold">
@@ -502,7 +502,7 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
                 <div className="ml-[4rem] flex">
                   <Image
                     className="cursor-pointer"
-                    src={bookmark.result ? BookmarkedIcon : BookmarkIcon}
+                    src={bookmark?.result ? BookmarkedIcon : BookmarkIcon}
                     alt=""
                     onClick={() => {
                       bookMarkHandler();
@@ -571,7 +571,7 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
                 className={`flex justify-center text-[0.5rem] xl:text-[1.4rem] lg:text-[1rem] sm:text-[0.5rem] font-extrabold text-[#6B6B6B]`}
               >
                 <span className="w-[5rem] xl:w-[16rem] lg:w-[10rem] sm:w-[5rem]">
-                  USERID
+                  {postMemberId}
                 </span>
                 <span className="w-[10rem] xl:w-[25rem] lg:w-[18rem] sm:w-[10rem] ml-[1rem]">
                   {postData?.result.ticket.startDate} ~{" "}
@@ -763,48 +763,48 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
                                 </span>
                                 {userInfo?.memberId ===
                                   coData.member.memberId && (
-                                  <div className="flex ml-auto">
-                                    <Image
-                                      className="w-[2.8rem] h-[2.8rem] cursor-pointer"
-                                      width={28}
-                                      height={28}
-                                      src={menubars}
-                                      alt=""
-                                      onClick={() => toggleMyEdit(coData.id)}
-                                    />
-                                    {openEditing && (
-                                      <div
-                                        className="absolute flex flex-col ml-auto bg-white shadow-md rounded-md -ml-[4.5rem] mt-[2.3rem] animate-dropdown z-20 rounded-[0.8rem]"
-                                        style={{
-                                          opacity: 0,
-                                          transform: "translateY(-10px)",
-                                        }}
-                                      >
-                                        <span
-                                          className="px-[2rem] py-[1rem] cursor-pointer text-red-500"
-                                          onClick={() => {
-                                            deleteReplyHandler(coData.id);
-                                            toggleMyEdit(coData.id);
+                                    <div className="flex ml-auto">
+                                      <Image
+                                        className="w-[2.8rem] h-[2.8rem] cursor-pointer"
+                                        width={28}
+                                        height={28}
+                                        src={menubars}
+                                        alt=""
+                                        onClick={() => toggleMyEdit(coData.id)}
+                                      />
+                                      {openEditing && (
+                                        <div
+                                          className="absolute flex flex-col ml-auto bg-white shadow-md rounded-md -ml-[4.5rem] mt-[2.3rem] animate-dropdown z-20 rounded-[0.8rem]"
+                                          style={{
+                                            opacity: 0,
+                                            transform: "translateY(-10px)",
                                           }}
                                         >
-                                          삭제
-                                        </span>
-                                        <span
-                                          className="px-[2rem] py-[1rem] cursor-pointer"
-                                          onClick={() => {
-                                            handleEditContent(
-                                              coData.id,
-                                              coData.content
-                                            );
-                                            toggleMyEdit(coData.id);
-                                          }}
-                                        >
-                                          수정
-                                        </span>
-                                      </div>
-                                    )}
-                                  </div>
-                                )}
+                                          <span
+                                            className="px-[2rem] py-[1rem] cursor-pointer text-red-500"
+                                            onClick={() => {
+                                              deleteReplyHandler(coData.id);
+                                              toggleMyEdit(coData.id);
+                                            }}
+                                          >
+                                            삭제
+                                          </span>
+                                          <span
+                                            className="px-[2rem] py-[1rem] cursor-pointer"
+                                            onClick={() => {
+                                              handleEditContent(
+                                                coData.id,
+                                                coData.content
+                                              );
+                                              toggleMyEdit(coData.id);
+                                            }}
+                                          >
+                                            수정
+                                          </span>
+                                        </div>
+                                      )}
+                                    </div>
+                                  )}
                               </div>
                               {isEditing ? (
                                 <div className="w-full ml-[2.5rem] mt-[0.5rem]">
@@ -955,52 +955,52 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
                                       </span>
                                       {userInfo?.memberId ===
                                         childData.member.memberId && (
-                                        <div className="flex ml-auto">
-                                          <Image
-                                            className="w-[2.8rem] h-[2.8rem] cursor-pointer"
-                                            width={28}
-                                            height={28}
-                                            src={menubars}
-                                            alt=""
-                                            onClick={() =>
-                                              toggleMyEdit(childData.id)
-                                            }
-                                          />
-                                          {openEditing && (
-                                            <div
-                                              className="absolute flex flex-col ml-auto bg-white shadow-md rounded-md -ml-[4.5rem] mt-[2.3rem] animate-dropdown z-20 rounded-[0.8rem]"
-                                              style={{
-                                                opacity: 0,
-                                                transform: "translateY(-10px)",
-                                              }}
-                                            >
-                                              <span
-                                                className="px-[2rem] py-[1rem] cursor-pointer"
-                                                onClick={() => {
-                                                  handleEditContent(
-                                                    childData.id,
-                                                    childData.content
-                                                  );
-                                                  toggleMyEdit(childData.id);
+                                          <div className="flex ml-auto">
+                                            <Image
+                                              className="w-[2.8rem] h-[2.8rem] cursor-pointer"
+                                              width={28}
+                                              height={28}
+                                              src={menubars}
+                                              alt=""
+                                              onClick={() =>
+                                                toggleMyEdit(childData.id)
+                                              }
+                                            />
+                                            {openEditing && (
+                                              <div
+                                                className="absolute flex flex-col ml-auto bg-white shadow-md rounded-md -ml-[4.5rem] mt-[2.3rem] animate-dropdown z-20 rounded-[0.8rem]"
+                                                style={{
+                                                  opacity: 0,
+                                                  transform: "translateY(-10px)",
                                                 }}
                                               >
-                                                수정
-                                              </span>
-                                              <span
-                                                className="px-[2rem] py-[1rem] cursor-pointer text-red-500"
-                                                onClick={() => {
-                                                  deleteReplyHandler(
-                                                    childData.id
-                                                  );
-                                                  toggleMyEdit(childData.id);
-                                                }}
-                                              >
-                                                삭제
-                                              </span>
-                                            </div>
-                                          )}
-                                        </div>
-                                      )}
+                                                <span
+                                                  className="px-[2rem] py-[1rem] cursor-pointer"
+                                                  onClick={() => {
+                                                    handleEditContent(
+                                                      childData.id,
+                                                      childData.content
+                                                    );
+                                                    toggleMyEdit(childData.id);
+                                                  }}
+                                                >
+                                                  수정
+                                                </span>
+                                                <span
+                                                  className="px-[2rem] py-[1rem] cursor-pointer text-red-500"
+                                                  onClick={() => {
+                                                    deleteReplyHandler(
+                                                      childData.id
+                                                    );
+                                                    toggleMyEdit(childData.id);
+                                                  }}
+                                                >
+                                                  삭제
+                                                </span>
+                                              </div>
+                                            )}
+                                          </div>
+                                        )}
                                     </div>
                                     {isEditing ? (
                                       <div className="w-[90%] h-[3.3rem] shadowall my-[1rem] ml-[4rem] pt-[0.6rem] flex flex-col border border-[#CFCFCF] bg-white rounded-[0.8rem] relative">
@@ -1062,7 +1062,7 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
                                           <hr className="mx-[1rem] h-[1rem] w-[0.1rem] bg-[#9D9D9D]" />
                                           <div>
                                             {replyOpen[index] &&
-                                            rreplyOpen[childData.id] ? (
+                                              rreplyOpen[childData.id] ? (
                                               <span
                                                 className="cursor-pointer"
                                                 onClick={() => {
@@ -1125,12 +1125,12 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
                                     </span>
                                     {userInfo?.memberId ===
                                       coData.member.memberId && (
-                                      <Image
-                                        className="w-[2.8rem] h-[2.8rem] ml-auto"
-                                        src={menubars}
-                                        alt=""
-                                      />
-                                    )}
+                                        <Image
+                                          className="w-[2.8rem] h-[2.8rem] ml-auto"
+                                          src={menubars}
+                                          alt=""
+                                        />
+                                      )}
                                   </div>
                                   <div className="relative">
                                     <input

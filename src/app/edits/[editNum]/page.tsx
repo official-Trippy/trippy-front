@@ -68,18 +68,60 @@ function PostEdit({ params }: { params: { editNum: number } }) {
     const router = useRouter();
     const [inputValue1, setInputValue1] = useState(postData?.result.ticket.destination);
     const [inputValue2, setInputValue2] = useState(postData?.result.ticket.departure);
-    const [tags, setTags] = useState<string[]>([]);
+    const [tags, setTags] = useState<string[]>(postData?.result.post.tags);
     const [inputValue, setInputValue] = useState<string>('');
-    const [ticketColor, setTicketColor] = useState(colorTicket[postData?.result.ticket.ticketColor])
+    const [ticketColor, setTicketColor] = useState(colorTicket[postData?.result.ticket.ticketColor]);
     const [postRequests, setPostRequests] = useState({
-        body: postData?.result.post.body,
+        body: postData?.result.post.body || '',
         images: postData?.result.post.images as string[], // 이미지 URL을 저장할 배열
     });
+    const [transportStr, setTransportStr] = useState(postData?.result.ticket.transport)
+
+    // postData가 변경될 때마다 ticketColor와 postRequests를 업데이트하는 useEffect 추가
+    useEffect(() => {
+        setTimeout(() => {
+            if (postData) {
+                setTicketColor(colorTicket[postData.result.ticket.ticketColor]);
+                setPostRequests({
+                    body: postData.result.post.body || '',
+                    images: postData.result.post.images as string[], // 이미지 URL을 저장할 배열
+                });
+                setTransportStr(postData?.result.ticket.transport);
+
+                // transportStr에 따라 이미지 설정
+                const transportValue = postData.result.ticket.transport;
+
+                const updatedImages = [
+                    { imgsrc: <PostAirSVG fillColor={colorTicket[postData.result.ticket.ticketColor]} /> },
+                    { imgsrc: <PostTrainSVG fillColor={colorTicket[postData.result.ticket.ticketColor]} /> },
+                    { imgsrc: <PostBusSVG fillColor={colorTicket[postData.result.ticket.ticketColor]} /> },
+                    { imgsrc: <PostBycicleSVG fillColor={colorTicket[postData.result.ticket.ticketColor]} /> },
+                    { imgsrc: <PostCarSVG fillColor={colorTicket[postData.result.ticket.ticketColor]} /> },
+                ];
+
+                const selectedImage = updatedImages.find(image => {
+                    const transportName = image.imgsrc.type.name; // SVG 컴포넌트의 이름
+                    return (transportName === 'PostAirSVG' && transportValue === 'Airplane') ||
+                        (transportName === 'PostTrainSVG' && transportValue === 'Train') ||
+                        (transportName === 'PostBusSVG' && transportValue === 'Bus') ||
+                        (transportName === 'PostBicycleSVG' && transportValue === 'Bicycle') ||
+                        (transportName === 'PostCarSVG' && transportValue === 'Car');
+                });
+
+                if (selectedImage) {
+                    setIsImageIdx([selectedImage]); // 선택된 이미지로 업데이트
+                } else {
+                    console.warn('No matching transport image found'); // 디버깅: 일치하는 이미지가 없을 경우 경고
+                }
+            }
+        }, 1000);
+    }, [postData]);
+
     const [result, setResult] = useState<ApiResponse | null>(null);
     const [result1, setResult1] = useState<ApiResponse | null>(null);
     const [transport, setTransport] = useState(postData?.result.ticket.transport);
     const [isImageIdx, setIsImageIdx] = useState<any[]>([]);
-    const [transportStr, setTransportStr] = useState(postData?.result.ticket.transport)
+
 
     useEffect(() => {
         setIsImageIdx([
@@ -200,6 +242,74 @@ function PostEdit({ params }: { params: { editNum: number } }) {
 
     console.log(postData?.result.post.id)
     const addPost = async () => {
+
+        if (inputValue1 === '' || inputValue2 === '') {
+            Swal.fire({
+                icon: 'error',
+                title: '입력 오류',
+                text: '출발지 또는 도착지를 작성해주세요.',
+                confirmButtonText: '확인',
+                confirmButtonColor: '#FB3463',
+            });
+            return;
+        }
+
+        if (!postData?.result?.ticket?.image) {
+            Swal.fire({
+                icon: 'error',
+                title: '이미지 오류',
+                text: '티켓 이미지를 업로드해주세요.',
+                confirmButtonText: '확인',
+                confirmButtonColor: '#FB3463',
+            });
+            console.log(postRequests)
+            return;
+        }
+
+        if (postRequests.body.trim() === '') {
+            Swal.fire({
+                icon: 'error',
+                title: '문구 작성 오류',
+                text: 'POST 문구를 작성해주세요.',
+                confirmButtonText: '확인',
+                confirmButtonColor: '#FB3463',
+            });
+            return;
+        }
+
+        if (tags.length < 3) {
+            Swal.fire({
+                icon: 'error',
+                title: '태그 오류',
+                text: '태그를 3개 이상 등록해주세요.',
+                confirmButtonText: '확인',
+                confirmButtonColor: '#FB3463',
+            });
+            return;
+        }
+
+        if (!startDate || !endDate) {
+            Swal.fire({
+                icon: 'error',
+                title: '날짜 오류',
+                text: '날짜 정보를 입력해주세요.',
+                confirmButtonText: '확인',
+                confirmButtonColor: '#FB3463',
+            });
+            return;
+        }
+
+        if (Number(passengerCount) < 1) {
+            Swal.fire({
+                icon: 'error',
+                title: '인원 오류',
+                text: '인원 수를 입력해주세요.',
+                confirmButtonText: '확인',
+                confirmButtonColor: '#FB3463',
+            });
+            return;
+        }
+
         const postRequest = {
             id: postData?.result.post.id,
             title: title,
@@ -222,10 +332,23 @@ function PostEdit({ params }: { params: { editNum: number } }) {
             ticketColor: ticketColor,
             transport: transportStr
         };
+
         try {
+            // 로딩 시작
+            Swal.fire({
+                title: '로딩 중...',
+                html: '게시글을 올리는 중입니다.',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+
             console.log(postRequest, ticketRequest)
             await editPost(postRequest);
             await editTicket(ticketRequest)
+
+            // 로딩 완료 후 성공 메시지
             Swal.fire({
                 icon: 'success',
                 title: 'TICKET 게시글을 올렸습니다.',
@@ -237,11 +360,18 @@ function PostEdit({ params }: { params: { editNum: number } }) {
                 }
             }).then((result) => {
                 if (result.isConfirmed) {
-                    router.push(`/board/${Number(params.editNum)}`);
+                    router.push('/');
                 }
             });
-        } catch (e) {
-
+        } catch (e: any) {
+            // 에러 처리 (예: 에러 메시지 표시)
+            Swal.fire({
+                icon: 'error',
+                title: '게시글 업로드에 실패했습니다.',
+                text: e.message || '알 수 없는 오류가 발생했습니다.',
+                confirmButtonText: '확인',
+                confirmButtonColor: '#FB3463',
+            });
         }
     }
 
@@ -270,6 +400,10 @@ function PostEdit({ params }: { params: { editNum: number } }) {
                 setInputValue(''); // 입력 필드 초기화
             }
         }
+    };
+
+    const handleTagRemove = (index: number) => {
+        setTags((prevTags) => prevTags.filter((_, i) => i !== index)); // 해당 인덱스의 태그를 삭제
     };
 
     const { getLocationData } = getCountry({ setResult });
@@ -387,11 +521,11 @@ function PostEdit({ params }: { params: { editNum: number } }) {
                             style={{ color: bgColor || 'inherit' }}
                         >
                             <span className='w-[16rem]'>PASSENGER</span>
-                            <span className='w-[25rem]'>DATE</span>
+                            <span className='w-[25rem] ml-[1rem]'>DATE</span>
                             <span className='w-[8rem]'>GROUP</span>
                         </div>
                         <div className={`flex ml-[7rem] text-[1.4rem] font-extrabold text-[#6B6B6B] relative`}>
-                            <span className='w-[16rem] flex'>USERID</span>
+                            <span className='w-[16rem] flex mt-[0.3rem]'>{postData?.result.member.memberId}</span>
                             {dateOpen ? (
                                 <div className='w-[25rem]'>
                                     <DatePicker
@@ -412,7 +546,7 @@ function PostEdit({ params }: { params: { editNum: number } }) {
                                     />
                                 </div>
                             ) : (
-                                <div className='w-[25rem] flex items-center' onClick={() => setDateOpen(true)}>
+                                <div className='w-[25rem] flex items-center ml-[1rem]' onClick={() => setDateOpen(true)}>
                                     <Image src={date} alt='' />
                                     {startDates && endDates ? (
                                         <span>{formatDateRange()}</span>
@@ -495,10 +629,16 @@ function PostEdit({ params }: { params: { editNum: number } }) {
                             value={inputValue}
                             onChange={handleInputChange}
                             onKeyDown={handleKeyDown} />
-                        <div className='ml-[6rem] mt-[1rem]'>
+                        <div className='flex ml-[6rem] mt-[1rem]'>
                             {tags.map((tag, index) => (
-                                <span key={index} className='inline-block bg-[#F5F5F5] text-[#9D9D9D] rounded-[1.6rem] text-[1.6rem] px-[0.8rem] py-[0.4rem] mr-2'>
+                                <span key={index} className='flex items-center bg-[#fa3463] text-white rounded-[1.6rem] text-[1.6rem] px-[0.8rem] py-[0.4rem] mr-2'>
                                     {tag}
+                                    <button
+                                        className='ml-2 text-white cursor-pointer pb-[0.3rem] text-[1.4rem]' // X 버튼 스타일
+                                        onClick={() => handleTagRemove(index)} // 클릭 시 해당 태그 삭제
+                                    >
+                                        x
+                                    </button>
                                 </span>
                             ))}
                         </div>
