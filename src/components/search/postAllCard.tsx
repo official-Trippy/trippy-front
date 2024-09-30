@@ -13,6 +13,7 @@ interface PostCardProps {
       viewCount: number;
       id: number;
       email: string;
+      commentCount: number;
     };
     ticket?: {
       image: {
@@ -103,10 +104,13 @@ const PostAllCard: React.FC<PostCardProps> = ({
             className="no-underline"
           >
             <div
-              className={`flex items-start sm:p-6 mb-6 ${isBlogOrNickname
-                ? "sm:w-[403px] sm:h-[72px] w-[326.231px] h-auto" // 모바일에서는 326.231px, 데스크탑에서는 403px로 적용
-                : "sm:w-[789px] sm:h-[174px] w-[326.231px] h-[107px] sm:bg-white rounded-lg shadow-md"
-                } sm:flex `}
+
+              className={`flex items-start sm:p-6 mb-6 ${
+                isBlogOrNickname
+                  ? "sm:w-[403px] sm:h-[72px] w-[326.231px] h-auto" // 모바일에서는 326.231px, 데스크탑에서는 403px로 적용
+                  : "sm:w-[789px] sm:h-[174px] w-[326.231px] h-[115px] sm:bg-white rounded-lg shadow-md"
+              } sm:flex `}
+
             >
               {/* Image */}
 
@@ -153,28 +157,28 @@ const PostAllCard: React.FC<PostCardProps> = ({
               </div>
 
               {/* Post, OOTD, or Blog Details */}
-
               <div
-                className={`ml-[20px] ${isBlogOrNickname ? "flex flex-col justify-center" : ""
-                  }`}
+
+                className={`ml-4 pr-3 ${
+                  isBlogOrNickname ? "flex flex-col justify-center" : ""
+                }`}
+
               >
                 {selectedSearchType === "BLOG" ? (
                   <>
-                    <h2 className="text-[2.4rem] font-semibold pb-2">
+                    <h2 className="text-[2.4rem] font-semibold mt-[0.7rem]">
                       {blogName || "Unnamed Blog"}
                     </h2>
-
-                    <p className="text-[1.2rem] text-[#9D9D9D] pt-2">
+                    <p className="text-[1.2rem] text-[#9D9D9D] mt-[0.5rem]">
                       @{memberId || "Anonymous"}
                     </p>
                   </>
                 ) : selectedSearchType === "NICKNAME" ? (
                   <>
-                    <h2 className="text-[2.4rem] font-semibold pb-2">
+                    <h2 className="text-[2.4rem] md:text-[2.4rem] font-semibold mt-[0.7rem]">
                       {nickName || "데이터 실패"}
                     </h2>
-
-                    <p className="text-[1.2rem] text-[#9D9D9D] pt-2">
+                    <p className="text-[1.2rem] md:text-[1.2rem] text-[#9D9D9D] mt-[0.5rem]">
                       @{memberId || "Unnamed Blog"}
                     </p>
                   </>
@@ -184,75 +188,75 @@ const PostAllCard: React.FC<PostCardProps> = ({
                       <img
                         src={member?.profileUrl || "/default-profile.png"}
                         alt={member?.nickName || "Profile"}
-                        className="sm:w-[30px] sm:h-[30px] w-[2rem] h-[2rem] rounded-full"
+                        className="w-[2rem] h-[2rem] md:w-[30px] md:h-[30px] rounded-full"
                       />
                       <p className="text-gray-800 font-semibold">
                         {member?.nickName || "Anonymous"}
                       </p>
                     </div>
 
-                    <p className="text-gray-800 my-[0.5rem] sm:my-[1rem]">
+                    <p className="text-gray-800 mb-2 md:my-4">
                       {truncateText(
                         postDetails?.body || "No description available",
-                        100
+                        60
                       )}
                     </p>
-                    <div className="flex flex-wrap gap-1 my-[0.5rem] mt-[0rem] sm:mt-[3rem]">
+                    <div className="flex flex-wrap gap-1 mb-2">
                       {postDetails?.tags?.slice(0, 4).map((tag, tagIndex) => (
                         <span
                           key={tagIndex}
-                          className="bg-gray-200 text-gray-800 px-2 py-0 rounded-full sm:text-sm sm:px-4 sm:py-2 sm:gap-px text-xs" // 크기 조정
+                          className="bg-gray-200 text-gray-800 px-2 py-1 rounded-full text-xs"
                         >
                           {tag}
                         </span>
                       ))}
                     </div>
-                    <div className="flex space-x-4">
-                      <p className="text-gray-600 text-[1rem] sm:text-[1.5rem]">
+                    <div className="flex space-x-2">
+                      <p className="text-gray-600 text-[1rem] md:text-[1.5rem]">
                         ❤️ {postDetails?.likeCount || 0}
                       </p>
-                      <p className="text-gray-600 text-[1rem] sm:text-[1.5rem]">
-                        💬 {postDetails?.viewCount || 0}
+                      <p className="text-gray-600 text-[1rem] md:text-[1.5rem]">
+                        💬 {postDetails?.commentCount || 0}
                       </p>
                     </div>
                   </>
                 ) : (
                   <>
-                    <h2 className="sm:text-3xl font-semibold sm:mb-3 text-[1.7rem]">
+                    <h2 className="text-[1.4rem] md:text-3xl font-semibold">
                       {postDetails?.title || "Untitled"}
                     </h2>
-                    <p className="text-gray-800 mb-3 text-ellipsis overflow-hidden theboki1">
+                    <p className="text-gray-800 mb-3">
                       {truncateText(
-                        bodyText || "No content available",
-                        100
+
+                        postDetails?.body || "No content available",
+                        60
+
                       )}
                     </p>
-
-                    <div className="flex flex-wrap gap-1 mb-4 sm:mt-[2rem]">
+                    <div className="flex flex-wrap gap-1 mb-4">
                       {postDetails?.tags?.slice(0, 3).map((tag, tagIndex) => (
                         <span
                           key={tagIndex}
-                          className="bg-gray-200 text-gray-800 px-2 py-1 rounded-full sm:text-sm sm:px-4 sm:py-2 sm:gap-px text-xs" // 크기 조정
+                          className="bg-gray-200 text-gray-800 px-2 py-1 rounded-full text-xs"
                         >
                           {tag}
                         </span>
                       ))}
                     </div>
-
-                    <div className="flex items-center space-x-6 justify-between mt-4">
+                    <div className="flex items-center space-x-4 justify-between mt-4">
                       <div className="flex space-x-4">
-                        <p className="text-gray-600 text-[1rem] sm:text-[1.5rem]">
+                        <p className="text-gray-600 text-[1rem] md:text-[1.5rem]">
                           ❤️ {postDetails?.likeCount || 0}
                         </p>
-                        <p className="text-gray-600 text-[1rem] sm:text-[1.5rem]">
-                          💬 {postDetails?.viewCount || 0}
+                        <p className="text-gray-600 text-[1rem] md:text-[1.5rem]">
+                          💬 {postDetails?.commentCount || 0}
                         </p>
                       </div>
                       <div className="flex items-center space-x-2">
                         <img
                           src={member?.profileUrl || "/default-profile.png"}
                           alt={member?.nickName || "Profile"}
-                          className="sm:w-[30px] sm:h-[30px] w-[2rem] h-[2rem] rounded-full"
+                          className="w-[2rem] h-[2rem] md:w-[30px] md:h-[30px] rounded-full"
                         />
                         <p className="text-gray-800 font-semibold">
                           {member?.nickName || "Anonymous"}

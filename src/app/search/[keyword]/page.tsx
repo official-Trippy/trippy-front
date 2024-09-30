@@ -92,6 +92,7 @@ const SearchPage = () => {
       setBlogList(blogListData);
 
       console.log("OOTD데이터~~", ootdListData);
+      console.log("ticktet데이터~~", postListData);
       if (postListData.length > 0) {
         setPosts(postListData);
         setSelectedSearchType("POST");

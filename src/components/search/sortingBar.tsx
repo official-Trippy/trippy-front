@@ -51,7 +51,7 @@ const SortingBar: React.FC<SortingBarProps> = ({
       </div>
 
       {/* 검색 타입 버튼 */}
-      <div className="grid-cols-2 gap-2 md:flex md:w-[789px] pt-[2rem]">
+      <div className="grid-cols-2 gap-2 md:w-[789px] pt-[2rem] sm:w-[500px] w-[331px]">
         {searchTypes.map((type) => (
           <button
             key={type.value}
@@ -71,7 +71,7 @@ const SortingBar: React.FC<SortingBarProps> = ({
             {type.label}
           </button>
         ))}
-        <div className="flex md:ml-auto mt-2 md:mt-0">
+        <div className="flex justify-end  md:mt-0 mt-2">
           <CustomSelect
             orderType={orderType}
             onOrderTypeChange={handleOrderTypeChange}
