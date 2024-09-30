@@ -62,10 +62,9 @@ const PostAllCard: React.FC<PostCardProps> = ({
       {posts.map((post, index) => {
         const getTextFromHtml = (html: any) => {
           const parser = new DOMParser();
-          const doc = parser.parseFromString(html, 'text/html');
+          const doc = parser.parseFromString(html, "text/html");
           return doc.body.innerText; // 텍스트만 반환
         };
-
 
         const {
           post: postDetails,
@@ -105,19 +104,21 @@ const PostAllCard: React.FC<PostCardProps> = ({
           >
             <div
 
-              className={`flex items-start sm:p-6 mb-6 ${isBlogOrNickname
+              className={`flex items-start sm:p-6 mb-6 ${
+                isBlogOrNickname
                   ? "sm:w-[403px] sm:h-[72px] w-[326.231px] h-auto" // 모바일에서는 326.231px, 데스크탑에서는 403px로 적용
                   : "sm:w-[789px] sm:h-[174px] w-[326.231px] h-[115px] sm:bg-white rounded-lg shadow-md"
-                } sm:flex `}
+              } sm:flex `}
 
             >
               {/* Image */}
 
               <div
-                className={`${isBlogOrNickname
-                  ? "w-[72px] h-[72px]"
-                  : "sm:w-1/3 sm:h-full w-[107px] h-[107px] pr-6"
-                  } flex-shrink-0 ${isBlogOrNickname ? "rounded-full" : ""}`}
+                className={`${
+                  isBlogOrNickname
+                    ? "w-[72px] h-[72px]"
+                    : "sm:w-1/3 sm:h-full w-[107px] h-[107px] pr-6"
+                } flex-shrink-0 ${isBlogOrNickname ? "rounded-full" : ""}`}
               >
                 {selectedSearchType === "OOTD" ? (
                   <img
@@ -125,10 +126,11 @@ const PostAllCard: React.FC<PostCardProps> = ({
                       postDetails?.images[0]?.accessUri || "/placeholder.png"
                     }
                     alt="OOTD Image"
-                    className={`object-cover ${isBlogOrNickname
-                      ? "rounded-full"
-                      : "rounded-lg w-full h-full"
-                      }`}
+                    className={`object-cover ${
+                      isBlogOrNickname
+                        ? "rounded-full"
+                        : "rounded-lg w-full h-full"
+                    }`}
                     style={
                       isBlogOrNickname ? { width: "72px", height: "72px" } : {}
                     }
@@ -138,10 +140,11 @@ const PostAllCard: React.FC<PostCardProps> = ({
                   <img
                     src={profileImgUrl || "/placeholder.png"}
                     alt={blogName || "Blog Image"}
-                    className={`object-cover ${isBlogOrNickname
-                      ? "rounded-full"
-                      : "rounded-lg sm:w-full sm:h-full w-[107px] h-[107px]"
-                      }`}
+                    className={`object-cover ${
+                      isBlogOrNickname
+                        ? "rounded-full"
+                        : "rounded-lg sm:w-full sm:h-full w-[107px] h-[107px]"
+                    }`}
                     style={
                       isBlogOrNickname ? { width: "72px", height: "72px" } : {}
                     }
@@ -158,8 +161,9 @@ const PostAllCard: React.FC<PostCardProps> = ({
               {/* Post, OOTD, or Blog Details */}
               <div
 
-                className={`ml-4 pr-3 ${isBlogOrNickname ? "flex flex-col justify-center" : ""
-                  }`}
+                className={`ml-4 pr-3 ${
+                  isBlogOrNickname ? "flex flex-col justify-center" : ""
+                }`}
 
               >
                 {selectedSearchType === "BLOG" ? (
@@ -182,7 +186,7 @@ const PostAllCard: React.FC<PostCardProps> = ({
                   </>
                 ) : selectedSearchType === "OOTD" ? (
                   <>
-                    <div className="flex items-center space-x-2 my-[1rem]">
+                    <div className="flex items-center space-x-2 sm:my-[1rem]">
                       <img
                         src={member?.profileUrl || "/default-profile.png"}
                         alt={member?.nickName || "Profile"}
@@ -193,13 +197,13 @@ const PostAllCard: React.FC<PostCardProps> = ({
                       </p>
                     </div>
 
-                    <p className="text-gray-800 mb-2 md:my-4">
+                    <p className="text-gray-800 sm:mb-2 md:my-4 sm:min-h-[5rem] min-h-[1rem] py-2">
                       {truncateText(
                         postDetails?.body || "No description available",
                         60
                       )}
                     </p>
-                    <div className="flex flex-wrap gap-1 mb-2">
+                    <div className="flex flex-wrap gap-1 sm:mb-2">
                       {postDetails?.tags?.slice(0, 4).map((tag, tagIndex) => (
                         <span
                           key={tagIndex}
@@ -209,7 +213,7 @@ const PostAllCard: React.FC<PostCardProps> = ({
                         </span>
                       ))}
                     </div>
-                    <div className="flex space-x-2">
+                    <div className="flex space-x-4 mt-[0.5rem]">
                       <p className="text-gray-600 text-[1rem] md:text-[1.5rem]">
                         ❤️ {postDetails?.likeCount || 0}
                       </p>
@@ -220,18 +224,18 @@ const PostAllCard: React.FC<PostCardProps> = ({
                   </>
                 ) : (
                   <>
-                    <h2 className="text-[1.4rem] md:text-3xl font-semibold">
+                    <h2 className="text-[1.4rem] md:text-3xl font-semibold sm:py-3">
                       {postDetails?.title || "Untitled"}
                     </h2>
-                    <p className="text-gray-800 mb-3">
+                    <p className="text-gray-800 sm:mb-3 sm:min-h-[5rem] min-h-[4rem] py-2">
                       {truncateText(
 
-                        bodyText || "No content available",
-                        60
+                        postDetails?.body || "No content available",
 
+                        60
                       )}
                     </p>
-                    <div className="flex flex-wrap gap-1 mb-4">
+                    <div className="flex flex-wrap gap-1 sm:mb-4">
                       {postDetails?.tags?.slice(0, 3).map((tag, tagIndex) => (
                         <span
                           key={tagIndex}
@@ -241,7 +245,7 @@ const PostAllCard: React.FC<PostCardProps> = ({
                         </span>
                       ))}
                     </div>
-                    <div className="flex items-center space-x-4 justify-between mt-4">
+                    <div className="flex items-center space-x-4 justify-between sm:mt-4">
                       <div className="flex space-x-4">
                         <p className="text-gray-600 text-[1rem] md:text-[1.5rem]">
                           ❤️ {postDetails?.likeCount || 0}

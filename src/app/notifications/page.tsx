@@ -78,9 +78,7 @@ const NotificationPage = () => {
 
   return (
     <div>
-      {/* <Header /> */}
-      {/* <FallingContainer /> */}
-      <div className="header flex justify-between items-center w-[50%] mx-auto relative">
+      <div className="header flex justify-between items-center sm:w-[50%] w-[70%] mx-auto relative">
         <h1 className="text-5xl">알림</h1>
         {/* 전체 삭제 버튼 */}
         {notificationCount > 0 && (
@@ -94,7 +92,7 @@ const NotificationPage = () => {
       </div>
 
       {/* 총 알림 개수 표시 */}
-      <div className="w-[50%] mx-auto my-4">
+      <div className="sm:w-[50%] w-[90%] mx-auto my-4">
         <h2 className="text-3xl font-semibold">
           {notificationCount > 0 ? (
             <>
@@ -108,7 +106,7 @@ const NotificationPage = () => {
       </div>
 
       {/* 알림 리스트 표시 영역 */}
-      <div className="w-[50%] mx-auto my-8 flex justify-start">
+      <div className="sm:w-[50%] w-[90%] mx-auto my-8 flex justify-start">
         {notifications.length === 0 ? (
           <div className="text-2xl text-center py-16">알림이 없습니다</div>
         ) : (

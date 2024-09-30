@@ -1,5 +1,3 @@
-"use client";
-
 import React, { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import { EventSourcePolyfill, NativeEventSource } from "event-source-polyfill";
@@ -18,8 +16,20 @@ interface INotification {
 const Notification: React.FC = () => {
   const [notifications, setNotifications] = useState<INotification[]>([]);
   const [showNotification, setShowNotification] = useState(false);
+  const [isMobile, setIsMobile] = useState(false); // 모바일 화면 여부를 관리하는 상태
   const queryClient = useQueryClient();
   const accessToken = Cookies.get("accessToken");
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    handleResize();
+    window.addEventListener("resize", handleResize);
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   useEffect(() => {
     const EventSource = EventSourcePolyfill || NativeEventSource;
@@ -38,23 +48,10 @@ const Notification: React.FC = () => {
     eventSource.addEventListener("sse", (event: any) => {
       try {
         const data = JSON.parse(event.data);
-        const handleNotifications = (data: INotification) => {
-          setNotifications((prev) => {
-            // 이전 알림을 유지하고 새 알림을 추가
-            const updatedNotifications = [...prev, data];
 
-            // 4개를 초과하면 가장 오래된 알림을 제거
-            return updatedNotifications.length > 4
-              ? updatedNotifications.slice(-4)
-              : updatedNotifications;
-          });
-          setShowNotification(true);
-        };
-
-        // const newNotification: INotification = data;
-
-        // setNotifications((prev) => [...prev, newNotification]);
-        // setShowNotification(true);
+        const newNotification: INotification = data;
+        setNotifications((prev) => [...prev, newNotification]);
+        setShowNotification(true);
 
         // 알림은 5초 후에 사라지도록 설정
         setTimeout(() => {
@@ -84,55 +81,76 @@ const Notification: React.FC = () => {
     return `${Math.floor(diffInSeconds / 86400)}일 전`;
   };
 
+  if (!showNotification || notifications.length === 0) return null;
+
+  const latestNotification = notifications[notifications.length - 1];
+
   const router = useRouter();
-  const goNotification = () => {
-    router.push(`/notifications`);
-  };
+
+  if (isMobile) {
+    return (
+      <div
+        className="fixed top-[7.4rem] left-[50%] translate-x-[-50%] bg-[rgba(49,49,49,0.95)] rounded-[10px] shadow-[0px_0px_10px_0px_rgba(0,0,0,0.08)] inline-flex items-center gap-[9px] px-[12px] py-[13px] w-[90%] h-[45px] z-50"
+        onClick={() => {
+          router.push("/notifications");
+        }}
+      >
+        <img
+          className="w-[35px] h-[35px] rounded-full"
+          src={latestNotification.senderProfileImgUri || "/default-image.png"}
+          alt={latestNotification.senderNickName}
+        />
+        <div className="flex-1 text-sm font-medium text-white">
+          {latestNotification.title}
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="fixed top-4 right-4 z-50 space-y-4">
-      {showNotification &&
-        notifications.map((notification) => (
+    <div className="fixed top-[6.5rem] right-[16rem] z-50 w-[390px] h-[300px] bg-white shadow-lg rounded-lg p-[28px] flex flex-col">
+      {/* 상단 중앙 제목 */}
+      <div className="text-center text-lg font-semibold text-gray-900 mb-4">
+        알림
+      </div>
+
+      {/* 알림 목록 */}
+      <div
+        className="flex flex-col space-y-2 overflow-auto"
+        style={{ maxHeight: "calc(100% - 80px)" }}
+      >
+        {notifications.slice(0, 4).map((notification) => (
           <div
             key={notification.notifyId}
-            className="w-[390px] h-[200px] bg-white shadow-lg rounded-lg pointer-events-auto ring-1 ring-black ring-opacity-5 overflow-hidden animate-slide-in-down px-[24px] py-[28px]"
+            className="w-[337px] h-[60px] bg-gray-100 rounded-lg flex items-center p-4"
           >
-            <div className="w-full text-center text-lg font-semibold text-gray-900 mb-4">
-              알림
-            </div>
-
-            <div className="flex items-center">
-
-              <div className="flex-shrink-0">
-                <img
-                  className="w-[60px] h-[60px] rounded-full"
-                  src={notification.senderProfileImgUri || "/default-image.png"}
-                  alt={notification.senderNickName}
-                />
-              </div>
-
-              <div className="ml-4 w-[325px]">
-                <p className="text-base font-medium text-gray-900 leading-6">
-                  {notification.senderNickName}님이 {notification.title}
-                </p>
-
-                <p className="mt-1 text-sm text-gray-500">
-                  {formatTimeAgo(notification.createdAt)}
-
-                </p>
-              </div>
-            </div>
-
-            <div className="flex border-l border-gray-200">
-              <button
-                className="w-full border border-transparent rounded-none rounded-r-lg p-4 flex items-center justify-center text-sm font-medium text-red-600 hover:text-red-500 focus:outline-none focus:ring-2 focus:ring-red-500"
-                onClick={() => {}}
-              >
-                더보기
-              </button>
+            <img
+              className="w-[60px] h-[60px] rounded-full flex-shrink-0"
+              src={notification.senderProfileImgUri || "/default-image.png"}
+              alt={notification.senderNickName}
+            />
+            <div className="ml-3 w-0 flex-1">
+              <p className="text-sm font-medium text-gray-900">
+                {notification.title}
+              </p>
+              <p className="mt-1 text-xs text-gray-500">
+                {formatTimeAgo(notification.createdAt)}
+              </p>
             </div>
           </div>
         ))}
+      </div>
+
+      <div className="mt-4 flex justify-center">
+        <button
+          className="p-2 bg-[#F5F5F5] text-black rounded-lg"
+          onClick={() => {
+            router.push("/notifications");
+          }}
+        >
+          더보기
+        </button>
+      </div>
     </div>
   );
 };

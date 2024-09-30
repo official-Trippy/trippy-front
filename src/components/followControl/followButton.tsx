@@ -41,12 +41,15 @@ const FollowButton: React.FC<FollowButtonProps> = ({
 
     if (localIsFollowing) {
       const result = await Swal.fire({
-        title: "정말 팔로우를 취소하시겠습니까?",
-        text: "팔로우를 취소해도 상대방에게 알림은 가지 않습니다.",
+        title: "정말로 팔로우를 취소하시겠습니까?",
+        text: "팔로우를 취소해도 상대방에게 알림이 가지 않아요.",
         icon: "warning",
+        iconColor: "#FB3463",
         showCancelButton: true,
-        confirmButtonText: "팔로우 취소",
-        cancelButtonText: "취소",
+        confirmButtonColor: "#FB3463",
+        cancelButtonColor: "#CFCFCF",
+        confirmButtonText: "예",
+        cancelButtonText: "아니오",
       });
 
       if (result.isConfirmed) {
