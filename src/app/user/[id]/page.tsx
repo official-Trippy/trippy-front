@@ -100,7 +100,9 @@ const UserPage = ({ params }: { params: { id: string } }) => {
   }
 
   const userData = data && data.result;
+  console.log('유저데이터', userData);
   const memberEmail = userData?.email;
+  const userBlogImg = userData?.blogTitleImgUrl;
 
   console.log(userBoardCount)
   return (
@@ -108,7 +110,7 @@ const UserPage = ({ params }: { params: { id: string } }) => {
       {/* <Header /> */}
       <div className="relative w-full h-[240px]">
         <Image
-          src={backgroundImg}
+          src={userBlogImg || backgroundImg}
           alt="Background"
           layout="fill"
           objectFit="cover"

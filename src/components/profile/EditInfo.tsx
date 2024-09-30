@@ -131,25 +131,26 @@ const EditInfo = () => {
       lowerValue.includes(swearWord)
     );
   };
-
-
-   // Debounce 적용: 2초 동안 입력이 없을 때 중복 체크
-   const debouncedNickNameCheck = useRef(
+  
+  // Debounce 적용: 2초 동안 입력이 없을 때 중복 체크
+  const debouncedNickNameCheck = useRef(
     debounce(async (value: string) => {
-      if (!validateNickName(value)) return; 
+      if (!validateNickName(value)) return; // 형식이 맞지 않으면 중복 체크 호출 방지
       await handleNickNameBlur(value);
     }, 1000)
   ).current;
-
+  
   const debouncedBlogNameCheck = useRef(
     debounce(async (value: string) => {
-      if (!validateBlogName(value)) return;  
+      if (!validateBlogName(value)) return; // 형식이 맞지 않으면 중복 체크 호출 방지
       await handleBlogNameBlur(value);
     }, 1000)
   ).current;
+  
   const [isNickNameTouched, setIsNickNameTouched] = useState(false); // 닉네임 수정 여부
   const [isBlogNameTouched, setIsBlogNameTouched] = useState(false); // 블로그 이름 수정 여부
   
+  // 닉네임 입력 핸들러
   const handleNickName = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
   
@@ -167,13 +168,19 @@ const EditInfo = () => {
   
     // 닉네임 형식 체크
     if (!validateNickName(value)) {
+      console.log(validateNickName);
       setNickNameError("형식이 올바르지 않습니다. 다시 입력해 주세요.");
-    } else {
-      setNickNameError(""); // 형식이 맞으면 에러 초기화
-      debouncedNickNameCheck(value); // 2초 후 중복 체크 실행
+      debouncedNickNameCheck.cancel();
+      return; // 형식이 맞지 않으면 중복 체크 중단
     }
+  
+    console.log(validateNickName); 
+    // 형식이 맞는 경우 중복 체크 실행
+    setNickNameError(""); // 형식이 맞으면 에러 초기화
+    debouncedNickNameCheck(value); // 2초 후 중복 체크 실행
   };
   
+  // 블로그 이름 입력 핸들러
   const handleBlogName = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
   
@@ -192,13 +199,16 @@ const EditInfo = () => {
     // 블로그 이름 형식 체크
     if (!validateBlogName(value)) {
       setBlogNameError("형식이 올바르지 않습니다. 다시 입력해 주세요.");
-    } else {
-      setBlogNameError(""); // 형식이 맞으면 에러 초기화
-      debouncedBlogNameCheck(value); // 2초 후 중복 체크 실행
+      debouncedBlogNameCheck.cancel();
+      return; // 형식이 맞지 않으면 중복 체크 중단
     }
+  
+    // 형식이 맞는 경우 중복 체크 실행
+    setBlogNameError(""); // 형식이 맞으면 에러 초기화
+    debouncedBlogNameCheck(value); // 2초 후 중복 체크 실행
   };
   
-
+  // 닉네임 중복 체크 함수
   const handleNickNameBlur = async (value: string) => {
     try {
       const { duplicated } = await checkNickNameDuplicate(value);
@@ -212,13 +222,16 @@ const EditInfo = () => {
       setNickNameError("서버에서 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
     }
   };
-
+  
   const validateNickName = (nickName: string) => {
-    const regex = /^[가-힣a-zA-Z0-9 ]{2,16}$/;
-    return regex.test(nickName);
-  };
+    const regex = /^(?=.*[a-z0-9가-힣])[a-z0-9가-힣 ]{2,16}$/; // 한글 자음/모음, 초성 허용 안함 + 공백 허용
+    const incompleteKoreanCharRegex = /[ㄱ-ㅎㅏ-ㅣ]/; // 자음, 모음만 입력되었는지 체크
+    if (incompleteKoreanCharRegex.test(nickName)) return false; // 자음/모음만 있는 경우 false
+    return regex.test(nickName); // 정규식이 일치하면 true 반환
+};
 
-
+  
+  // 블로그 이름 중복 체크 함수
   const handleBlogNameBlur = async (value: string) => {
     try {
       const { duplicated } = await checkBlogNameDuplicate(value);
@@ -232,10 +245,13 @@ const EditInfo = () => {
       setBlogNameError("서버에서 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
     }
   };
-
+  
+  // 블로그 이름 형식 체크 함수
   const validateBlogName = (blogName: string) => {
-    const regex = /^[가-힣a-zA-Z0-9 ]{2,28}$/;
-    return regex.test(blogName);
+    const regex = /^[가-힣a-zA-Z0-9 ]{2,28}$/; // 한글, 영문, 숫자, 공백만 허용
+    const incompleteKoreanCharRegex = /[ㄱ-ㅎㅏ-ㅣ]/; // 자음, 모음만 입력되었는지 체크
+    if (incompleteKoreanCharRegex.test(blogName)) return false; // 자음/모음만 있는 경우 false
+    return regex.test(blogName); // 정규 표현식이 일치하면 true 반환
   };
 
   const isFormValid = 
@@ -414,17 +430,26 @@ const EditInfo = () => {
     setIsBlogImageChanged(true);
   };
 
-  const handleBlogIntroduce = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setBlogIntroduce(value);
+const handleBlogIntroduce = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const value = e.target.value;
 
-    if (checkSwearWords(value)) {
-      setBlogIntroduceError("욕설이 포함되었습니다. 다시 입력해주세요.");
-      return;
-    }
+  // 20글자 초과 시 더 이상 입력되지 않도록 막음
+  if (value.length > 20) {
+    return; // 입력 자체를 차단
+  }
 
-    setBlogIntroduceError("");
-  };
+  // 입력값을 항상 업데이트
+  setBlogIntroduce(value);
+
+  // 욕설 체크
+  if (checkSwearWords(value)) {
+    setBlogIntroduceError("욕설이 포함되었습니다. 다시 입력해주세요.");
+    return;
+  }
+
+  // 에러가 없을 때 에러 메시지 초기화
+  setBlogIntroduceError("");
+};
 
   const handleInterestClick = (interest: string) => {
     setSelectedInterests((prevSelected) => {
@@ -703,7 +728,8 @@ const EditInfo = () => {
         <div className="mt-[4rem]">
           <div className="">
             <div className="sign-up-info">프로필 사진</div>
-            <div className="mt-[2rem] flex items-center">
+            <div className="mt-[2rem] flex items-center relative">
+              {/* 프로필 이미지 */}
               <div className="rounded-full overflow-hidden w-[100px] h-[100px]">
                 {profileImage ? (
                   <Image
@@ -712,37 +738,45 @@ const EditInfo = () => {
                     className="object-cover w-full h-full"
                     width={100}
                     height={100}
-                     />
-                  ) : (
-                    <Image
+                  />
+                ) : (
+                  <Image
                     src={DefaultImage}
                     alt="Default Profile"
                     width={100}
                     height={100}
-                    className="object-cover w-full h-full"/>
-                  )}
-                </div>
-              <div className="ml-8 flex flex-col justify-center">
+                    className="object-cover w-full h-full"
+                  />
+                )}
+              </div>
+
+              {/* 프로필 사진 업로드 버튼 */}
+              <div className="ml-8 flex flex-col items-center">
                 <input
                   type="file"
                   accept="image/*"
                   onChange={handleImageUpload}
                   className="hidden"
-                  id="imageUpload" />
-                <label htmlFor="imageUpload" className="max-w-[200px] px-8 py-4 custom-label text-center">
+                  id="imageUpload"
+                />
+                <label
+                  htmlFor="imageUpload"
+                  className="px-8 py-4 custom-label text-center"
+                >
                   프로필 사진 업로드
                 </label>
-                <div className="mt-[5px] h-[16px]">
-                {isProfileImageChanged && (
-                    <button
-                      onClick={handleImageDelete}
-                      className="w-full mx-auto text-[1rem] text-gray-500 hover:text-gray-900"
-                    >
-                      이미지 삭제
-                    </button>
-                )}
               </div>
-              </div>
+
+              {/* 이미지 삭제 버튼을 절대 위치로 배치 */}
+              {isProfileImageChanged && (
+                <button
+                  onClick={handleImageDelete}
+                  className="absolute mt-2 text-[1rem] text-gray-500 hover:text-gray-900"
+                  style={{ top: '76px', left: '165px' }} 
+                >
+                  이미지 삭제
+                </button>
+              )}
             </div>
             <div className="flex-col">
               <div className="mt-[2rem]">
@@ -797,7 +831,7 @@ const EditInfo = () => {
                   type="text"
                   value={blogIntroduce}
                   onChange={handleBlogIntroduce}
-                  placeholder="50글자 이내로 소개글을 작성해보세요."
+                  placeholder="20글자 이내로 소개글을 작성해보세요."
                   className="w-full px-4 py-2 mt-[2rem] mb-2 h-[4rem] rounded-xl border border-gray-300 focus:border-[#FB3463] focus:outline-none"
                   style={{ background: "var(--4, #F5F5F5)", fontSize: "1.2rem" }} />
                 {blogIntroduceError && (
