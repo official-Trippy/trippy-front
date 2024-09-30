@@ -424,7 +424,7 @@ const handleEditSubmit = () => {
                 onClick={() => handleProfileClick(comment.member?.memberId)}
               />
             </div>
-            <div className="text-[#292929] text-sm font-semibold ml-[5px] cursor-pointer" onClick={() => handleProfileClick(comment.member?.memberId)}>
+            <div className="text-[#292929] text-sm font-semibold ml-[8px] cursor-pointer" onClick={() => handleProfileClick(comment.member?.memberId)}>
               {comment.member?.nickName}
             </div>
             {ootdMemberId === comment.member.memberId && (
@@ -458,7 +458,7 @@ const handleEditSubmit = () => {
               </div>
             )}
           </div>
-          <div className="ml-[3.7rem] items-center mr-0">
+          <div className="ml-[3.7rem] items-center mr-0 mt-1">
             {editCommentId === comment.id ? ( // 수정 중인 댓글이면
               <div className='flex flex-col'>
               <div className='flex-1 flex gap-2 mt-2 items-center'>
@@ -709,13 +709,18 @@ const handleEditSubmit = () => {
                 </div>
               </div>
               <div className="flex-1 ml-12 mr-1">
-                <input
-                  type="text"
-                  className="mt-2 p-2 rounded w-[97%] sm-700:w-full focus:outline-normal"
-                  value={newComment}
-                  onChange={(e) => setNewComment(e.target.value)}
-                  placeholder="블로그가 훈훈해지는 댓글 부탁드립니다."
-                />
+              <input
+                type="text"
+                className="mt-2 p-2 rounded w-[97%] sm-700:w-full focus:outline-normal"
+                value={newComment}
+                onChange={(e) => setNewComment(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && newComment.trim()) {
+                    handleCommentSubmit();
+                  }
+                }}
+                placeholder="블로그가 훈훈해지는 댓글 부탁드립니다."
+              />
               </div>
             </div>
             <button

@@ -286,7 +286,7 @@ const TagContainer: React.FC<TagContainerProps> = ({ item }) => {
                 <h1 className="font-bold text-[2rem]">
                     {userName}님, 이런 스타일 어때요?
                 </h1>
-                <div className='flex ml-auto mt-[10px] sm-700:mt-0' onClick={handleGoEditPage}>
+                <div className='flex ml-auto mt-[10px] sm-700:mt-0 cursor-pointer' onClick={handleGoEditPage}>
                         <div className="text-right text-[#9d9d9d]">관심 키워드 설정</div>
                         <Image
                             src={RightIcon}
