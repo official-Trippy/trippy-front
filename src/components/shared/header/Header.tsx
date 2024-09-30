@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import LogoHeader from "../../../../public/LogoHeader.svg";
-import AlertImg from "../../../../public/AlertImg.png";
+import searchIcon from "../../../../public/icon_search2.svg";
 import DefaultImage from "../../../../public/defaultImage.svg";
 
 import searchIconMobile from "../../../../public/search_icon_mobile.svg"; 
@@ -177,21 +177,20 @@ const Header = () => {
         </div>
 
         <div className="flex items-center flex-grow max-w-[65%]">
-          <div className="flex mx-auto w-full justify-end">
+          <div className="hidden md-1000:flex mx-auto w-full justify-end">
             <SearchBar />
           </div>
 
-          {/* <div className="ml-auto mr-4 md-850:hidden">
-
-            <Image
-              src={searchIconMobile}
-              alt="Search"
-              width={24}
-              height={24}
-              className="cursor-pointer"
-            />
-
-          </div> */}
+          <div className="ml-auto mr-2 md-1000:hidden w-[24px] h-[24px] items-center mt-[7px]">
+          <Image
+            src={searchIcon}
+            alt="Search"
+            width={18}
+            height={18}
+            className="cursor-pointer"
+            onClick={() => setSearchModalVisible(true)}
+          />
+          </div> 
 
           {!loading && !isGuest && (
             <>
@@ -345,6 +344,24 @@ const Header = () => {
             </div>
           )}
         </div>
+        {searchModalVisible && (
+          <div className="fixed inset-0 z-50 bg-white flex flex-col items-center pt-2">
+            {" "}
+            {/* pt-8로 상단에 적당히 여백을 줌 */}
+            <div className="w-full max-w-[600px] flex justify-between items-center mb-4 px-4 py-2">
+              {/* <Image
+                src={LogoHeader}
+                alt="Logo"
+                className="w-[110px] h-[34px] object-contain"
+              /> */}
+            </div>
+            <div className="w-full max-w-[600px] px-4">
+              <SearchBarMobileBar
+                setSearchModalVisible={setSearchModalVisible}
+              />
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Mobile Layout */}
