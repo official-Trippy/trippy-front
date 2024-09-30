@@ -359,9 +359,13 @@ function PostWrite() {
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter' && inputValue.trim() !== "") {
-            // 중복 태그 체크
-            if (!tags.includes(inputValue.trim())) {
-                setTags([...tags, inputValue.trim()]);
+            const trimmedInput = inputValue.trim();
+
+            // 중복 태그 체크 (부분 포함 검사 추가)
+            const isDuplicate = tags.some(tag => tag.toLowerCase() === trimmedInput.toLowerCase() || trimmedInput.toLowerCase().includes(tag.toLowerCase()));
+
+            if (!isDuplicate) {
+                setTags([...tags, trimmedInput]);
                 setInputValue(''); // 입력 필드 초기화
             }
         }
