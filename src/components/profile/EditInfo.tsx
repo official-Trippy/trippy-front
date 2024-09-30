@@ -131,25 +131,26 @@ const EditInfo = () => {
       lowerValue.includes(swearWord)
     );
   };
-
-
-   // Debounce 적용: 2초 동안 입력이 없을 때 중복 체크
-   const debouncedNickNameCheck = useRef(
+  
+  // Debounce 적용: 2초 동안 입력이 없을 때 중복 체크
+  const debouncedNickNameCheck = useRef(
     debounce(async (value: string) => {
-      if (!validateNickName(value)) return; 
+      if (!validateNickName(value)) return; // 형식이 맞지 않으면 중복 체크 호출 방지
       await handleNickNameBlur(value);
     }, 1000)
   ).current;
-
+  
   const debouncedBlogNameCheck = useRef(
     debounce(async (value: string) => {
-      if (!validateBlogName(value)) return;  
+      if (!validateBlogName(value)) return; // 형식이 맞지 않으면 중복 체크 호출 방지
       await handleBlogNameBlur(value);
     }, 1000)
   ).current;
+  
   const [isNickNameTouched, setIsNickNameTouched] = useState(false); // 닉네임 수정 여부
   const [isBlogNameTouched, setIsBlogNameTouched] = useState(false); // 블로그 이름 수정 여부
   
+  // 닉네임 입력 핸들러
   const handleNickName = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
   
@@ -167,13 +168,19 @@ const EditInfo = () => {
   
     // 닉네임 형식 체크
     if (!validateNickName(value)) {
+      console.log(validateNickName);
       setNickNameError("형식이 올바르지 않습니다. 다시 입력해 주세요.");
-    } else {
-      setNickNameError(""); // 형식이 맞으면 에러 초기화
-      debouncedNickNameCheck(value); // 2초 후 중복 체크 실행
+      debouncedNickNameCheck.cancel();
+      return; // 형식이 맞지 않으면 중복 체크 중단
     }
+  
+    console.log(validateNickName); 
+    // 형식이 맞는 경우 중복 체크 실행
+    setNickNameError(""); // 형식이 맞으면 에러 초기화
+    debouncedNickNameCheck(value); // 2초 후 중복 체크 실행
   };
   
+  // 블로그 이름 입력 핸들러
   const handleBlogName = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
   
@@ -192,13 +199,16 @@ const EditInfo = () => {
     // 블로그 이름 형식 체크
     if (!validateBlogName(value)) {
       setBlogNameError("형식이 올바르지 않습니다. 다시 입력해 주세요.");
-    } else {
-      setBlogNameError(""); // 형식이 맞으면 에러 초기화
-      debouncedBlogNameCheck(value); // 2초 후 중복 체크 실행
+      debouncedBlogNameCheck.cancel();
+      return; // 형식이 맞지 않으면 중복 체크 중단
     }
+  
+    // 형식이 맞는 경우 중복 체크 실행
+    setBlogNameError(""); // 형식이 맞으면 에러 초기화
+    debouncedBlogNameCheck(value); // 2초 후 중복 체크 실행
   };
   
-
+  // 닉네임 중복 체크 함수
   const handleNickNameBlur = async (value: string) => {
     try {
       const { duplicated } = await checkNickNameDuplicate(value);
@@ -212,13 +222,16 @@ const EditInfo = () => {
       setNickNameError("서버에서 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
     }
   };
-
+  
   const validateNickName = (nickName: string) => {
-    const regex = /^[가-힣a-zA-Z0-9 ]{2,16}$/;
-    return regex.test(nickName);
-  };
+    const regex = /^(?=.*[a-z0-9가-힣])[a-z0-9가-힣 ]{2,16}$/; // 한글 자음/모음, 초성 허용 안함 + 공백 허용
+    const incompleteKoreanCharRegex = /[ㄱ-ㅎㅏ-ㅣ]/; // 자음, 모음만 입력되었는지 체크
+    if (incompleteKoreanCharRegex.test(nickName)) return false; // 자음/모음만 있는 경우 false
+    return regex.test(nickName); // 정규식이 일치하면 true 반환
+};
 
-
+  
+  // 블로그 이름 중복 체크 함수
   const handleBlogNameBlur = async (value: string) => {
     try {
       const { duplicated } = await checkBlogNameDuplicate(value);
@@ -232,10 +245,13 @@ const EditInfo = () => {
       setBlogNameError("서버에서 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
     }
   };
-
+  
+  // 블로그 이름 형식 체크 함수
   const validateBlogName = (blogName: string) => {
-    const regex = /^[가-힣a-zA-Z0-9 ]{2,28}$/;
-    return regex.test(blogName);
+    const regex = /^[가-힣a-zA-Z0-9 ]{2,28}$/; // 한글, 영문, 숫자, 공백만 허용
+    const incompleteKoreanCharRegex = /[ㄱ-ㅎㅏ-ㅣ]/; // 자음, 모음만 입력되었는지 체크
+    if (incompleteKoreanCharRegex.test(blogName)) return false; // 자음/모음만 있는 경우 false
+    return regex.test(blogName); // 정규 표현식이 일치하면 true 반환
   };
 
   const isFormValid = 
