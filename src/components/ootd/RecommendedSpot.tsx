@@ -27,6 +27,7 @@ interface RecommendedSpotProps {
 const RecommendedSpot: React.FC<RecommendedSpotProps> = ({ recommendedSpots, location }) => {
   const [itemsPerSlide, setItemsPerSlide] = useState(4);
   const swiperRef = useRef<SwiperRef | null>(null);
+  const [currentSlide, setCurrentSlide] = useState(0); // 현재 슬라이드 인덱스 관리
 
   const updateItemsPerSlide = () => {
     if (typeof window !== 'undefined') {
@@ -90,8 +91,8 @@ const RecommendedSpot: React.FC<RecommendedSpotProps> = ({ recommendedSpots, loc
 
       {recommendedSpots.length > 0 ? (
         <>
-          {/* 왼쪽 버튼 */}
-          {itemsPerSlide < recommendedSpots.length && (
+          {/* 왼쪽 버튼 (첫 번째 슬라이드에서 숨김 처리) */}
+          {itemsPerSlide < recommendedSpots.length && currentSlide > 0 && (
             <Image
               src={SwiperLeftButton}
               alt="Previous"
@@ -115,6 +116,7 @@ const RecommendedSpot: React.FC<RecommendedSpotProps> = ({ recommendedSpots, loc
               spaceBetween={20}
               slidesPerView={itemsPerSlide}
               className="mySwiper"
+              onSlideChange={(swiper) => setCurrentSlide(swiper.activeIndex)} // 슬라이드 변경 시 현재 인덱스 업데이트
             >
               {recommendedSpots.map((spot, index) => (
                 <SwiperSlide key={index} className="flex flex-col items-center justify-center text-center">
@@ -184,8 +186,8 @@ const RecommendedSpot: React.FC<RecommendedSpotProps> = ({ recommendedSpots, loc
               ))}
             </Swiper>
           </div>
-          {/* 오른쪽 버튼 */}
-          {itemsPerSlide < recommendedSpots.length && (
+          {/* 오른쪽 버튼 (마지막 슬라이드에서 숨김 처리) */}
+          {itemsPerSlide < recommendedSpots.length && currentSlide < recommendedSpots.length - itemsPerSlide && (
             <Image
               src={SwiperRightButton}
               alt="Next"
@@ -206,9 +208,9 @@ const RecommendedSpot: React.FC<RecommendedSpotProps> = ({ recommendedSpots, loc
         </>
       ) : (
         // 추천 장소가 없을 때 중앙에 메시지를 표시
-      <div className="flex justify-center items-center font-bold text-2xl text-center whitespace-normal">
-        {location}에 대한 추천 관광지 데이터가 없습니다!
-      </div>
+        <div className="flex justify-center items-center font-bold text-2xl text-center whitespace-normal">
+          {location}에 대한 추천 관광지 데이터가 없습니다!
+        </div>
       )}
     </div>
   );
