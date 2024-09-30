@@ -430,26 +430,26 @@ const EditInfo = () => {
     setIsBlogImageChanged(true);
   };
 
-  const handleBlogIntroduce = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-  
-    // 20글자 초과 시 더 이상 입력되지 않도록 막음
-    if (value.length > 20) {
-      return; // 입력 자체를 차단
-    }
-  
-    // 입력값을 항상 업데이트
-    setBlogIntroduce(value);
-  
-    // 욕설 체크
-    if (checkSwearWords(value)) {
-      setBlogIntroduceError("욕설이 포함되었습니다. 다시 입력해주세요.");
-      return;
-    }
-  
-    // 에러가 없을 때 에러 메시지 초기화
-    setBlogIntroduceError("");
-  };
+const handleBlogIntroduce = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const value = e.target.value;
+
+  // 20글자 초과 시 더 이상 입력되지 않도록 막음
+  if (value.length > 20) {
+    return; // 입력 자체를 차단
+  }
+
+  // 입력값을 항상 업데이트
+  setBlogIntroduce(value);
+
+  // 욕설 체크
+  if (checkSwearWords(value)) {
+    setBlogIntroduceError("욕설이 포함되었습니다. 다시 입력해주세요.");
+    return;
+  }
+
+  // 에러가 없을 때 에러 메시지 초기화
+  setBlogIntroduceError("");
+};
 
   const handleInterestClick = (interest: string) => {
     setSelectedInterests((prevSelected) => {
@@ -728,7 +728,8 @@ const EditInfo = () => {
         <div className="mt-[4rem]">
           <div className="">
             <div className="sign-up-info">프로필 사진</div>
-            <div className="mt-[2rem] flex items-center">
+            <div className="mt-[2rem] flex items-center relative">
+              {/* 프로필 이미지 */}
               <div className="rounded-full overflow-hidden w-[100px] h-[100px]">
                 {profileImage ? (
                   <Image
@@ -737,37 +738,45 @@ const EditInfo = () => {
                     className="object-cover w-full h-full"
                     width={100}
                     height={100}
-                     />
-                  ) : (
-                    <Image
+                  />
+                ) : (
+                  <Image
                     src={DefaultImage}
                     alt="Default Profile"
                     width={100}
                     height={100}
-                    className="object-cover w-full h-full"/>
-                  )}
-                </div>
-              <div className="ml-8 flex flex-col justify-center">
+                    className="object-cover w-full h-full"
+                  />
+                )}
+              </div>
+
+              {/* 프로필 사진 업로드 버튼 */}
+              <div className="ml-8 flex flex-col items-center">
                 <input
                   type="file"
                   accept="image/*"
                   onChange={handleImageUpload}
                   className="hidden"
-                  id="imageUpload" />
-                <label htmlFor="imageUpload" className="max-w-[200px] px-8 py-4 custom-label text-center">
+                  id="imageUpload"
+                />
+                <label
+                  htmlFor="imageUpload"
+                  className="px-8 py-4 custom-label text-center"
+                >
                   프로필 사진 업로드
                 </label>
-                <div className="mt-[5px] h-[16px]">
-                {isProfileImageChanged && (
-                    <button
-                      onClick={handleImageDelete}
-                      className="w-full mx-auto text-[1rem] text-gray-500 hover:text-gray-900"
-                    >
-                      이미지 삭제
-                    </button>
-                )}
               </div>
-              </div>
+
+              {/* 이미지 삭제 버튼을 절대 위치로 배치 */}
+              {isProfileImageChanged && (
+                <button
+                  onClick={handleImageDelete}
+                  className="absolute mt-2 text-[1rem] text-gray-500 hover:text-gray-900"
+                  style={{ top: '76px', left: '165px' }} 
+                >
+                  이미지 삭제
+                </button>
+              )}
             </div>
             <div className="flex-col">
               <div className="mt-[2rem]">

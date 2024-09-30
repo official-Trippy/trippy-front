@@ -36,19 +36,20 @@ const BlogRegisterFirst = () => {
 
   const { setUserInfo } = useUserInfo();
   const router = useRouter();
+
   // Debounced functions for checking nickname and blog name
   const debouncedNickNameCheck = useRef(
     debounce(async (value: string) => {
       if (!validateNickName(value)) return;
       await handleNickNameBlur(value);
-    }, 2000)
+    }, 1000)
   ).current;
 
   const debouncedBlogNameCheck = useRef(
     debounce(async (value: string) => {
       if (!validateBlogName(value)) return;
       await handleBlogNameBlur(value);
-    }, 2000)
+    }, 1000)
   ).current;
 
   useEffect(() => {
@@ -77,26 +78,68 @@ const BlogRegisterFirst = () => {
     );
   };
 
+  const [isNickNameTouched, setIsNickNameTouched] = useState(false); // 닉네임 수정 여부
+  const [isBlogNameTouched, setIsBlogNameTouched] = useState(false); // 블로그 이름 수정 여부
+
+  // 닉네임 입력 핸들러
   const handleNickName = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
+  
     const byteLength = getByteLength(value);
     if (byteLength > 16) return;
-
+  
     setNickName(value);
-
+    setIsNickNameTouched(true); // 닉네임 필드가 수정되었음을 추적
+  
+    // 욕설 체크
     if (checkSwearWords(value)) {
       setNickNameError("욕설이 포함되었습니다. 다시 입력해주세요.");
       return;
     }
-
+  
+    // 닉네임 형식 체크
     if (!validateNickName(value)) {
+      console.log(validateNickName);
       setNickNameError("형식이 올바르지 않습니다. 다시 입력해 주세요.");
-    } else {
-      setNickNameError("");
-      debouncedNickNameCheck(value); // 2초 뒤에 닉네임 중복 체크
+      debouncedNickNameCheck.cancel();
+      return; // 형식이 맞지 않으면 중복 체크 중단
     }
+  
+    console.log(validateNickName); 
+    // 형식이 맞는 경우 중복 체크 실행
+    setNickNameError(""); // 형식이 맞으면 에러 초기화
+    debouncedNickNameCheck(value); // 2초 후 중복 체크 실행
   };
-
+  
+  // 블로그 이름 입력 핸들러
+  const handleBlogName = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+  
+    const byteLength = getByteLength(value);
+    if (byteLength > 30) return;
+  
+    setBlogName(value);
+    setIsBlogNameTouched(true); // 블로그 이름 필드가 수정되었음을 추적
+  
+    // 욕설 체크
+    if (checkSwearWords(value)) {
+      setBlogNameError("욕설이 포함되었습니다. 다시 입력해주세요.");
+      return;
+    }
+  
+    // 블로그 이름 형식 체크
+    if (!validateBlogName(value)) {
+      setBlogNameError("형식이 올바르지 않습니다. 다시 입력해 주세요.");
+      debouncedBlogNameCheck.cancel();
+      return; // 형식이 맞지 않으면 중복 체크 중단
+    }
+  
+    // 형식이 맞는 경우 중복 체크 실행
+    setBlogNameError(""); // 형식이 맞으면 에러 초기화
+    debouncedBlogNameCheck(value); // 2초 후 중복 체크 실행
+  };
+  
+  // 닉네임 중복 체크 함수
   const handleNickNameBlur = async (value: string) => {
     try {
       const { duplicated } = await checkNickNameDuplicate(value);
@@ -106,35 +149,20 @@ const BlogRegisterFirst = () => {
         setNickNameError("사용 가능한 닉네임입니다.");
       }
     } catch (error) {
+      console.error("Error checking nickname duplication:", error);
       setNickNameError("서버에서 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
     }
   };
-
+  
   const validateNickName = (nickName: string) => {
-    const regex = /^[가-힣a-zA-Z0-9 ]{2,16}$/;
-    return regex.test(nickName);
-  };
+    const regex = /^(?=.*[a-z0-9가-힣])[a-z0-9가-힣 ]{2,16}$/; // 한글 자음/모음, 초성 허용 안함 + 공백 허용
+    const incompleteKoreanCharRegex = /[ㄱ-ㅎㅏ-ㅣ]/; // 자음, 모음만 입력되었는지 체크
+    if (incompleteKoreanCharRegex.test(nickName)) return false; // 자음/모음만 있는 경우 false
+    return regex.test(nickName); // 정규식이 일치하면 true 반환
+};
 
-  const handleBlogName = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    const byteLength = getByteLength(value);
-    if (byteLength > 30) return;
-
-    setBlogName(value);
-
-    if (checkSwearWords(value)) {
-      setBlogNameError("욕설이 포함되었습니다. 다시 입력해주세요.");
-      return;
-    }
-
-    if (!validateBlogName(value)) {
-      setBlogNameError("형식이 올바르지 않습니다. 다시 입력해 주세요.");
-    } else {
-      setBlogNameError("");
-      debouncedBlogNameCheck(value); // 2초 뒤에 블로그 이름 중복 체크
-    }
-  };
-
+  
+  // 블로그 이름 중복 체크 함수
   const handleBlogNameBlur = async (value: string) => {
     try {
       const { duplicated } = await checkBlogNameDuplicate(value);
@@ -144,27 +172,40 @@ const BlogRegisterFirst = () => {
         setBlogNameError("사용 가능한 블로그 이름입니다.");
       }
     } catch (error) {
+      console.error("Error checking blog name duplication:", error);
       setBlogNameError("서버에서 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
     }
   };
-
+  
+  // 블로그 이름 형식 체크 함수
   const validateBlogName = (blogName: string) => {
-    const regex = /^[가-힣a-zA-Z0-9 ]{2,28}$/;
-    return regex.test(blogName);
+    const regex = /^[가-힣a-zA-Z0-9 ]{2,28}$/; // 한글, 영문, 숫자, 공백만 허용
+    const incompleteKoreanCharRegex = /[ㄱ-ㅎㅏ-ㅣ]/; // 자음, 모음만 입력되었는지 체크
+    if (incompleteKoreanCharRegex.test(blogName)) return false; // 자음/모음만 있는 경우 false
+    return regex.test(blogName); // 정규 표현식이 일치하면 true 반환
   };
+
 
   const handleBlogIntroduce = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
+  
+    // 20글자 초과 시 더 이상 입력되지 않도록 막음
+    if (value.length > 20) {
+      return; // 입력 자체를 차단
+    }
+  
+    // 입력값을 항상 업데이트
     setBlogIntroduce(value);
-
+  
+    // 욕설 체크
     if (checkSwearWords(value)) {
       setBlogIntroduceError("욕설이 포함되었습니다. 다시 입력해주세요.");
       return;
     }
-
+  
+    // 에러가 없을 때 에러 메시지 초기화
     setBlogIntroduceError("");
   };
-
 
   // 크롭 관련 상태
   const [imageSrc, setImageSrc] = useState<string | null>(null); // 크롭할 이미지 소스
@@ -249,7 +290,7 @@ const BlogRegisterFirst = () => {
         <div className="sign-up-info">기본 회원 정보를 등록해주세요</div>
         <div className="mt-[2rem]">
           <div className="sign-up-info">프로필 사진</div>
-          <div className="mt-[2rem] flex items-center">
+          <div className="mt-[2rem] flex items-center relative">
             <div className="rounded-full overflow-hidden w-[100px] h-[100px]">
               {profileImage ? (
                 <Image
@@ -270,7 +311,7 @@ const BlogRegisterFirst = () => {
                 />
               )}
             </div>
-            <div className="ml-8 flex flex-col justify-center">
+            <div className="ml-8 flex flex-col items-center">
               <input
                 type="file"
                 accept="image/*"
@@ -284,16 +325,15 @@ const BlogRegisterFirst = () => {
               >
                 프로필 사진 업로드
               </label>
-              <div className="mt-[5px] h-[16px]">
               {profileImage && (
                   <button
                     onClick={handleImageDelete}
-                    className="w-full mx-auto text-[1rem] text-gray-500 hover:text-gray-900"
+                    className="absolute mt-2 text-[1rem] text-gray-500 hover:text-gray-900"
+                    style={{ top: '76px', left: '165px' }} 
                   >
                     이미지 삭제
                   </button>
                 )}
-              </div>
             </div>
           </div>
           <div className="flex-col">
@@ -353,7 +393,7 @@ const BlogRegisterFirst = () => {
                 type="text"
                 value={blogIntroduce}
                 onChange={handleBlogIntroduce}
-                placeholder="50글자 이내로 소개글을 작성해보세요."
+                placeholder="20글자 이내로 소개글을 작성해보세요."
                 className="w-full px-4 py-2 mt-[2rem] mb-2 h-[4rem] rounded-xl border border-gray-300 focus:border-[#FB3463] focus:outline-none"
                 style={{ background: "var(--4, #F5F5F5)", fontSize: "1.2rem" }}
               />
