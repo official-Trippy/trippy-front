@@ -737,13 +737,13 @@ function PostWrite() {
                         </form>
                     </div>
                     <div className='w-full h-[13rem] shadowall mt-[0.5rem] mb-[10rem] rounded-[0.8rem]'>
-                        <input className={`text-[1.6rem] font-medium w-[50rem] outline-none ${window.innerWidth > 600 ? "ml-[6rem]" : "ml-[2rem]"} mt-[3.4rem]`}
+                        <input className={`text-[1.6rem] font-medium w-[50rem] outline-none ${typeof window !== 'undefined' && window.innerWidth > 600 ? "ml-[6rem]" : "ml-[2rem]"} mt-[3.4rem]`}
                             type='text'
                             placeholder='태그를 3개 이상 입력해주세요.'
                             value={inputValue}
                             onChange={handleInputChange}
                             onKeyDown={handleKeyDown} />
-                        <div className={`flex ${window.innerWidth > 600 ? "ml-[6rem]" : "ml-[2rem]"} mt-[1rem]`}>
+                        <div className={`flex ${typeof window !== 'undefined' && window.innerWidth > 600 ? "ml-[6rem]" : "ml-[2rem]"} mt-[1rem]`}>
                             {tags.map((tag, index) => (
                                 <span key={index} className='flex items-center bg-[#fa3463] text-white rounded-[1.6rem] text-[1.6rem] px-[0.8rem] py-[0.4rem] mr-2'>
                                     {tag}
