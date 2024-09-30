@@ -105,11 +105,10 @@ const PostAllCard: React.FC<PostCardProps> = ({
           >
             <div
 
-              className={`flex items-start sm:p-6 mb-6 ${
-                isBlogOrNickname
+              className={`flex items-start sm:p-6 mb-6 ${isBlogOrNickname
                   ? "sm:w-[403px] sm:h-[72px] w-[326.231px] h-auto" // 모바일에서는 326.231px, 데스크탑에서는 403px로 적용
                   : "sm:w-[789px] sm:h-[174px] w-[326.231px] h-[115px] sm:bg-white rounded-lg shadow-md"
-              } sm:flex `}
+                } sm:flex `}
 
             >
               {/* Image */}
@@ -159,9 +158,8 @@ const PostAllCard: React.FC<PostCardProps> = ({
               {/* Post, OOTD, or Blog Details */}
               <div
 
-                className={`ml-4 pr-3 ${
-                  isBlogOrNickname ? "flex flex-col justify-center" : ""
-                }`}
+                className={`ml-4 pr-3 ${isBlogOrNickname ? "flex flex-col justify-center" : ""
+                  }`}
 
               >
                 {selectedSearchType === "BLOG" ? (
@@ -228,7 +226,7 @@ const PostAllCard: React.FC<PostCardProps> = ({
                     <p className="text-gray-800 mb-3">
                       {truncateText(
 
-                        postDetails?.body || "No content available",
+                        bodyText || "No content available",
                         60
 
                       )}
