@@ -572,7 +572,7 @@ function PostEdit({ params }: { params: { editNum: number } }) {
                             {thumbnailPreview === null ? (
                                 <div className="flex flex-col m-auto">
                                     <Image
-                                        className="w-[23rem] h-[26rem] rounded-[1rem]"
+                                        className="w-[23rem] h-[26rem] rounded-[1rem] object-cover"
                                         src={postData?.result.ticket.image.accessUri}
                                         alt=""
                                         width={230}
@@ -581,7 +581,7 @@ function PostEdit({ params }: { params: { editNum: number } }) {
                                 </div>
                             ) : (
                                 <div className='flex flex-col m-auto'>
-                                    <Image className=' w-[30rem] h-[25rem] rounded-[1rem]' src={thumbnailPreview} width={400} height={250} alt='' />
+                                    <Image className=' w-[30rem] h-[25rem] rounded-[1rem] object-cover' src={thumbnailPreview} width={400} height={250} alt='' />
                                 </div>
                             )}
 
