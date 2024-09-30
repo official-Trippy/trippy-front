@@ -247,7 +247,7 @@ const Header = () => {
                       userInfo={userInfo}
                       style={{
                         position: "absolute",
-                        bottom: "-200px",
+                        bottom: "-190px",
                         left: "-210px",
                       }}
                       handleLogout={async () => {
