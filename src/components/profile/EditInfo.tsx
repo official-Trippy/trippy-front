@@ -432,13 +432,22 @@ const EditInfo = () => {
 
   const handleBlogIntroduce = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
+  
+    // 20글자 초과 시 더 이상 입력되지 않도록 막음
+    if (value.length > 20) {
+      return; // 입력 자체를 차단
+    }
+  
+    // 입력값을 항상 업데이트
     setBlogIntroduce(value);
-
+  
+    // 욕설 체크
     if (checkSwearWords(value)) {
       setBlogIntroduceError("욕설이 포함되었습니다. 다시 입력해주세요.");
       return;
     }
-
+  
+    // 에러가 없을 때 에러 메시지 초기화
     setBlogIntroduceError("");
   };
 
@@ -813,7 +822,7 @@ const EditInfo = () => {
                   type="text"
                   value={blogIntroduce}
                   onChange={handleBlogIntroduce}
-                  placeholder="50글자 이내로 소개글을 작성해보세요."
+                  placeholder="20글자 이내로 소개글을 작성해보세요."
                   className="w-full px-4 py-2 mt-[2rem] mb-2 h-[4rem] rounded-xl border border-gray-300 focus:border-[#FB3463] focus:outline-none"
                   style={{ background: "var(--4, #F5F5F5)", fontSize: "1.2rem" }} />
                 {blogIntroduceError && (
