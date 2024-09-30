@@ -345,7 +345,7 @@ const Header = () => {
           )}
         </div>
         {searchModalVisible && (
-          <div className="fixed inset-0 z-50 bg-white flex flex-col items-center pt-2">
+          <div className="fixed inset-0 z-50 bg-white flex flex-col items-center pt-2 z-[9999]">
             {" "}
             {/* pt-8로 상단에 적당히 여백을 줌 */}
             <div className="w-full max-w-[600px] flex justify-between items-center mb-4 px-4 py-2">
@@ -405,7 +405,7 @@ const Header = () => {
           {/* <div className="ml-[5px] my-auto">로그아웃</div> */}
         </div>
         {searchModalVisible && (
-          <div className="fixed inset-0 z-50 bg-white flex flex-col items-center pt-2">
+          <div className="fixed inset-0 z-50 bg-white flex flex-col items-center pt-2 z-[9999]">
             {" "}
             {/* pt-8로 상단에 적당히 여백을 줌 */}
             <div className="w-full max-w-[600px] flex justify-between items-center mb-4 px-4 py-2">
