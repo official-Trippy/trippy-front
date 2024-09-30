@@ -48,6 +48,7 @@ import { updatePostComment } from "@/services/board/patch/editComments";
 import BookmarkIcon from "../../../../public/icon_bookmark.svg";
 import BookmarkedIcon from "../../../../public/bookmark-fill.svg";
 import { addBookmark, deleteBookmark } from "@/services/bookmark/bookmark";
+import { formatDate, formatTimetoDays } from "@/constants/dateFotmat";
 // import { postBoardBookMark } from "@/services/board/post/postBoard";
 
 export default function BoardPage({ params }: { params: { boardId: number } }) {
@@ -187,16 +188,6 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
     }
   };
 
-  function formatDate(dateString: any) {
-    const date = new Date(dateString);
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const day = String(date.getDate()).padStart(2, "0");
-    const hours = String(date.getHours()).padStart(2, "0");
-    const minutes = String(date.getMinutes()).padStart(2, "0");
-
-    return `${year}.${month}.${day}`;
-  }
   const createdAt = postData?.result.post.createDateTime;
   const formattedDate = formatDate(createdAt);
 
@@ -416,10 +407,11 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
   const handleTagClick = (tag: string) => {
     router.push(`/search/${encodeURIComponent(tag)}`);
   };
+  console.log(postCommentData)
   return (
     <div>
       {/* {window.innerWidth > 600 && (<Header />)} */}
-      <div className="w-[90%] sm-700:w-[50%] mx-auto">
+      <div className="w-[90%] sm-700:w-[50%] mx-auto ">
         <div className="flex text-[#6B6B6B] font-semibold text-[2rem]">
           {window.innerWidth > 600 ? (
             <span className="mt-[8rem]">
@@ -508,14 +500,14 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
                       bookMarkHandler();
                     }}
                   />
-                  <span className="text-[#9D9D9D] text-[1.6rem]">
+                  <span className="text-[#9D9D9D] text-[1.2rem] ml-[0.5rem] items-end flex">
                     {postData?.result.post.bookmarkCount}
                   </span>
                 </div>
               </div>
             </div>
           </div>
-          <div className="w-full h-[11rem] xl:h-[32rem] lg:h-[20rem] sm:h-[11rem] border border-[#D9D9D9] rounded-[1rem] flex mt-[5rem]">
+          <div className="w-full h-[11rem] xl:h-[32rem] lg:h-[20rem] sm:h-[11rem] border border-[#D9D9D9] rounded-[1rem] flex mt-[5rem] shadowall">
             <div
               className={`w-[1.4rem] xl:w-[5rem] lg:w-[3rem] sm:w-[1.4rem] h-full ${colorTicket[postData.result.ticket.ticketColor] ? `bg-[${colorTicket[postData.result.ticket.ticketColor]}]` : ""} rounded-l-[1rem]`}
             ></div>
@@ -653,7 +645,7 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
               onClick={LikeHandler}
             />
           )}
-          <span className="text-[1.6rem] font-normal text-[#6B6B6B]">
+          <span className="text-[1.6rem] font-normal text-[#6B6B6B] mx-[0.5rem]">
             {postData?.result.post.likeCount}
           </span>
           <Image src={bottomimg} alt="" width={24} height={24} />
@@ -675,7 +667,7 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
             />
           )}
           <span
-            className={`text-[1.6rem] font-normal ${isReplyOpen ? "text-[#FB3463]" : "text-[#6B6B6B]"} `}
+            className={`text-[1.6rem] font-normal mx-[0.5rem] ${isReplyOpen ? "text-[#FB3463]" : "text-[#6B6B6B]"} `}
           >
             {postData?.result.post.commentCount}
           </span>
@@ -734,161 +726,381 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
                     </button>
                   </div>
                 )}
+                {postCommentData?.result.length !== 0 && (
+                  <div
+                    className={`w-full h-full shadowall px-[2rem] lg:px-[4.7rem] sm:px-[2rem] py-[1.4rem] my-[3.5rem] flex flex-col rounded-[0.8rem]`}
+                  >
+                    {postCommentData?.result &&
+                      Object.entries(postCommentData.result).map(
+                        ([key, coData]: [string, any], index: number) => {
 
-                <div
-                  className={`w-full h-full shadowall px-[2rem] lg:px-[4.7rem] sm:px-[2rem] py-[1.4rem] my-[3.5rem] flex flex-col rounded-[0.8rem]`}
-                >
-                  {postCommentData?.result &&
-                    Object.entries(postCommentData.result).map(
-                      ([key, coData]: [string, any], index: number) => {
-                        const createDateTime = new Date(coData.createDateTime);
-                        const formattedDateTime = `${createDateTime.getFullYear()}.${String(createDateTime.getMonth() + 1).padStart(2, "0")}.${String(createDateTime.getDate()).padStart(2, "0")} ${String(createDateTime.getHours()).padStart(2, "0")}:${String(createDateTime.getMinutes()).padStart(2, "0")}`;
+                          const isEditing = editingIndexes[coData.id] || false;
+                          const openEditing = myUpdateReply[coData.id] || false;
 
-                        const isEditing = editingIndexes[coData.id] || false;
-                        const openEditing = myUpdateReply[coData.id] || false;
-
-                        return (
-                          <div className="mb-[2.5rem]" key={key}>
-                            <div className={`pt-[1rem] py-[0.5rem] mr-[2rem]`}>
-                              <div className="flex items-center">
-                                <Image
-                                  className="w-[2.8rem] h-[2.8rem] flex items-center rounded-full mt-[0.2em]"
-                                  src={coData.member.profileUrl}
-                                  alt=""
-                                  width={28}
-                                  height={28}
-                                />
-                                <span className="ml-[1.4rem] text-[1.8rem] font-semibold flex items-center">
-                                  {coData.member.nickName}
-                                </span>
-                                {userInfo?.memberId ===
-                                  coData.member.memberId && (
-                                    <div className="flex ml-auto">
-                                      <Image
-                                        className="w-[2.8rem] h-[2.8rem] cursor-pointer"
-                                        width={28}
-                                        height={28}
-                                        src={menubars}
-                                        alt=""
-                                        onClick={() => toggleMyEdit(coData.id)}
-                                      />
-                                      {openEditing && (
-                                        <div
-                                          className="absolute flex flex-col ml-auto bg-white shadow-md rounded-md -ml-[4.5rem] mt-[2.3rem] animate-dropdown z-20 rounded-[0.8rem]"
-                                          style={{
-                                            opacity: 0,
-                                            transform: "translateY(-10px)",
-                                          }}
-                                        >
-                                          <span
-                                            className="px-[2rem] py-[1rem] cursor-pointer text-red-500"
-                                            onClick={() => {
-                                              deleteReplyHandler(coData.id);
-                                              toggleMyEdit(coData.id);
+                          return (
+                            <div className="mb-[2.5rem]" key={key}>
+                              <div className={`pt-[1rem] py-[0.5rem] mr-[2rem]`}>
+                                <div className="flex items-center">
+                                  <Image
+                                    className="w-[2.8rem] h-[2.8rem] flex items-center rounded-full mt-[0.2em]"
+                                    src={coData.member.profileUrl}
+                                    alt=""
+                                    width={28}
+                                    height={28}
+                                  />
+                                  <span className="ml-[1.4rem] text-[1.8rem] font-semibold flex items-center">
+                                    {coData.member.nickName}
+                                  </span>
+                                  {userInfo?.memberId ===
+                                    coData.member.memberId && (
+                                      <div className="flex ml-auto">
+                                        <Image
+                                          className="w-[2.8rem] h-[2.8rem] cursor-pointer"
+                                          width={28}
+                                          height={28}
+                                          src={menubars}
+                                          alt=""
+                                          onClick={() => toggleMyEdit(coData.id)}
+                                        />
+                                        {openEditing && (
+                                          <div
+                                            className="absolute flex flex-col ml-auto bg-white shadow-md rounded-md -ml-[4.5rem] mt-[2.3rem] animate-dropdown z-20 rounded-[0.8rem]"
+                                            style={{
+                                              opacity: 0,
+                                              transform: "translateY(-10px)",
                                             }}
                                           >
-                                            삭제
-                                          </span>
-                                          <span
-                                            className="px-[2rem] py-[1rem] cursor-pointer"
-                                            onClick={() => {
-                                              handleEditContent(
-                                                coData.id,
-                                                coData.content
-                                              );
-                                              toggleMyEdit(coData.id);
-                                            }}
-                                          >
-                                            수정
-                                          </span>
-                                        </div>
-                                      )}
-                                    </div>
-                                  )}
-                              </div>
-                              {isEditing ? (
-                                <div className="w-full ml-[2.5rem] mt-[0.5rem]">
-                                  <div className="w-[95%] h-[3.3rem] relative shadowall flex flex-col border border-[#CFCFCF] bg-white rounded-[0.8rem]">
-                                    <input
-                                      className="w-full h-fit outline-none text-[1.4rem] font-normal mt-[0.5rem] pl-[1.5rem]"
-                                      type="text"
-                                      placeholder={`블로그가 훈훈해지는 댓글 부탁드립니다.`}
-                                      value={updateReply}
-                                      onChange={(e) =>
-                                        setUpdateReply(e.target.value)
-                                      }
-                                    />
-                                  </div>
-                                  <div className="w-full flex mt-[1rem] ml-auto pr-[2rem]">
-                                    <button
-                                      className="ml-auto hover:bg-[#292929] hover:text-white bg-[#FB3463] text-white rounded-[0.8rem] text-[1.6rem] font-semibold w-[6.6rem] h-[2.5rem] flex mr-[1.4rem] items-center justify-center"
-                                      onClick={() => {
-                                        commentReplyHandler(
-                                          replymemId,
-                                          replyNickname,
-                                          replyId
-                                        );
-                                        commentEditHandler(coData.id);
-                                      }}
-                                    >
-                                      수정
-                                    </button>
-                                    <button
-                                      className="hover:bg-[#292929] hover:text-white bg-[#9D9D9D] text-white rounded-[0.8rem] text-[1.6rem] font-semibold w-[6.6rem] h-[2.5rem] flex mr-[1.4rem] items-center justify-center"
-                                      onClick={() => {
-                                        commentReplyHandler(
-                                          replymemId,
-                                          replyNickname,
-                                          replyId
-                                        );
-                                        handleEditContent(
-                                          coData.id,
-                                          coData.content
-                                        );
-                                      }}
-                                    >
-                                      취소
-                                    </button>
-                                  </div>
+                                            <span
+                                              className="px-[2rem] py-[1rem] cursor-pointer text-red-500"
+                                              onClick={() => {
+                                                deleteReplyHandler(coData.id);
+                                                toggleMyEdit(coData.id);
+                                              }}
+                                            >
+                                              삭제
+                                            </span>
+                                            <span
+                                              className="px-[2rem] py-[1rem] cursor-pointer"
+                                              onClick={() => {
+                                                handleEditContent(
+                                                  coData.id,
+                                                  coData.content
+                                                );
+                                                toggleMyEdit(coData.id);
+                                              }}
+                                            >
+                                              수정
+                                            </span>
+                                          </div>
+                                        )}
+                                      </div>
+                                    )}
                                 </div>
-                              ) : (
-                                <div>
-                                  <div className="ml-[4rem] my-[0.5rem]">
-                                    <span className="text-[1.4rem] font-normal text-[#292929]">
-                                      {coData.content}
-                                    </span>
+                                {isEditing ? (
+                                  <div className="w-full ml-[2.5rem] mt-[0.5rem]">
+                                    <div className="w-[95%] h-[3.3rem] relative shadowall flex flex-col border border-[#CFCFCF] bg-white rounded-[0.8rem]">
+                                      <input
+                                        className="w-full h-fit outline-none text-[1.4rem] font-normal mt-[0.5rem] pl-[1.5rem]"
+                                        type="text"
+                                        placeholder={`블로그가 훈훈해지는 댓글 부탁드립니다.`}
+                                        value={updateReply}
+                                        onChange={(e) =>
+                                          setUpdateReply(e.target.value)
+                                        }
+                                      />
+                                    </div>
+                                    <div className="w-full flex mt-[1rem] ml-auto pr-[2rem]">
+                                      <button
+                                        className="ml-auto hover:bg-[#292929] hover:text-white bg-[#FB3463] text-white rounded-[0.8rem] text-[1.6rem] font-semibold w-[6.6rem] h-[2.5rem] flex mr-[1.4rem] items-center justify-center"
+                                        onClick={() => {
+                                          commentReplyHandler(
+                                            replymemId,
+                                            replyNickname,
+                                            replyId
+                                          );
+                                          commentEditHandler(coData.id);
+                                        }}
+                                      >
+                                        수정
+                                      </button>
+                                      <button
+                                        className="hover:bg-[#292929] hover:text-white bg-[#9D9D9D] text-white rounded-[0.8rem] text-[1.6rem] font-semibold w-[6.6rem] h-[2.5rem] flex mr-[1.4rem] items-center justify-center"
+                                        onClick={() => {
+                                          commentReplyHandler(
+                                            replymemId,
+                                            replyNickname,
+                                            replyId
+                                          );
+                                          handleEditContent(
+                                            coData.id,
+                                            coData.content
+                                          );
+                                        }}
+                                      >
+                                        취소
+                                      </button>
+                                    </div>
                                   </div>
-                                  <div className="flex ml-[4rem] text-[1.2rem] text-[#9D9D9D] items-center">
-                                    <span>{formattedDateTime}</span>
-                                    <hr className="mx-[1rem] h-[1rem] w-[0.1rem] bg-[#9D9D9D]" />
-                                    <span
-                                      className="cursor-pointer"
+                                ) : (
+                                  <div>
+                                    <div className="ml-[4rem] my-[0.5rem]">
+                                      <span className="text-[1.4rem] font-normal text-[#292929]">
+                                        {coData.content}
+                                      </span>
+                                    </div>
+                                    <div className="flex ml-[4rem] text-[1.2rem] text-[#9D9D9D] items-center">
+                                      <span>{formatTimetoDays(coData.createDateTime)}</span>
+                                      <hr className="mx-[1rem] h-[1rem] w-[0.1rem] bg-[#9D9D9D]" />
+                                      <span
+                                        className="cursor-pointer"
+                                        onClick={() =>
+                                          handleReplyToggle(
+                                            index,
+                                            coData.id,
+                                            coData.member.nickName,
+                                            coData.member.memberId
+                                          )
+                                        }
+                                      >
+                                        {replyStates[index]
+                                          ? "답글취소"
+                                          : "답글달기"}
+                                      </span>
+                                    </div>
+                                  </div>
+                                )}
+
+                                {replyStates[index] && (
+                                  <div className="w-[95%] h-[9.3rem] shadowall mt-[2rem] ml-[4rem] pl-[1.7rem] pt-[1.4rem] flex border border-[#CFCFCF] rounded-[0.8rem] relative">
+                                    <div className="w-full">
+                                      <div className="flex items-center">
+                                        <Image
+                                          className="w-[2.8rem] h-[2.8rem] flex items-center rounded-full"
+                                          src={
+                                            memberDatas?.result.profileImageUrl
+                                          }
+                                          alt=""
+                                          width={28}
+                                          height={28}
+                                        />
+                                        <span className="ml-[1.4rem] text-[1.8rem] font-semibold flex items-center">
+                                          {memberDatas?.result.nickName}
+                                        </span>
+                                      </div>
+                                      <div className="relative">
+                                        <input
+                                          className="w-[70%] outline-none ml-[2.5rem] text-[1.4rem] font-normal pl-[1.5rem]"
+                                          type="text"
+                                          placeholder={`${coData.member.nickName}에게 답글쓰기`}
+                                          value={replyComment}
+                                          onChange={(e) =>
+                                            setReplyComment(e.target.value)
+                                          }
+                                        />
+                                      </div>
+                                    </div>
+                                    <button
+                                      className="hover:bg-[#292929] hover:text-white bg-[#F5F5F5] text-[#292929] rounded-[0.8rem] text-[1.6rem] font-semibold w-[8.6rem] h-[3.5rem] flex ml-auto mr-[1.4rem] items-center justify-center"
                                       onClick={() =>
-                                        handleReplyToggle(
-                                          index,
-                                          coData.id,
-                                          coData.member.nickName,
-                                          coData.member.memberId
+                                        commentReplyHandler(
+                                          replymemId,
+                                          replyNickname,
+                                          replyId
                                         )
                                       }
                                     >
-                                      {replyStates[index]
-                                        ? "답글취소"
-                                        : "답글달기"}
-                                    </span>
+                                      입력
+                                    </button>
                                   </div>
-                                </div>
+                                )}
+                              </div>
+                              {coData?.children.map(
+                                (childData: any, childIndex: number) => {
+                                  const isEditing =
+                                    editingIndexes[childData.id] || false;
+                                  const openEditing =
+                                    myUpdateReply[childData.id] || false;
+
+                                  console.log(childData, isEditing);
+                                  return (
+                                    <div
+                                      className={`bg-[#F5F5F5] w-[95%] pt-[2rem] ${isEditing ? "pb-[4rem]" : "pb-[2rem] "} px-[1.6rem] mx-[4rem] rounded-[0.8rem]`}
+                                      key={childIndex}
+                                    >
+                                      <div className="flex items-center">
+                                        <Image
+                                          className="w-[2.8rem] h-[2.8rem] flex items-center rounded-full"
+                                          src={childData.member.profileUrl}
+                                          alt=""
+                                          width={28}
+                                          height={28}
+                                        />
+                                        <span className="ml-[1.4rem] text-[1.8rem] font-semibold flex items-center">
+                                          {childData.member.nickName}
+                                        </span>
+                                        {userInfo?.memberId ===
+                                          childData.member.memberId && (
+                                            <div className="flex ml-auto">
+                                              <Image
+                                                className="w-[2.8rem] h-[2.8rem] cursor-pointer"
+                                                width={28}
+                                                height={28}
+                                                src={menubars}
+                                                alt=""
+                                                onClick={() =>
+                                                  toggleMyEdit(childData.id)
+                                                }
+                                              />
+                                              {openEditing && (
+                                                <div
+                                                  className="absolute flex flex-col ml-auto bg-white shadow-md rounded-md -ml-[4.5rem] mt-[2.3rem] animate-dropdown z-20 rounded-[0.8rem]"
+                                                  style={{
+                                                    opacity: 0,
+                                                    transform: "translateY(-10px)",
+                                                  }}
+                                                >
+                                                  <span
+                                                    className="px-[2rem] py-[1rem] cursor-pointer"
+                                                    onClick={() => {
+                                                      handleEditContent(
+                                                        childData.id,
+                                                        childData.content
+                                                      );
+                                                      toggleMyEdit(childData.id);
+                                                    }}
+                                                  >
+                                                    수정
+                                                  </span>
+                                                  <span
+                                                    className="px-[2rem] py-[1rem] cursor-pointer text-red-500"
+                                                    onClick={() => {
+                                                      deleteReplyHandler(
+                                                        childData.id
+                                                      );
+                                                      toggleMyEdit(childData.id);
+                                                    }}
+                                                  >
+                                                    삭제
+                                                  </span>
+                                                </div>
+                                              )}
+                                            </div>
+                                          )}
+                                      </div>
+                                      {isEditing ? (
+                                        <div className="w-[90%] h-[3.3rem] shadowall my-[1rem] ml-[4rem] pt-[0.6rem] flex flex-col border border-[#CFCFCF] bg-white rounded-[0.8rem] relative">
+                                          <div className="w-full">
+                                            <div className="relative">
+                                              <input
+                                                className="w-full h-fit outline-none text-[1.4rem] font-normal pl-[1.5rem]"
+                                                type="text"
+                                                placeholder={`${coData.member.nickName}에게 답글쓰기`}
+                                                value={updateReply}
+                                                onChange={(e) =>
+                                                  setUpdateReply(e.target.value)
+                                                }
+                                              />
+                                            </div>
+                                          </div>
+                                          <div className="flex ml-auto mt-[1rem]">
+                                            <button
+                                              className="hover:bg-[#292929] hover:text-white bg-[#FB3463] text-white rounded-[0.8rem] text-[1.6rem] font-semibold w-[6.6rem] h-[2.5rem] flex ml-auto mr-[1.4rem] items-center justify-center"
+                                              onClick={() => {
+                                                commentReplyHandler(
+                                                  replymemId,
+                                                  replyNickname,
+                                                  replyId
+                                                );
+                                                commentEditHandler(childData.id);
+                                              }}
+                                            >
+                                              수정
+                                            </button>
+                                            <button
+                                              className="hover:bg-[#292929] hover:text-white bg-[#9D9D9D] text-white rounded-[0.8rem] text-[1.6rem] font-semibold w-[6.6rem] h-[2.5rem] flex ml-auto mr-[1.4rem] items-center justify-center"
+                                              onClick={() => {
+                                                commentReplyHandler(
+                                                  replymemId,
+                                                  replyNickname,
+                                                  replyId
+                                                );
+                                                handleEditContent(
+                                                  childData.id,
+                                                  childData.content
+                                                );
+                                              }}
+                                            >
+                                              취소
+                                            </button>
+                                          </div>
+                                        </div>
+                                      ) : (
+                                        <div>
+                                          <div className="text-[1.4rem] font-normal ml-[4.4rem] text-[#292929] my-[0.5rem] pr-[3rem]">
+                                            <span className="text-[#FFBACA] text-[1.4rem] mr-[1rem]">
+                                              @{childData.mentionMemberNickName}
+                                            </span>
+                                            {childData.content}
+                                          </div>
+                                          <div className="flex ml-[4.5rem] text-[1.2rem] text-[#9D9D9D] items-center">
+                                            <span>{formatTimetoDays(childData.createDateTime)}</span>
+                                            <hr className="mx-[1rem] h-[1rem] w-[0.1rem] bg-[#9D9D9D]" />
+                                            <div>
+                                              {replyOpen[index] &&
+                                                rreplyOpen[childData.id] ? (
+                                                <span
+                                                  className="cursor-pointer"
+                                                  onClick={() => {
+                                                    toggleReply(index);
+                                                    toggleRreply(childData.id);
+                                                  }}
+                                                >
+                                                  답글취소
+                                                </span>
+                                              ) : (
+                                                <span
+                                                  className="cursor-pointer"
+                                                  onClick={() => {
+                                                    toggleReply(index);
+                                                    toggleRreply(childData.id);
+                                                    setParentIds(
+                                                      childData.parentId
+                                                    );
+                                                    setReplyId(childData.id);
+                                                    setReplyNickname(
+                                                      childData.member.nickName
+                                                    );
+                                                    setReplyMemId(
+                                                      childData.member.memberId
+                                                    );
+                                                  }}
+                                                >
+                                                  답글달기
+                                                </span>
+                                              )}
+
+                                              {/* 답글이 열렸을 때 추가적인 요소를 보여줄 수 있습니다 */}
+                                              {replyOpen[index] && (
+                                                <div className="reply-input">
+                                                  {/* 답글 입력 폼이나 추가적인 내용을 여기에 추가할 수 있습니다 */}
+                                                </div>
+                                              )}
+                                            </div>
+                                          </div>
+                                        </div>
+                                      )}
+                                    </div>
+                                  );
+                                }
                               )}
 
-                              {replyStates[index] && (
+                              {replyOpen[index] && userInfo && (
                                 <div className="w-[95%] h-[9.3rem] shadowall mt-[2rem] ml-[4rem] pl-[1.7rem] pt-[1.4rem] flex border border-[#CFCFCF] rounded-[0.8rem] relative">
                                   <div className="w-full">
                                     <div className="flex items-center">
                                       <Image
-                                        className="w-[2.8rem] h-[2.8rem] flex items-center rounded-full"
-                                        src={
-                                          memberDatas?.result.profileImageUrl
-                                        }
+                                        className="flex items-center"
+                                        src={memberDatas?.result.profileImageUrl}
                                         alt=""
                                         width={28}
                                         height={28}
@@ -896,16 +1108,24 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
                                       <span className="ml-[1.4rem] text-[1.8rem] font-semibold flex items-center">
                                         {memberDatas?.result.nickName}
                                       </span>
+                                      {userInfo?.memberId ===
+                                        coData.member.memberId && (
+                                          <Image
+                                            className="w-[2.8rem] h-[2.8rem] ml-auto"
+                                            src={menubars}
+                                            alt=""
+                                          />
+                                        )}
                                     </div>
                                     <div className="relative">
                                       <input
-                                        className="w-[70%] outline-none ml-[2.5rem] text-[1.4rem] font-normal pl-[1.5rem]"
+                                        className="w-[70%] outline-none ml-[2.5rem] text-[1.4rem] font-normal pl-[1.5rem]" // padding-left 추가
                                         type="text"
-                                        placeholder={`${coData.member.nickName}에게 답글쓰기`}
                                         value={replyComment}
                                         onChange={(e) =>
                                           setReplyComment(e.target.value)
                                         }
+                                        placeholder={`${replyNickname}에게 답글쓰기`}
                                       />
                                     </div>
                                   </div>
@@ -924,256 +1144,23 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
                                 </div>
                               )}
                             </div>
-                            {coData?.children.map(
-                              (childData: any, childIndex: number) => {
-                                const createDateTime = new Date(
-                                  childData.createDateTime
-                                );
-                                const formattedDateTimes = `${createDateTime.getFullYear()}.${String(createDateTime.getMonth() + 1).padStart(2, "0")}.${String(createDateTime.getDate()).padStart(2, "0")} ${String(createDateTime.getHours()).padStart(2, "0")}:${String(createDateTime.getMinutes()).padStart(2, "0")}`;
+                          );
+                        }
+                      )}
+                  </div>
+                )}
 
-                                const isEditing =
-                                  editingIndexes[childData.id] || false;
-                                const openEditing =
-                                  myUpdateReply[childData.id] || false;
-
-                                console.log(childData, isEditing);
-                                return (
-                                  <div
-                                    className={`bg-[#F5F5F5] w-[95%] pt-[2rem] ${isEditing ? "pb-[4rem]" : "pb-[2rem] "} px-[1.6rem] mx-[4rem] rounded-[0.8rem]`}
-                                    key={childIndex}
-                                  >
-                                    <div className="flex items-center">
-                                      <Image
-                                        className="w-[2.8rem] h-[2.8rem] flex items-center rounded-full"
-                                        src={childData.member.profileUrl}
-                                        alt=""
-                                        width={28}
-                                        height={28}
-                                      />
-                                      <span className="ml-[1.4rem] text-[1.8rem] font-semibold flex items-center">
-                                        {childData.member.nickName}
-                                      </span>
-                                      {userInfo?.memberId ===
-                                        childData.member.memberId && (
-                                          <div className="flex ml-auto">
-                                            <Image
-                                              className="w-[2.8rem] h-[2.8rem] cursor-pointer"
-                                              width={28}
-                                              height={28}
-                                              src={menubars}
-                                              alt=""
-                                              onClick={() =>
-                                                toggleMyEdit(childData.id)
-                                              }
-                                            />
-                                            {openEditing && (
-                                              <div
-                                                className="absolute flex flex-col ml-auto bg-white shadow-md rounded-md -ml-[4.5rem] mt-[2.3rem] animate-dropdown z-20 rounded-[0.8rem]"
-                                                style={{
-                                                  opacity: 0,
-                                                  transform: "translateY(-10px)",
-                                                }}
-                                              >
-                                                <span
-                                                  className="px-[2rem] py-[1rem] cursor-pointer"
-                                                  onClick={() => {
-                                                    handleEditContent(
-                                                      childData.id,
-                                                      childData.content
-                                                    );
-                                                    toggleMyEdit(childData.id);
-                                                  }}
-                                                >
-                                                  수정
-                                                </span>
-                                                <span
-                                                  className="px-[2rem] py-[1rem] cursor-pointer text-red-500"
-                                                  onClick={() => {
-                                                    deleteReplyHandler(
-                                                      childData.id
-                                                    );
-                                                    toggleMyEdit(childData.id);
-                                                  }}
-                                                >
-                                                  삭제
-                                                </span>
-                                              </div>
-                                            )}
-                                          </div>
-                                        )}
-                                    </div>
-                                    {isEditing ? (
-                                      <div className="w-[90%] h-[3.3rem] shadowall my-[1rem] ml-[4rem] pt-[0.6rem] flex flex-col border border-[#CFCFCF] bg-white rounded-[0.8rem] relative">
-                                        <div className="w-full">
-                                          <div className="relative">
-                                            <input
-                                              className="w-full h-fit outline-none text-[1.4rem] font-normal pl-[1.5rem]"
-                                              type="text"
-                                              placeholder={`${coData.member.nickName}에게 답글쓰기`}
-                                              value={updateReply}
-                                              onChange={(e) =>
-                                                setUpdateReply(e.target.value)
-                                              }
-                                            />
-                                          </div>
-                                        </div>
-                                        <div className="flex ml-auto mt-[1rem]">
-                                          <button
-                                            className="hover:bg-[#292929] hover:text-white bg-[#FB3463] text-white rounded-[0.8rem] text-[1.6rem] font-semibold w-[6.6rem] h-[2.5rem] flex ml-auto mr-[1.4rem] items-center justify-center"
-                                            onClick={() => {
-                                              commentReplyHandler(
-                                                replymemId,
-                                                replyNickname,
-                                                replyId
-                                              );
-                                              commentEditHandler(childData.id);
-                                            }}
-                                          >
-                                            수정
-                                          </button>
-                                          <button
-                                            className="hover:bg-[#292929] hover:text-white bg-[#9D9D9D] text-white rounded-[0.8rem] text-[1.6rem] font-semibold w-[6.6rem] h-[2.5rem] flex ml-auto mr-[1.4rem] items-center justify-center"
-                                            onClick={() => {
-                                              commentReplyHandler(
-                                                replymemId,
-                                                replyNickname,
-                                                replyId
-                                              );
-                                              handleEditContent(
-                                                childData.id,
-                                                childData.content
-                                              );
-                                            }}
-                                          >
-                                            취소
-                                          </button>
-                                        </div>
-                                      </div>
-                                    ) : (
-                                      <div>
-                                        <div className="text-[1.4rem] font-normal ml-[4.4rem] text-[#292929] my-[0.5rem] pr-[3rem]">
-                                          <span className="text-[#FFBACA] text-[1.4rem] mr-[1rem]">
-                                            @{childData.mentionMemberNickName}
-                                          </span>
-                                          {childData.content}
-                                        </div>
-                                        <div className="flex ml-[4.5rem] text-[1.2rem] text-[#9D9D9D] items-center">
-                                          <span>{formattedDateTimes}</span>
-                                          <hr className="mx-[1rem] h-[1rem] w-[0.1rem] bg-[#9D9D9D]" />
-                                          <div>
-                                            {replyOpen[index] &&
-                                              rreplyOpen[childData.id] ? (
-                                              <span
-                                                className="cursor-pointer"
-                                                onClick={() => {
-                                                  toggleReply(index);
-                                                  toggleRreply(childData.id);
-                                                }}
-                                              >
-                                                답글취소
-                                              </span>
-                                            ) : (
-                                              <span
-                                                className="cursor-pointer"
-                                                onClick={() => {
-                                                  toggleReply(index);
-                                                  toggleRreply(childData.id);
-                                                  setParentIds(
-                                                    childData.parentId
-                                                  );
-                                                  setReplyId(childData.id);
-                                                  setReplyNickname(
-                                                    childData.member.nickName
-                                                  );
-                                                  setReplyMemId(
-                                                    childData.member.memberId
-                                                  );
-                                                }}
-                                              >
-                                                답글달기
-                                              </span>
-                                            )}
-
-                                            {/* 답글이 열렸을 때 추가적인 요소를 보여줄 수 있습니다 */}
-                                            {replyOpen[index] && (
-                                              <div className="reply-input">
-                                                {/* 답글 입력 폼이나 추가적인 내용을 여기에 추가할 수 있습니다 */}
-                                              </div>
-                                            )}
-                                          </div>
-                                        </div>
-                                      </div>
-                                    )}
-                                  </div>
-                                );
-                              }
-                            )}
-
-                            {replyOpen[index] && userInfo && (
-                              <div className="w-[95%] h-[9.3rem] shadowall mt-[2rem] ml-[4rem] pl-[1.7rem] pt-[1.4rem] flex border border-[#CFCFCF] rounded-[0.8rem] relative">
-                                <div className="w-full">
-                                  <div className="flex items-center">
-                                    <Image
-                                      className="flex items-center"
-                                      src={memberDatas?.result.profileImageUrl}
-                                      alt=""
-                                      width={28}
-                                      height={28}
-                                    />
-                                    <span className="ml-[1.4rem] text-[1.8rem] font-semibold flex items-center">
-                                      {memberDatas?.result.nickName}
-                                    </span>
-                                    {userInfo?.memberId ===
-                                      coData.member.memberId && (
-                                        <Image
-                                          className="w-[2.8rem] h-[2.8rem] ml-auto"
-                                          src={menubars}
-                                          alt=""
-                                        />
-                                      )}
-                                  </div>
-                                  <div className="relative">
-                                    <input
-                                      className="w-[70%] outline-none ml-[2.5rem] text-[1.4rem] font-normal pl-[1.5rem]" // padding-left 추가
-                                      type="text"
-                                      value={replyComment}
-                                      onChange={(e) =>
-                                        setReplyComment(e.target.value)
-                                      }
-                                      placeholder={`${replyNickname}에게 답글쓰기`}
-                                    />
-                                  </div>
-                                </div>
-                                <button
-                                  className="hover:bg-[#292929] hover:text-white bg-[#F5F5F5] text-[#292929] rounded-[0.8rem] text-[1.6rem] font-semibold w-[8.6rem] h-[3.5rem] flex ml-auto mr-[1.4rem] items-center justify-center"
-                                  onClick={() =>
-                                    commentReplyHandler(
-                                      replymemId,
-                                      replyNickname,
-                                      replyId
-                                    )
-                                  }
-                                >
-                                  입력
-                                </button>
-                              </div>
-                            )}
-                          </div>
-                        );
-                      }
-                    )}
-                </div>
               </div>
             )}
           </div>
         ) : (
-          <div className="w-full h-[75rem] bg-[#F5F5F5]">
-            <div className="flex flex-col pt-[25rem]">
-              <span className="flex text-center mx-auto text-[3.2rem] font-medium">
+          <div className="w-full h-[25rem] bg-[#F5F5F5]">
+            <div className="flex flex-col pt-[6rem]">
+              <span className="flex text-center mx-auto text-[1.6rem] font-medium">
                 트리피 회원이면 댓글을 달 수 있어요
               </span>
               <button
-                className="flex text-center mx-auto bg-[#FB3463] text-[2.4rem] py-[1.5rem] px-[3rem] rounded-[0.8rem] text-white mt-[3rem]"
+                className="flex text-center font-semibold mx-auto bg-[#FB3463] text-[1.6rem] py-[0.7rem] px-[6rem] rounded-[0.8rem] text-white mt-[1rem]"
                 onClick={loginEdit}
               >
                 로그인 하러가기
