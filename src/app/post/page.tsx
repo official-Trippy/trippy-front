@@ -65,6 +65,11 @@ function PostWrite() {
     const [result1, setResult1] = useState<ApiResponse | null>(null);
     const [transportStr, setTransportStr] = useState('');
     const accessToken = Cookies.get("accessToken");
+    const [isClient, setIsClient] = useState(false);
+
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
 
     useEffect(() => {
         setIsImageIdx([
@@ -430,7 +435,7 @@ function PostWrite() {
                     ></button>
                     <button className='ml-auto flex bg-[#FB3463] text-white text-[1.6rem] font-semibold rounded-[1rem] px-[2.5rem] py-[0.5rem]' onClick={addPost}>올리기</button>
                 </div>
-                {window.innerWidth > 600 ? (
+                {isClient && window.innerWidth > 600 ? (
                     <div className='w-full h-[32rem] border border-[#D9D9D9] rounded-[1rem] flex mx-auto mt-[2rem]'>
                         <div className={`w-[15.4rem] h-full bg-[${bgColor}] rounded-l-[1rem]`}></div>
                         <div className='w-full mt-[5rem] relative'>
