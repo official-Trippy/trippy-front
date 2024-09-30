@@ -435,7 +435,7 @@ function PostWrite() {
                     ></button>
                     <button className='ml-auto flex bg-[#FB3463] text-white text-[1.6rem] font-semibold rounded-[1rem] px-[2.5rem] py-[0.5rem]' onClick={addPost}>올리기</button>
                 </div>
-                {isClient && window.innerWidth > 600 ? (
+                {typeof window !== 'undefined' && window.innerWidth > 600 ? (
                     <div className='w-full h-[32rem] border border-[#D9D9D9] rounded-[1rem] flex mx-auto mt-[2rem]'>
                         <div className={`w-[15.4rem] h-full bg-[${bgColor}] rounded-l-[1rem]`}></div>
                         <div className='w-full mt-[5rem] relative'>
