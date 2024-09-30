@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useQuery } from "react-query";
 import Slider from "react-slick";
 import {
@@ -111,9 +111,28 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
+  const menuRef = useRef<HTMLDivElement | null>(null);
+
   const handleCabapIconClick = () => {
     setIsMenuOpen(!isMenuOpen);
   };
+
+  useEffect(() => {
+    const handleClickOutside = (event: { target: any; }) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setIsMenuOpen(false); // 모달 외부 클릭 시 모달 닫기
+      }
+    };
+
+    if (isMenuOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isMenuOpen]);
+
 
   const router = useRouter();
 
@@ -362,16 +381,16 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
                     className="cursor-pointer"
                   />
                   {isMenuOpen && (
-                    <div className="absolute top-full right-0 mt-4 w-32 bg-white rounded shadow-2xl z-10">
+                    <div ref={menuRef} className="absolute top-full right-0 mt-4 w-32 bg-white rounded shadow-2xl z-10">
                       <div
-                        className="pb-2 pt-3 px-4 text-[#ff4f4f] cursor-pointer text-center"
+                        className="pb-2 pt-3 px-4 text-[#ff4f4f] cursor-pointer text-center font-bold"
                         onClick={handleDeleteClick}
                       >
                         삭제
                       </div>
                       <div className="border-t border-gray-300 my-2" />
                       <div
-                        className="pb-3 pt-2 px-4 text-neutral-900 dark:text-white  cursor-pointer text-center"
+                        className="pb-3 pt-2 px-4 text-neutral-900 dark:text-white  cursor-pointer text-center font-bold"
                         onClick={() => router.push(`/edit/${id}`)}
                       >
                         수정
