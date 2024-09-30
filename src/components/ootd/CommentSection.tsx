@@ -446,11 +446,11 @@ const handleEditSubmit = () => {
               }} 
               className="absolute w-[60px] right-[4px] mt-[5px] bg-white rounded shadow-lg z-10"
             >
-              <div className="pt-3 pb-2 px-4 text-[#fa3463] cursor-pointer text-center flex-shrink-0" onClick={() => handleDelete(comment.id)}>
+              <div className="pt-3 pb-2 px-4 text-[#fa3463] font-bold cursor-pointer text-center flex-shrink-0" onClick={() => handleDelete(comment.id)}>
                 삭제
               </div>
               <div className="border-t border-gray-300 my-2" /> 
-              <div className="pt-2 pb-3 px-4 text-neutral-900 dark:text-white  cursor-pointer text-center flex-shrink-0" onClick={() => handleEditClick(comment)}>
+              <div className="pt-2 pb-3 px-4 text-neutral-900 dark:text-white font-bold cursor-pointer text-center flex-shrink-0" onClick={() => handleEditClick(comment)}>
                 수정
               </div>
             </div>
