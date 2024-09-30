@@ -59,6 +59,13 @@ const PostAllCard: React.FC<PostCardProps> = ({
   return (
     <div className="flex flex-col items-stretch gap-[25.012px] h-174px w-789px">
       {posts.map((post, index) => {
+        const getTextFromHtml = (html: any) => {
+          const parser = new DOMParser();
+          const doc = parser.parseFromString(html, 'text/html');
+          return doc.body.innerText; // 텍스트만 반환
+        };
+
+
         const {
           post: postDetails,
           ootd: ootdDetails,
@@ -70,6 +77,8 @@ const PostAllCard: React.FC<PostCardProps> = ({
           memberId,
           nickName,
         } = post;
+
+        const bodyText = getTextFromHtml(post.post?.body);
 
         // 타입에 따른 링크 경로 설정
         let linkPath = "#"; // 기본값은 빈 링크
@@ -94,20 +103,18 @@ const PostAllCard: React.FC<PostCardProps> = ({
             className="no-underline"
           >
             <div
-              className={`flex items-start sm:p-6 mb-6 ${
-                isBlogOrNickname
-                  ? "sm:w-[403px] sm:h-[72px] w-[326.231px] h-auto" // 모바일에서는 326.231px, 데스크탑에서는 403px로 적용
-                  : "sm:w-[789px] sm:h-[174px] w-[326.231px] h-[107px] sm:bg-white rounded-lg shadow-md"
-              } sm:flex `}
+              className={`flex items-start sm:p-6 mb-6 ${isBlogOrNickname
+                ? "sm:w-[403px] sm:h-[72px] w-[326.231px] h-auto" // 모바일에서는 326.231px, 데스크탑에서는 403px로 적용
+                : "sm:w-[789px] sm:h-[174px] w-[326.231px] h-[107px] sm:bg-white rounded-lg shadow-md"
+                } sm:flex `}
             >
               {/* Image */}
 
               <div
-                className={`${
-                  isBlogOrNickname
-                    ? "w-[72px] h-[72px]"
-                    : "sm:w-1/3 sm:h-full w-[107px] h-[107px] pr-6"
-                } flex-shrink-0 ${isBlogOrNickname ? "rounded-full" : ""}`}
+                className={`${isBlogOrNickname
+                  ? "w-[72px] h-[72px]"
+                  : "sm:w-1/3 sm:h-full w-[107px] h-[107px] pr-6"
+                  } flex-shrink-0 ${isBlogOrNickname ? "rounded-full" : ""}`}
               >
                 {selectedSearchType === "OOTD" ? (
                   <img
@@ -115,11 +122,10 @@ const PostAllCard: React.FC<PostCardProps> = ({
                       postDetails?.images[0]?.accessUri || "/placeholder.png"
                     }
                     alt="OOTD Image"
-                    className={`object-cover ${
-                      isBlogOrNickname
-                        ? "rounded-full"
-                        : "rounded-lg w-full h-full"
-                    }`}
+                    className={`object-cover ${isBlogOrNickname
+                      ? "rounded-full"
+                      : "rounded-lg w-full h-full"
+                      }`}
                     style={
                       isBlogOrNickname ? { width: "72px", height: "72px" } : {}
                     }
@@ -129,11 +135,10 @@ const PostAllCard: React.FC<PostCardProps> = ({
                   <img
                     src={profileImgUrl || "/placeholder.png"}
                     alt={blogName || "Blog Image"}
-                    className={`object-cover ${
-                      isBlogOrNickname
-                        ? "rounded-full"
-                        : "rounded-lg sm:w-full sm:h-full w-[107px] h-[107px]"
-                    }`}
+                    className={`object-cover ${isBlogOrNickname
+                      ? "rounded-full"
+                      : "rounded-lg sm:w-full sm:h-full w-[107px] h-[107px]"
+                      }`}
                     style={
                       isBlogOrNickname ? { width: "72px", height: "72px" } : {}
                     }
@@ -150,9 +155,8 @@ const PostAllCard: React.FC<PostCardProps> = ({
               {/* Post, OOTD, or Blog Details */}
 
               <div
-                className={`ml-[20px] ${
-                  isBlogOrNickname ? "flex flex-col justify-center" : ""
-                }`}
+                className={`ml-[20px] ${isBlogOrNickname ? "flex flex-col justify-center" : ""
+                  }`}
               >
                 {selectedSearchType === "BLOG" ? (
                   <>
@@ -219,7 +223,7 @@ const PostAllCard: React.FC<PostCardProps> = ({
                     </h2>
                     <p className="text-gray-800 mb-3 text-ellipsis overflow-hidden theboki1">
                       {truncateText(
-                        postDetails?.body || "No content available",
+                        bodyText || "No content available",
                         100
                       )}
                     </p>
