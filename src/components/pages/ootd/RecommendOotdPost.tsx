@@ -103,9 +103,6 @@ const TagContainer: React.FC<TagContainerProps> = ({ item }) => {
         }
     );
 
-    const totalCount = data?.result?.ootdList?.length ?? 0;
-    const totalSlides = Math.ceil(totalCount / itemsPerSlide);
-
     useEffect(() => {
         if (userInfo) {
             fetchLikedPosts().then(setLikedPosts);
@@ -130,18 +127,37 @@ const TagContainer: React.FC<TagContainerProps> = ({ item }) => {
         }
     };
 
+    const totalCount = data?.result?.ootdList?.length ?? 0; // 전체 OOTD 개수
+    const totalSlides = Math.ceil(totalCount / itemsPerSlide); // 총 슬라이드 수
+
     const updateItemsPerSlide = () => {
         if (typeof window !== 'undefined') {
             const width = window.innerWidth;
             if (width < 700) {
-                setItemsPerSlide(2);
+                setItemsPerSlide(2); // 화면 너비가 700px 이하일 때 2개씩
             } else if (width < 1000) {
-                setItemsPerSlide(3);
+                setItemsPerSlide(3); // 화면 너비가 1000px 이하일 때 3개씩
             } else {
-                setItemsPerSlide(4);
+                setItemsPerSlide(4); // 그 외에는 4개씩
             }
         }
     };
+
+      // 첫 번째 슬라이드인지 확인
+      const isAtFirstSlide = currentSlide === 0;
+
+      // 마지막 슬라이드인지 확인 (마지막 슬라이드가 정확하게 나타나도록 수정)
+      const isAtLastSlide = currentSlide + itemsPerSlide >= totalCount;
+
+    useEffect(() => {
+        updateItemsPerSlide();
+        window.addEventListener('resize', updateItemsPerSlide);
+
+        return () => {
+            window.removeEventListener('resize', updateItemsPerSlide);
+        };
+    }, []);
+
 
     useEffect(() => {
         updateItemsPerSlide();
@@ -238,9 +254,7 @@ const TagContainer: React.FC<TagContainerProps> = ({ item }) => {
         }
     };
 
-    const isAtFirstSlide = currentSlide === 0;
-    const isAtLastSlide = currentSlide === totalSlides - 1;
-    const shouldShowButtons = itemsPerSlide < totalCount;
+
 
     const [windowWidth, setWindowWidth] = useState<number | null>(null);
 
@@ -364,7 +378,7 @@ const TagContainer: React.FC<TagContainerProps> = ({ item }) => {
                     />
                 )}
             </div>
-            {!isAtFirstSlide && shouldShowButtons && (
+            {!isAtFirstSlide  && (
            <Image
            src={SwiperLeftButton}
            alt="Previous"
@@ -457,7 +471,7 @@ const TagContainer: React.FC<TagContainerProps> = ({ item }) => {
                     )}
                 </Swiper>
             </div>
-            {!isAtLastSlide && shouldShowButtons && (
+            {!isAtLastSlide  && (
                 <Image
                     src={SwiperRightButton}
                     alt="Next"
