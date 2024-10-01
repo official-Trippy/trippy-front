@@ -7,6 +7,7 @@ import PopularSearches from "@/components/search/popularSearches";
 import axios from "axios";
 import SortingBar from "@/components/search/sortingBar";
 import PostAllCard from "@/components/search/postAllCard";
+import MobilePopularSearch from "@/components/search/mobilePopularSearch";
 
 const SearchPage = () => {
   const [posts, setPosts] = useState<any[]>([]); // 보여줄 포스트
@@ -25,6 +26,8 @@ const SearchPage = () => {
   const PAGE_SIZE = 10;
   const RealKeyword = decodeURIComponent(keyword as string);
 
+  const [isMobileView, setIsMobileView] = useState(false);
+
   // 검색 결과 가져오기 (처음 4개 타입에 대해 요청)
   useEffect(() => {
     fetchAllPosts(RealKeyword);
@@ -33,6 +36,20 @@ const SearchPage = () => {
   // 인기 검색어 가져오기
   useEffect(() => {
     fetchPopularSearches();
+  }, []);
+
+  // 화면 크기 확인
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobileView(window.innerWidth <= 1500);
+    };
+
+    handleResize(); // 초기 로드 시 체크
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
   }, []);
 
   // 4개의 타입에 대한 데이터 요청
@@ -91,8 +108,6 @@ const SearchPage = () => {
       setNicknameList(nicknameListData);
       setBlogList(blogListData);
 
-      console.log("OOTD데이터~~", ootdListData);
-      console.log("ticktet데이터~~", postListData);
       if (postListData.length > 0) {
         setPosts(postListData);
         setSelectedSearchType("POST");
@@ -133,14 +148,21 @@ const SearchPage = () => {
 
   return (
     <div className="w-full min-h-screen bg-white">
-      {/* <Header /> */}
-
-      <div className="w-[90%] lg:w-[68%] mx-auto mt-8 px-4 lg:px-10">
+      <div className="w-[100%] lg:w-[68%] mx-auto mt-8 px-4 lg:px-10">
         {/* 검색 결과 제목 */}
-        <h1 className="text-2xl lg:text-4xl font-semibold mb-6">
-          <span className="text-[#FB3463]">{RealKeyword}</span>에 대한{" "}
-          <span className="text-[#FB3463]"> {count}</span>건의 검색 결과입니다.
-        </h1>
+        <div className="flex flex-row justify-between  items-center">
+          <h1 className="sm-700:text-2xl text-1xl lg:text-4xl font-semibold mb-6 min-w-[150px]">
+            <span className="text-[#FB3463]">{RealKeyword}</span>에 대한{" "}
+            <span className="text-[#FB3463]"> {count}</span>건의 검색
+            결과입니다.
+          </h1>
+
+          {isMobileView ? (
+            <MobilePopularSearch popularSearches={popularSearches} />
+          ) : (
+            ""
+          )}
+        </div>
 
         {/* Sorting Bar */}
         <SortingBar
@@ -156,9 +178,9 @@ const SearchPage = () => {
           onSelectSortOrder={setSelectedSortOrder}
         />
 
+        {/* Posts Section */}
         <div className="flex flex-col lg:flex-row">
           <div className="flex-grow w-full">
-            {/* Posts Section */}
             {isLoading ? (
               <p>Loading...</p>
             ) : posts.length > 0 ? (
@@ -177,11 +199,11 @@ const SearchPage = () => {
               </div>
             )}
           </div>
-
-          {/* Sidebar Section */}
-          <div className="flex-none w-full lg:w-[300px] mt-8 lg:mt-0 lg:ml-8 hidden md:block">
+          {isMobileView ? (
+            ""
+          ) : (
             <PopularSearches popularSearches={popularSearches} />
-          </div>
+          )}
         </div>
       </div>
     </div>
