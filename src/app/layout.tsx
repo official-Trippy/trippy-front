@@ -33,7 +33,7 @@ export default function RootLayout({
         {/* 사이트 제목 및 설명 설정 */}
         <title>Trippy</title>
         <meta name="description" content="트리피를 통해 여행기를 공유하고 여행지를 찾아보세요!" />
-        <link rel="icon" href="/TrippyMainLogo.png" />
+        <link rel="icon" href="/TrippyFavicon.png" type="image/png" />
 
         <meta property="og:title" content="Trippy" />
         <meta property="og:description" content="트리피를 통해 여행기를 공유하고 여행지를 찾아보세요!" />
