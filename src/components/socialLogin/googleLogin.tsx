@@ -29,7 +29,7 @@ const GoogleLoginButton = () => {
   return (
     <div className="flex flex-col my-1 items-center cursor-pointer">
       <div
-        className="bg-white text-neutral-900 dark:text-white  px-4 rounded-md my-2 w-[350px] h-[44px] flex items-center justify-center"
+        className="text-neutral-900 dark:text-white  px-4 rounded-md my-2 w-[330px] h-[44px] flex items-center justify-center hidden"
         onClick={handleGoogleLogin}
       >
         <Image src={google} alt="kakao" width={330} height={44} />

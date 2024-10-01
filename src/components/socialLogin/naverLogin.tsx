@@ -16,7 +16,7 @@ const NaverLogin = () => {
           clientId: process.env.NEXT_PUBLIC_NAVER_CLIENT_ID,
           callbackUrl: process.env.NEXT_PUBLIC_NAVER_LOGIN_REDIRECT_URI,
           isPopup: false,
-          loginButton: { color: "green", type: 3, height: 5 }, 
+          loginButton: { color: "green", type: 3, height: 5 },
         });
 
         naverLogin.init();
@@ -56,7 +56,7 @@ const NaverLogin = () => {
         ref={naverRef}
       ></div>
       <div
-        className="bg-naver-btn text-white px-4 rounded-md my-2 w-[310px] h-[44px] flex items-center justify-center cursor-pointer"
+        className=" text-white px-4 rounded-md my-2 w-[310px] h-[44px] flex items-center justify-center cursor-pointer"
         onClick={handleCustomButtonClick}
       >
         <Image src={kakao} alt="kakao" width={330} height={15} />
