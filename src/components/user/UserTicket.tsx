@@ -76,7 +76,7 @@ const UserTicket = ({ memberEmail, userBoardCount }: userProps) => {
                     <span className={`text-[0.8rem] lg:text-[0.8rem] xl:text-[1.2rem] font-extrabold font-akira`} style={{ color: colorTicket[ticektDatas.ticket.ticketColor] || 'inherit' }}>
                       PASSENGER
                     </span>
-                    <span className="text-[1.2rem] font-medium text-[#6B6B6B]">USERID</span>
+                    <span className="text-[0.8rem] font-medium text-[#6B6B6B]">{ticektDatas.member.memberId}</span>
                   </div>
                   <div className="flex flex-col mt-[0.5rem]">
                     <span className={`text-[1.2rem] font-extrabold font-akira`} style={{ color: colorTicket[ticektDatas.ticket.ticketColor] || 'inherit' }}>DATE</span>

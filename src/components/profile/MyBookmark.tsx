@@ -149,13 +149,13 @@ const MyBookmark = () => {
                       />
                     </div>
                     {/* )} */}
-                    <div className="font-normal font-['Pretendard'] shadowall rounded-[1rem] p-[1rem] flex">
-                      <div className="mx-auto">
+                    <div className="font-normal font-['Pretendard'] shadowall rounded-[1rem] px-[0.7rem] pb-[0.7rem] pt-[0.3rem] flex">
+                      <div className="mx-auto mt-[0.2rem] lg:mt-[1rem] sm-700:mt-[0.2rem]">
                         <div className="flex flex-col">
                           <span className={`text-[0.8rem] lg:text-[0.8rem] xl:text-[1.2rem] font-extrabold font-akira`} style={{ color: colorTicket[ticektDatas.ticket.ticketColor] || 'inherit' }}>
                             PASSENGER
                           </span>
-                          <span className="text-[1.2rem] font-medium text-[#6B6B6B]">USERID</span>
+                          <span className="text-[0.8rem] font-medium text-[#6B6B6B]">{ticektDatas.member.memberId}</span>
                         </div>
                         <div className="flex flex-col mt-[0.5rem]">
                           <span className={`text-[1.2rem] font-extrabold font-akira`} style={{ color: colorTicket[ticektDatas.ticket.ticketColor] || 'inherit' }}>DATE</span>
@@ -167,7 +167,7 @@ const MyBookmark = () => {
                         </div>
                       </div>
                       <div className="mx-auto border border-dashed border-[#CFCFCF]" />
-                      <div className="flex flex-col font-extrabold font-akira mx-auto">
+                      <div className="flex flex-col font-extrabold font-akira mx-auto pl-[1rem]">
                         <span className="text-[1.8rem] sm:text-[2.8rem] md:text-[2.4rem] lg:text-[1.8rem] xl:text-[3.2rem]">{ticektDatas.ticket.departureCode}</span>
                         <div className="mx-auto">
                           {getTransportImage(ticektDatas.ticket.transport, ticektDatas.ticket.ticketColor)}

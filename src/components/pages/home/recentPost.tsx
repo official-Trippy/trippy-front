@@ -131,6 +131,10 @@ function RecentPost({ allPosts, setAllPosts, boardData, boardRefetch, PAGE_SIZE,
         router.push("/login");
     };
 
+    const handleBoardPage = (id: number) => {
+        router.push(`/board/${id}`)
+    }
+
     const handleTabChange = (newTab: "ALL" | "FOLLOWING") => {
         startTransition(() => {
             setTab(newTab);
@@ -190,10 +194,10 @@ function RecentPost({ allPosts, setAllPosts, boardData, boardRefetch, PAGE_SIZE,
                             const bodyText = getTextFromHtml(posts.post.body);
 
                             return (
-                                <Link
-                                    href={`/board/${BoardId}`}
+                                <div
                                     className="lg:h-[20rem] md:h-[27rem] h-[27rem] rounded-[1rem] px-[1.6rem] py-[2rem] cursor-pointer mt-[1.5rem]"
                                     key={index}
+                                    onClick={() => handleBoardPage(BoardId)}
                                 >
                                     {window.innerWidth > 500 ? (
                                         <div className="flex w-full">
@@ -290,7 +294,7 @@ function RecentPost({ allPosts, setAllPosts, boardData, boardRefetch, PAGE_SIZE,
                                             </div>
                                         )
                                     }
-                                </Link>
+                                </div>
                             );
                         })}
                     </div>
