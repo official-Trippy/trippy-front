@@ -41,7 +41,7 @@ const SearchPage = () => {
   // 화면 크기 확인
   useEffect(() => {
     const handleResize = () => {
-      setIsMobileView(window.innerWidth <= 1500);
+      setIsMobileView(window.innerWidth <= 1200);
     };
 
     handleResize(); // 초기 로드 시 체크
@@ -148,7 +148,7 @@ const SearchPage = () => {
 
   return (
     <div className="w-full min-h-screen bg-white">
-      <div className="w-[100%] lg:w-[68%] mx-auto mt-8 px-4 lg:px-10 ">
+      <div className="w-[90%] lg:w-[100%] mx-auto mt-8 px-4 lg:px-10 max-w-[1250px]">
         <div className="mb-0">
           {isMobileView ? (
             <MobilePopularSearch popularSearches={popularSearches} />
@@ -158,7 +158,8 @@ const SearchPage = () => {
         </div>
         {/* 검색 결과 제목 */}
         <div className="flex flex-row justify-between  items-center">
-          <h1 className="sm-700:text-[2rem] md-700:text-[3.6rem] text-[1.6rem] lg:text-4xl font-semibold mb-6 sm:min-w-[500px] min-w-[150px]">
+
+          <h1 className="sm-700:text-[2rem] md-700:text-[3.6rem] text-[1.6rem] lg:text-3xl font-semibold mb-6 sm:min-w-[500px] min-w-[150px]">
             <span className="text-[#FB3463]">{RealKeyword}</span>에 대한{" "}
             <span className="text-[#FB3463]"> {count}</span>건의 검색
             결과입니다.
@@ -180,10 +181,10 @@ const SearchPage = () => {
         />
 
         {/* Posts Section */}
-        <div className="flex flex-col lg:flex-row">
+        <div className="flex flex-col lg:flex-row mx-auto">
           <div className="flex-grow w-full">
             {isLoading ? (
-              <p>Loading...</p>
+              <p></p>
             ) : posts.length > 0 ? (
               <div className="flex flex-wrap justify-start items-start gap-[15px] lg:gap-[25px]">
                 <PostAllCard
