@@ -58,13 +58,12 @@ const SortingBar: React.FC<SortingBarProps> = ({
             onClick={() => onSelectSearchType(type.value)}
             className={`px-2 py-1 sm-700:px-4 sm-700:py-2 rounded ${
               selectedSearchType === type.value
-                ? "bg-white text-[#FB3463]"
+                ? "bg-white text-[#FB3463] font-bold"
                 : "bg-white text-gray-700"
-            } hover:bg-gray-200 transition`}
+            }  transition`}
             style={{
               fontFamily: "Pretendard, sans-serif",
               fontSize: "14px", // 모바일 글씨 크기 조정
-              fontWeight: "400",
               lineHeight: "normal",
             }}
           >
