@@ -30,6 +30,23 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        {/* 사이트 제목 및 설명 설정 */}
+        <title>Trippy</title>
+        <meta name="description" content="트리피를 통해 여행기를 공유하고 여행지를 찾아보세요!" />
+
+        {/* Open Graph (OG) 메타 태그: 소셜 미디어 미리보기 정보 설정 */}
+        <meta property="og:title" content="Trippy" />
+        <meta property="og:description" content="트리피를 통해 여행기를 공유하고 여행지를 찾아보세요!" />
+        <meta property="og:image" content="/LogoMain.svg" /> {/* 미리보기 이미지 경로 설정 */}
+        <meta property="og:url" content="https://www.trippy.or.kr" />
+
+        {/* Twitter 카드 메타 태그 */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Trippy" />
+        <meta name="twitter:description" content="트리피를 통해 여행기를 공유하고 여행지를 찾아보세요!" />
+        <meta name="twitter:image" content="/LogoMain.svg" />
+
+        {/* 기타 스크립트 */}
         <Script
           src="https://static.nid.naver.com/js/naveridlogin_js_sdk_2.0.2.js"
           strategy="beforeInteractive"
