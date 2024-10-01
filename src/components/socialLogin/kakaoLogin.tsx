@@ -63,7 +63,7 @@ export default function KakaoLogin() {
   };
 
   return (
-    <div className="flex flex-col my-1 items-center">
+    <div className="flex flex-col my-1 items-center cursor-pointer">
       <div
         className="bg-kakao-btn text-neutral-900 dark:text-white  px-4 rounded-md my-2 w-[310px] h-[44px] flex items-center justify-center"
         onClick={kakaoLoginHandler}
