@@ -647,7 +647,8 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
                     {postData?.result.ticket.departureCode}
                   </h1>
                   <div className="w-[5rem] xl:w-[16rem] lg:w-[10rem] sm:w-[5rem] pl-[2rem] rounded-[0.8rem] flex">
-                    <span className="text-[#9D9D9D] text-[0.8rem] xl:text-[2.4rem] lg:text-[2rem] sm:text-[0.8rem] font-semibold">
+
+                    <span className={`text-[#9D9D9D] text-[0.8rem] font-semibold ${postData?.result.ticket.departure?.length > 5 || postData?.result.ticket.destination?.length > 5 ? 'text-[2rem]' : 'xl:text-[2.4rem] lg:text-[2rem] sm:text-[0.8rem]'}`}>
                       {postData?.result.ticket.departure}
                     </span>
                   </div>
@@ -663,7 +664,7 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
                     {postData?.result.ticket.destinationCode}
                   </h1>
                   <div className="w-[5rem] xl:w-[16rem] lg:w-[10rem] sm:w-[5rem] pl-[2rem] rounded-[0.8rem] flex">
-                    <span className="text-[#9D9D9D] text-[0.8rem] xl:text-[2.4rem] lg:text-[2rem] sm:text-[0.8rem] font-semibold">
+                    <span className={`text-[#9D9D9D] text-[0.8rem] font-semibold ${postData?.result.ticket.destination?.length > 5 || postData?.result.ticket.departure?.length > 5 ? 'text-[2rem]' : 'xl:text-[2.4rem] lg:text-[2rem] sm:text-[0.8rem]'}`}>
                       {postData?.result.ticket.destination}
                     </span>
                   </div>
