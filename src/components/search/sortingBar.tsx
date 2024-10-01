@@ -51,14 +51,14 @@ const SortingBar: React.FC<SortingBarProps> = ({
       </div>
 
       {/* 검색 타입 버튼 */}
-      <div className="grid-cols-2 gap-2 md:w-[789px] pt-[2rem] sm:w-[500px] w-[331px]">
+      <div className="grid-cols-2 gap-2 sm-700:w-[789px] pt-[2rem]  w-[100%]">
         {searchTypes.map((type) => (
           <button
             key={type.value}
             onClick={() => onSelectSearchType(type.value)}
             className={`px-2 py-1 sm-700:px-4 sm-700:py-2 rounded ${
               selectedSearchType === type.value
-                ? "bg-[#FB3463] text-white"
+                ? "bg-white text-[#FB3463]"
                 : "bg-white text-gray-700"
             } hover:bg-gray-200 transition`}
             style={{

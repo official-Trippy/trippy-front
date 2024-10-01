@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { FaSearch, FaTimes } from "react-icons/fa";
+import { FaTimes } from "react-icons/fa";
 import { IoIosArrowBack } from "react-icons/io";
 
 interface SearchMobileBarProps {
@@ -20,6 +20,7 @@ const SearchMobileBar: React.FC<SearchMobileBarProps> = ({
   const handleSearch = () => {
     if (query.trim() !== "") {
       router.push(`/search/${encodeURIComponent(query)}`);
+      setSearchModalVisible(false); // 모달 닫기
     }
   };
 
@@ -38,8 +39,6 @@ const SearchMobileBar: React.FC<SearchMobileBarProps> = ({
 
       {/* 검색어 입력 필드와 아이콘들 */}
       <div className="relative flex items-center w-full mx-auto max-w-[600px] min-w-[100px]">
-        {/* 검색 아이콘 */}
-
         {/* 검색어 입력 필드 */}
         <input
           type="text"
@@ -52,7 +51,8 @@ const SearchMobileBar: React.FC<SearchMobileBarProps> = ({
           }}
           onKeyDown={(event) => {
             if (event.key === "Enter") {
-              handleSearch();
+              event.preventDefault(); // 기본 동작 방지
+              handleSearch(); // 검색 수행 및 모달 닫기
             }
           }}
         />
