@@ -21,6 +21,10 @@ const LoginForm = () => {
 
   useEffect(() => {
     checkLoginStatus();
+    sessionStorage.removeItem("profileImage");
+    sessionStorage.removeItem("nickName");
+    sessionStorage.removeItem("blogName");
+    sessionStorage.removeItem("blogIntroduce");
   }, []);
 
   const checkLoginStatus = async () => {

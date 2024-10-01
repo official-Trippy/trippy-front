@@ -4,20 +4,53 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import BlogStep2 from "../../../public/BlogStep2.svg";
 import Link from "next/link";
-import { submitInterests } from "@/services/blog"
+import { submitInterests } from "@/services/blog";
 import { blogInterests } from "@/constants/blogPreference";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
+import Swal from "sweetalert2"; // Swal 모듈 추가
 
 const BlogRegisterSecond = () => {
   const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
-
   const router = useRouter();
 
   useEffect(() => {
-    // 페이지 진입 시 로그인 상태 및 role 값을 확인
-    checkLoginStatus();
-  }, []);
+    if (typeof window !== "undefined") {
+      // 페이지 진입 시 로그인 상태 및 role 값을 확인
+      checkLoginStatus();
+
+      // 뒤로 가기 이벤트 감지
+      const handlePopState = () => {
+        Swal.fire({
+          title: '회원가입을 처음부터 다시 해야해요!',
+          text: '그래도 계속하시겠습니까?',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonText: '확인',
+          cancelButtonText: '취소',
+          confirmButtonColor: '#FB3463',
+          cancelButtonColor: '#9d9d9d'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            // '확인' 버튼을 눌렀을 때 홈으로 리다이렉트
+            Cookies.remove("accessToken");
+            Cookies.remove("refreshToken");
+            Cookies.remove("role");
+            router.push("/");
+          } else {
+            // 취소했을 때 뒤로 가지 않고 페이지 상태 유지
+            window.history.pushState(null, "", window.location.href);
+          }
+        });
+      };
+
+      window.addEventListener("popstate", handlePopState); // 뒤로 가기 이벤트 리스너 추가
+
+      return () => {
+        window.removeEventListener("popstate", handlePopState); // 컴포넌트 언마운트 시 이벤트 리스너 제거
+      };
+    }
+  }, [router]);
 
   const checkLoginStatus = () => {
     const accessToken = Cookies.get("accessToken");
@@ -37,20 +70,14 @@ const BlogRegisterSecond = () => {
   };
 
   const toggleInterest = (interest: string) => {
-    // 이미 선택된 관심사를 클릭하면 해제
     if (selectedInterests.includes(interest)) {
-      setSelectedInterests(
-        selectedInterests.filter((item) => item !== interest)
-      );
-    } 
-    // 5개 초과로 선택되지 않도록 제한
-    else if (selectedInterests.length < 5) {
+      setSelectedInterests(selectedInterests.filter((item) => item !== interest));
+    } else if (selectedInterests.length < 5) {
       setSelectedInterests([...selectedInterests, interest]);
     }
   };
 
-  // 선택된 관심사를 blogInterests의 순서대로 정렬
-  const sortedSelectedInterests = blogInterests.filter(interest =>
+  const sortedSelectedInterests = blogInterests.filter((interest) =>
     selectedInterests.includes(interest)
   );
 
@@ -58,10 +85,9 @@ const BlogRegisterSecond = () => {
     selectedInterests.length >= 2 && selectedInterests.length <= 5;
 
   const handleSubmit = async () => {
-    console.log(sortedSelectedInterests); // 정렬된 관심사 출력
+    console.log(sortedSelectedInterests);
     try {
       const result = await submitInterests(sortedSelectedInterests);
-
       if (result.success) {
         console.log("Successfully submitted interests!");
       } else {
@@ -91,12 +117,16 @@ const BlogRegisterSecond = () => {
             {blogInterests.map((interest, index) => (
               <button
                 key={index}
-                className={`favorite-btn-font ${selectedInterests.includes(interest)
-                  ? "favorite-btn-active"
-                  : "favorite-btn-inactive"
+                className={`favorite-btn-font ${
+                  selectedInterests.includes(interest)
+                    ? "favorite-btn-active"
+                    : "favorite-btn-inactive"
                 }`}
                 onClick={() => toggleInterest(interest)}
-                disabled={!selectedInterests.includes(interest) && selectedInterests.length >= 5} // 5개 선택 시 추가 선택 불가
+                disabled={
+                  !selectedInterests.includes(interest) &&
+                  selectedInterests.length >= 5
+                }
               >
                 {interest}
               </button>
@@ -109,8 +139,9 @@ const BlogRegisterSecond = () => {
           <Link href="/blogRegister3">
             <button
               type="submit"
-              className={`mx-auto w-full ${isButtonActive ? "bg-btn-color" : "bg-[#cfcfcf]"
-                } sm-700:w-[120px] h-[44px] mt-[2rem] mb-[2rem] text-white py-2 rounded-xl flex justify-center items-center`}
+              className={`mx-auto w-full ${
+                isButtonActive ? "bg-btn-color" : "bg-[#cfcfcf]"
+              } sm-700:w-[120px] h-[44px] mt-[2rem] mb-[2rem] text-white py-2 rounded-xl flex justify-center items-center`}
               onClick={handleSubmit}
               style={{ fontSize: "1.2rem" }}
               disabled={!isButtonActive}
