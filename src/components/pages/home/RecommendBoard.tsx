@@ -236,23 +236,22 @@ const RecommendBoard = () => {
 
 
             <div className="flex items-center my-12 relative">
-                {!userInfo && (
-                    <Image
-                        src={SwiperLeftButton}
-                        alt="Previous"
-                        width={25}
-                        height={25}
-                        onClick={() => handleScroll('left')}
-                        style={{
-                            width: '25px',
-                            height: '25px',
-                            position: 'absolute',
-                            top: '50%',
-                            transform: 'translateY(-50%)',
-                            left: '-30px',
-                            zIndex: 999,
-                        }}
-                    />
+                {!userInfo && (<Image
+                    src={SwiperLeftButton}
+                    alt="Previous"
+                    width={25}
+                    height={25}
+                    onClick={() => handleScroll('left')}
+                    style={{
+                        width: '25px',
+                        height: '25px',
+                        position: 'absolute',
+                        top: '50%',
+                        transform: 'translateY(-50%)',
+                        left: '-30px',
+                        zIndex: 999,
+                    }}
+                />
                 )}
                 <div
                     className="overflow-hidden w-full cursor-pointer"
@@ -287,7 +286,7 @@ const RecommendBoard = () => {
                         )}
                     </div>
                 </div>
-                {!userInfo && (
+                {!userInfo && data?.result?.postList?.length > 0 && (
                     <Image
                         src={SwiperRightButton}
                         alt="Next"
@@ -306,7 +305,7 @@ const RecommendBoard = () => {
                     />
                 )}
             </div>
-            {itemsPerSlide < totalCount && (
+            {itemsPerSlide < totalCount && data?.result?.postList?.length > 0 && (
                 <Image
                     src={SwiperLeftButton}
                     alt="Previous"
@@ -475,7 +474,7 @@ const RecommendBoard = () => {
                     )}
                 </Swiper>
             </div>
-            {itemsPerSlide < totalCount && (
+            {itemsPerSlide < totalCount && data?.result?.postList?.length > 0 && (
                 <Image
                     src={SwiperRightButton}
                     alt="Next"
