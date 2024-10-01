@@ -5,9 +5,7 @@ import Cookies from "js-cookie";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import "dayjs/locale/ko";
-import Header from "@/components/shared/header/Header";
-import FallingContainer from "@/components/falling/FallingContainer";
-
+import { useRouter } from "next/navigation";
 interface INotification {
   notifyId: number;
   title: string;
@@ -15,6 +13,7 @@ interface INotification {
   senderNickName: string;
   createdAt: string;
   read: boolean;
+  senderMemberId: string;
 }
 
 dayjs.extend(relativeTime);
@@ -42,6 +41,7 @@ const NotificationPage = () => {
     };
     fetchNotifications();
   }, [accessToken]);
+  console.log("전체알림 정보", notifications);
 
   const handleDeleteNotification = async (notifyId: number) => {
     try {
@@ -75,20 +75,25 @@ const NotificationPage = () => {
   };
 
   const notificationCount = notifications.length;
+  const router = useRouter();
+
+  const goUserPage = (memberId: string) => {
+    router.push(`/user/${memberId}`);
+  };
 
   return (
     <div>
       <div className="header flex justify-between items-center sm:w-[50%] w-[70%] mx-auto relative">
         <h1 className="text-5xl">알림</h1>
         {/* 전체 삭제 버튼 */}
-        {notificationCount > 0 && (
+        {/* {notificationCount > 0 && (
           <button
             onClick={handleDeleteAllNotifications}
             className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600"
           >
             전체 삭제
           </button>
-        )}
+        )} */}
       </div>
 
       {/* 총 알림 개수 표시 */}
@@ -114,7 +119,10 @@ const NotificationPage = () => {
             {notifications.map((notification) => (
               <div
                 key={notification.notifyId}
-                className="flex items-center p-4 border rounded-lg shadow-sm bg-white w-full"
+                className="cursor-pointer flex items-center p-4 border rounded-lg shadow-sm bg-white w-full"
+                onClick={() => {
+                  goUserPage(notification.senderMemberId);
+                }}
               >
                 {/* 프로필 이미지 */}
                 <div className="w-16 h-16 rounded-full overflow-hidden">
@@ -134,14 +142,14 @@ const NotificationPage = () => {
                   </p>
                 </div>
                 {/* 개별 삭제 버튼 */}
-                <button
+                {/* <button
                   onClick={() =>
                     handleDeleteNotification(notification.notifyId)
                   }
                   className="text-red-500 hover:text-red-700 px-2 py-1"
                 >
                   삭제
-                </button>
+                </button> */}
               </div>
             ))}
           </div>

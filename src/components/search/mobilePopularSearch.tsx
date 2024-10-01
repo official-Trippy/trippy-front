@@ -22,7 +22,7 @@ const MobilePopularSearch: React.FC<PopularSearchesProps> = ({
   }, [popularSearches.length]);
 
   return (
-    <div className="flex items-center justify-end w-full w-[300px] mb-[15px]">
+    <div className="flex items-center justify-end w-full w-[300px]">
       {/* 타이틀 */}
       <h2 className="text-[1.125rem] font-semibold mr-4">인기 검색어</h2>
 

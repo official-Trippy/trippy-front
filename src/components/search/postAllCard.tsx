@@ -216,7 +216,7 @@ const PostAllCard: React.FC<PostCardProps> = ({
                       </p>
                     </div>
 
-                    <p className="text-gray-800 sm:mb-2 md:my-4 sm:min-h-[5rem] min-h-[1rem] py-2">
+                    <p className="text-gray-800 sm:min-h-[5rem] min-h-[1rem] py-2">
                       {truncateText(
                         postDetails?.body || "No description available",
                         60
@@ -265,7 +265,7 @@ const PostAllCard: React.FC<PostCardProps> = ({
                     <h2 className="text-[1.4rem] md:text-3xl font-semibold sm:py-3">
                       {postDetails?.title || "Untitled"}
                     </h2>
-                    <p className="text-gray-800 sm:mb-3 sm:min-h-[5rem] min-h-[4rem] py-2">
+                    <p className="text-gray-800 sm:min-h-[5rem] min-h-[4rem] py-2">
                       {truncateText(
                         bodyText || "No content available",
 

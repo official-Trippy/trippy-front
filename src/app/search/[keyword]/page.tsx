@@ -148,20 +148,21 @@ const SearchPage = () => {
 
   return (
     <div className="w-full min-h-screen bg-white">
-      <div className="w-[100%] lg:w-[68%] mx-auto mt-8 px-4 lg:px-10">
-        {/* 검색 결과 제목 */}
-        <div className="flex flex-row justify-between  items-center">
-          <h1 className="sm-700:text-2xl text-1xl lg:text-4xl font-semibold mb-6 min-w-[150px]">
-            <span className="text-[#FB3463]">{RealKeyword}</span>에 대한{" "}
-            <span className="text-[#FB3463]"> {count}</span>건의 검색
-            결과입니다.
-          </h1>
-
+      <div className="w-[100%] lg:w-[68%] mx-auto mt-8 px-4 lg:px-10 ">
+        <div className="mb-0">
           {isMobileView ? (
             <MobilePopularSearch popularSearches={popularSearches} />
           ) : (
             ""
           )}
+        </div>
+        {/* 검색 결과 제목 */}
+        <div className="flex flex-row justify-between  items-center">
+          <h1 className="sm-700:text-[2rem] md-700:text-[3.6rem] text-[1.6rem] lg:text-4xl font-semibold mb-6 sm:min-w-[500px] min-w-[150px]">
+            <span className="text-[#FB3463]">{RealKeyword}</span>에 대한{" "}
+            <span className="text-[#FB3463]"> {count}</span>건의 검색
+            결과입니다.
+          </h1>
         </div>
 
         {/* Sorting Bar */}

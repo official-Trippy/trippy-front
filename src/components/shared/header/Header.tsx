@@ -7,10 +7,10 @@ import LogoHeader from "../../../../public/LogoHeader.svg";
 import AlertImg from "../../../../public/AlertImg.png";
 import DefaultImage from "../../../../public/defaultImage.svg";
 
-import searchIconMobile from "../../../../public/search_icon_mobile.svg"; 
-import alertIconMobile from "../../../../public/alert_icon_mobile.svg"; 
-import alertIcon from "../../../../public/icon_alarm.svg"; 
-import ootdWrite from "../../../../public/ootdWrite.svg"; 
+import searchIconMobile from "../../../../public/search_icon_mobile.svg";
+import alertIconMobile from "../../../../public/alert_icon_mobile.svg";
+import alertIcon from "../../../../public/icon_alarm.svg";
+import ootdWrite from "../../../../public/ootdWrite.svg";
 
 import logoutImg from "../../../../public/LogoutImg.svg";
 import UserModal from "@/components/userInfo/userModal";

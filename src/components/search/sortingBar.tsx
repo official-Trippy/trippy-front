@@ -58,7 +58,7 @@ const SortingBar: React.FC<SortingBarProps> = ({
             onClick={() => onSelectSearchType(type.value)}
             className={`px-2 py-1 sm-700:px-4 sm-700:py-2 rounded ${
               selectedSearchType === type.value
-                ? "bg-[#FB3463] text-white"
+                ? "bg-white text-[#FB3463]"
                 : "bg-white text-gray-700"
             } hover:bg-gray-200 transition`}
             style={{
