@@ -28,6 +28,7 @@ export default function KakaoTalk() {
 
         console.log("Access token received:", accessToken);
         console.log("data returned from api: ", data); 
+        
 
         const socialName = "kakao";
         const roleRes = await axios.post(
@@ -44,17 +45,10 @@ export default function KakaoTalk() {
         Cookies.set("accessToken", roleRes.data.result.accessToken);
         Cookies.set("role", role);
 
-        console.log("User role received:", role);
-<<<<<<< HEAD
-        if (role === "MEMBER" || role === "ADMIN") {
-=======
-
-        // 인증 후 경로를 업데이트하여 뒤로 가기를 눌러도 다시 인증 시도하지 않도록 처리
         window.history.replaceState(null, "", "/blogRegister");
 
-        // role에 따라 페이지 이동
-        if (role === "MEMBER") {
->>>>>>> 8e40fc1572000fff9ffd95dc119acf65dce09a3e
+        console.log("User role received:", role);
+        if (role === "MEMBER" || role === "ADMIN") {
           router.push("/");
           router.refresh();
           return;
