@@ -109,12 +109,12 @@ const NotificationPage = () => {
   
   return (
     <div>
-      <div className="header flex justify-between items-center sm:w-[50%] w-[70%] mx-auto relative">
+      <div className="header flex justify-between w-[90%] items-center sm-700:w-[50%] max-w-[800px] mx-auto relative">
         <h1 className="text-4xl font-bold">알림</h1>
       </div>
   
       {/* 총 알림 개수 표시 */}
-      <div className="sm:w-[50%] w-[90%] mx-auto my-4">
+      <div className="sm-700:w-[50%] w-[90%] max-w-[800px] mx-auto my-4">
         {notificationCount > 0 ? (
           <h2 className="text-3xl font-semibold">
             <span className="text-[#FB3463]">{notificationCount}</span>
@@ -126,7 +126,7 @@ const NotificationPage = () => {
       </div>
   
       {/* 알림 리스트 표시 영역 */}
-      <div className="sm:w-[50%] w-[90%] mx-auto my-8 flex justify-start">
+      <div className="sm-700:w-[50%] sm-700:mb-0 w-[90%] max-w-[800px] mx-auto my-8 flex justify-start mb-[80px]">
         {notificationCount === 0 ? (
           <div className="text-2xl text-center py-16"></div>
         ) : (
