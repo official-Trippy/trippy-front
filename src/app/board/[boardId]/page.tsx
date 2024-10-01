@@ -137,7 +137,7 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
 
   console.log(editingIndexes);
 
-  const { data: postData, refetch: postRefetch } = useQuery({
+  const { data: postData, refetch: postRefetch, isLoading: postLoading } = useQuery({
     queryKey: ["postData"],
     queryFn: () => getPost(Number(params.boardId)),
   });
@@ -173,24 +173,11 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
     },
   });
 
-  const { data: bookmark, refetch: bookmarkRefetch } = useQuery({
+  const { data: bookmark, refetch: bookmarkRefetch, isLoading: bookMarkLoading } = useQuery({
     queryKey: ["bookmark"],
     queryFn: () => getBoardBookMark(Number(params.boardId)),
     enabled: !!Number(params.boardId),
   });
-
-  const {
-    data: recommendedSpots,
-    isLoading: isSpotsLoading,
-    error: spotsError,
-  } = useQuery(
-    ["recommendedSpots", Number(params.boardId)],
-    () => fetchRecommendedSpots(Number(params.boardId)),
-    {
-      enabled: !!Number(params.boardId),
-      refetchOnWindowFocus: false,
-    }
-  );
 
   console.log(bookmark);
 
@@ -341,9 +328,7 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
     setRreplyOpen(updatedRreplyOpen);
   };
 
-  if (!postData) {
-    return <div>Loading...</div>; // 데이터가 로딩 중일 때
-  }
+
 
   const replaceImagesInBody = (body: any, images: any) => {
     const parser = new DOMParser();
@@ -536,6 +521,11 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
     );
   };
 
+
+  if (postLoading || isLoading || bookMarkLoading) {
+    return <SkeletonOotdDetailRecommend />; // 데이터가 로딩 중일 때
+  }
+
   return (
     <div>
       {/* {window.innerWidth > 600 && (<Header />)} */}
@@ -653,7 +643,7 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
                     </span>
                   </div>
                 </div>
-                <div className="relative flex bg-white mt-0 xl:mt-[3rem] lg:mt-[0.8rem] sm:mt-0 w-[1.7rem] lg:w-[2.8rem] sm:w-[1.7rem] h-[1.7rem] lg:h-[2.8rem] sm:h-[1.7rem] z-10 mx-[3%] xl:mx-[9%] sm:mx-[3%]">
+                <div className="relative flex bg-white mt-0 xl:mt-[2.8rem] lg:mt-[0.8rem] sm:mt-0 w-[1.7rem] lg:w-[3.2rem] sm:w-[1.7rem] h-[1.7rem] lg:h-[2.8rem] sm:h-[1.7rem] z-10 mx-[3%] xl:mx-[9%] sm:mx-[3%]">
                   {getTransportImage(
                     postData?.result.ticket.transport,
                     postData?.result.ticket.ticketColor
