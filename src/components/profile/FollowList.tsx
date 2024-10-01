@@ -148,7 +148,7 @@ const FollowList: React.FC<{
   }
 
   return (
-    <div className="h-[400px]">
+    <div className="">
       <h3 className="text-2xl font-bold my-12">
         {type === "follower" ? "팔로워" : "팔로잉"}
         <span className="text-[#FB3463]"> {filteredUserData.length}</span>

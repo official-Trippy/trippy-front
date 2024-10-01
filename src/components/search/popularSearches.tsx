@@ -8,7 +8,7 @@ const PopularSearches: React.FC<PopularSearchesProps> = ({
   popularSearches,
 }) => {
   return (
-    <div className="ml-auto flex flex-col p-10 w-[300px]">
+    <div className="ml-auto flex flex-col pl-20 w-[300px]">
       <h2 className="text-[2rem] font-semibold mb-4">인기 검색어</h2>
       <ul className="">
         {popularSearches.map((term, index) => (

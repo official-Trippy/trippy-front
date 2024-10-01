@@ -49,7 +49,7 @@ const NaverLogin = () => {
   };
 
   return (
-    <div className="flex flex-col my-0 items-center">
+    <div className="flex flex-col my-0 items-center cursor-pointer">
       <div
         id="naverIdLogin"
         className="hidden" // 기본 버튼을 숨깁니다.

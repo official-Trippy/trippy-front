@@ -212,6 +212,9 @@ const RecentOotdPost: React.FC = () => {
     }
   }, [isLoading]);
 
+
+  const roleValue = Cookies.get('role');
+  
   if (loading || showSkeleton || isLoading) {
     return <SkeletonRecentOotdPost />;
   }
@@ -227,21 +230,18 @@ const RecentOotdPost: React.FC = () => {
       )}
 
       <div className={`flex text-[1.6rem] py-12`}>
-        {userInfo && (
-          <span
+        {(userInfo && roleValue) && (
+          <><span
             className={`pr-[1rem] cursor-pointer ${tab === "ALL" ? "font-bold text-[#fa3463]" : ""}`}
             onClick={() => handleTabChange("ALL")}
           >
             전체글
-          </span>
-        )}
-        {userInfo && (
-          <span
+          </span><span
             className={`px-[1rem] cursor-pointer ${tab === "FOLLOWING" ? "font-bold text-[#fa3463]" : ""}`}
             onClick={() => handleTabChange("FOLLOWING")}
           >
-            팔로잉
-          </span>
+              팔로잉
+            </span></>
         )}
         <div className="ml-auto">
           <CustomSelect

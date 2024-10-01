@@ -19,6 +19,8 @@ import SwiperLeftButton from '../../../../public/SwiperLeftBtn.svg';
 import SwiperRightButton from '../../../../public/SwiperRightBtn.svg';
 import { useUserStore } from '@/store/useUserStore'; // Zustand 전역 상태 사용
 import SkeletonRecommendOotdPost from './SkeletonRecommendOotdPost';
+import Cookies from 'js-cookie';
+
 
 const TagContainer: React.FC<TagContainerProps> = ({ item }) => {
     const containerRef = useRef<HTMLDivElement | null>(null);
@@ -270,32 +272,35 @@ const TagContainer: React.FC<TagContainerProps> = ({ item }) => {
         }
     }, [isLoading]);
 
+    
+    const roleValue = Cookies.get('role');
+
+
     if (loading || showSkeleton || isLoading) {
         return <SkeletonRecommendOotdPost />;
     }
 
     return (
         <div className="relative w-[90%] sm-700:w-[66%] mx-auto pt-[5rem] overflow-visible">
-            {!userInfo && (
+            {(!userInfo || !roleValue) && (
                 <h1 className="font-bold text-[2rem] mb-4">
                     관심분야에 따른 OOTD를 확인해보세요!
                 </h1>
             )}
-            {userInfo && (
-                <div className='flex flex-col items-start sm-700:flex-row sm-700:items-center'>
+            {(userInfo && roleValue) && ( // 조건식을 함수 호출이 아니라 논리 연산으로 수정
+            <div className='flex flex-col items-start sm-700:flex-row sm-700:items-center'>
                 <h1 className="font-bold text-[2rem]">
                     {userName}님, 이런 스타일 어때요?
                 </h1>
                 <div className='flex ml-auto mt-[10px] sm-700:mt-0 cursor-pointer' onClick={handleGoEditPage}>
-                        <div className="text-right text-[#9d9d9d]">관심 키워드 설정</div>
-                        <Image
-                            src={RightIcon}
-                            alt="keyword"
-                            width={14}
-                            height={14} />
-                        <div />
-                    </div>
+                    <div className="text-right text-[#9d9d9d]">관심 키워드 설정</div>
+                    <Image
+                        src={RightIcon}
+                        alt="keyword"
+                        width={14}
+                        height={14} />
                 </div>
+            </div>
             )}
 
             <div className="flex items-center my-12 relative">

@@ -18,11 +18,11 @@ import { useUserStore } from '@/store/useUserStore'; // Zustand 전역 상태 �
 import { fetchRecommendBoard } from '@/services/board/get/getRecBoard';
 import { AirSVG, BusSVG, BycicleSVG, CarSVG, TrainSVG } from '@/components/transportsvg/home';
 import { colorTicket } from '@/types/board';
-import nonheartImg from "@/dummy/heartbin.svg"
-import heartImg from "@/dummy/heart.svg";
-import moment from "@/dummy/moment.svg"
 import SkeletonRecommendOotdPost from '../ootd/SkeletonRecommendOotdPost';
 import SkeletonRecBoard from './SkeletonRecBoard';
+import heartImg from "../../../../public/heartedIcon.svg";
+import nonheartImg from "../../../../public/heartIcon-default.svg";
+import moment from "../../../../public/commentIcon-default.svg";
 
 const TagContainer: React.FC<TagContainerProps> = ({ item }) => {
     const containerRef = useRef<HTMLDivElement | null>(null);
@@ -299,7 +299,7 @@ const RecommendBoard = () => {
                             height: '25px',
                             position: 'absolute',
                             top: '50%',
-                            transform: 'translateY(-50%)',
+                            transform: 'translateY(-60%)',
                             right: '-30px',
                             zIndex: 999,
                         }}
@@ -313,7 +313,7 @@ const RecommendBoard = () => {
                     width={60}
                     height={60}
                     onClick={() => handleScrollOotd('left')}
-                    className="absolute left-[-30px] top-[60%] transform -translate-y-1/2 z-10"
+                    className={`absolute left-[-30px] top-[60%] transform ${window.innerWidth < 700 ? "-translate-y-2/5" : "-translate-y-1/2"} z-10`}
                 />
             )}
             <div className='relative mx-auto '>
@@ -424,7 +424,7 @@ const RecommendBoard = () => {
 
                                         {/* <TagContainer item={item} /> */}
                                         <div className={`pb-4 ${window.innerWidth < 500 ? 'hidden' : ''}`}>
-                                            <div className="w-full flex items-center">
+                                            <div className="w-full flex items-center mt-[1.5rem]">
                                                 <div className="flex items-center pl-[2rem] pr-[1rem]">
                                                     <div className="relative w-[24px] h-[24px]">
                                                         <Image
@@ -450,9 +450,9 @@ const RecommendBoard = () => {
                                                     ) : (
                                                         <Image src={nonheartImg} alt='' width={24} height={24} />
                                                     )}
-                                                    <span className="text-[1.6rem] font-normal">{item.post.likeCount}</span>
+                                                    <span className="text-[1.6rem] font-normal ml-[0.7rem]">{item.post.likeCount}</span>
                                                     <Image className='ml-[1rem]' src={moment} alt='' width={24} height={24} />
-                                                    <span className="text-[1.6rem] font-normal">{item.post.commentCount}</span>
+                                                    <span className="text-[1.6rem] font-normal ml-[0.7rem]">{item.post.commentCount}</span>
                                                 </div>
                                             </div>
 
@@ -482,7 +482,7 @@ const RecommendBoard = () => {
                     width={60}
                     height={60}
                     onClick={() => handleScrollOotd('right')}
-                    className="absolute right-[-30px] top-[60%] transform -translate-y-1/2 z-10"
+                    className={`absolute right-[-30px] top-[60%] transform ${window.innerWidth < 700 ? "-translate-y-2/5" : "-translate-y-1/2"} z-10`}
                 />
             )}
         </div>
