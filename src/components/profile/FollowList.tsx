@@ -172,7 +172,7 @@ const FollowList: React.FC<{
           </div>
         )}
         {filteredUserData.length === 0 ? (
-          <div className="text-left my-12 text-3xl">목록이 비어 있습니다.</div>
+          <div className="text-left my-12 text-3xl"></div>
         ) : (
           filteredUserData.map((user) => (
             <div
