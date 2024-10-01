@@ -9,7 +9,6 @@ import { useEffect, useState } from "react";
 import RecommendBoard from "@/components/pages/home/RecommendBoard";
 import { useRouter } from "next/navigation";
 
-
 const PAGE_SIZE = 10;
 
 export default function Home() {
@@ -48,25 +47,30 @@ export default function Home() {
       }
     };
 
-    window.addEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
     handleResize(); // 초기 호출
 
-    return () => window.removeEventListener('resize', handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   const { data: boardData, refetch: boardRefetch } = useQuery({
-    queryKey: ['boardData'],
-    queryFn: () => getBoard(PAGE_SIZE, pages)
-  })
+    queryKey: ["boardData"],
+    queryFn: () => getBoard(PAGE_SIZE, pages),
+  });
 
-
-
-  console.log(boardData)
+  console.log(boardData);
   return (
     <div>
       <RecommendBoard />
-      <RecentPost allPosts={allPosts} setAllPosts={setAllPosts} boardData={boardData} boardRefetch={boardRefetch} PAGE_SIZE={PAGE_SIZE} pages={pages} setPages={setPages} />
-
+      <RecentPost
+        allPosts={allPosts}
+        setAllPosts={setAllPosts}
+        boardData={boardData}
+        boardRefetch={boardRefetch}
+        PAGE_SIZE={PAGE_SIZE}
+        pages={pages}
+        setPages={setPages}
+      />
     </div>
   );
 }

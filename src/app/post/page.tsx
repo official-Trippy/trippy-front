@@ -520,7 +520,7 @@ function PostWrite() {
                                 <span className='w-[8rem]'>GROUP</span>
                             </div>
                             <div className={`flex ml-[7rem] text-[1.4rem] font-extrabold text-[#6B6B6B] relative`}>
-                                <span className='w-[17rem] flex mt-[0.3rem]'>{memberData?.result.memberId}</span>
+                                <span className='w-[17rem] flex mt-[0.3rem]'>{memberData?.result.nickName}</span>
                                 <DateInput2 onDateChange={handleDateChange} startDate={String(startDate)} endDate={String(endDate)} setEndDate={setEndDate} setStartDate={setStartDate} />
                                 <div className='w-[8rem] flex text-[1.6rem]'>
                                     <button className='text-[#FB3463] flex text-[2rem]' onClick={handleDecrease}>-</button>
@@ -628,7 +628,7 @@ function PostWrite() {
                                 <span className='w-[2rem] ml-[5.5rem]'>GROUP</span>
                             </div>
                             <div className={`flex text-[0.5rem] ml-[1rem] items-center font-extrabold text-[#6B6B6B] relative`}>
-                                <span className='w-[5rem] flex mt-[0.3rem]'>{memberData?.result.memberId}</span>
+                                <span className='w-[5rem] flex mt-[0.3rem]'>{memberData?.result.nickName}</span>
                                 <DateInput2 onDateChange={handleDateChange} startDate={String(startDate)} endDate={String(endDate)} setEndDate={setEndDate} setStartDate={setStartDate} />
 
                                 <div className='w-[5rem] flex text-[0.8rem] items-center'>

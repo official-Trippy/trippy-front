@@ -45,13 +45,10 @@ export default function KakaoTalk() {
         Cookies.set("role", role);
 
         console.log("User role received:", role);
-
-        // 인증 후 경로를 업데이트하여 뒤로 가기를 눌러도 다시 인증 시도하지 않도록 처리
-        window.history.replaceState(null, "", "/blogRegister");
-
-        // role에 따라 페이지 이동
-        if (role === "MEMBER") {
+        if (role === "MEMBER" || role === "ADMIN") {
           router.push("/");
+          router.refresh();
+          return;
         } else if (role === "GUEST") {
           router.push("/blogRegister");
         }

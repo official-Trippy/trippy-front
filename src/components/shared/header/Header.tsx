@@ -44,6 +44,10 @@ const Header = () => {
     loadUserInfo();
   }, [fetchUserInfo]);
 
+  useEffect(() => {
+    router.refresh();
+  });
+
   //수정 고려중
   // useEffect(() => {
   //   const EventSource = EventSourcePolyfill || NativeEventSource;
@@ -182,15 +186,15 @@ const Header = () => {
           </div>
 
           <div className="ml-auto mr-2 md-1000:hidden w-[24px] h-[24px] items-center mt-[7px]">
-          <Image
-            src={searchIcon}
-            alt="Search"
-            width={18}
-            height={18}
-            className="cursor-pointer"
-            onClick={() => setSearchModalVisible(true)}
-          />
-          </div> 
+            <Image
+              src={searchIcon}
+              alt="Search"
+              width={18}
+              height={18}
+              className="cursor-pointer"
+              onClick={() => setSearchModalVisible(true)}
+            />
+          </div>
 
           {!loading && !isGuest && (
             <>

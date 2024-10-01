@@ -5,12 +5,14 @@ import SecondBg from "@/components/pages/onboarding/secondbg";
 import ThirdBg from "@/components/pages/onboarding/thirdbg";
 import Header from "@/components/shared/header/Header";
 import Slider from "@/components/slider";
+import { useRouter } from "next/navigation";
 import React, { useEffect, useRef, useState } from "react";
 
 const OnBoradingPage = () => {
   const pagesRef = useRef<HTMLDivElement>(null);
   const paginationRef = useRef<HTMLUListElement>(null);
   const [showSecondAnimation, setShowSecondAnimation] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -33,6 +35,10 @@ const OnBoradingPage = () => {
       window.removeEventListener('scroll', handleScroll);
     };
   }, []);
+
+  const homeRoute = () => {
+    router.push(`/`)
+  }
 
   return (
     <div>
@@ -60,7 +66,7 @@ const OnBoradingPage = () => {
               <h1 className="text-[4rem] font-bold text-white flex mx-auto">나만의 특별한 OOTD와<br />정보를 공유할 수 있어요</h1>
               <span className="text-[2rem] font-normal text-white">여행 중 나의 특별한 OOTD를 공유하며 소통해보세요</span>
             </div>
-            <button className="w-[32rem] mt-[6rem] py-[1.2rem] bg-btn-color mx-auto font-semibold text-white text-[1.6rem] rounded-[0.4rem] hover:bg-btn-color/85">시작하기</button>
+            <button className="w-[32rem] mt-[6rem] py-[1.2rem] bg-btn-color mx-auto font-semibold text-white text-[1.6rem] rounded-[0.4rem] hover:bg-btn-color/85" onClick={homeRoute}>시작하기</button>
           </div>
         </ThirdBg>
       </div>
