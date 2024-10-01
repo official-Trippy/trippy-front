@@ -91,3 +91,25 @@ export async function getBoardBookMark(postId: number) {
         return null;
     }
 }
+
+export async function getBoardFollow(size: number, page: number, orderType: string) {
+    try {
+        const res = await axios.get(`${backendUrl}/api/post/all?size=${size}&page=${page}&orderType=${orderType}`);
+        return res.data;
+    } catch (e) {
+        return null;
+    }
+}
+
+export const fetchFollowTicketPosts = async (page: number, size: number, orderType: string) => {
+    const response = await axios.get(`${backendUrl}/api/post/follow`, {
+        params: {
+            page,
+            size,
+            orderType,
+            postType: 'POST',
+        },
+    });
+
+    return response.data;
+};

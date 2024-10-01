@@ -1,14 +1,16 @@
 import Image from 'next/image';
-import React, { ReactNode, useEffect, useState } from 'react'
+import React, { ReactNode, useEffect, useState, useTransition } from 'react'
 import Link from "next/link";
-import nonheartImg from "@/dummy/heartbin.svg"
-import heartImg from "@/dummy/heart.svg";
-import moment from "@/dummy/moment.svg"
 import { useQuery } from 'react-query';
-import { getAllBoardCount, getFollowBoard } from '@/services/board/get/getBoard';
+import { fetchFollowTicketPosts, getAllBoardCount, getBoardFollow, getFollowBoard } from '@/services/board/get/getBoard';
 import DefaultImage from '../../../../public/defaultImage.svg';
 import { useUserStore } from '@/store/useUserStore';
 import SkeletonBoard from './SkeletonBoard';
+import CustomSelect from '../ootd/CustomSelect';
+import { useRouter } from 'next/navigation';
+import heartImg from "../../../../public/heartedIcon.svg";
+import nonheartImg from "../../../../public/heartIcon-default.svg";
+import moment from "../../../../public/commentIcon-default.svg";
 
 interface HomeRecentProps {
     allPosts: number;
@@ -22,59 +24,54 @@ interface HomeRecentProps {
 
 
 function RecentPost({ allPosts, setAllPosts, boardData, boardRefetch, PAGE_SIZE, pages, setPages }: HomeRecentProps) {
-    const [sortOrder, setSortOrder] = useState('최신순');
+    const [page, setPage] = useState(0);
     // const [sortOrders, setSortOrders] = useState('최신순');
-
+    const [isPending, startTransition] = useTransition();
     const [isClicked, setIsClicked] = useState(false);
     const { userInfo, loading } = useUserStore((state) => ({
         userInfo: state.userInfo,
         loading: state.loading,
     }));
-
+    const [tab, setTab] = useState<"ALL" | "FOLLOWING" | null>(null);
+    const [orderTypes, setOrderTypes] = useState("LATEST")
+    const isTabInitialized = tab !== null;
     const memberIds = userInfo && userInfo?.memberId;
+    const router = useRouter();
+
     const { data: followData } = useQuery({
         queryKey: ['followData'],
         queryFn: () => getFollowBoard(memberIds)
     })
 
+    const { data: boardCountData, isLoading: allLoading } = useQuery({
+        queryKey: ['boardCountData'],
+        queryFn: () => getAllBoardCount()
+    })
 
-    const sortedPosts = () => {
-        if (!boardData || !boardData.result) return [];
+    const { data: followingData, isLoading: isFollowingLoading } = useQuery({
+        queryKey: ['followDatas', page, orderTypes],
+        queryFn: () => getBoardFollow(PAGE_SIZE, page, orderTypes)
+    })
 
-        return boardData.result.sort((a: any, b: any) => {
-            if (sortOrder === '조회순') {
-                return b.post.viewCount - a.post.viewCount; // 조회순
-            } else if (sortOrder === '인기순') {
-                return b.post.likeCount - a.post.likeCount; // 인기순
-            } else {
-                const dateA = new Date(a.post.createDateTime).getTime();
-                const dateB = new Date(b.post.createDateTime).getTime();
-                return dateB - dateA; // 최신순
+    const { data: followingPostsData, isLoading: isFollowingPostsLoading } =
+        useQuery(
+            ["followingOotdPosts", page, orderTypes],
+            () => fetchFollowTicketPosts(page, PAGE_SIZE, orderTypes),
+            {
+                enabled: tab === "FOLLOWING" && isTabInitialized,
             }
-        });
-    };
+        );
 
-    const filteredBoardData = boardData?.result.filter((post: any) => {
-        return followData?.result.followings.some((following: any) => {
-            return following.memberId === post.member.memberId;
-        });
-    });
+    const ticketList =
+        tab === "ALL"
+            ? followingData?.result || []
+            : followingPostsData?.result || [];
+    const isLoading =
+        allLoading ||
+        (tab === "ALL" ? isFollowingLoading : isFollowingPostsLoading);
 
-    const sortedFollowPosts = () => {
-        if (!filteredBoardData) return [];
 
-        return filteredBoardData?.sort((a: any, b: any) => {
-            if (sortOrder === '조회순') {
-                return b.post.viewCount - a.post.viewCount; // 조회순
-            } else if (sortOrder === '인기순') {
-                return b.post.likeCount - a.post.likeCount; // 인기순
-            } else {
-                const dateA = new Date(a.post.createDateTime).getTime();
-                const dateB = new Date(b.post.createDateTime).getTime();
-                return dateB - dateA; // 최신순
-            }
-        });
-    };
+    console.log(followingData, followingPostsData)
 
     function formatDate(dateString: any) {
         const date = new Date(dateString);
@@ -87,12 +84,9 @@ function RecentPost({ allPosts, setAllPosts, boardData, boardRefetch, PAGE_SIZE,
         return `${year}.${month}.${day}`;
     }
 
-    console.log(sortedFollowPosts())
+    const isGuest = userInfo?.role === "GUEST";
 
-    const { data: boardCountData } = useQuery({
-        queryKey: ['boardCountData'],
-        queryFn: () => getAllBoardCount()
-    })
+
 
     const totalPages = boardCountData ? Math.ceil(boardCountData / PAGE_SIZE) : 0;
 
@@ -107,6 +101,19 @@ function RecentPost({ allPosts, setAllPosts, boardData, boardRefetch, PAGE_SIZE,
     const [showSkeleton, setShowSkeleton] = useState(true);
 
     useEffect(() => {
+        if (typeof window !== "undefined") {
+            const savedTab = sessionStorage.getItem("tab");
+            if (!userInfo) {
+                setTab("ALL"); // 유저 정보가 없으면 무조건 'ALL'로 설정
+            } else if (savedTab) {
+                setTab(savedTab as "ALL" | "FOLLOWING");
+            } else {
+                setTab(!isGuest ? "ALL" : "FOLLOWING");
+            }
+        }
+    }, [userInfo]);
+
+    useEffect(() => {
         if (typeof window !== 'undefined') { // 클라이언트에서만 실행되도록 체크
             const delay = setTimeout(() => {
                 setShowSkeleton(false);
@@ -116,34 +123,58 @@ function RecentPost({ allPosts, setAllPosts, boardData, boardRefetch, PAGE_SIZE,
         }
     }, [loading]);
 
-    if (loading || showSkeleton) {
+    if (loading || showSkeleton || isFollowingLoading) {
         return <SkeletonBoard />;
     };
 
+    const handleLogin = () => {
+        router.push("/login");
+    };
 
+    const handleTabChange = (newTab: "ALL" | "FOLLOWING") => {
+        startTransition(() => {
+            setTab(newTab);
+            setPage(0);
+        });
+    };
+    const handleOrderTypeChange = (value: string) => {
+        setOrderTypes(value);
+        setPage(0);
+    };
+    console.log(followingData)
     return (
         <div className='w-[90%] sm-700:w-[66%] mx-auto py-[5rem]'>
             <div>
                 <h1 className='font-bold text-[2rem]'>트리피의 다양한 여정을 함께 해보세요!</h1>
                 <div className='flex text-[1.6rem] pt-[5rem] px-[1rem]'>
-                    <span className={`px-[2rem] cursor-pointer transition-all duration-300 ${allPosts === 0 ? "font-bold border-b-2 border-black" : ""}`} onClick={() => setAllPosts(0)}>전체글</span>
-                    <span className={`px-[2rem] cursor-pointer transition-all duration-300 ${allPosts === 1 ? "font-bold border-b-2 border-black" : ""}`} onClick={() => setAllPosts(1)}>팔로잉</span>
-                    <select
-                        className={`flex w-[8rem] h-[3rem] ml-auto font-medium selectshadow rounded-[0.8rem] outline-none border ${isClicked && "border-[#FB3463]"}`}
-                        value={sortOrder}
-                        onChange={(e) => setSortOrder(e.target.value)}
-                        onClick={() => setIsClicked(!isClicked)}
-                    >
-                        <option value='최신순'>최신순</option>
-                        <option value='조회순'>조회순</option>
-                        <option value='인기순'>인기순</option>
-                    </select>
+                    {userInfo && (
+                        <span
+                            className={`pr-[1rem] cursor-pointer ${tab === "ALL" ? "font-bold text-[#fa3463]" : ""}`}
+                            onClick={() => handleTabChange("ALL")}
+                        >
+                            전체글
+                        </span>
+                    )}
+                    {userInfo && (
+                        <span
+                            className={`px-[1rem] cursor-pointer ${tab === "FOLLOWING" ? "font-bold text-[#fa3463]" : ""}`}
+                            onClick={() => handleTabChange("FOLLOWING")}
+                        >
+                            팔로잉
+                        </span>
+                    )}
+                    <div className="ml-auto">
+                        <CustomSelect
+                            orderType={orderTypes}
+                            onOrderTypeChange={handleOrderTypeChange}
+                        />
+                    </div>
                 </div>
             </div>
-            {allPosts === 0 ? (
+            {ticketList.length > 0 ? (
                 <div>
                     <div className="grid grid-cols-1 lg:grid-cols-1 2xl:grid-cols-2 gap-x-[8rem] gap-y-[5.3rem]">
-                        {sortedPosts().map((posts: any, index: number) => {
+                        {ticketList?.map((posts: any, index: number) => {
                             const BoardId = posts.post.id;
 
 
@@ -197,15 +228,15 @@ function RecentPost({ allPosts, setAllPosts, boardData, boardRefetch, PAGE_SIZE,
                                                         <span className={`hidden md:block font-['Pretendard']`}>{posts.member.nickName}</span>
                                                         {/* <span className="">{formattedDate}</span> */}
                                                     </div>
-                                                    <div className="flex items-end text-[#9D9D9D] ml-auto">
+                                                    <div className="flex items-center text-[#9D9D9D] ml-auto">
                                                         {posts.post.isLiked ? (
                                                             <Image src={heartImg} alt='' width={24} height={24} />
                                                         ) : (
                                                             <Image src={nonheartImg} alt='' width={24} height={24} />
                                                         )}
-                                                        <span className="text-[1rem] font-normal ml-auto">{posts.post.likeCount}</span>
+                                                        <span className="text-[1rem] font-normal ml-[0.7rem]">{posts.post.likeCount}</span>
                                                         <Image className='ml-[1rem]' src={moment} alt='' width={24} height={24} />
-                                                        <span className="text-[1rem] font-normal">{posts.post.commentCount}</span>
+                                                        <span className="text-[1rem] font-normal ml-[0.7rem]">{posts.post.commentCount}</span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -243,15 +274,15 @@ function RecentPost({ allPosts, setAllPosts, boardData, boardRefetch, PAGE_SIZE,
                                                                 {tagData}
                                                             </span>
                                                         ))}
-                                                        <div className="flex items-end text-[#9D9D9D] ml-auto">
+                                                        <div className="flex items-center text-[#9D9D9D] ml-auto">
                                                             {posts.post.isLiked ? (
                                                                 <Image src={heartImg} alt='' width={24} height={24} />
                                                             ) : (
                                                                 <Image src={nonheartImg} alt='' width={24} height={24} />
                                                             )}
-                                                            <span className="text-[1rem] font-normal ml-auto">{posts.post.likeCount}</span>
+                                                            <span className="flex items-center text-[1rem] font-normal ml-[0.7rem]">{posts.post.likeCount}</span>
                                                             <Image className='ml-[1rem]' src={moment} alt='' width={24} height={24} />
-                                                            <span className="text-[1rem] font-normal">{posts.post.commentCount}</span>
+                                                            <span className="text-[1rem] font-normal ml-[0.7rem]">{posts.post.commentCount}</span>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -276,62 +307,27 @@ function RecentPost({ allPosts, setAllPosts, boardData, boardRefetch, PAGE_SIZE,
                     </div>
                 </div>
             ) : (
-                <div className="grid grid-cols-1 lg:grid-cols-1 2xl:grid-cols-2 gap-x-[8rem] gap-y-[5.3rem] mt-[5rem]">
-                    {sortedFollowPosts().map((posts: any, index: number) => {
-                        const BoardId = posts.post.id;
-
-                        const getTextFromHtml = (html: any) => {
-                            const parser = new DOMParser();
-                            const doc = parser.parseFromString(html, 'text/html');
-                            return doc.body.innerText; // 텍스트만 반환
-                        };
-
-                        const bodyText = getTextFromHtml(posts.post.body);
-
-                        return (
-                            <Link
-                                href={`/board/${BoardId}`}
-                                className="h-[20rem] shadowall rounded-[1rem] px-[1.6rem] py-[2rem] hover:-translate-y-4 duration-300 cursor-pointer"
-                                key={index}
+                <div className="h-full flex flex-col text-[2rem] text-neutral-900 dark:text-white  my-auto items-center justify-center font-medium font-['Pretendard'] py-[50px]">
+                    {userInfo ? (
+                        <div className="flex flex-row">
+                            <span className="text-[#FB3463]">팔로우</span>한 유저의 TICKET이
+                            없어요!
+                        </div>
+                    ) : (
+                        <>
+                            <div className="flex flex-row">
+                                <span className="text-neutral-900 dark:text-white ">
+                                    트리피 로그인 후 팔로잉 게시글을 확인하세요!
+                                </span>
+                            </div>
+                            <div
+                                className="bg-btn-color text-white text-2xl rounded-[8px] font-semibold mt-[20px] px-8 py-4 cursor-pointer"
+                                onClick={handleLogin}
                             >
-                                <div className="flex w-full">
-                                    <Image className="w-[17rem] h-[17rem] rounded-[0.8rem]" src={posts.ticket.image.accessUri} alt="" width={170} height={170} />
-                                    <div className='flex flex-col w-full ml-[2.5rem]'>
-                                        <h1 className="text-[2rem] font-medium text-ellipsis overflow-hidden">{posts.post.title}</h1>
-                                        <span className="text-[1.6rem] mt-[0.4rem] h-[5rem] font-normal text-[#6B6B6B] text-ellipsis overflow-hidden">{bodyText}</span>
-                                        <div className="flex flex-wrap text-ellipsis overflow-hidden">
-                                            {posts?.post.tags.map((tagData: string, index: number) => (
-                                                <span
-                                                    key={index}
-                                                    className="w-fit px-[0.8rem] py-[0.4rem] mt-[1.2rem] mr-[0.5rem] bg-[#F5F5F5] text-[1.3rem] text-[#9d9d9d] rounded-[1.6rem] text-ellipsis overflow-hidden"
-                                                >
-                                                    {tagData}
-                                                </span>
-                                            ))}
-                                        </div>
-                                        <div className="flex mt-[2rem]">
-                                            <div className="flex h-full text-[1.4rem] font-normal space-x-4 items-end mt-auto">
-                                                <Image src={posts.member.profileUrl || DefaultImage} width={24} height={24} alt="" />
-                                                <span className="">{posts.member.nickName}</span>
-                                            </div>
-                                            <div className="flex items-end text-[#9D9D9D] ml-auto">
-                                                {posts.post.isLiked ? (
-                                                    <Image src={heartImg} alt='' width={24} height={24} />
-                                                ) : (
-                                                    <Image src={nonheartImg} alt='' width={24} height={24} />
-                                                )}
-                                                <span className="text-[1rem] font-normal ml-auto">{posts.post.likeCount}</span>
-                                                <Image className='ml-[1rem]' src={moment} alt='' width={24} height={24} />
-                                                <span className="text-[1rem] font-normal">{posts.post.commentCount}</span>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                </div>
-
-                            </Link>
-                        );
-                    })}
+                                TICKET 게시글 작성하러 가기
+                            </div>
+                        </>
+                    )}
                 </div>
             )}
         </div>
