@@ -30,6 +30,7 @@ import { getCountry, getCountry1 } from '@/services/board/get/getCountry'
 import editPost from '@/services/board/patch/editPost'
 import editTicket from '@/services/board/patch/editTicket'
 import { PostAirSVG, PostBusSVG, PostBycicleSVG, PostCarSVG, PostTrainSVG } from '@/components/transportsvg/post'
+import DateInput2 from '@/components/board/DateInput2'
 
 interface CountryResult {
     countryIsoAlp2: string;
@@ -75,7 +76,8 @@ function PostEdit({ params }: { params: { editNum: number } }) {
         body: postData?.result.post.body || '',
         images: postData?.result.post.images as string[], // 이미지 URL을 저장할 배열
     });
-    const [transportStr, setTransportStr] = useState(postData?.result.ticket.transport)
+    const [transportStr, setTransportStr] = useState(postData?.result.ticket.transport);
+    const [date, setDate] = useState<string>('');
 
     // postData가 변경될 때마다 ticketColor와 postRequests를 업데이트하는 useEffect 추가
     useEffect(() => {
@@ -177,6 +179,9 @@ function PostEdit({ params }: { params: { editNum: number } }) {
 
     console.log(ticketColor, bgColor)
 
+    const handleDateChange = (date: string) => {
+        setDate(date);
+    };
 
     const selectTransport = (imgSrc: JSX.Element) => {
         setIsImageIdx((prevState) => {
@@ -422,7 +427,7 @@ function PostEdit({ params }: { params: { editNum: number } }) {
     return (
         <div>
             {/* <Header /> */}
-            <div className='w-[66%] mx-auto'>
+            <div className='w-[90%] sm-700:w-[66%] mx-auto'>
                 <div className='flex items-center mt-[5rem]'>
                     <button
                         onClick={() => handleButtonClick('#55FBAF', 0)}
@@ -450,145 +455,266 @@ function PostEdit({ params }: { params: { editNum: number } }) {
                     ></button>
                     <button className='ml-auto flex bg-[#FB3463] text-white text-[1.6rem] font-semibold rounded-[1rem] px-[2.5rem] py-[0.5rem]' onClick={addPost}>올리기</button>
                 </div>
-                <div className='w-full h-[32rem] border border-[#D9D9D9] rounded-[1rem] flex mx-auto mt-[2rem]'>
-                    <div className={`w-[15.4rem] h-full bg-[${bgColor}] rounded-l-[1rem]`}
-                        style={{ color: colorTicket[postData?.result.ticket.ticketColor] || 'inherit' }}></div>
-                    <div className='w-full mt-[5rem] relative'>
-                        <div className='flex justify-center'>
-                            <div className='ml-[5rem]'>
-                                <h1 className='h-[9rem] text-[6rem] font-extrabold font-akira'>{result1?.result?.isoAlp3 || postData?.result?.ticket?.departureCode}</h1>
-                                <div className='w-[18rem] h-[3.6rem] px-[2rem] shadowall rounded-[0.8rem] flex mt-4'>
-                                    <input
-                                        className='w-[12rem] text-[1.6rem] outline-none'
-                                        type='text'
-                                        placeholder='검색 2'
-                                        value={inputValue2} // 두 번째 입력 값 상태
-                                        onChange={(e) => setInputValue2(e.target.value)} // 입력 값 변경 시 핸들러
-                                        onKeyDown={(e) => {
-                                            if (e.key === 'Enter') {
-                                                searchCountry1(inputValue2); // 엔터 키가 눌리면 함수 호출
-                                            }
-                                        }}
-                                    />
-                                    <button className='ml-auto' onClick={() => searchCountry1(inputValue2)} >
-                                        <Image src={searchicon} alt='' />
-                                    </button>
+                {typeof window !== 'undefined' && window.innerWidth > 600 ? (
+                    <div className='w-full h-[32rem] border border-[#D9D9D9] rounded-[1rem] flex mx-auto mt-[2rem]'>
+                        <div className={`w-[15.4rem] h-full bg-[${bgColor}] rounded-l-[1rem]`}
+                            style={{ color: colorTicket[postData?.result.ticket.ticketColor] || 'inherit' }}></div>
+                        <div className='w-full mt-[5rem] relative'>
+                            <div className='flex justify-center'>
+                                <div className='ml-[5rem]'>
+                                    <h1 className='h-[9rem] text-[6rem] font-extrabold font-akira'>{result1?.result?.isoAlp3 || postData?.result?.ticket?.departureCode}</h1>
+                                    <div className='w-[18rem] h-[3.6rem] px-[2rem] shadowall rounded-[0.8rem] flex mt-4'>
+                                        <input
+                                            className='w-[12rem] text-[1.6rem] outline-none'
+                                            type='text'
+                                            placeholder='검색 2'
+                                            value={inputValue2} // 두 번째 입력 값 상태
+                                            onChange={(e) => setInputValue2(e.target.value)} // 입력 값 변경 시 핸들러
+                                            onKeyDown={(e) => {
+                                                if (e.key === 'Enter') {
+                                                    searchCountry1(inputValue2); // 엔터 키가 눌리면 함수 호출
+                                                }
+                                            }}
+                                        />
+                                        <button className='ml-auto' onClick={() => searchCountry1(inputValue2)} >
+                                            <Image src={searchicon} alt='' />
+                                        </button>
+                                    </div>
+                                </div>
+                                <div className='relative bg-white z-10 ml-[4%] mr-[11%]'>
+                                    {
+                                        isTransport ? (
+                                            <div className='w-[6rem] h-[28rem] absolute z-10 bg-white shadowall rounded-[3rem] flex items-center justify-center mt-[1.5rem] flex-col space-y-9'>
+                                                {isImageIdx.slice(0, 5).map((item: any, index) => (
+                                                    <div key={index} onClick={() => selectTransport(item.imgsrc)}>
+                                                        {item.imgsrc}
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        ) : (
+                                            <div
+                                                className='w-[6rem] h-[6rem] absolute shadowall rounded-full flex items-center justify-center mt-[1.5rem]'
+                                                onClick={() => setIsTransport(true)}
+                                            >
+                                                {isImageIdx[0]?.imgsrc}
+                                            </div>
+                                        )
+                                    }
+                                </div>
+                                <div>
+                                    <h1 className='h-[10rem] text-[6rem] font-extrabold font-akira'>{result?.result?.isoAlp3 || postData?.result?.ticket?.departureCode}</h1>
+                                    <div className='w-[18rem] h-[3.6rem] px-[2rem] shadowall rounded-[0.8rem] flex'>
+                                        <input
+                                            className='w-[12rem] text-[1.6rem] outline-none'
+                                            type='text'
+                                            placeholder='검색 1'
+                                            value={inputValue1} // 첫 번째 입력 값 상태
+                                            onChange={(e) => setInputValue1(e.target.value)} // 입력 값 변경 시 핸들러
+                                            onKeyDown={(e) => {
+                                                if (e.key === 'Enter') {
+                                                    searchCountry(inputValue1); // 엔터 키가 눌리면 함수 호출
+                                                }
+                                            }}
+                                        />
+                                        <button className='ml-auto' onClick={() => searchCountry(inputValue1)} >
+                                            <Image src={searchicon} alt='' />
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
-                            <div className='relative bg-white z-10 ml-[4%] mr-[11%]'>
-                                {
-                                    isTransport ? (
-                                        <div className='w-[6rem] h-[28rem] absolute z-10 bg-white shadowall rounded-[3rem] flex items-center justify-center mt-[1.5rem] flex-col space-y-9'>
-                                            {isImageIdx.slice(0, 5).map((item: any, index) => (
-                                                <div key={index} onClick={() => selectTransport(item.imgsrc)}>
-                                                    {item.imgsrc}
-                                                </div>
-                                            ))}
-                                        </div>
-                                    ) : (
-                                        <div
-                                            className='w-[6rem] h-[6rem] absolute shadowall rounded-full flex items-center justify-center mt-[1.5rem]'
-                                            onClick={() => setIsTransport(true)}
-                                        >
-                                            {isImageIdx[0]?.imgsrc}
-                                        </div>
-                                    )
-                                }
+                            <div className='w-[95%] border-2 border-dashed border-[#CFCFCF] my-[3rem] mx-auto relative z-0' />
+                            <div className={`flex ml-[7rem] text-[1.4rem] font-extrabold font-akira`}
+                                style={{ color: bgColor || 'inherit' }}
+                            >
+                                <span className='w-[16rem]'>PASSENGER</span>
+                                <span className='w-[25rem] ml-[1rem]'>DATE</span>
+                                <span className='w-[8rem]'>GROUP</span>
                             </div>
-                            <div>
-                                <h1 className='h-[10rem] text-[6rem] font-extrabold font-akira'>{result?.result?.isoAlp3 || postData?.result?.ticket?.departureCode}</h1>
-                                <div className='w-[18rem] h-[3.6rem] px-[2rem] shadowall rounded-[0.8rem] flex'>
-                                    <input
-                                        className='w-[12rem] text-[1.6rem] outline-none'
-                                        type='text'
-                                        placeholder='검색 1'
-                                        value={inputValue1} // 첫 번째 입력 값 상태
-                                        onChange={(e) => setInputValue1(e.target.value)} // 입력 값 변경 시 핸들러
-                                        onKeyDown={(e) => {
-                                            if (e.key === 'Enter') {
-                                                searchCountry(inputValue1); // 엔터 키가 눌리면 함수 호출
-                                            }
-                                        }}
-                                    />
-                                    <button className='ml-auto' onClick={() => searchCountry(inputValue1)} >
-                                        <Image src={searchicon} alt='' />
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                        <div className='w-[95%] border-2 border-dashed border-[#CFCFCF] my-[3rem] mx-auto relative z-0' />
-                        <div className={`flex ml-[7rem] text-[1.4rem] font-extrabold font-akira`}
-                            style={{ color: bgColor || 'inherit' }}
-                        >
-                            <span className='w-[16rem]'>PASSENGER</span>
-                            <span className='w-[25rem] ml-[1rem]'>DATE</span>
-                            <span className='w-[8rem]'>GROUP</span>
-                        </div>
-                        <div className={`flex ml-[7rem] text-[1.4rem] font-extrabold text-[#6B6B6B] relative`}>
-                            <span className='w-[16rem] flex mt-[0.3rem]'>{postData?.result.member.memberId}</span>
-                            {dateOpen ? (
-                                <div className='w-[25rem]'>
-                                    <DatePicker
-                                        selected={startDates || undefined}
-                                        onChange={(dates) => {
-                                            const [start, end] = dates;
-                                            setStartDates(start);
-                                            setEndDates(end);
-                                            if (start && end) {
-                                                setDateOpen(false);
-                                            }
-                                        }}
-                                        startDate={startDates || undefined}
-                                        endDate={endDates || undefined}
-                                        selectsRange
-                                        inline
-                                        dateFormat="yyyy. MM. dd"
-                                    />
-                                </div>
-                            ) : (
-                                <div className='w-[25rem] flex items-center ml-[1rem]' onClick={() => setDateOpen(true)}>
-                                    <Image src={date} alt='' />
-                                    {startDates && endDates ? (
-                                        <span>{formatDateRange()}</span>
-                                    ) : (
-                                        <span>{postData?.result.ticket.startDate} - {postData?.result.ticket.endDate}</span>
-                                    )}
-                                </div>
-                            )}
+                            <div className={`flex ml-[7rem] text-[1.4rem] font-extrabold text-[#6B6B6B] relative`}>
+                                <span className='w-[16rem] flex mt-[0.3rem]'>{postData?.result.member.memberId}</span>
+                                {dateOpen ? (
+                                    <div className='w-[25rem]'>
+                                        <DatePicker
+                                            selected={startDates || undefined}
+                                            onChange={(dates) => {
+                                                const [start, end] = dates;
+                                                setStartDates(start);
+                                                setEndDates(end);
+                                                if (start && end) {
+                                                    setDateOpen(false);
+                                                }
+                                            }}
+                                            startDate={startDates || undefined}
+                                            endDate={endDates || undefined}
+                                            selectsRange
+                                            inline
+                                            dateFormat="yyyy. MM. dd"
+                                        />
+                                    </div>
+                                ) : (
+                                    <div className='w-[25rem] flex items-center ml-[1rem]' onClick={() => setDateOpen(true)}>
+                                        <Image src={date} alt='' />
+                                        {startDates && endDates ? (
+                                            <span>{formatDateRange()}</span>
+                                        ) : (
+                                            <span>{postData?.result.ticket.startDate} - {postData?.result.ticket.endDate}</span>
+                                        )}
+                                    </div>
+                                )}
 
-                            <div className='w-[8rem] flex text-[1.6rem]'>
-                                <button className='text-[#FB3463] flex text-[2rem]' onClick={handleDecrease}>-</button>
-                                <span className='mx-[1rem] mt-[0.5rem]'>{passengerCount || postData?.result.ticket.memberNum}</span>
-                                <button className='text-[#FB3463] flex text-[2rem]' onClick={handleIncrease}>+</button>
+                                <div className='w-[8rem] flex text-[1.6rem]'>
+                                    <button className='text-[#FB3463] flex text-[2rem]' onClick={handleDecrease}>-</button>
+                                    <span className='mx-[1rem] mt-[0.5rem]'>{passengerCount || postData?.result.ticket.memberNum}</span>
+                                    <button className='text-[#FB3463] flex text-[2rem]' onClick={handleIncrease}>+</button>
+                                </div>
                             </div>
+                        </div>
+                        <div className={`w-[60rem] h-full bg-[${bgColor}] rounded-r-[1rem] flex ml-auto`}>
+                            <div className='absolute'>
+                                <div className='relative bg-white w-[4rem] h-[4rem] rounded-full -mt-[2rem] -ml-[2rem]'></div>
+                                <div className='relative bg-white w-[4rem] h-[4rem] rounded-full mt-[28rem] -ml-[2rem]'></div>
+                            </div>
+                            <label className='w-full h-full flex cursor-pointer' htmlFor='input-file'>
+                                {thumbnailPreview === null ? (
+                                    <div className="flex flex-col m-auto">
+                                        <Image
+                                            className="w-[23rem] h-[26rem] rounded-[1rem] object-cover"
+                                            src={postData?.result.ticket.image.accessUri}
+                                            alt=""
+                                            width={230}
+                                            height={260}
+                                        />
+                                    </div>
+                                ) : (
+                                    <div className='flex flex-col m-auto'>
+                                        <Image className=' w-[30rem] h-[25rem] rounded-[1rem] object-cover' src={thumbnailPreview} width={400} height={250} alt='' />
+                                    </div>
+                                )}
+
+                            </label>
+                            <input className='hidden' id='input-file' type='file' accept='image/*' onChange={handleImageUpload} />
                         </div>
                     </div>
-                    <div className={`w-[60rem] h-full bg-[${bgColor}] rounded-r-[1rem] flex ml-auto`}>
-                        <div className='absolute'>
-                            <div className='relative bg-white w-[4rem] h-[4rem] rounded-full -mt-[2rem] -ml-[2rem]'></div>
-                            <div className='relative bg-white w-[4rem] h-[4rem] rounded-full mt-[28rem] -ml-[2rem]'></div>
-                        </div>
-                        <label className='w-full h-full flex cursor-pointer' htmlFor='input-file'>
-                            {thumbnailPreview === null ? (
-                                <div className="flex flex-col m-auto">
-                                    <Image
-                                        className="w-[23rem] h-[26rem] rounded-[1rem] object-cover"
-                                        src={postData?.result.ticket.image.accessUri}
-                                        alt=""
-                                        width={230}
-                                        height={260}
-                                    />
-                                </div>
-                            ) : (
-                                <div className='flex flex-col m-auto'>
-                                    <Image className=' w-[30rem] h-[25rem] rounded-[1rem] object-cover' src={thumbnailPreview} width={400} height={250} alt='' />
-                                </div>
-                            )}
+                ) : (
+                    <div className='w-full h-[11rem] border border-[#D9D9D9] rounded-[1rem] flex mx-auto mt-[2rem]'>
+                        <div className={`w-[1.4rem] h-full bg-[${bgColor}] rounded-l-[1rem]`}></div>
+                        <div className='w-fit relative'>
+                            <div className='flex justify-center'>
+                                <div>
+                                    <h1 className='h-[3rem] mt-[1.3rem] text-[2rem] text-[#292929] font-extrabold font-akira'>{result?.result?.isoAlp3 || postData?.result?.ticket?.departureCode}</h1>
+                                    <div className='w-[5rem] h-[1.6rem] px-[0.3rem] shadowall rounded-[0.8rem] flex'>
+                                        <input
+                                            className='w-[3rem] text-[0.8rem] pl-[0.5rem] outline-none'
+                                            type='text'
+                                            placeholder='출발지'
+                                            value={inputValue2} // 첫 번째 입력 값 상태
+                                            onChange={(e) => setInputValue1(e.target.value)} // 입력 값 변경 시 핸들러
+                                            onKeyDown={(e) => {
+                                                if (e.key === 'Enter') {
+                                                    searchCountry(inputValue2); // 엔터 키가 눌리면 함수 호출
+                                                }
+                                            }}
+                                        />
+                                        <button className='ml-auto' onClick={() => searchCountry(inputValue2)} >
+                                            <Image src={searchicon} alt='' width={10} height={10} />
+                                        </button>
+                                    </div>
 
-                        </label>
-                        <input className='hidden' id='input-file' type='file' accept='image/*' onChange={handleImageUpload} />
+                                </div>
+                                <div className='relative bg-white z-10 ml-[7%] mr-[15%]'>
+                                    {
+                                        isTransport ? (
+                                            <div className='w-[1.7rem] h-[10.7rem] absolute z-10 bg-white shadowall rounded-[3rem] flex items-center justify-center mt-[2rem] flex-col space-y-2'>
+                                                {isImageIdx.slice(0, 5).map((item: any, index) => (
+                                                    <div key={index} onClick={() => selectTransport(item.imgsrc)} className="flex items-center justify-center">
+                                                        {/* SVG 이미지에 크기 조정 */}
+                                                        <div style={{ width: '2rem', height: '2rem' }}>
+                                                            {React.cloneElement(item.imgsrc, { width: '2rem', height: '2rem' })}
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        ) : (
+                                            <div
+                                                className='w-[1.7rem] h-[1.7rem] absolute shadowall rounded-full flex items-center justify-center mt-[2rem]'
+                                                onClick={() => setIsTransport(true)}
+                                            >
+                                                {isImageIdx[0]?.imgsrc}
+                                            </div>
+                                        )
+                                    }
+                                </div>
+                                <div className=''>
+                                    <h1 className='h-[3rem] mt-[1.3rem] text-[2rem] text-[#292929] font-extrabold font-akira'>{result?.result?.isoAlp3 || postData?.result?.ticket?.destinationCode}</h1>
+                                    <div className='w-[5rem] h-[1.6rem] px-[0.3rem] shadowall rounded-[0.8rem] flex'>
+                                        <input
+                                            className='w-[3rem] text-[0.8rem] pl-[0.5rem] outline-none'
+                                            type='text'
+                                            placeholder='도착지'
+                                            value={inputValue1} // 두 번째 입력 값 상태
+                                            onChange={(e) => setInputValue1(e.target.value)} // 입력 값 변경 시 핸들러
+                                            onKeyDown={(e) => {
+                                                if (e.key === 'Enter') {
+                                                    searchCountry1(inputValue1); // 엔터 키가 눌리면 함수 호출
+                                                }
+                                            }}
+                                        />
+                                        <button className='ml-auto' onClick={() => searchCountry1(inputValue1)} >
+                                            <Image src={searchicon} alt='' width={10} height={10} />
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className='w-[95%] border border-dashed border-[#CFCFCF] my-[1rem] mx-auto relative z-0' />
+                            <div className={`flex text-[0.5rem] ml-[1rem] font-extrabold font-akira`}
+                                style={{ color: bgColor || 'inherit' }}
+                            >
+                                <span className='w-[5rem]'>PASSENGER</span>
+                                <span className='w-[9rem] ml-[2rem]'>DATE</span>
+                                <span className='w-[2rem] ml-[5.5rem]'>GROUP</span>
+                            </div>
+                            <div className={`flex text-[0.5rem] ml-[1rem] items-center font-extrabold text-[#6B6B6B] relative`}>
+                                <span className='w-[5rem] flex mt-[0.3rem]'>{postData?.result.member.memberId}</span>
+                                <DateInput2 onDateChange={handleDateChange} startDate={String(startDate)} endDate={String(endDate)} setEndDate={setEndDate} setStartDate={setStartDate} />
+                                <div className='w-[5rem] flex text-[0.8rem] items-center'>
+                                    <button className='text-[#FB3463] flex text-[1.2rem] items-center -mt-[0.2rem]' onClick={handleDecrease}>-</button>
+                                    <span className='mx-[0.5rem]'>{passengerCount}</span>
+                                    <button className='text-[#FB3463] flex text-[1.2rem] items-center -mt-[0.2rem]' onClick={handleIncrease}>+</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div className={`w-[10rem] h-full bg-[${bgColor}] rounded-r-[1rem] flex ml-auto`}>
+                            <div className='absolute'>
+                                <div className='relative bg-white w-[1.3rem] sm:w-[1.3rem] h-[1.3rem] rounded-full -mt-[0.6rem] -ml-[0.8rem]'></div>
+                                <div className='relative bg-white w-[1.3rem] h-[1.3rem] rounded-full mt-[9.4rem] -ml-[0.8rem]'></div>
+                            </div>
+                            <label className='w-fit h-full flex cursor-pointer p-[0.7rem]' htmlFor='input-file'>
+                                {thumbnailPreview === null ? (
+                                    <div className='flex flex-col justify-center items-center m-auto w-[8.5rem] h-[9.5rem] rounded-[1rem] overflow-hidden'>
+                                        <Image
+                                            className='w-full h-full object-cover'
+                                            src={postData?.result.ticket.image.accessUri}
+                                            alt=''
+                                            width={85}
+                                            height={95}
+                                        />
+                                    </div>
+                                ) : (
+                                    <div className='flex flex-col justify-center items-center m-auto w-[8.5rem] h-[9.5rem] rounded-[1rem] overflow-hidden'>
+                                        <Image
+                                            className='w-full h-full object-cover'
+                                            src={thumbnailPreview}
+                                            alt=''
+                                            width={85}
+                                            height={95}
+                                        />
+                                    </div>
+                                )}
+                            </label>
+                            <input className='hidden' id='input-file' type='file' accept='image/*' onChange={handleImageUpload} />
+                        </div>
                     </div>
-                </div>
+                )}
                 <>
                     <div className="h-screen w-full overflow-hidden shadowall mt-[2rem] rounded-[0.8rem]">
                         <form
@@ -622,16 +748,16 @@ function PostEdit({ params }: { params: { editNum: number } }) {
 
                         </form>
                     </div>
-                    <div className='w-full h-[13rem] shadowall mt-[0.5rem] mb-[10rem]'>
-                        <input className='text-[1.6rem] font-medium w-[50rem] outline-none ml-[6rem] mt-[3.4rem]'
+                    <div className='w-full h-[18rem] shadowall mt-[0.5rem] mb-[10rem]'>
+                        <input className={`text-[1.6rem] font-medium w-[50rem] outline-none ${typeof window !== 'undefined' && window.innerWidth > 600 ? "ml-[6rem]" : "ml-[2rem]"} mt-[3.4rem]`}
                             type='text'
                             placeholder='태그를 3개 이상 입력해주세요.'
                             value={inputValue}
                             onChange={handleInputChange}
                             onKeyDown={handleKeyDown} />
-                        <div className='flex ml-[6rem] mt-[1rem]'>
-                            {tags.map((tag, index) => (
-                                <span key={index} className='flex items-center bg-[#fa3463] text-white rounded-[1.6rem] text-[1.6rem] px-[0.8rem] py-[0.4rem] mr-2'>
+                        <div className={`flex flex-wrap ${typeof window !== 'undefined' && window.innerWidth > 600 ? "ml-[6rem]" : "ml-[2rem]"}`}>
+                            {tags?.map((tag, index) => (
+                                <span key={index} className='flex items-center mt-[1rem] bg-[#fa3463] text-white rounded-[1.6rem] text-[1.6rem] px-[0.8rem] py-[0.4rem] mr-2'>
                                     {tag}
                                     <button
                                         className='ml-2 text-white cursor-pointer pb-[0.3rem] text-[1.4rem]' // X 버튼 스타일

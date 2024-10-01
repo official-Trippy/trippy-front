@@ -521,33 +521,6 @@ function PostWrite() {
                             </div>
                             <div className={`flex ml-[7rem] text-[1.4rem] font-extrabold text-[#6B6B6B] relative`}>
                                 <span className='w-[17rem] flex mt-[0.3rem]'>{memberData?.result.memberId}</span>
-                                {/* {dateOpen ? (
-                                    <div className='w-[25rem]'>
-                                        <DatePicker
-                                            selected={startDate || undefined}
-                                            onChange={(dates) => {
-                                                const [start, end] = dates;
-                                                setStartDate(start);
-                                                setEndDate(end);
-                                                if (start && end) {
-                                                    setDateOpen(false);
-                                                }
-                                            }}
-                                            startDate={startDate || undefined}
-                                            endDate={endDate || undefined}
-                                            selectsRange
-                                            inline
-                                            dateFormat="yyyy. MM. dd"
-                                        />
-                                    </div>
-                                ) : (
-                                    <div className='w-[25rem] flex items-center' onClick={() => setDateOpen(true)}>
-                                        <Image src={date} alt='' />
-                                        {startDate && endDate && (
-                                            <span>{formatDateRange()}</span>
-                                        )}
-                                    </div>
-                                )} */}
                                 <DateInput2 onDateChange={handleDateChange} startDate={String(startDate)} endDate={String(endDate)} setEndDate={setEndDate} setStartDate={setStartDate} />
                                 <div className='w-[8rem] flex text-[1.6rem]'>
                                     <button className='text-[#FB3463] flex text-[2rem]' onClick={handleDecrease}>-</button>

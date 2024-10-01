@@ -299,7 +299,7 @@ const RecommendBoard = () => {
                             height: '25px',
                             position: 'absolute',
                             top: '50%',
-                            transform: 'translateY(-50%)',
+                            transform: 'translateY(-60%)',
                             right: '-30px',
                             zIndex: 999,
                         }}
@@ -313,7 +313,7 @@ const RecommendBoard = () => {
                     width={60}
                     height={60}
                     onClick={() => handleScrollOotd('left')}
-                    className="absolute left-[-30px] top-[60%] transform -translate-y-1/2 z-10"
+                    className={`absolute left-[-30px] top-[60%] transform ${window.innerWidth < 700 ? "-translate-y-2/5" : "-translate-y-1/2"} z-10`}
                 />
             )}
             <div className='relative mx-auto '>
@@ -424,7 +424,7 @@ const RecommendBoard = () => {
 
                                         {/* <TagContainer item={item} /> */}
                                         <div className={`pb-4 ${window.innerWidth < 500 ? 'hidden' : ''}`}>
-                                            <div className="w-full flex items-center">
+                                            <div className="w-full flex items-center mt-[1.5rem]">
                                                 <div className="flex items-center pl-[2rem] pr-[1rem]">
                                                     <div className="relative w-[24px] h-[24px]">
                                                         <Image
@@ -482,7 +482,7 @@ const RecommendBoard = () => {
                     width={60}
                     height={60}
                     onClick={() => handleScrollOotd('right')}
-                    className="absolute right-[-30px] top-[60%] transform -translate-y-1/2 z-10"
+                    className={`absolute right-[-30px] top-[60%] transform ${window.innerWidth < 700 ? "-translate-y-2/5" : "-translate-y-1/2"} z-10`}
                 />
             )}
         </div>

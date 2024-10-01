@@ -123,7 +123,7 @@ function RecentPost({ allPosts, setAllPosts, boardData, boardRefetch, PAGE_SIZE,
         }
     }, [loading]);
 
-    if (loading || showSkeleton) {
+    if (loading || showSkeleton || isFollowingLoading) {
         return <SkeletonBoard />;
     };
 

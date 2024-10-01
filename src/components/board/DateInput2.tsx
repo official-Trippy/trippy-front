@@ -42,21 +42,30 @@ const DateInput2: React.FC<DateInputProps> = ({
 
     // 날짜 변경 시 상태 업데이트
     setSelectedDates([start, end]);
-    setStartDate(String(start));
-    setEndDate(String(end));
+
+    // 시작 날짜와 종료 날짜 설정
+    const formattedStart = start ? format(start, 'yyyyMMdd') : null;
+    const formattedEnd = end ? format(end, 'yyyyMMdd') : null;
+
+    setStartDate(start);
+    setEndDate(end);
 
     // 입력 값 업데이트
     if (start && end) {
-      setInputValue(`${format(start, 'yyyyMMdd')} - ${format(end, 'yyyyMMdd')}`);
+      setInputValue(`${formattedStart} - ${formattedEnd}`);
     } else if (start) {
-      setInputValue(format(start, 'yyyyMMdd'));
+      setInputValue(String(formattedStart));
     } else if (end) {
-      setInputValue(format(end, 'yyyyMMdd'));
+      setInputValue(String(formattedEnd));
     } else {
       setInputValue('');
     }
 
-    onDateChange([start ? format(start, 'yyyyMMdd') : null, end ? format(end, 'yyyyMMdd') : null]);
+    // 날짜 변경 콜백 호출
+    onDateChange([formattedStart, formattedEnd]);
+
+    // 상태 업데이트 후 콘솔 로그
+    console.log(formattedStart, formattedEnd);
   };
 
   const handleCalendarClick = () => {
