@@ -28,6 +28,7 @@ export default function KakaoTalk() {
 
         console.log("Access token received:", accessToken);
         console.log("data returned from api: ", data); 
+        
 
         const socialName = "kakao";
         const roleRes = await axios.post(
@@ -43,6 +44,8 @@ export default function KakaoTalk() {
         const role = roleRes.data.result.role;
         Cookies.set("accessToken", roleRes.data.result.accessToken);
         Cookies.set("role", role);
+
+        window.history.replaceState(null, "", "/blogRegister");
 
         console.log("User role received:", role);
         if (role === "MEMBER" || role === "ADMIN") {
