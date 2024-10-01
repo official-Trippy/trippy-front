@@ -17,7 +17,7 @@ import { getByteLength } from "@/constants/getByteLength";
 import Cookies from "js-cookie";
 import Cropper, { Area } from "react-easy-crop";
 import { getCroppedImg } from "@/utils/getCroppedImg";
-import { debounce } from 'lodash';  
+import { debounce } from "lodash";
 
 const BlogRegisterFirst = () => {
   const [profileImage, setProfileImage] = useState<{
@@ -84,19 +84,19 @@ const BlogRegisterFirst = () => {
   // 닉네임 입력 핸들러
   const handleNickName = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-  
+
     const byteLength = getByteLength(value);
     if (byteLength > 16) return;
-  
+
     setNickName(value);
     setIsNickNameTouched(true); // 닉네임 필드가 수정되었음을 추적
-  
+
     // 욕설 체크
     if (checkSwearWords(value)) {
       setNickNameError("욕설이 포함되었습니다. 다시 입력해주세요.");
       return;
     }
-  
+
     // 닉네임 형식 체크
     if (!validateNickName(value)) {
       console.log(validateNickName);
@@ -104,41 +104,41 @@ const BlogRegisterFirst = () => {
       debouncedNickNameCheck.cancel();
       return; // 형식이 맞지 않으면 중복 체크 중단
     }
-  
-    console.log(validateNickName); 
+
+    console.log(validateNickName);
     // 형식이 맞는 경우 중복 체크 실행
     setNickNameError(""); // 형식이 맞으면 에러 초기화
     debouncedNickNameCheck(value); // 2초 후 중복 체크 실행
   };
-  
+
   // 블로그 이름 입력 핸들러
   const handleBlogName = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-  
+
     const byteLength = getByteLength(value);
     if (byteLength > 30) return;
-  
+
     setBlogName(value);
     setIsBlogNameTouched(true); // 블로그 이름 필드가 수정되었음을 추적
-  
+
     // 욕설 체크
     if (checkSwearWords(value)) {
       setBlogNameError("욕설이 포함되었습니다. 다시 입력해주세요.");
       return;
     }
-  
+
     // 블로그 이름 형식 체크
     if (!validateBlogName(value)) {
       setBlogNameError("형식이 올바르지 않습니다. 다시 입력해 주세요.");
       debouncedBlogNameCheck.cancel();
       return; // 형식이 맞지 않으면 중복 체크 중단
     }
-  
+
     // 형식이 맞는 경우 중복 체크 실행
     setBlogNameError(""); // 형식이 맞으면 에러 초기화
     debouncedBlogNameCheck(value); // 2초 후 중복 체크 실행
   };
-  
+
   // 닉네임 중복 체크 함수
   const handleNickNameBlur = async (value: string) => {
     try {
@@ -150,18 +150,19 @@ const BlogRegisterFirst = () => {
       }
     } catch (error) {
       console.error("Error checking nickname duplication:", error);
-      setNickNameError("서버에서 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
+      setNickNameError(
+        "서버에서 오류가 발생했습니다. 잠시 후 다시 시도해주세요."
+      );
     }
   };
-  
+
   const validateNickName = (nickName: string) => {
     const regex = /^(?=.*[a-z0-9가-힣])[a-z0-9가-힣 ]{2,16}$/; // 한글 자음/모음, 초성 허용 안함 + 공백 허용
     const incompleteKoreanCharRegex = /[ㄱ-ㅎㅏ-ㅣ]/; // 자음, 모음만 입력되었는지 체크
     if (incompleteKoreanCharRegex.test(nickName)) return false; // 자음/모음만 있는 경우 false
     return regex.test(nickName); // 정규식이 일치하면 true 반환
-};
+  };
 
-  
   // 블로그 이름 중복 체크 함수
   const handleBlogNameBlur = async (value: string) => {
     try {
@@ -173,10 +174,12 @@ const BlogRegisterFirst = () => {
       }
     } catch (error) {
       console.error("Error checking blog name duplication:", error);
-      setBlogNameError("서버에서 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
+      setBlogNameError(
+        "서버에서 오류가 발생했습니다. 잠시 후 다시 시도해주세요."
+      );
     }
   };
-  
+
   // 블로그 이름 형식 체크 함수
   const validateBlogName = (blogName: string) => {
     const regex = /^[가-힣a-zA-Z0-9 ]{2,28}$/; // 한글, 영문, 숫자, 공백만 허용
@@ -185,24 +188,23 @@ const BlogRegisterFirst = () => {
     return regex.test(blogName); // 정규 표현식이 일치하면 true 반환
   };
 
-
   const handleBlogIntroduce = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-  
+
     // 20글자 초과 시 더 이상 입력되지 않도록 막음
     if (value.length > 20) {
       return; // 입력 자체를 차단
     }
-  
+
     // 입력값을 항상 업데이트
     setBlogIntroduce(value);
-  
+
     // 욕설 체크
     if (checkSwearWords(value)) {
       setBlogIntroduceError("욕설이 포함되었습니다. 다시 입력해주세요.");
       return;
     }
-  
+
     // 에러가 없을 때 에러 메시지 초기화
     setBlogIntroduceError("");
   };
@@ -236,8 +238,10 @@ const BlogRegisterFirst = () => {
       const croppedBlob = await getCroppedImg(imageSrc, croppedAreaPixels); // 크롭된 이미지 가져오기
 
       if (croppedBlob) {
-        const fileName = 'croppedImage.jpg'; // 파일 이름 지정
-        const croppedFile = new File([croppedBlob], fileName, { type: 'image/jpeg' });
+        const fileName = "croppedImage.jpg"; // 파일 이름 지정
+        const croppedFile = new File([croppedBlob], fileName, {
+          type: "image/jpeg",
+        });
 
         // 크롭된 이미지 업로드
         const response = await uploadImage(croppedFile);
@@ -256,7 +260,11 @@ const BlogRegisterFirst = () => {
   };
 
   const handleSubmit = async () => {
-    if (!nickNameError.includes("사용 가능") || !blogNameError.includes("사용 가능") || !imageUploaded) {
+    if (
+      !nickNameError.includes("사용 가능") ||
+      !blogNameError.includes("사용 가능") ||
+      !imageUploaded
+    ) {
       return;
     }
     try {
@@ -266,7 +274,7 @@ const BlogRegisterFirst = () => {
         blogName: blogName,
         blogIntroduce: blogIntroduce,
       };
-  
+
       console.log(data);
       setUserInfo(data);
       const response = await signupCommon(data);
@@ -276,161 +284,169 @@ const BlogRegisterFirst = () => {
       console.error("Error signing up:", error);
     }
   };
-  
 
   return (
     <div className="min-h-[calc(100dvh-60px)] flex flex-col justify-between flex-col-reverse mb-[60px] sm:flex-col sm-700:min-h-[100vh] sm-700:justify-center sm-700:mb-0 items-center w-full">
       <div className="w-[90%] max-w-[400px] mx-auto">
-      <div className="w-full flex justify-center mt-[20px]">
-      <Image src={BlogStep1} alt="Logo" className="w-[30rem]"  />
-    </div>
-    </div>
-    <div className="w-[90%] max-w-[400px] mx-auto">
-      <div className="mt-[20px]">
-        <div className="sign-up-info">기본 회원 정보를 등록해주세요</div>
-        <div className="mt-[2rem]">
-          <div className="sign-up-info">프로필 사진</div>
-          <div className="mt-[2rem] flex items-center relative">
-            <div className="rounded-full overflow-hidden w-[100px] h-[100px]">
-              {profileImage ? (
-                <Image
-                  src={profileImage.accessUri}
-                  alt="Profile"
-                  className="object-cover w-full h-full"
-                  width={100}
-                  height={100}
-                  unoptimized={true}
+        <div className="w-full flex justify-center mt-[20px]">
+          <Image src={BlogStep1} alt="Logo" className="w-[30rem]" />
+        </div>
+      </div>
+      <div className="w-[90%] max-w-[400px] mx-auto">
+        <div className="mt-[20px]">
+          <div className="sign-up-info">기본 회원 정보를 등록해주세요</div>
+          <div className="mt-[2rem]">
+            <div className="sign-up-info">프로필 사진</div>
+            <div className="mt-[2rem] flex items-center relative">
+              <div className="rounded-full overflow-hidden w-[100px] h-[100px]">
+                {profileImage ? (
+                  <Image
+                    src={profileImage.accessUri}
+                    alt="Profile"
+                    className="object-cover w-full h-full"
+                    width={100}
+                    height={100}
+                    unoptimized={true}
+                  />
+                ) : (
+                  <Image
+                    src={DefaultProfileImg}
+                    alt="Default Profile"
+                    width={100}
+                    height={100}
+                    className="object-cover w-full h-full"
+                  />
+                )}
+              </div>
+              <div className="ml-8 flex flex-col items-center">
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageUpload}
+                  className="hidden"
+                  id="imageUpload"
                 />
-              ) : (
-                <Image
-                  src={DefaultProfileImg}
-                  alt="Default Profile"
-                  width={100}
-                  height={100}
-                  className="object-cover w-full h-full"
-                />
-              )}
-            </div>
-            <div className="ml-8 flex flex-col items-center">
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleImageUpload}
-                className="hidden"
-                id="imageUpload"
-              />
-              <label
-                htmlFor="imageUpload"
-                className="max-w-[200px] px-8 py-4 custom-label text-center"
-              >
-                프로필 사진 업로드
-              </label>
-              {profileImage && (
+                <label
+                  htmlFor="imageUpload"
+                  className="max-w-[200px] px-8 py-4 custom-label text-center"
+                >
+                  프로필 사진 업로드
+                </label>
+                {profileImage && (
                   <button
                     onClick={handleImageDelete}
                     className="absolute mt-2 text-[1rem] text-gray-500 hover:text-gray-900"
-                    style={{ top: '76px', left: '165px' }} 
+                    style={{ top: "76px", left: "165px" }}
                   >
                     이미지 삭제
                   </button>
                 )}
-            </div>
-          </div>
-          <div className="flex-col">
-            <div className="mt-[2rem]">
-              <label htmlFor="nickName" className="sign-up-info block">
-                닉네임
-              </label>
-              <input
-                type="text"
-                value={nickName}
-                onChange={handleNickName}
-                placeholder="한글 2-8자, 영어 4-16자 이내로 입력 가능합니다."
-                className="w-full px-4 py-2 mt-[2rem] mb-2 h-[4rem] rounded-xl border border-gray-300 focus:border-[#FB3463] focus:outline-none"
-                style={{ background: "var(--4, #F5F5F5)", fontSize: "1.2rem" }}
-              />
-              <div className="h-[1.7rem]">
-                {nickNameError && (
-                  <p
-                    className={`text-${
-                      nickNameError.includes("사용 가능") ? "green" : "red"
-                    }-500`}
-                  >
-                    {nickNameError}
-                  </p>
-                )}
               </div>
             </div>
-            <div className="mt-[2rem]">
-              <label htmlFor="blogName" className="sign-up-info block">
-                블로그 이름
-              </label>
-              <input
-                type="text"
-                value={blogName}
-                onChange={handleBlogName}
-                placeholder="한글 2-14자, 영어 4-28자 이내로 입력 가능합니다."
-                className="w-full px-4 py-2 mt-[2rem] mb-2 h-[4rem] rounded-xl border border-gray-300 focus:border-[#FB3463] focus:outline-none"
-                style={{ background: "var(--4, #F5F5F5)", fontSize: "1.2rem" }}
-              />
-              <div className="h-[1.7rem]">
-                {blogNameError && (
-                  <p
-                    className={`text-${
-                      blogNameError.includes("사용 가능") ? "green" : "red"
-                    }-500`}
-                  >
-                    {blogNameError}
-                  </p>
-                )}
+            <div className="flex-col">
+              <div className="mt-[2rem]">
+                <label htmlFor="nickName" className="sign-up-info block">
+                  닉네임
+                </label>
+                <input
+                  type="text"
+                  value={nickName}
+                  onChange={handleNickName}
+                  placeholder="한글 2-8자, 영어 4-16자 이내로 입력 가능합니다."
+                  className="w-full px-4 py-2 mt-[2rem] mb-2 h-[4rem] rounded-xl border border-gray-300 focus:border-[#FB3463] focus:outline-none"
+                  style={{
+                    background: "var(--4, #F5F5F5)",
+                    fontSize: "1.2rem",
+                  }}
+                />
+                <div className="h-[1.7rem]">
+                  {nickNameError && (
+                    <p
+                      className={`text-${
+                        nickNameError.includes("사용 가능") ? "green" : "red"
+                      }-500`}
+                    >
+                      {nickNameError}
+                    </p>
+                  )}
+                </div>
+              </div>
+              <div className="mt-[2rem]">
+                <label htmlFor="blogName" className="sign-up-info block">
+                  블로그 이름
+                </label>
+                <input
+                  type="text"
+                  value={blogName}
+                  onChange={handleBlogName}
+                  placeholder="한글 2-14자, 영어 4-28자 이내로 입력 가능합니다."
+                  className="w-full px-4 py-2 mt-[2rem] mb-2 h-[4rem] rounded-xl border border-gray-300 focus:border-[#FB3463] focus:outline-none"
+                  style={{
+                    background: "var(--4, #F5F5F5)",
+                    fontSize: "1.2rem",
+                  }}
+                />
+                <div className="h-[1.7rem]">
+                  {blogNameError && (
+                    <p
+                      className={`text-${
+                        blogNameError.includes("사용 가능") ? "green" : "red"
+                      }-500`}
+                    >
+                      {blogNameError}
+                    </p>
+                  )}
+                </div>
+              </div>
+              <div className="mt-[2rem]">
+                <label htmlFor="blogIntroduce" className="sign-up-info block">
+                  한 줄 소개(선택)
+                </label>
+                <input
+                  type="text"
+                  value={blogIntroduce}
+                  onChange={handleBlogIntroduce}
+                  placeholder="20글자 이내로 소개글을 작성해보세요."
+                  className="w-full px-4 py-2 mt-[2rem] mb-2 h-[4rem] rounded-xl border border-gray-300 focus:border-[#FB3463] focus:outline-none"
+                  style={{
+                    background: "var(--4, #F5F5F5)",
+                    fontSize: "1.2rem",
+                  }}
+                />
+                <div className="h-[1.7rem]">
+                  {blogIntroduceError && (
+                    <p className="text-red-500">{blogIntroduceError}</p>
+                  )}
+                </div>
               </div>
             </div>
-            <div className="mt-[2rem]">
-              <label htmlFor="blogIntroduce" className="sign-up-info block">
-                한 줄 소개(선택)
-              </label>
-              <input
-                type="text"
-                value={blogIntroduce}
-                onChange={handleBlogIntroduce}
-                placeholder="20글자 이내로 소개글을 작성해보세요."
-                className="w-full px-4 py-2 mt-[2rem] mb-2 h-[4rem] rounded-xl border border-gray-300 focus:border-[#FB3463] focus:outline-none"
-                style={{ background: "var(--4, #F5F5F5)", fontSize: "1.2rem" }}
-              />
-              <div className="h-[1.7rem]">
-                {blogIntroduceError && (
-                  <p className="text-red-500">{blogIntroduceError}</p>
-                )}
-              </div>
-            </div>
           </div>
-          </div>
-          </div>
-          </div>
-          <div className="w-[90%] max-w-[400px] mx-auto mt-auto sm-700:mt-0">
-          <div className="text-center">
+        </div>
+      </div>
+      <div className="w-[90%] max-w-[400px] mx-auto mt-auto sm-700:mt-0">
+        <div className="text-center">
           <button
-              type="submit"
-              className={`mx-auto w-full sm-700:w-[120px] h-[44px] mt-[2rem] mb-[2rem] text-white py-2 rounded-xl flex justify-center items-center ${
-                !nickNameError.includes("사용 가능") ||
-                !blogNameError.includes("사용 가능") ||
-                !imageUploaded
-                  ? "cursor-not-allowed bg-[#cfcfcf] hover:bg-[#cfcfcf]"
-                  : "bg-btn-color"
-              }`}
-              onClick={handleSubmit}
-              style={{ fontSize: "1.2rem" }}
-              disabled={
-                !nickNameError.includes("사용 가능") ||
-                !blogNameError.includes("사용 가능") ||
-                !imageUploaded
-              }
-            >
-              다음
-            </button>
-          </div>
-          </div>
-          {isImageModalOpen && (
+            type="submit"
+            className={`mx-auto w-full sm-700:w-[120px] h-[44px] mt-[2rem] mb-[2rem] text-white py-2 rounded-xl flex justify-center items-center ${
+              !nickNameError.includes("사용 가능") ||
+              !blogNameError.includes("사용 가능") ||
+              !imageUploaded
+                ? "cursor-not-allowed bg-[#cfcfcf] hover:bg-[#cfcfcf]"
+                : "bg-btn-color"
+            }`}
+            onClick={handleSubmit}
+            style={{ fontSize: "1.2rem" }}
+            disabled={
+              !nickNameError.includes("사용 가능") ||
+              !blogNameError.includes("사용 가능") ||
+              !imageUploaded
+            }
+          >
+            다음
+          </button>
+        </div>
+      </div>
+      {isImageModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white py-4 px-8 rounded-lg shadow-lg">
             <h3 className="mb-4 text-center">이미지 영역 선택</h3>
@@ -442,20 +458,28 @@ const BlogRegisterFirst = () => {
                   zoom={zoom}
                   aspect={1} // 1:1 비율로 설정
                   onCropChange={setCrop}
-                  onCropComplete={(croppedArea, croppedAreaPixels) => setCroppedAreaPixels(croppedAreaPixels)}
+                  onCropComplete={(croppedArea, croppedAreaPixels) =>
+                    setCroppedAreaPixels(croppedAreaPixels)
+                  }
                   onZoomChange={setZoom}
                   objectFit="cover" // 이미지 여백을 없애고 화면에 맞춤
                 />
               )}
             </div>
             <div className="flex justify-end mt-4">
-                <div className="bg-btn-color text-white px-4 py-2 font-medium font-['Pretendard'] rounded mr-2 cursor-pointer" onClick={handleCropImage}>
-                  완료
-                </div>
-                <div className="border border-[#cfcfcf] text-[#cfcfcf] px-4 py-2 font-medium font-['Pretendard'] rounded cursor-pointer" onClick={() => setIsImageModalOpen(false)}>
-                  취소
-                </div>
+              <div
+                className="bg-btn-color text-white px-4 py-2 font-medium font-['Pretendard'] rounded mr-2 cursor-pointer"
+                onClick={handleCropImage}
+              >
+                완료
               </div>
+              <div
+                className="border border-[#cfcfcf] text-[#cfcfcf] px-4 py-2 font-medium font-['Pretendard'] rounded cursor-pointer"
+                onClick={() => setIsImageModalOpen(false)}
+              >
+                취소
+              </div>
+            </div>
           </div>
         </div>
       )}

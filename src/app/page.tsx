@@ -7,7 +7,7 @@ import Header from "@/components/shared/header/Header";
 import getBoard, { getTotalBoardCount } from "@/services/board/get/getBoard";
 import { useEffect, useState } from "react";
 import RecommendBoard from "@/components/pages/home/RecommendBoard";
-
+import { useRouter } from "next/navigation";
 
 const PAGE_SIZE = 10;
 
@@ -17,7 +17,9 @@ export default function Home() {
   const [visibleCards, setVisibleCards] = useState(4);
   const [isLikeNum, setIsLikeNum] = useState([]);
   const [pages, setPages] = useState(0);
+  const [hasRefreshed, setHasRefreshed] = useState(false);
 
+  const router = useRouter();
 
   useEffect(() => {
     const handleResize = () => {
@@ -33,12 +35,11 @@ export default function Home() {
       }
     };
 
-    window.addEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
     handleResize(); // 초기 호출
 
-    return () => window.removeEventListener('resize', handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
-
 
   const {
     data: memberData,
@@ -54,18 +55,24 @@ export default function Home() {
   });
 
   const { data: boardData, refetch: boardRefetch } = useQuery({
-    queryKey: ['boardData'],
-    queryFn: () => getBoard(PAGE_SIZE, pages)
-  })
+    queryKey: ["boardData"],
+    queryFn: () => getBoard(PAGE_SIZE, pages),
+  });
 
+  console.log(boardData);
 
-
-  console.log(boardData)
   return (
     <div>
       <RecommendBoard />
-      <RecentPost allPosts={allPosts} setAllPosts={setAllPosts} boardData={boardData} boardRefetch={boardRefetch} PAGE_SIZE={PAGE_SIZE} pages={pages} setPages={setPages} />
-
+      <RecentPost
+        allPosts={allPosts}
+        setAllPosts={setAllPosts}
+        boardData={boardData}
+        boardRefetch={boardRefetch}
+        PAGE_SIZE={PAGE_SIZE}
+        pages={pages}
+        setPages={setPages}
+      />
     </div>
   );
 }

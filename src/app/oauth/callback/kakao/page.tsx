@@ -41,8 +41,10 @@ export default function KakaoTalk() {
         Cookies.set("accessToken", roleRes.data.result.accessToken);
         console.log(roleRes.data);
         console.log("User role received:", role);
-        if (role === "MEMBER") {
+        if (role === "MEMBER" || role === "ADMIN") {
           router.push("/");
+          router.refresh();
+          return;
         } else if (role === "GUEST") {
           router.push("/blogRegister");
         }

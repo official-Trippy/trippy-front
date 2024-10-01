@@ -6,8 +6,10 @@ import kakao from "../../../public/kakao.svg";
 import naver from "../../../public/naver.svg";
 import google from "../../../public/google.svg";
 import NaverLoginHandler from "./naverLogin";
+import { useRouter } from "next/navigation";
 
 const kakaoRedirectUri = process.env.NEXT_PUBLIC_KAKAO_LOGIN_REDIRECT_URI;
+
 const kakaoScope = [
   "profile_nickname",
   "profile_image",
@@ -16,6 +18,8 @@ const kakaoScope = [
 ].join(",");
 
 export default function KakaoLogin() {
+  const router = useRouter();
+
   useEffect(() => {
     // Kakao SDK 로드 및 초기화
     const Kakao = (window as any)?.Kakao;
@@ -59,6 +63,7 @@ export default function KakaoLogin() {
         scope: kakaoScope,
       });
       console.log("Kakao Logging in");
+      router.refresh();
     }
   };
 

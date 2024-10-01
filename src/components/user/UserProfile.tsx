@@ -5,7 +5,7 @@ import { fetchUserProfile } from "@/services/ootd.ts/ootdGet";
 import { UserProfileResponse } from "@/types/ootd";
 import { useUserStore } from "@/store/useUserStore";
 import FollowButton from "../followControl/followButton";
-import DefaultImage from '../../../public/defaultImage.svg';
+import DefaultImage from "../../../public/defaultImage.svg";
 import ImageModal from "@/utils/ImageModal";
 
 const TABS = {
@@ -72,7 +72,7 @@ const UserProfile: React.FC<UserProfileProps> = ({
               alt="Profile"
               width={80}
               height={80}
-              onClick={handleImageClick} 
+              onClick={handleImageClick}
               style={{
                 width: "80px",
                 height: "80px",
@@ -81,7 +81,9 @@ const UserProfile: React.FC<UserProfileProps> = ({
               }}
             />
           </div>
-          <h1 className="text-4xl font-bold mt-[10px] text-center">{nickName}</h1>
+          <h1 className="text-4xl font-bold mt-[10px] text-center">
+            {nickName}
+          </h1>
           <span className="text-xl text-gray-600 mt-[5px]">{email}</span>
           <div className="mt-[10px] flex px-4">
             <span
@@ -101,7 +103,6 @@ const UserProfile: React.FC<UserProfileProps> = ({
             </span>
           </div>
 
-
           <div className="ml-auto flex items-center mt-[30px] mx-auto">
             {targetMemberId && userMemberId && (
               <FollowButton
@@ -109,7 +110,6 @@ const UserProfile: React.FC<UserProfileProps> = ({
                 userMemberId={userMemberId}
               />
             )}
-
           </div>
         </div>
       </div>

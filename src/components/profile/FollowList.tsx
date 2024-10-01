@@ -211,7 +211,7 @@ const FollowList: React.FC<{
                       : handleFollow(user.memberId)
                   }
                 >
-                  {myFollowings.includes(user.memberId) ? "팔로잉" : "맞팔로우"}
+                  {myFollowings.includes(user.memberId) ? "팔로잉" : "팔로우"}
                 </button>
               )}
             </div>
