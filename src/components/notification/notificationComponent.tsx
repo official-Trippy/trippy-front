@@ -100,7 +100,7 @@ const Notification: React.FC = () => {
           src={latestNotification.senderProfileImgUri || "/default-image.png"}
           alt={latestNotification.senderNickName}
         />
-        <div className="flex-1 text-sm font-medium text-white">
+        <div className="flex-1 text-sm font-weight-500 text-white">
           {latestNotification.title}
         </div>
       </div>
@@ -122,7 +122,7 @@ const Notification: React.FC = () => {
         {notifications.slice(0, 4).map((notification) => (
           <div
             key={notification.notifyId}
-            className="w-[337px] h-[60px] bg-gray-100 rounded-lg flex items-center p-4"
+            className="w-[337px] h-[60px] rounded-lg flex items-center p-4"
           >
             <img
               className="w-[60px] h-[60px] rounded-full flex-shrink-0"
@@ -130,7 +130,7 @@ const Notification: React.FC = () => {
               alt={notification.senderNickName}
             />
             <div className="ml-3 w-0 flex-1">
-              <p className="text-sm font-medium text-gray-900">
+              <p className="text-[1rem] font-medium text-gray-900">
                 {notification.title}
               </p>
               <p className="mt-1 text-xs text-gray-500">
@@ -141,9 +141,12 @@ const Notification: React.FC = () => {
         ))}
       </div>
 
-      <div className="mt-4 flex justify-center">
+      {/* 더보기 버튼 */}
+      <div className="mt-auto flex justify-center pt-2 ">
+        {" "}
+        {/* 여기서 pt-2로 위쪽 여백 추가 */}
         <button
-          className="p-2 bg-[#F5F5F5] text-black rounded-lg"
+          className="p-[8px] bg-[#F5F5F5] text-black rounded-lg w-[86px]"
           onClick={() => {
             router.push("/notifications");
           }}

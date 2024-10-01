@@ -28,6 +28,14 @@ const FollowList: React.FC<{
   const currentUser = useUserStore((state) => state.userInfo);
   const currentUserId = currentUser?.memberId;
 
+  const isCurrentUserInList = userData.some(
+    (user) => user.memberId === currentUserId
+  );
+
+  const filteredUserData = isCurrentUserInList
+    ? userData.filter((user) => user.memberId !== currentUserId)
+    : userData;
+
   useEffect(() => {
     const checkAvailability = async () => {
       setIsCheckingAvailability(true);
@@ -128,7 +136,7 @@ const FollowList: React.FC<{
 
   // 로딩 상태를 고려한 처리
   if (isLoading || isCheckingAvailability) {
-    return <div>Loading...</div>;
+    return <div></div>;
   }
 
   if (error) {
@@ -143,25 +151,40 @@ const FollowList: React.FC<{
     <div className="h-[400px]">
       <h3 className="text-2xl font-bold my-12">
         {type === "follower" ? "팔로워" : "팔로잉"}
-        <span className="text-[#FB3463]"> {followCnt}</span>
+        <span className="text-[#FB3463]"> {filteredUserData.length}</span>
       </h3>
       <div>
-        {!userData || userData.length === 0 ? (
-          <div className="text-left my-12 text-3xl">
-            {type === "follower"
-              ? "아직 팔로워가 없습니다. 가장 먼저 팔로우 해주세요!"
-              : "아직 팔로잉이 없습니다. 친해지고 싶은 이웃을 팔로우 해보세요!"}
+        {isCurrentUserInList && (
+          <div className="flex items-center justify-between p-4 border-b border-gray-200 cursor-pointer">
+            <div className="flex items-center">
+              <div className="w-16 h-16 rounded-full overflow-hidden">
+                <img
+                  src={currentUser.profileImageUrl || DefaultImage}
+                  alt="Profile"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <div className="ml-4">
+                <p className="text-lg font-bold">{currentUser.nickName}</p>
+                <p className="text-gray-600">{currentUserId}</p>
+              </div>
+            </div>
           </div>
+        )}
+        {filteredUserData.length === 0 ? (
+          <div className="text-left my-12 text-3xl">목록이 비어 있습니다.</div>
         ) : (
-          userData.map((user) => (
+          filteredUserData.map((user) => (
             <div
               key={user.memberId}
               className="flex items-center justify-between p-4 border-b border-gray-200 cursor-pointer"
-              onClick={() => {
-                goUserPage(user.memberId);
-              }}
             >
-              <div className="flex items-center">
+              <div
+                className="flex items-center"
+                onClick={() => {
+                  goUserPage(user.memberId);
+                }}
+              >
                 <div className="w-16 h-16 rounded-full overflow-hidden">
                   <img
                     src={user.profileImageUrl || DefaultImage}
@@ -174,7 +197,8 @@ const FollowList: React.FC<{
                   <p className="text-gray-600">{user.memberId}</p>
                 </div>
               </div>
-              {currentUserId === memberId && (
+
+              {user.memberId !== currentUserId && ( // Hide button for current user
                 <button
                   className={`px-4 py-2 rounded-lg w-[51px]  text-sm ${
                     myFollowings.includes(user.memberId)
