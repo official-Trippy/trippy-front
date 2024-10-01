@@ -1,11 +1,6 @@
 "use client";
 import Image from "next/image";
 import React, { use, useEffect, useState } from "react";
-import uploadImages from "@/dummy/uploadfile.svg";
-import air from "@/dummy/air.svg";
-import dummys from "@/dummy/dummys.svg";
-import plused from "@/dummy/plus.svg";
-import dummysed from "@/dummy/dummysed.svg";
 import {
   useRouter,
   useSearchParams,
@@ -49,7 +44,19 @@ import BookmarkIcon from "../../../../public/icon_bookmark.svg";
 import BookmarkedIcon from "../../../../public/bookmark-fill.svg";
 import { addBookmark, deleteBookmark } from "@/services/bookmark/bookmark";
 import { formatDate, formatTimetoDays } from "@/constants/dateFotmat";
-// import { postBoardBookMark } from "@/services/board/post/postBoard";
+import { likePostList } from "@/services/ootd.ts/ootdComments";
+import DownIcon from '../../../../public/arrow_down.svg';
+import UpIcon from '../../../../public/icon_up.svg';
+import HeartIcon from '../../../../public/heartedIcon.svg';
+import EmptyHeartIcon from '../../../../public/heartIcon-default.svg';
+import EmptyHeartIcon2 from '../../../../public/heartIcon-fill.svg';
+import CommentIcon from '../../../../public/commentIcon-fill.svg';
+import CommentIcon1 from '../../../../public/commentIcon-default.svg';
+import { fetchRecommendedSpots } from "@/services/ootd.ts/ootdGet";
+import SkeletonOotdDetailRecommend from "@/components/pages/ootd/SkeletonOotdDetailRecommend";
+import RecommendedSpot from "@/components/ootd/RecommendedSpot";
+
+
 
 export default function BoardPage({ params }: { params: { boardId: number } }) {
   const accessToken = Cookies.get("accessToken");
@@ -66,6 +73,36 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
   const [parentIds, setParentIds] = useState(0);
   const [soloReply, setSoloReply] = useState(false);
   const [replyStates, setReplyStates] = useState<boolean[]>([]);
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const [showComments, setShowComments] = useState<boolean>(!!accessToken);
+  const [showLikes, setShowLikes] = useState<boolean>(false);
+  const [isLoadingLikes, setIsLoadingLikes] = useState<boolean>(false);
+  const [likeList, setLikeList] = useState<any[]>([]);
+
+
+  useEffect(() => {
+    const fetchLikeList = async () => {
+      setIsLoadingLikes(true);
+      try {
+        const result = await likePostList(Number(params.boardId));
+        if (result.isSuccess && Array.isArray(result.result.likeList)) {
+          setLikeList(result.result.likeList);
+        } else {
+          setLikeList([]);
+        }
+      } catch (error) {
+        console.error('Error fetching like list:', error);
+        setLikeList([]);
+      }
+      setIsLoadingLikes(false);
+    };
+
+    if (showLikes) {
+      fetchLikeList();
+    }
+  }, [showLikes, Number(params.boardId)]);
+
   const [editingIndexes, setEditingIndexes] = useState<{
     [key: number]: boolean;
   }>({}); // 수정 상태를 관리할 객체
@@ -79,6 +116,10 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
       ...prev,
       [index]: !prev[index], // 해당 인덱스의 수정 상태 토글
     }));
+  };
+
+  const handlePageChange = (pageNumber: number) => {
+    setCurrentPage(pageNumber);
   };
 
   const toggleMyEdit = (index: number) => {
@@ -138,6 +179,19 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
     enabled: !!Number(params.boardId),
   });
 
+  const {
+    data: recommendedSpots,
+    isLoading: isSpotsLoading,
+    error: spotsError,
+  } = useQuery(
+    ["recommendedSpots", Number(params.boardId)],
+    () => fetchRecommendedSpots(Number(params.boardId)),
+    {
+      enabled: !!Number(params.boardId),
+      refetchOnWindowFocus: false,
+    }
+  );
+
   console.log(bookmark);
 
   console.log(postData?.result.member.memberId);
@@ -153,6 +207,14 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
     }
   }, [postData]);
   console.log(following);
+
+  const handleGoProfile = (memberId: string) => {
+    if (memberId) {
+      router.push(`/user/${memberId}`);
+    } else {
+      router.push('/mypage'); // memberId가 없을 경우 내 페이지로 이동
+    }
+  };
 
   const isFollowing =
     Array.isArray(following.followings) &&
@@ -384,6 +446,13 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
     }
   };
 
+
+  const handleToggleLikes = () => {
+    setShowLikes(!showLikes);
+
+    if (!showLikes) setIsReplyOpen(false);
+  };
+
   const bookMarkHandler = async () => {
     try {
       if (bookmark.result) {
@@ -408,6 +477,65 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
     router.push(`/search/${encodeURIComponent(tag)}`);
   };
   console.log(postCommentData)
+
+
+  const itemsPerPage = 18;
+
+  const renderLikeList = (likes: any[]) => {
+    if (!Array.isArray(likes)) {
+      return null;
+    }
+
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    const paginatedLikes = likes.slice(startIndex, endIndex);
+
+    const totalPages = Math.ceil(likes.length / itemsPerPage);
+    const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
+
+    return (
+      <div className="w-full bg-white rounded-lg shadow-md py-4 mt-8">
+        <div className="grid grid-cols-2 xs-400:grid-cols-3 gap-0">
+          {paginatedLikes.map((like, index) => (
+            <div key={index} className="my-4 like-section px-4 py-0 sm-700:px-4 sm-700:py-4">
+              <div className="flex items-center ml-[20px] xs-400:justify-center xs-400:ml-0 py-2 cursor-pointer" onClick={() => handleGoProfile(like.memberId)}>
+                <div className="min-w-12 min-h-12 w-12 h-12 sm-700:w-16 sm-700:h-16 relative mr-4">
+                  <Image
+                    src={like.profileUrl || userInfo.profileImageUrl}
+                    alt="프로필 이미지"
+                    layout="fill"
+                    objectFit="cover"
+                    className="rounded-full"
+                  />
+                </div>
+                <div>
+                  <div className="text-gray-800 text-sm sm:text-base truncate whitespace-nowrap overflow-hidden">
+                    {like.nickName}
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* 페이지네이션 버튼 */}
+        {totalPages > 1 && (
+          <div className="flex justify-center mt-4">
+            {pages.map((pageNumber) => (
+              <button
+                key={pageNumber}
+                onClick={() => handlePageChange(pageNumber)}
+                className={`px-4 py-2 mx-1 rounded ${currentPage === pageNumber ? 'text-[#fa3463] font-semibold' : 'text-[#cfcfcf] font-normal'}`}
+              >
+                {pageNumber}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+    );
+  };
+
   return (
     <div>
       {/* {window.innerWidth > 600 && (<Header />)} */}
@@ -440,22 +568,23 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
                 />
                 {isOpenMenu && (
                   <div
-                    className="absolute bg-white shadow-md rounded-md mt-[3rem] -ml-[10rem] px-[1.5rem] py-[2rem] animate-dropdown z-20 rounded-[0.8rem]"
+                    className="absolute text-[1.2rem] flex flex-col bg-white shadow-md rounded-md mt-[6rem] shadow-2xl -ml-[5rem] animate-dropdown z-20 rounded-[0.8rem]"
                     style={{ opacity: 0, transform: "translateY(-10px)" }}
                   >
                     {" "}
                     {/* 스타일 추가 */}
                     <span
-                      className="cursor-pointer bg-[#F5F5F5] text-[#292929] hover:bg-[#F5F5F5d] block p-[0.8rem] rounded-[0.8rem]"
+                      className="pb-3 pt-2 px-[2rem] text-neutral-900 dark:text-white cursor-pointer text-center font-bold"
                       onClick={editBoardEdit}
                     >
-                      수정하기
+                      수정
                     </span>
+                    <div className="border-t border-gray-300" />
                     <span
-                      className="cursor-pointer bg-[#292929] text-white hover:bg-[#292929cc] block mt-[0.8rem] p-[0.8rem] rounded-[0.8rem]"
+                      className="pb-2 pt-3 px-[2rem] text-[#ff4f4f] cursor-pointer text-center font-bold"
                       onClick={deleteBoardHandler}
                     >
-                      삭제하기
+                      삭제
                     </span>
                   </div>
                 )}
@@ -629,7 +758,7 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
           {postLikeData?.result ? (
             <Image
               className="cursor-pointer"
-              src={heartImg}
+              src={HeartIcon}
               alt=""
               width={24}
               height={24}
@@ -638,7 +767,7 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
           ) : (
             <Image
               className="cursor-pointer"
-              src={nonheartImg}
+              src={showLikes ? EmptyHeartIcon2 : EmptyHeartIcon}
               alt=""
               width={24}
               height={24}
@@ -648,11 +777,12 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
           <span className="text-[1.6rem] font-normal text-[#6B6B6B] mx-[0.5rem]">
             {postData?.result.post.likeCount}
           </span>
-          <Image src={bottomimg} alt="" width={24} height={24} />
+          <Image src={showLikes ? UpIcon : DownIcon} alt="" width={24} height={24} onClick={handleToggleLikes} />
+
           {isReplyOpen ? (
             <Image
               className="ml-[2rem]"
-              src={commentPink}
+              src={CommentIcon}
               alt=""
               width={24}
               height={24}
@@ -660,7 +790,7 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
           ) : (
             <Image
               className="ml-[2rem]"
-              src={moment}
+              src={CommentIcon1}
               alt=""
               width={24}
               height={24}
@@ -687,7 +817,7 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
               alt=""
               width={24}
               height={24}
-              onClick={() => setIsReplyOpen(true)}
+              onClick={() => { setIsReplyOpen(true); setShowLikes(false); }}
             />
           )}
         </div>
@@ -1152,6 +1282,19 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
 
               </div>
             )}
+            {showLikes && (
+              <div className="">
+                {isLoadingLikes ? (
+                  <div></div>
+                ) : (
+                  likeList.length === 0 ? (
+                    <div></div>
+                  ) : (
+                    renderLikeList(likeList)
+                  )
+                )}
+              </div>
+            )}
           </div>
         ) : (
           <div className="w-full h-[25rem] bg-[#F5F5F5]">
@@ -1169,6 +1312,14 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
           </div>
         )}
       </div>
+      {/* {isSpotsLoading ? (
+          <SkeletonOotdDetailRecommend />
+        ) : (
+          <RecommendedSpot 
+          recommendedSpots={recommendedSpots?.result || []}
+          location={formattedLocation}
+        />
+        )} */}
     </div>
   );
 }

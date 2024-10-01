@@ -19,6 +19,8 @@ import { PostAirSVG, PostBusSVG, PostBycicleSVG, PostCarSVG, PostTrainSVG } from
 import { useQuery } from 'react-query'
 import { MemberInfo } from '@/services/auth'
 import Cookies from "js-cookie"
+import DateInput from '@/components/ootd/DateInput'
+import DateInput2 from '@/components/board/DateInput2'
 
 interface CountryResult {
     countryIsoAlp2: string;
@@ -66,6 +68,7 @@ function PostWrite() {
     const [transportStr, setTransportStr] = useState('');
     const accessToken = Cookies.get("accessToken");
     const [isClient, setIsClient] = useState(false);
+    const [date, setDate] = useState<string>('');
 
     useEffect(() => {
         setIsClient(true);
@@ -91,6 +94,9 @@ function PostWrite() {
         ]);
     }, [ticketColor]);
 
+    const handleDateChange = (date: string) => {
+        setDate(date);
+    };
 
     const formatDate = (date: Date | null) => {
         if (!date) return '';
@@ -101,12 +107,16 @@ function PostWrite() {
         });
     };
 
-    function formatDates(date: any) {
-        const year = date?.getFullYear();
-        const month = String(date?.getMonth() + 1).padStart(2, '0');
-        const day = String(date?.getDate()).padStart(2, '0');
+    function formatDates(date: Date | null) {
+        if (!date || !(date instanceof Date) || isNaN(date.getTime())) {
+            return ''; // 날짜가 null이거나 유효하지 않은 경우 빈 문자열 반환
+        }
 
-        return `${year}-${month}-${day}`;
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+
+        return `${year}-${month}-${day}`; // 원하는 형식으로 반환
     }
 
     const formatDateRange = () => {
@@ -482,9 +492,9 @@ function PostWrite() {
                                 </div>
                                 <div className='ml-[5rem]'>
                                     <h1 className='h-[9rem] text-[2rem] xl:text-[6rem] lg:text-[3rem] sm:text-[2rem] text-[#292929]  font-extrabold font-akira'>{result1?.result.isoAlp3}</h1>
-                                    <div className='w-[18rem] h-[3.6rem] px-[2rem] shadowall rounded-[0.8rem] flex mt-4'>
+                                    <div className='w-[11rem] xl:w-[18rem] sm:w-[11rem] h-[3.6rem] px-[2rem] shadowall rounded-[0.8rem] flex mt-4'>
                                         <input
-                                            className='w-[12rem] text-[1.6rem] outline-none'
+                                            className='w-[5rem] xl:w-[12rem] sm:w-[5rem] text-[1.6rem] outline-none'
                                             type='text'
                                             placeholder='도착지'
                                             value={inputValue2} // 두 번째 입력 값 상태
@@ -506,12 +516,12 @@ function PostWrite() {
                                 style={{ color: bgColor || 'inherit' }}
                             >
                                 <span className='w-[17.2rem]'>PASSENGER</span>
-                                <span className='w-[25rem]'>DATE</span>
+                                <span className='w-[25rem] ml-[1.5rem]'>DATE</span>
                                 <span className='w-[8rem]'>GROUP</span>
                             </div>
                             <div className={`flex ml-[7rem] text-[1.4rem] font-extrabold text-[#6B6B6B] relative`}>
                                 <span className='w-[17rem] flex mt-[0.3rem]'>{memberData?.result.memberId}</span>
-                                {dateOpen ? (
+                                {/* {dateOpen ? (
                                     <div className='w-[25rem]'>
                                         <DatePicker
                                             selected={startDate || undefined}
@@ -537,8 +547,8 @@ function PostWrite() {
                                             <span>{formatDateRange()}</span>
                                         )}
                                     </div>
-                                )}
-
+                                )} */}
+                                <DateInput2 onDateChange={handleDateChange} startDate={startDate} endDate={endDate} setEndDate={setEndDate} setStartDate={setStartDate} />
                                 <div className='w-[8rem] flex text-[1.6rem]'>
                                     <button className='text-[#FB3463] flex text-[2rem]' onClick={handleDecrease}>-</button>
                                     <span className='mx-[1rem] mt-[0.5rem]'>{passengerCount}</span>
@@ -546,7 +556,7 @@ function PostWrite() {
                                 </div>
                             </div>
                         </div>
-                        <div className={`w-full max-w-[40rem] h-full bg-[${bgColor}] rounded-r-[1rem] flex ml-auto`}>
+                        <div className={`w-[90%] max-w-[40rem] h-full bg-[${bgColor}] rounded-r-[1rem] flex ml-auto`}>
                             <div className='absolute'>
                                 <div className='relative bg-white w-[4rem] h-[4rem] rounded-full -mt-[2rem] -ml-[2rem]'></div>
                                 <div className='relative bg-white w-[4rem] h-[4rem] rounded-full mt-[28rem] -ml-[2rem]'></div>
@@ -637,42 +647,16 @@ function PostWrite() {
                                 </div>
                             </div>
                             <div className='w-[95%] border border-dashed border-[#CFCFCF] my-[1rem] mx-auto relative z-0' />
-                            <div className={`flex text-[0.5rem] ml-[3rem] font-extrabold font-akira`}
+                            <div className={`flex text-[0.5rem] ml-[1rem] font-extrabold font-akira`}
                                 style={{ color: bgColor || 'inherit' }}
                             >
                                 <span className='w-[5rem]'>PASSENGER</span>
                                 <span className='w-[9rem] ml-[2rem]'>DATE</span>
-                                <span className='w-[2rem]'>GROUP</span>
+                                <span className='w-[2rem] ml-[5.5rem]'>GROUP</span>
                             </div>
-                            <div className={`flex text-[0.5rem] ml-[3rem] items-center font-extrabold text-[#6B6B6B] relative`}>
+                            <div className={`flex text-[0.5rem] ml-[1rem] items-center font-extrabold text-[#6B6B6B] relative`}>
                                 <span className='w-[5rem] flex mt-[0.3rem]'>{memberData?.result.memberId}</span>
-                                {dateOpen ? (
-                                    <div className='w-[5rem] items-center flex absolute'>
-                                        <DatePicker
-                                            selected={startDate || undefined}
-                                            onChange={(dates) => {
-                                                const [start, end] = dates;
-                                                setStartDate(start);
-                                                setEndDate(end);
-                                                if (start && end) {
-                                                    setDateOpen(false);
-                                                }
-                                            }}
-                                            startDate={startDate || undefined}
-                                            endDate={endDate || undefined}
-                                            selectsRange
-                                            inline
-                                            dateFormat="yyyy. MM. dd"
-                                        />
-                                    </div>
-                                ) : (
-                                    <div className='w-[9rem] flex items-center ml-[2rem]' onClick={() => setDateOpen(true)}>
-                                        <Image src={date} alt='' width={10} height={10} />
-                                        {startDate && endDate && (
-                                            <span className='flex items-center mt-[0.3rem]'>{formatDateRange()}</span>
-                                        )}
-                                    </div>
-                                )}
+                                <DateInput2 onDateChange={handleDateChange} startDate={startDate} endDate={endDate} setEndDate={setEndDate} setStartDate={setStartDate} />
 
                                 <div className='w-[5rem] flex text-[0.8rem] items-center'>
                                     <button className='text-[#FB3463] flex text-[1.2rem] items-center -mt-[0.2rem]' onClick={handleDecrease}>-</button>

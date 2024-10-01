@@ -18,11 +18,11 @@ import { useUserStore } from '@/store/useUserStore'; // Zustand 전역 상태 �
 import { fetchRecommendBoard } from '@/services/board/get/getRecBoard';
 import { AirSVG, BusSVG, BycicleSVG, CarSVG, TrainSVG } from '@/components/transportsvg/home';
 import { colorTicket } from '@/types/board';
-import nonheartImg from "@/dummy/heartbin.svg"
-import heartImg from "@/dummy/heart.svg";
-import moment from "@/dummy/moment.svg"
 import SkeletonRecommendOotdPost from '../ootd/SkeletonRecommendOotdPost';
 import SkeletonRecBoard from './SkeletonRecBoard';
+import heartImg from "../../../../public/heartedIcon.svg";
+import nonheartImg from "../../../../public/heartIcon-default.svg";
+import moment from "../../../../public/commentIcon-default.svg";
 
 const TagContainer: React.FC<TagContainerProps> = ({ item }) => {
     const containerRef = useRef<HTMLDivElement | null>(null);
@@ -450,9 +450,9 @@ const RecommendBoard = () => {
                                                     ) : (
                                                         <Image src={nonheartImg} alt='' width={24} height={24} />
                                                     )}
-                                                    <span className="text-[1.6rem] font-normal">{item.post.likeCount}</span>
+                                                    <span className="text-[1.6rem] font-normal ml-[0.7rem]">{item.post.likeCount}</span>
                                                     <Image className='ml-[1rem]' src={moment} alt='' width={24} height={24} />
-                                                    <span className="text-[1.6rem] font-normal">{item.post.commentCount}</span>
+                                                    <span className="text-[1.6rem] font-normal ml-[0.7rem]">{item.post.commentCount}</span>
                                                 </div>
                                             </div>
 
