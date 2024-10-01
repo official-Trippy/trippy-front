@@ -44,9 +44,9 @@ const Header = () => {
     loadUserInfo();
   }, [fetchUserInfo]);
 
-  useEffect(() => {
-    router.refresh();
-  });
+  // useEffect(() => {
+  //   router.refresh();
+  // });
 
   //수정 고려중
   // useEffect(() => {
