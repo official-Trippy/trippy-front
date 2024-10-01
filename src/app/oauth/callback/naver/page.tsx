@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-import axios, { AxiosResponse } from "axios";
+import axios, { AxiosError, AxiosResponse } from "axios";
 import Image from "next/image";
 import Cookies from "js-cookie";
 import LogoMain from "../../../../../public/LogoMain.svg";
@@ -41,16 +41,33 @@ const NaverCallback = () => {
           Cookies.set("accessToken", roleRes.data.result.accessToken);
 
           const role = roleRes.data.result.role;
-          console.log(roleRes.data);
-          console.log(roleRes.data.result.accessToken);
+          console.log("User role received:", role);
+
+          Cookies.set("role", role);
+
+          // 인증 후 경로를 업데이트하여 뒤로 가기를 눌러도 다시 인증 시도하지 않도록 처리
+          window.history.replaceState(null, "", "/blogRegister");
+
+          // role에 따라 페이지 이동
           if (role === "MEMBER") {
             router.push("/");
           } else if (role === "GUEST") {
             router.push("/blogRegister");
           }
         } catch (error) {
-          console.error("Naver login failed:", error);
-          router.push("/");
+          // 타입 가드 추가
+          if (error instanceof AxiosError) {
+            console.error("Error fetching access token:", error);
+
+            // 401 에러 처리
+            if (error.response?.status === 401) {
+              Cookies.remove("accessToken");
+              Cookies.remove("role");
+              router.push("/");
+            }
+          } else {
+            console.error("Unexpected error:", error);
+          }
         }
       }
     };

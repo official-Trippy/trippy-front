@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import Image from "next/image";
 import LogoMain from "../../../../../public/LogoMain.svg";
 import Cookies from "js-cookie";
@@ -12,9 +12,11 @@ const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 export default function GoogleLogin() {
   const router = useRouter();
   const executedRef = useRef(false);
+
   useEffect(() => {
-    if (executedRef.current) return; // If already executed, return
+    if (executedRef.current) return; // 인증 로직이 이미 실행된 경우 중복 실행 방지
     executedRef.current = true;
+
     const urlParams = new URLSearchParams(window.location.search);
     const authCode = urlParams.get("code");
     console.log("authCode :", authCode);
@@ -22,12 +24,13 @@ export default function GoogleLogin() {
     const loginHandler = async (code: string | string[]) => {
       try {
         const res = await axios.post(`/api/oauth/callback/google?code=${code}`);
-        const Data = res.data;
+        const data = res.data;
         const accessToken = res.data.data.access_token;
-        console.log("Access token received:", accessToken);
-        console.log("data returned from api: ", Data); // 데이터 잘 받아오는지 확인용 로그
-        const socialName = "google";
 
+        console.log("Access token received:", accessToken);
+        console.log("data returned from api: ", data); 
+
+        const socialName = "google";
         const roleRes = await axios.post(
           `${backendUrl}/api/member/login/oauth2/${socialName}`,
           {},
@@ -37,25 +40,43 @@ export default function GoogleLogin() {
             },
           }
         );
+
         const role = roleRes.data.result.role;
         Cookies.set("accessToken", roleRes.data.result.accessToken);
-        console.log(roleRes.data);
+        Cookies.set("role", role);
+
         console.log("User role received:", role);
+
+        // 인증 후 경로를 업데이트하여 뒤로 가기를 눌러도 다시 인증 시도하지 않도록 처리
+        window.history.replaceState(null, "", "/blogRegister");
+
+        // role에 따라 페이지 이동
         if (role === "MEMBER") {
           router.push("/");
         } else if (role === "GUEST") {
           router.push("/blogRegister");
         }
       } catch (error) {
-        console.error("Error fetching access token:", error);
+        // 에러 처리 추가
+        if (error instanceof AxiosError) {
+          console.error("Error fetching access token:", error);
+
+          // 401 에러 처리
+          if (error.response?.status === 401) {
+            Cookies.remove("accessToken");
+            Cookies.remove("role");
+            router.push("/");
+          }
+        } else {
+          console.error("Unexpected error:", error);
+        }
       }
     };
 
     if (authCode) {
       loginHandler(authCode);
     }
-  }, []);
-
+  }, [router]);
   return (
     <div className="flex items-center justify-center h-screen">
       <div role="status">
