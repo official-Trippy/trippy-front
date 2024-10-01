@@ -144,13 +144,27 @@ const BlogRegisterFirst = () => {
       }
     };
   
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      // 창을 닫거나 새로고침할 때 쿠키 제거
+      Cookies.remove("accessToken");
+      Cookies.remove("refreshToken");
+      Cookies.remove("role");
+  
+      // 사용자에게 경고 메시지를 띄울 수 있음 (일부 브라우저에서만 작동)
+      const message = "이 페이지를 떠나시겠습니까?";
+      e.returnValue = message; // 브라우저에서 사용자에게 확인 대화 상자를 표시
+      return message;
+    };
+  
     if (typeof window !== 'undefined') {
       window.addEventListener('popstate', handleBackNavigation); // 뒤로 가기 이벤트 리스너 추가
+      window.addEventListener('beforeunload', handleBeforeUnload); // 창 닫기 이벤트 리스너 추가
     }
   
     return () => {
       if (typeof window !== 'undefined') {
         window.removeEventListener('popstate', handleBackNavigation); // 이벤트 리스너 제거
+        window.removeEventListener('beforeunload', handleBeforeUnload); // 창 닫기 이벤트 리스너 제거
       }
     };
   }, [router]);

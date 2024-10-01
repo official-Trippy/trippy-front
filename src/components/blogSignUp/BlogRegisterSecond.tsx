@@ -16,38 +16,29 @@ const BlogRegisterSecond = () => {
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      // 페이지 진입 시 로그인 상태 및 role 값을 확인
-      checkLoginStatus();
-
       // 뒤로 가기 이벤트 감지
       const handlePopState = () => {
-        Swal.fire({
-          title: '회원가입을 처음부터 다시 해야해요!',
-          text: '그래도 계속하시겠습니까?',
-          icon: 'warning',
-          showCancelButton: true,
-          confirmButtonText: '확인',
-          cancelButtonText: '취소',
-          confirmButtonColor: '#FB3463',
-          cancelButtonColor: '#9d9d9d'
-        }).then((result) => {
-          if (result.isConfirmed) {
-            // '확인' 버튼을 눌렀을 때 홈으로 리다이렉트
-            Cookies.remove("accessToken");
-            Cookies.remove("refreshToken");
-            Cookies.remove("role");
-            router.push("/");
-          } else {
-            // 취소했을 때 뒤로 가지 않고 페이지 상태 유지
-            window.history.pushState(null, "", window.location.href);
-          }
-        });
+        // 쿠키 제거 및 홈으로 리다이렉트
+        Cookies.remove("accessToken");
+        Cookies.remove("refreshToken");
+        Cookies.remove("role");
+        router.push("/");
       };
-
+  
+      // 창 닫기 또는 새로 고침 이벤트 처리
+      const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+        // 창을 닫거나 새로 고침할 때 토큰 제거
+        Cookies.remove("accessToken");
+        Cookies.remove("refreshToken");
+        Cookies.remove("role");
+      };
+  
       window.addEventListener("popstate", handlePopState); // 뒤로 가기 이벤트 리스너 추가
-
+      window.addEventListener("beforeunload", handleBeforeUnload); // 창 닫기 및 새로 고침 이벤트 리스너 추가
+  
       return () => {
         window.removeEventListener("popstate", handlePopState); // 컴포넌트 언마운트 시 이벤트 리스너 제거
+        window.removeEventListener("beforeunload", handleBeforeUnload); // 창 닫기 이벤트 리스너 제거
       };
     }
   }, [router]);
