@@ -110,7 +110,7 @@ const NotificationPage = () => {
   return (
     <div>
       <div className="header flex justify-between items-center sm:w-[50%] w-[70%] mx-auto relative">
-        <h1 className="text-5xl">알림</h1>
+        <h1 className="text-4xl font-bold">알림</h1>
       </div>
   
       {/* 총 알림 개수 표시 */}
@@ -121,14 +121,14 @@ const NotificationPage = () => {
             개의 새로운 알림
           </h2>
         ) : (
-          <h2 className="text-3xl font-semibold">새로운 알림이 없습니다</h2>
+          <h2 className="text-2xl font-semibold">새로운 알림이 없습니다.</h2>
         )}
       </div>
   
       {/* 알림 리스트 표시 영역 */}
       <div className="sm:w-[50%] w-[90%] mx-auto my-8 flex justify-start">
         {notificationCount === 0 ? (
-          <div className="text-2xl text-center py-16">알림이 없습니다</div>
+          <div className="text-2xl text-center py-16"></div>
         ) : (
           <div className="flex flex-col space-y-4 w-full">
             {notifications.map((notification) => (
