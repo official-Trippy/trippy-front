@@ -7,17 +7,32 @@ import Header from "@/components/shared/header/Header";
 import getBoard, { getTotalBoardCount } from "@/services/board/get/getBoard";
 import { useEffect, useState } from "react";
 import RecommendBoard from "@/components/pages/home/RecommendBoard";
+import { useRouter } from "next/navigation";
 
 
 const PAGE_SIZE = 10;
 
 export default function Home() {
   const accessToken = Cookies.get("accessToken");
+  const joinToken = Cookies.get("joinToken");
   const [allPosts, setAllPosts] = useState(0);
   const [visibleCards, setVisibleCards] = useState(4);
   const [isLikeNum, setIsLikeNum] = useState([]);
   const [pages, setPages] = useState(0);
+  const router = useRouter();
 
+  useEffect(() => {
+    // 쿠키 값 확인 및 리다이렉션
+    if (!joinToken) {
+      // 쿠키가 없으면 joinToken 생성
+      const newJoinToken = "joinTokens"; // 기본값 또는 UUID 생성 로직
+      Cookies.set("joinToken", newJoinToken, { expires: 3 });
+      router.push("/onBoarding"); // 쿠키가 없으면 /onBoarding 페이지로 이동
+    } else {
+      // 쿠키가 존재할 경우
+      console.log("Join token exists:", joinToken);
+    }
+  }, [joinToken, router]);
 
   useEffect(() => {
     const handleResize = () => {
