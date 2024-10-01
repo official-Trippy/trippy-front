@@ -548,7 +548,7 @@ function PostWrite() {
                                         )}
                                     </div>
                                 )} */}
-                                <DateInput2 onDateChange={handleDateChange} startDate={startDate} endDate={endDate} setEndDate={setEndDate} setStartDate={setStartDate} />
+                                <DateInput2 onDateChange={handleDateChange} startDate={String(startDate)} endDate={String(endDate)} setEndDate={setEndDate} setStartDate={setStartDate} />
                                 <div className='w-[8rem] flex text-[1.6rem]'>
                                     <button className='text-[#FB3463] flex text-[2rem]' onClick={handleDecrease}>-</button>
                                     <span className='mx-[1rem] mt-[0.5rem]'>{passengerCount}</span>
@@ -656,7 +656,7 @@ function PostWrite() {
                             </div>
                             <div className={`flex text-[0.5rem] ml-[1rem] items-center font-extrabold text-[#6B6B6B] relative`}>
                                 <span className='w-[5rem] flex mt-[0.3rem]'>{memberData?.result.memberId}</span>
-                                <DateInput2 onDateChange={handleDateChange} startDate={startDate} endDate={endDate} setEndDate={setEndDate} setStartDate={setStartDate} />
+                                <DateInput2 onDateChange={handleDateChange} startDate={String(startDate)} endDate={String(endDate)} setEndDate={setEndDate} setStartDate={setStartDate} />
 
                                 <div className='w-[5rem] flex text-[0.8rem] items-center'>
                                     <button className='text-[#FB3463] flex text-[1.2rem] items-center -mt-[0.2rem]' onClick={handleDecrease}>-</button>

@@ -5,12 +5,12 @@ import CalendarIcon from '../../../public/icon_calendar.svg';
 import CalendarModal2 from './CalendarModal2';
 
 interface DateInputProps {
-  onDateChange: (dates: [string | null, string | null]) => void; // 날짜 배열 전달
+  onDateChange: any; // 날짜 배열 전달
   initialDate?: string; // 초기 date를 받을 수 있도록 추가
   startDate: string; // 시작 날짜
   endDate: string; // 종료 날짜
-  setStartDate: (date: string | null) => void; // 시작 날짜 설정 함수
-  setEndDate: (date: string | null) => void; // 종료 날짜 설정 함수
+  setStartDate: any; // 시작 날짜 설정 함수
+  setEndDate: any; // 종료 날짜 설정 함수
 }
 
 const DateInput2: React.FC<DateInputProps> = ({
