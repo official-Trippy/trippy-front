@@ -424,7 +424,7 @@ const RecommendBoard = () => {
 
                                         {/* <TagContainer item={item} /> */}
                                         <div className={`pb-4 ${window.innerWidth < 500 ? 'hidden' : ''}`}>
-                                            <div className="w-full flex items-center">
+                                            <div className="w-full flex items-center mt-[1.5rem]">
                                                 <div className="flex items-center pl-[2rem] pr-[1rem]">
                                                     <div className="relative w-[24px] h-[24px]">
                                                         <Image

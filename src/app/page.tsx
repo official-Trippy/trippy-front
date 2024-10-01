@@ -39,20 +39,6 @@ export default function Home() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-
-  const {
-    data: memberData,
-    error,
-    isLoading,
-  } = useQuery({
-    queryKey: ["member", accessToken],
-    queryFn: () => MemberInfo(accessToken),
-    onError: (error) => {
-      // 에러 처리 로직
-      console.error(error);
-    },
-  });
-
   const { data: boardData, refetch: boardRefetch } = useQuery({
     queryKey: ['boardData'],
     queryFn: () => getBoard(PAGE_SIZE, pages)
