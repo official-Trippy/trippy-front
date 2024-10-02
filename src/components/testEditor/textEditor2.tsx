@@ -5,38 +5,49 @@ import { uploadImage } from '@/services/blog';
 interface editorProps {
     postRequest: any;
     setPostRequest: any;
+    onImageUpload: (imageUrl: string) => void; // 이미지 업로드 핸들러를 props로 추가
 }
 
 const inputAPI = process.env.NEXT_PUBLIC_INPUT_TEXT_API_KEY
 
-const MyTinyMCEEditor = ({ postRequest, setPostRequest }: editorProps) => {
+const MyTinyMCEEditor = ({ postRequest, setPostRequest, onImageUpload }: editorProps) => {
 
 
-    const handleEditorChange = (newContent: string) => {
-        setPostRequest((prev: any) => ({
-            ...prev,
-            body: newContent, // 텍스트 내용 업데이트
-        }));
+    const handleEditorChange = (content: string) => {
+        setPostRequest((prev: any) => ({ ...prev, body: content })); // 에디터 내용 업데이트
     };
 
-    const handleImageUpload = async (blobInfo: any, success: (url: string) => void, failure: (message: string) => void) => {
-        const file = blobInfo.blob(); // blobInfo에서 파일 추출
+    // const handleImageUpload = async (blobInfo: any, success: (url: string) => void, failure: (message: string) => void) => {
+    //     const file = blobInfo.blob(); // blobInfo에서 파일 추출
 
+    //     try {
+    //         const uploadedImage = await uploadImage(file);
+    //         const imageUrl = uploadedImage.result; // 업로드한 이미지의 URL
+
+    //         // 성공적인 업로드 후 URL을 배열에 추가
+    //         setPostRequest((prev: any) => ({
+    //             ...prev,
+    //             images: [...prev.images, imageUrl], // 이미지 URL 추가
+    //         }));
+
+    //         // 성공적인 업로드 후 URL을 반환
+    //         success(imageUrl);
+    //     } catch (error) {
+    //         console.error('Error uploading image:', error);
+    //         failure('이미지 업로드에 실패했습니다.'); // 실패 시 에러 메시지
+    //     }
+    // };
+
+    const handleImageUpload = async (blobInfo: any) => {
+        const file = blobInfo.blob(); // Blob 객체 가져오기
         try {
-            const uploadedImage = await uploadImage(file);
-            const imageUrl = uploadedImage.result; // 업로드한 이미지의 URL
-
-            // 성공적인 업로드 후 URL을 배열에 추가
-            setPostRequest((prev: any) => ({
-                ...prev,
-                images: [...prev.images, imageUrl], // 이미지 URL 추가
-            }));
-
-            // 성공적인 업로드 후 URL을 반환
-            success(imageUrl);
+            const uploadedImage = await uploadImage(file); // 이미지 업로드 함수 호출
+            const imageUrl = uploadedImage.result; // 업로드된 이미지 URL 가져오기
+            onImageUpload(imageUrl); // 부모 컴포넌트로 이미지 URL 전달
+            return imageUrl; // TinyMCE에 이미지 URL 반환
         } catch (error) {
             console.error('Error uploading image:', error);
-            failure('이미지 업로드에 실패했습니다.'); // 실패 시 에러 메시지
+            return ''; // 실패 시 빈 문자열 반환
         }
     };
 

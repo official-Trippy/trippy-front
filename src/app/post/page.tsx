@@ -682,6 +682,10 @@ function PostWrite() {
                                 <MyTinyMCEEditor
                                     postRequest={postRequests}
                                     setPostRequest={setPostRequests}
+                                    onImageUpload={(imageUrl) => {
+                                        setImages((prevImages: any) => [...prevImages, imageUrl]); // 이미지 URL을 images 상태에 추가
+                                        setPostRequests((prev) => ({ ...prev, images: [...prev.images, imageUrl] })); // postRequests에도 추가
+                                    }}
                                 />
                                 <textarea
                                     className='w-full h-screen outline-none text-[2rem] px-[6rem] py-[2.5rem]'
