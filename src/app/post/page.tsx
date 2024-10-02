@@ -63,6 +63,7 @@ function PostWrite() {
         body: '',
         images: [] as string[], // 이미지 URL을 저장할 배열
     });
+    console.log(postRequests)
     const [result, setResult] = useState<ApiResponse | null>(null);
     const [result1, setResult1] = useState<ApiResponse | null>(null);
     const [transportStr, setTransportStr] = useState('');
@@ -684,9 +685,10 @@ function PostWrite() {
                                     setPostRequest={setPostRequests}
                                     onImageUpload={(imageUrl) => {
                                         setImages((prevImages: any) => [...prevImages, imageUrl]); // 이미지 URL을 images 상태에 추가
-                                        setPostRequests((prev) => ({ ...prev, images: [...prev.images, imageUrl] })); // postRequests에도 추가
                                     }}
+
                                 />
+
                                 <textarea
                                     className='w-full h-screen outline-none text-[2rem] px-[6rem] py-[2.5rem]'
                                     placeholder='여러분의 경험을 자유롭게 적어주세요.'
