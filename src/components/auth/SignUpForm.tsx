@@ -233,7 +233,7 @@ const SignUpForm = () => {
           onFocus={handleInputFocus}
           onBlur={handleInputBlur}
           onChange={handleEmailChange}
-          placeholder="Trippy@trip.com"
+          placeholder="trippy@trippy.or.kr"
           className="flex-1 border-gray-300 focus:border-[#FB3463] focus:outline-none"
           style={{ background: "var(--4, #F5F5F5)", fontSize: "1.2rem" }}
           disabled={isCodeVerified}

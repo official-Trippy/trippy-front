@@ -134,6 +134,8 @@ const TagContainer: React.FC<TagContainerProps> = ({ item }) => {
     };
   
     const totalCount = data?.result?.ootdList?.length ?? 0; // 전체 OOTD 개수
+
+    console.log(totalCount);
     const totalSlides = Math.ceil(totalCount / itemsPerSlide); // 총 슬라이드 수
   
     const updateItemsPerSlide = () => {
@@ -371,7 +373,7 @@ const TagContainer: React.FC<TagContainerProps> = ({ item }) => {
                     />
                 )}
             </div>
-            {!isAtFirstSlide  && (
+            {!isAtFirstSlide  &&  (
            <Image
            src={SwiperLeftButton}
            alt="Previous"

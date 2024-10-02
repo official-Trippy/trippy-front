@@ -32,10 +32,12 @@ const GoogleLoginButton = () => {
         className="text-neutral-900 dark:text-white  px-4 rounded-md my-2 w-[330px] h-[44px] flex items-center justify-center hidden"
         onClick={handleGoogleLogin}
       >
-        <Image src={google} alt="kakao" width={330} height={44} />
+        <div className="w-[308px]">
+        <Image src={google} alt="google" width={316} height={46} />
+        </div>
       </div>
     </div>
   );
-};
+}
 
 export default GoogleLoginButton;
