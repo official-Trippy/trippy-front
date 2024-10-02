@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, useCallback } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { Editor as TinyMCEEditor } from '@tinymce/tinymce-react';
 import { uploadImage } from '@/services/blog';
 
@@ -12,7 +12,9 @@ const inputAPI = process.env.NEXT_PUBLIC_INPUT_TEXT_API_KEY;
 
 const MyTinyMCEEditor: React.FC<EditorProps> = ({ postRequest, setPostRequest, onImageUpload }) => {
     const editorRef = useRef<any>(null);
+    const isImageUploaded = useRef(false); // 이미지 업로드 플래그
 
+    // 에디터 내용 변경 시 호출되는 함수
     const handleEditorChange = (content: string) => {
         const parser = new DOMParser();
         const doc = parser.parseFromString(content, 'text/html');
@@ -28,6 +30,7 @@ const MyTinyMCEEditor: React.FC<EditorProps> = ({ postRequest, setPostRequest, o
 
         const cleanBody = doc.body.innerHTML.replace(/<img[^>]*>/g, '');
 
+        // 상태 업데이트
         setPostRequest((prev: any) => {
             const updatedImages = images.filter((newImage) =>
                 !prev.images.some((img: any) => img.accessUri === newImage.accessUri)
@@ -47,9 +50,7 @@ const MyTinyMCEEditor: React.FC<EditorProps> = ({ postRequest, setPostRequest, o
         });
     };
 
-
-
-
+    // 이미지 업로드 처리
     const handleImageUpload = async (blobInfo: any) => {
         const file = blobInfo.blob();
         try {
@@ -64,7 +65,7 @@ const MyTinyMCEEditor: React.FC<EditorProps> = ({ postRequest, setPostRequest, o
 
             if (editorRef.current) {
                 editorRef.current.insertContent(`<img src="${imageUrl}" />`);
-                handleEditorChange(editorRef.current.getContent()); // 내용 업데이트 호출
+                isImageUploaded.current = true; // 이미지 업로드 완료 플래그 설정
             }
 
             return imageUrl;
@@ -73,6 +74,15 @@ const MyTinyMCEEditor: React.FC<EditorProps> = ({ postRequest, setPostRequest, o
             return '';
         }
     };
+
+    // 이미지 업로드 후 상태 업데이트
+    useEffect(() => {
+        if (isImageUploaded.current) {
+            const content = editorRef.current.getContent();
+            handleEditorChange(content);
+            isImageUploaded.current = false; // 플래그 초기화
+        }
+    }, [editorRef.current]); // editorRef.current가 변경될 때만 실행
 
     const imagesHtml = postRequest.images
         .map((image: any) => `<img src="${image.accessUri}" />`)
