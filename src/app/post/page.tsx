@@ -476,16 +476,16 @@ function PostWrite() {
                                 <div className='relative bg-white z-10 ml-[7%] mr-[10%]'>
                                     {
                                         isTransport ? (
-                                            <div className='w-[6rem] h-[28rem] absolute z-10 bg-white shadowall rounded-[3rem] flex items-center justify-center mt-[2rem] flex-col space-y-9'>
+                                            <div className='w-[6rem] h-[31rem] absolute z-10 bg-white shadowall rounded-[3rem] flex items-center justify-center mt-[2rem] flex-col space-y-1'>
                                                 {isImageIdx.slice(0, 5).map((item: any, index) => (
-                                                    <div key={index} onClick={() => selectTransport(item.imgsrc)}>
+                                                    <div key={index} className='w-[6rem] h-[6rem] p-[1rem]' onClick={() => selectTransport(item.imgsrc)}>
                                                         {item.imgsrc}
                                                     </div>
                                                 ))}
                                             </div>
                                         ) : (
                                             <div
-                                                className='w-[6rem] h-[6rem] absolute shadowall rounded-full flex items-center justify-center mt-[2rem]'
+                                                className='w-[6rem] h-[6rem] absolute shadowall rounded-full flex items-center justify-center mt-[2rem] p-[1rem]'
                                                 onClick={() => setIsTransport(true)}
                                             >
                                                 {isImageIdx[0]?.imgsrc}
@@ -581,12 +581,12 @@ function PostWrite() {
                                 <div className='relative bg-white z-10 ml-[7%] mr-[15%]'>
                                     {
                                         isTransport ? (
-                                            <div className='w-[1.7rem] h-[10.7rem] absolute z-10 bg-white shadowall rounded-[3rem] flex items-center justify-center mt-[2rem] flex-col space-y-2'>
+                                            <div className='w-[2rem] h-[13rem] absolute z-10 bg-white shadowall rounded-[3rem] flex items-center justify-center mt-[2rem] flex-col space-y-2'>
                                                 {isImageIdx.slice(0, 5).map((item: any, index) => (
-                                                    <div key={index} onClick={() => selectTransport(item.imgsrc)} className="flex items-center justify-center">
+                                                    <div key={index} onClick={() => selectTransport(item.imgsrc)} className="flex items-center justify-center py-[0.1rem] px-[1rem]">
                                                         {/* SVG 이미지에 크기 조정 */}
-                                                        <div style={{ width: '2rem', height: '2rem' }}>
-                                                            {React.cloneElement(item.imgsrc, { width: '2rem', height: '2rem' })}
+                                                        <div style={{ width: '1.7rem', height: '1.7rem' }}>
+                                                            {React.cloneElement(item.imgsrc, { width: '1.7rem', height: '1.7rem' })}
                                                         </div>
                                                     </div>
                                                 ))}
