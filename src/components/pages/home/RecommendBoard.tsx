@@ -28,6 +28,7 @@ const TagContainer: React.FC<TagContainerProps> = ({ item }) => {
     const containerRef = useRef<HTMLDivElement | null>(null);
     const [visibleTags, setVisibleTags] = useState<string[]>(item.post.tags);
 
+
     useEffect(() => {
         const container = containerRef.current;
         if (!container) return;
@@ -82,6 +83,8 @@ const RecommendBoard = () => {
     const scrollRef = useRef<HTMLDivElement | null>(null);
     const swiperRef = useRef<SwiperRef | null>(null);
     const [showSkeleton, setShowSkeleton] = useState(true);
+    const [showScrollButtons, setShowScrollButtons] = useState(false);
+    const [currentSlide, setCurrentSlide] = useState(0);
 
     const { data, isLoading, error } = useQuery(['recommendOotdPost', selectedInterest], () => fetchRecommendBoard(selectedInterest), {
         keepPreviousData: true,
@@ -90,6 +93,10 @@ const RecommendBoard = () => {
     const totalCount = data?.result?.totalCnt;
 
 
+    const isAtFirstSlide = currentSlide === 0;
+
+    // 마지막 슬라이드인지 확인 (마지막 슬라이드가 정확하게 나타나도록 수정)
+    const isAtLastSlide = currentSlide + itemsPerSlide >= totalCount;
 
     // 사용자 정보에서 관심사 가져오기
     const fetchUserInterests = async () => {
@@ -115,6 +122,14 @@ const RecommendBoard = () => {
             fetchUserInterests(); // 관심사 정보 가져오기
         }
     }, [userInfo]);
+
+    const checkScroll = () => {
+        if (scrollRef.current) {
+            const { scrollWidth, clientWidth } = scrollRef.current;
+            setShowScrollButtons(scrollWidth > clientWidth);
+        }
+    };
+
 
     // 화면 크기에 따라 itemsPerSlide를 설정하는 함수
     const updateItemsPerSlide = () => {
@@ -236,7 +251,7 @@ const RecommendBoard = () => {
 
 
             <div className="flex items-center my-12 relative">
-                {!userInfo && (<Image
+                {(!userInfo || showScrollButtons) && (<Image
                     src={SwiperLeftButton}
                     alt="Previous"
                     width={25}
@@ -286,7 +301,7 @@ const RecommendBoard = () => {
                         )}
                     </div>
                 </div>
-                {!userInfo && data?.result?.postList?.length > 0 && (
+                {(!userInfo || showScrollButtons) && data?.result?.postList?.length > 0 && (
                     <Image
                         src={SwiperRightButton}
                         alt="Next"
@@ -305,7 +320,7 @@ const RecommendBoard = () => {
                     />
                 )}
             </div>
-            {itemsPerSlide < totalCount && data?.result?.postList?.length > 0 && (
+            {!isAtFirstSlide && (
                 <Image
                     src={SwiperLeftButton}
                     alt="Previous"
@@ -474,7 +489,7 @@ const RecommendBoard = () => {
                     )}
                 </Swiper>
             </div>
-            {itemsPerSlide < totalCount && data?.result?.postList?.length > 0 && (
+            {!isAtLastSlide && (
                 <Image
                     src={SwiperRightButton}
                     alt="Next"
