@@ -1,97 +1,50 @@
-import React, { useRef, useEffect } from 'react';
-import { Editor as TinyMCEEditor } from '@tinymce/tinymce-react';
+import React, { useState } from 'react';
+import { Editor } from '@tinymce/tinymce-react';
 import { uploadImage } from '@/services/blog';
 
-interface EditorProps {
+interface editorProps {
     postRequest: any;
     setPostRequest: any;
-    onImageUpload: (imageUrl: string) => void;
+    onImageUpload: (imageUrl: string) => void; // 이미지 업로드 핸들러를 props로 추가
 }
 
 const inputAPI = process.env.NEXT_PUBLIC_INPUT_TEXT_API_KEY;
 
-const MyTinyMCEEditor: React.FC<EditorProps> = ({ postRequest, setPostRequest, onImageUpload }) => {
-    const editorRef = useRef<any>(null);
-    const isImageUploaded = useRef(false); // 이미지 업로드 플래그
+const MyTinyMCEEditor = ({ postRequest, setPostRequest, onImageUpload }: editorProps) => {
+    const [contented, setContented] = useState('')
 
-    // 에디터 내용 변경 시 호출되는 함수
     const handleEditorChange = (content: string) => {
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(content, 'text/html');
-        const images: { accessUri: string }[] = [];
+        setContented((prev: any) => ({ ...prev, body: content })); // 에디터 내용 업데이트
 
-        const imgTags = doc.getElementsByTagName('img');
-        for (let i = 0; i < imgTags.length; i++) {
-            const imgSrc = imgTags[i].getAttribute('src');
-            if (imgSrc) {
-                images.push({ accessUri: imgSrc });
-            }
-        }
-
-        const cleanBody = doc.body.innerHTML.replace(/<img[^>]*>/g, '');
-
-        // 상태 업데이트
-        setPostRequest((prev: any) => {
-            const updatedImages = images.filter((newImage) =>
-                !prev.images.some((img: any) => img.accessUri === newImage.accessUri)
-            );
-
-            // 상태가 실제로 변경되는 경우에만 업데이트
-            if (cleanBody !== prev.body || updatedImages.length > 0) {
-                return {
-                    ...prev,
-                    body: cleanBody,
-                    images: [...prev.images, ...updatedImages],
-                };
-            }
-
-            // 상태가 변경되지 않으면 이전 상태 반환
-            return prev;
-        });
+        const cleanContent = content.replace(/<img[^>]*>/g, ''); // 모든 이미지 태그 제거
+        setPostRequest((prev: any) => ({ ...prev, body: cleanContent })); // 에디터 내용 업데이트
     };
 
-    // 이미지 업로드 처리
     const handleImageUpload = async (blobInfo: any) => {
-        const file = blobInfo.blob();
+        const file = blobInfo.blob(); // Blob 객체 가져오기
         try {
-            const uploadedImage = await uploadImage(file);
-            const imageUrl = uploadedImage.result.accessUri;
+            const uploadedImage = await uploadImage(file); // 이미지 업로드 함수 호출
+            const imageUrl = uploadedImage.result; // 업로드된 이미지 URL 가져오기
 
-            if (typeof imageUrl !== 'string') {
-                throw new Error('Uploaded image URL is not a string');
-            }
+            // 이미지 URL을 postRequest.images에 추가
+            setPostRequest((prev: any) => ({
+                ...prev,
+                images: [...prev.images, imageUrl], // 이미지 URL 추가
+            }));
 
-            onImageUpload(imageUrl);
-
-            if (editorRef.current) {
-                editorRef.current.insertContent(`<img src="${imageUrl}" />`);
-                isImageUploaded.current = true; // 이미지 업로드 완료 플래그 설정
-            }
-
+            // TinyMCE에 이미지 URL 반환
             return imageUrl;
         } catch (error) {
             console.error('Error uploading image:', error);
-            return '';
+            return ''; // 실패 시 빈 문자열 반환
         }
     };
 
-    // 이미지 업로드 후 상태 업데이트
-    useEffect(() => {
-        if (isImageUploaded.current) {
-            const content = editorRef.current.getContent();
-            handleEditorChange(content);
-            isImageUploaded.current = false; // 플래그 초기화
-        }
-    }, [editorRef.current]); // editorRef.current가 변경될 때만 실행
-
-    const imagesHtml = postRequest.images
-        .map((image: any) => `<img src="${image.accessUri}" />`)
-        .join('');
+    console.log(postRequest); // postRequest 확인
 
     return (
         <div>
-            <TinyMCEEditor
-                onInit={(evt, editor) => (editorRef.current = editor)}
+            <Editor
                 initialValue="<p>여러분의 경험을 자유롭게 적어주세요.</p>"
                 apiKey={inputAPI}
                 init={{
@@ -118,9 +71,9 @@ const MyTinyMCEEditor: React.FC<EditorProps> = ({ postRequest, setPostRequest, o
                         'lists table link charmap searchreplace | ' +
                         'image media codesample emoticons fullscreen preview | ' +
                         'removeformat | undo redo',
-                    images_upload_handler: handleImageUpload,
+                    images_upload_handler: handleImageUpload, // 이미지 업로드 핸들러 지정
                 }}
-                value={postRequest.body + imagesHtml}
+                value={contented} // 에디터의 내용을 상태로 관리
                 onEditorChange={handleEditorChange}
             />
         </div>

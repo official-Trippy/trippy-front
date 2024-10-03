@@ -716,16 +716,16 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
           </div>
         </div>
         <div className="py-[5rem] min-h-[100rem] ">
-          {/* {images.map((image, index) => (
-                        <Image
-                            className="max-w-[60rem] max-h-[60rem]"
-                            src={image.accessUri}
-                            alt=""
-                            key={index}
-                            width={900}
-                            height={900}
-                        />
-                    ))} */}
+          {images.map((image, index) => (
+            <Image
+              className="max-w-[60rem] max-h-[60rem]"
+              src={image.accessUri}
+              alt=""
+              key={index}
+              width={900}
+              height={900}
+            />
+          ))}
           <span
             className="text-[1.6rem] font-medium"
             dangerouslySetInnerHTML={{ __html: bodyWithImages }}
