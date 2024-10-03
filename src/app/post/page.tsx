@@ -21,6 +21,8 @@ import { MemberInfo } from '@/services/auth'
 import Cookies from "js-cookie"
 import DateInput from '@/components/ootd/DateInput'
 import DateInput2 from '@/components/board/DateInput2'
+import Editor from '@/components/testEditor/textEditors'
+import Write from '@/components/testEditor/textEditors'
 
 interface CountryResult {
     countryIsoAlp2: string;
@@ -63,6 +65,7 @@ function PostWrite() {
         body: '',
         images: [] as string[], // 이미지 URL을 저장할 배열
     });
+    console.log(postRequests)
     const [result, setResult] = useState<ApiResponse | null>(null);
     const [result1, setResult1] = useState<ApiResponse | null>(null);
     const [transportStr, setTransportStr] = useState('');
@@ -661,7 +664,9 @@ function PostWrite() {
                     </div>
                 )}
                 <>
+
                     <div className="h-screen w-full overflow-hidden shadowall mt-[2rem] rounded-[0.8rem]">
+
                         <form
                             className="h-screen w-full"
                         >
@@ -684,15 +689,17 @@ function PostWrite() {
                                     setPostRequest={setPostRequests}
                                     onImageUpload={(imageUrl) => {
                                         setImages((prevImages: any) => [...prevImages, imageUrl]); // 이미지 URL을 images 상태에 추가
-                                        setPostRequests((prev) => ({ ...prev, images: [...prev.images, imageUrl] })); // postRequests에도 추가
                                     }}
+
                                 />
-                                <textarea
+
+                                {/* <Write onImagesChange={setImages} /> */}
+                                {/* <textarea
                                     className='w-full h-screen outline-none text-[2rem] px-[6rem] py-[2.5rem]'
                                     placeholder='여러분의 경험을 자유롭게 적어주세요.'
                                     value={body}
                                     onChange={(e) => setBody(e.target.value)}
-                                ></textarea>
+                                ></textarea> */}
                             </div>
 
                         </form>

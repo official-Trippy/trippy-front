@@ -716,21 +716,38 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
           </div>
         </div>
         <div className="py-[5rem] min-h-[100rem] ">
-          {/* {images.map((image, index) => (
-                        <Image
-                            className="max-w-[60rem] max-h-[60rem]"
-                            src={image.accessUri}
-                            alt=""
-                            key={index}
-                            width={900}
-                            height={900}
-                        />
-                    ))} */}
-          <span
-            className="text-[1.6rem] font-medium"
-            dangerouslySetInnerHTML={{ __html: bodyWithImages }}
-          />
+          {bodyWithImages.split(/<\/?p>/).filter(Boolean).map((item: string, index: number) => {
+            const trimmedItem = item.trim(); // 공백 제거
+
+            if (!trimmedItem || trimmedItem === '&nbsp;') {
+              return null; // 아무것도 렌더링하지 않음
+            }
+            // 이미지 데이터가 있는 경우
+            if (trimmedItem.startsWith('imageData')) {
+              const imageIndex = parseInt(trimmedItem.replace('imageData', '')) - 1; // imageData1 -> 0, imageData2 -> 1 등
+              if (images[imageIndex]) {
+                return (
+                  <Image
+                    className="max-w-[60rem] max-h-[60rem]"
+                    src={images[imageIndex].accessUri}
+                    alt=""
+                    key={index}
+                    width={900}
+                    height={900}
+                  />
+                );
+              }
+            }
+
+            // 텍스트인 경우
+            return (
+              <p key={index} className="text-[1.6rem] font-medium">
+                {trimmedItem}
+              </p>
+            );
+          })}
         </div>
+
         <div className="flex flex-wrap">
           {postData?.result.post.tags.map((tagData: string, index: number) => (
             <span
