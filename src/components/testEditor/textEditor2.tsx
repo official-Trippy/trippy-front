@@ -16,7 +16,15 @@ const MyTinyMCEEditor = ({ postRequest, setPostRequest, onImageUpload }: editorP
     const handleEditorChange = (content: string) => {
         setContented((prev: any) => ({ ...prev, body: content })); // 에디터 내용 업데이트
 
-        const cleanContent = content.replace(/<img[^>]*>/g, ''); // 모든 이미지 태그 제거
+        const imgTags = content.match(/<img[^>]*>/g) || [];
+        let index = 1;
+
+        // 이미지 태그를 인덱스로 대체
+        const cleanContent = content.replace(/<img[^>]*>/g, () => {
+            const imgIndex = "imageData" + index++;
+            return imgIndex.toString(); // 인덱스를 문자열로 반환
+        });
+
         setPostRequest((prev: any) => ({ ...prev, body: cleanContent })); // 에디터 내용 업데이트
     };
 
