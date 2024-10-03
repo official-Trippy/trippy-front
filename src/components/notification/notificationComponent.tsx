@@ -19,6 +19,7 @@ const Notification: React.FC = () => {
   const [isMobile, setIsMobile] = useState(false); // 모바일 화면 여부를 관리하는 상태
   const queryClient = useQueryClient();
   const accessToken = Cookies.get("accessToken");
+  const router = useRouter();
 
   useEffect(() => {
     const handleResize = () => {
@@ -85,7 +86,7 @@ const Notification: React.FC = () => {
 
   const latestNotification = notifications[notifications.length - 1];
 
-  const router = useRouter();
+
 
   if (isMobile) {
     return (

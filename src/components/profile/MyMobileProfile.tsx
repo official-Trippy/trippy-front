@@ -21,6 +21,7 @@ const TABS = {
 const MyMobileProfile: React.FC<{ setActiveTab: (tab: string) => void }> = ({ setActiveTab }) => {
   const accessToken = Cookies.get("accessToken");
   const router = useRouter();
+  const { resetUserInfo } = useUserStore();
 
   const { data, error, isLoading } = useQuery({
     queryKey: ["member", accessToken],
@@ -57,7 +58,7 @@ const MyMobileProfile: React.FC<{ setActiveTab: (tab: string) => void }> = ({ se
     router.push("/editProfile");
   };
 
-  const { resetUserInfo } = useUserStore();
+
 
   const handleLogoutClick = () => {
     Cookies.remove("accessToken");
