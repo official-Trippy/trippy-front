@@ -188,7 +188,9 @@ function RecentPost({ allPosts, setAllPosts, boardData, boardRefetch, PAGE_SIZE,
                             const getTextFromHtml = (html: any) => {
                                 const parser = new DOMParser();
                                 const doc = parser.parseFromString(html, 'text/html');
-                                return doc.body.innerText; // 텍스트만 반환
+
+                                const text = doc.body.innerText;
+                                return text.replace(/imageData\d+/g, '').trim();
                             };
 
                             const bodyText = getTextFromHtml(posts.post.body);

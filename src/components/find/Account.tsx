@@ -14,7 +14,8 @@ const Account = () => {
   const [maskedEmail, setMaskedEmail] = useState("");
 
   const isNicknameValid = () => {
-    return /^[A-Za-z0-9]{4,}$/.test(nickname) || /^[가-힣0-9]{2,}$/.test(nickname);
+    const trimmedNickname = nickname.trim(); // 앞뒤 공백 제거
+    return /^[A-Za-z가-힣0-9\s]+$/.test(trimmedNickname) && trimmedNickname.length >= 2;
   };
 
   const isNextButtonDisabled = () => {
@@ -22,7 +23,7 @@ const Account = () => {
   };
 
   const handleNicknameChange = (e: { target: { value: React.SetStateAction<string>; }; }) => {
-    setNickname(e.target.value);
+    setNickname(e.target.value); // 공백을 허용하며 입력
   };
 
   const handleFindAccount = async () => {
@@ -61,7 +62,7 @@ const Account = () => {
       </div>
       <div className="w-[100%] max-w-[400px] mx-auto flex flex-col justify-between">
   <div className="flex flex-col mt-[200px] sm:h-[300px] sm:mt-0 justify-center">
-    <div className="text-center text-zinc-800 text-4xl font-semibold font-['Pretendard']">
+    <div className="text-center  text-4xl font-semibold font-['Pretendard']">
       계정 찾기
     </div>
     <div className="w-[90%] max-w-[400px] mx-auto">
@@ -102,7 +103,7 @@ const Account = () => {
         {!accountFound && !badRequest && (
             <button
             onClick={handleFindAccount}
-            className={`mx-auto w-full sm-700:w-[120px] h-[44px] mt-[2rem] mb-[2rem] text-white py-2 rounded-xl flex justify-center items-center ${isNextButtonDisabled() ? "cursor-not-allowed bg-[#cfcfcf] hover:bg-[#cfcfcf]" : "bg-btn-color hover:bg-[#FB3463]"}`}
+            className={`mx-auto w-full sm-700:w-[120px] h-[44px] mt-[2rem] mb-[2rem] font-bold text-white py-2 rounded-xl flex justify-center items-center ${isNextButtonDisabled() ? "cursor-not-allowed bg-[#cfcfcf] hover:bg-[#cfcfcf]" : "bg-btn-color hover:bg-[#FB3463]"}`}
             style={{ fontSize: "1.2rem" }}
             disabled={isNextButtonDisabled()}
           >
@@ -113,7 +114,7 @@ const Account = () => {
              {badRequest && (
           <button
             onClick={handleTryAgain}
-            className={`mx-auto w-full sm-700:w-[120px] h-[44px] mt-[2rem] mb-[2rem] bg-btn-color text-white py-2 rounded-xl flex justify-center items-center bg-[#cfcfcf] hover:bg-[#cfcfcf]`}
+            className={`mx-auto w-full sm-700:w-[120px] h-[44px] mt-[2rem] mb-[2rem] bg-btn-color font-bold text-white py-2 rounded-xl flex justify-center items-center bg-[#cfcfcf] hover:bg-[#cfcfcf]`}
             style={{ fontSize: "1.2rem" }}
           >
             다시 시도하기

@@ -55,6 +55,7 @@ import CommentIcon1 from '../../../../public/commentIcon-default.svg';
 import { fetchRecommendedSpots } from "@/services/ootd.ts/ootdGet";
 import SkeletonOotdDetailRecommend from "@/components/pages/ootd/SkeletonOotdDetailRecommend";
 import RecommendedSpot from "@/components/ootd/RecommendedSpot";
+import SkeletonBoardDetail from "@/components/pages/home/SkeletonBoardDetail";
 
 
 
@@ -79,7 +80,17 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
   const [showLikes, setShowLikes] = useState<boolean>(false);
   const [isLoadingLikes, setIsLoadingLikes] = useState<boolean>(false);
   const [likeList, setLikeList] = useState<any[]>([]);
+  const [showSkeleton, setShowSkeleton] = useState(true);
 
+  // 3초 후에 Skeleton을 숨기고 실제 콘텐츠를 보여주도록 설정
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowSkeleton(false);
+    }, 1000);
+
+    // 컴포넌트 언마운트 시 타이머 정리
+    return () => clearTimeout(timer);
+  }, []);
 
   useEffect(() => {
     const fetchLikeList = async () => {
@@ -522,8 +533,8 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
   };
 
 
-  if (postLoading || isLoading || bookMarkLoading) {
-    return <SkeletonOotdDetailRecommend />; // 데이터가 로딩 중일 때
+  if (showSkeleton || postLoading || isLoading || bookMarkLoading) {
+    return <SkeletonBoardDetail />; // 데이터가 로딩 중일 때
   }
 
   return (
@@ -632,7 +643,7 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
             ></div>
             <div className="w-full mt-[1.7rem] xl:mt-[5rem] lg:mt-[3rem] sm:mt-[1.7rem] relative">
               <div className="flex justify-center">
-                <div>
+                <div className="w-[5rem] xl:w-[16rem] lg:w-[10rem] sm:w-[5rem]">
                   <h1 className="text-[2rem] xl:text-[6rem] lg:text-[3rem] sm:text-[2rem] text-[#292929] font-extrabold font-akira">
                     {postData?.result.ticket.departureCode}
                   </h1>
@@ -643,13 +654,13 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
                     </span>
                   </div>
                 </div>
-                <div className="relative flex bg-white mt-0 xl:mt-[2.8rem] lg:mt-[0.8rem] sm:mt-0 w-[1.7rem] lg:w-[3.2rem] sm:w-[1.7rem] h-[1.7rem] lg:h-[2.8rem] sm:h-[1.7rem] z-10 mx-[3%] xl:mx-[9%] sm:mx-[3%]">
+                <div className="relative flex bg-white mt-[0.7rem] xl:mt-[2.8rem] lg:mt-[1rem] sm:mt-[0.7rem] w-[1.7rem] lg:w-[3.2rem] sm:w-[1.7rem] h-[1.7rem] lg:h-[2.8rem] sm:h-[1.7rem] z-10 mx-[6%] xl:mx-[9%] sm:mx-[6%]">
                   {getTransportImage(
                     postData?.result.ticket.transport,
                     postData?.result.ticket.ticketColor
                   )}
                 </div>
-                <div className="">
+                <div className="w-[5rem] xl:w-[16rem] lg:w-[10rem] sm:w-[5rem] ">
                   <h1 className="text-[2rem] xl:text-[6rem] lg:text-[3rem] sm:text-[2rem] text-[#292929] font-extrabold font-akira">
                     {postData?.result.ticket.destinationCode}
                   </h1>
@@ -716,21 +727,38 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
           </div>
         </div>
         <div className="py-[5rem] min-h-[100rem] ">
-          {/* {images.map((image, index) => (
-                        <Image
-                            className="max-w-[60rem] max-h-[60rem]"
-                            src={image.accessUri}
-                            alt=""
-                            key={index}
-                            width={900}
-                            height={900}
-                        />
-                    ))} */}
-          <span
-            className="text-[1.6rem] font-medium"
-            dangerouslySetInnerHTML={{ __html: bodyWithImages }}
-          />
+          {bodyWithImages.split(/<\/?p>/).filter(Boolean).map((item: string, index: number) => {
+            const trimmedItem = item.trim(); // 공백 제거
+
+            if (!trimmedItem || trimmedItem === '&nbsp;') {
+              return null; // 아무것도 렌더링하지 않음
+            }
+            // 이미지 데이터가 있는 경우
+            if (trimmedItem.startsWith('imageData')) {
+              const imageIndex = parseInt(trimmedItem.replace('imageData', '')) - 1; // imageData1 -> 0, imageData2 -> 1 등
+              if (images[imageIndex]) {
+                return (
+                  <Image
+                    className="max-w-[60rem] max-h-[60rem]"
+                    src={images[imageIndex].accessUri}
+                    alt=""
+                    key={index}
+                    width={900}
+                    height={900}
+                  />
+                );
+              }
+            }
+
+            // 텍스트인 경우
+            return (
+              <p key={index} className="text-[1.6rem] font-medium">
+                {trimmedItem}
+              </p>
+            );
+          })}
         </div>
+
         <div className="flex flex-wrap">
           {postData?.result.post.tags.map((tagData: string, index: number) => (
             <span

@@ -21,6 +21,8 @@ import { MemberInfo } from '@/services/auth'
 import Cookies from "js-cookie"
 import DateInput from '@/components/ootd/DateInput'
 import DateInput2 from '@/components/board/DateInput2'
+import Editor from '@/components/testEditor/textEditors'
+import Write from '@/components/testEditor/textEditors'
 
 interface CountryResult {
     countryIsoAlp2: string;
@@ -63,6 +65,7 @@ function PostWrite() {
         body: '',
         images: [] as string[], // 이미지 URL을 저장할 배열
     });
+    console.log(postRequests)
     const [result, setResult] = useState<ApiResponse | null>(null);
     const [result1, setResult1] = useState<ApiResponse | null>(null);
     const [transportStr, setTransportStr] = useState('');
@@ -473,16 +476,16 @@ function PostWrite() {
                                 <div className='relative bg-white z-10 ml-[7%] mr-[10%]'>
                                     {
                                         isTransport ? (
-                                            <div className='w-[6rem] h-[28rem] absolute z-10 bg-white shadowall rounded-[3rem] flex items-center justify-center mt-[2rem] flex-col space-y-9'>
+                                            <div className='w-[6rem] h-[31rem] absolute z-10 bg-white shadowall rounded-[3rem] flex items-center justify-center mt-[2rem] flex-col space-y-1'>
                                                 {isImageIdx.slice(0, 5).map((item: any, index) => (
-                                                    <div key={index} onClick={() => selectTransport(item.imgsrc)}>
+                                                    <div key={index} className='w-[6rem] h-[6rem] p-[1rem]' onClick={() => selectTransport(item.imgsrc)}>
                                                         {item.imgsrc}
                                                     </div>
                                                 ))}
                                             </div>
                                         ) : (
                                             <div
-                                                className='w-[6rem] h-[6rem] absolute shadowall rounded-full flex items-center justify-center mt-[2rem]'
+                                                className='w-[6rem] h-[6rem] absolute shadowall rounded-full flex items-center justify-center mt-[2rem] p-[1rem]'
                                                 onClick={() => setIsTransport(true)}
                                             >
                                                 {isImageIdx[0]?.imgsrc}
@@ -578,12 +581,12 @@ function PostWrite() {
                                 <div className='relative bg-white z-10 ml-[7%] mr-[15%]'>
                                     {
                                         isTransport ? (
-                                            <div className='w-[1.7rem] h-[10.7rem] absolute z-10 bg-white shadowall rounded-[3rem] flex items-center justify-center mt-[2rem] flex-col space-y-2'>
+                                            <div className='w-[2rem] h-[13rem] absolute z-10 bg-white shadowall rounded-[3rem] flex items-center justify-center mt-[2rem] flex-col space-y-2'>
                                                 {isImageIdx.slice(0, 5).map((item: any, index) => (
-                                                    <div key={index} onClick={() => selectTransport(item.imgsrc)} className="flex items-center justify-center">
+                                                    <div key={index} onClick={() => selectTransport(item.imgsrc)} className="flex items-center justify-center py-[0.1rem] px-[1rem]">
                                                         {/* SVG 이미지에 크기 조정 */}
-                                                        <div style={{ width: '2rem', height: '2rem' }}>
-                                                            {React.cloneElement(item.imgsrc, { width: '2rem', height: '2rem' })}
+                                                        <div style={{ width: '1.7rem', height: '1.7rem' }}>
+                                                            {React.cloneElement(item.imgsrc, { width: '1.7rem', height: '1.7rem' })}
                                                         </div>
                                                     </div>
                                                 ))}
@@ -661,7 +664,9 @@ function PostWrite() {
                     </div>
                 )}
                 <>
+
                     <div className="h-screen w-full overflow-hidden shadowall mt-[2rem] rounded-[0.8rem]">
+
                         <form
                             className="h-screen w-full"
                         >
@@ -682,13 +687,19 @@ function PostWrite() {
                                 <MyTinyMCEEditor
                                     postRequest={postRequests}
                                     setPostRequest={setPostRequests}
+                                    onImageUpload={(imageUrl) => {
+                                        setImages((prevImages: any) => [...prevImages, imageUrl]); // 이미지 URL을 images 상태에 추가
+                                    }}
+
                                 />
-                                <textarea
+
+                                {/* <Write onImagesChange={setImages} /> */}
+                                {/* <textarea
                                     className='w-full h-screen outline-none text-[2rem] px-[6rem] py-[2.5rem]'
                                     placeholder='여러분의 경험을 자유롭게 적어주세요.'
                                     value={body}
                                     onChange={(e) => setBody(e.target.value)}
-                                ></textarea>
+                                ></textarea> */}
                             </div>
 
                         </form>

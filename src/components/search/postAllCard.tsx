@@ -53,15 +53,6 @@ const PostAllCard: React.FC<PostCardProps> = ({
 
   selectedSearchType,
 }) => {
-  if (!Array.isArray(posts) || posts.length === 0) {
-    return <p>No posts available</p>;
-  }
-
-  const truncateText = (text: string, maxLength: number) => {
-    if (text.length <= maxLength) return text;
-    return text.substring(0, maxLength) + "...";
-  };
-
   const [tagCount, setTagCount] = useState(5);
 
   // Effect to update tag count based on window size
@@ -79,6 +70,19 @@ const PostAllCard: React.FC<PostCardProps> = ({
     // Cleanup on component unmount
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+
+  if (!Array.isArray(posts) || posts.length === 0) {
+    return <p>No posts available</p>;
+  }
+
+  const truncateText = (text: string, maxLength: number) => {
+    if (text.length <= maxLength) return text;
+    return text.substring(0, maxLength) + "...";
+  };
+
+
+
+
 
   return (
     <div className="flex flex-col items-stretch gap-[25.012px] h-174px w-789px">
@@ -126,20 +130,21 @@ const PostAllCard: React.FC<PostCardProps> = ({
             className="no-underline"
           >
             <div
+
               className={`flex items-start sm:p-6 mb-6 ${
                 isBlogOrNickname
                   ? "sm:w-[403px] sm:h-[72px] w-[326.231px] h-auto" // 모바일에서는 326.231px, 데스크탑에서는 403px로 적용
                   : "w-[100%] sm:h-[174px] sm:bg-white rounded-lg shadow-md"
               } sm:flex `}
+
             >
               {/* Image */}
 
               <div
-                className={`${
-                  isBlogOrNickname
-                    ? "w-[72px] h-[72px]"
-                    : "sm:w-1/3 sm:h-full w-[107px] h-[107px] pr-6"
-                } flex-shrink-0 ${isBlogOrNickname ? "rounded-full" : ""}`}
+                className={`${isBlogOrNickname
+                  ? "w-[72px] h-[72px]"
+                  : "sm:w-1/3 sm:h-full w-[107px] h-[107px] pr-6"
+                  } flex-shrink-0 ${isBlogOrNickname ? "rounded-full" : ""}`}
               >
                 {selectedSearchType === "OOTD" ? (
                   <img
@@ -147,11 +152,10 @@ const PostAllCard: React.FC<PostCardProps> = ({
                       postDetails?.images[0]?.accessUri || "/placeholder.png"
                     }
                     alt="OOTD Image"
-                    className={`object-cover ${
-                      isBlogOrNickname
-                        ? "rounded-full"
-                        : "rounded-lg w-full h-full"
-                    }`}
+                    className={`object-cover ${isBlogOrNickname
+                      ? "rounded-full"
+                      : "rounded-lg w-full h-full"
+                      }`}
                     style={
                       isBlogOrNickname ? { width: "72px", height: "72px" } : {}
                     }
@@ -161,11 +165,10 @@ const PostAllCard: React.FC<PostCardProps> = ({
                   <img
                     src={profileImgUrl || "/placeholder.png"}
                     alt={blogName || "Blog Image"}
-                    className={`object-cover ${
-                      isBlogOrNickname
-                        ? "rounded-full"
-                        : "rounded-lg sm:w-full sm:h-full w-[107px] h-[107px]"
-                    }`}
+                    className={`object-cover ${isBlogOrNickname
+                      ? "rounded-full"
+                      : "rounded-lg sm:w-full sm:h-full w-[107px] h-[107px]"
+                      }`}
                     style={
                       isBlogOrNickname ? { width: "72px", height: "72px" } : {}
                     }
@@ -181,9 +184,8 @@ const PostAllCard: React.FC<PostCardProps> = ({
 
               {/* Post, OOTD, or Blog Details */}
               <div
-                className={`ml-4 pr-3 ${
-                  isBlogOrNickname ? "flex flex-col justify-center" : "w-full"
-                }`}
+                className={`ml-4 pr-3 ${isBlogOrNickname ? "flex flex-col justify-center" : "w-full"
+                  }`}
               >
                 {selectedSearchType === "BLOG" ? (
                   <>

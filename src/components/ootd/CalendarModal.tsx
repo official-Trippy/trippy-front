@@ -16,17 +16,19 @@ const CalendarModal: React.FC<CalendarModalProps> = ({
   selectedDate,
   onDateChange,
 }) => {
-  if (!isOpen) return null;
-
-  const today = new Date();
-  const years = Array.from(new Array(50), (_, i) => today.getFullYear() - i); // 최근 50년간의 연도
-  const months = ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'];
 
   const [isYearDropdownOpen, setIsYearDropdownOpen] = useState(false);
   const [isMonthDropdownOpen, setIsMonthDropdownOpen] = useState(false);
 
   // 선택된 날짜를 임시로 저장할 상태
   const [tempSelectedDate, setTempSelectedDate] = useState<Date | null>(selectedDate);
+
+  if (!isOpen) return null;
+
+  const today = new Date();
+  const years = Array.from(new Array(50), (_, i) => today.getFullYear() - i); // 최근 50년간의 연도
+  const months = ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'];
+
 
   // 날짜를 선택했을 때 tempSelectedDate에 저장
   const handleDateChange = (date: Date | null) => {
@@ -158,7 +160,7 @@ const CalendarModal: React.FC<CalendarModalProps> = ({
             );
           }}
         />
-        
+
         {/* 선택 및 취소 버튼 */}
         <div className="w-full flex justify-center gap-4 mt-4">
           <button className="w-[60px] h-[35px] bg-btn-color text-white py-2 rounded-[6px]" onClick={handleConfirm}>

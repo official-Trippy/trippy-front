@@ -203,7 +203,7 @@ const Password = () => {
       <div className="w-[90%] max-w-[400px] mx-auto">
       {!showPasswordFields && (
         <div className='w-[100%] max-w-[400px] mx-auto flex flex-col h-[300px] mt-[100px]'>
-          <div className="text-center text-zinc-800 text-4xl font-semibold font-['Pretendard']">비밀번호 재설정</div>
+          <div className="text-center text-4xl font-semibold font-['Pretendard']">비밀번호 재설정</div>
           <div className="text-center text-neutral-400 text-2xl text-base font-normal font-['Pretendard'] mt-[1rem]">트리피에 등록한 이메일을 입력해주세요.</div>
         <div
           className={`flex w-full px-4 py-2 mt-[2rem] mb-2 h-[4rem] rounded-xl border  ${isInputFocused ? "border-[#FB3463]" : "border-gray-300"} focus:border-[#FB3463] focus:outline-none`}
@@ -215,8 +215,8 @@ const Password = () => {
               onFocus={handleInputFocus}
               onBlur={handleInputBlur}
               onChange={handleEmailChange}
-              placeholder="Trippy@trip.com"
-              className="flex-1 border-gray-300 focus:border-[#FB3463] focus:outline-none"
+              placeholder="trippy@trippy.or.kr"
+              className="flex-1 border-gray-300 focus:border-[#FB3463] focus:outline-none bg-white text-black"
               style={{ background: "var(--4, #F5F5F5)", fontSize: "1.2rem" }}
               disabled={isCodeVerified} />
             {!isCodeVerified && (

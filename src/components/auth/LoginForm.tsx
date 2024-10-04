@@ -98,8 +98,8 @@ const LoginForm = () => {
             type="email"
             id="email"
             onChange={(e) => setMemberId(e.target.value)}
-            placeholder="trippy@trippy.co.kr"
-            className="border-b border-gray-300 rounded-none py-2 w-[320px]"
+            placeholder="trippy@trippy.or.kr"
+            className="border-b border-gray-300 rounded-none py-2 w-[320px] bg-white text-black"
             style={{ fontSize: "1.6rem" }}
           />
         </div>
@@ -113,7 +113,7 @@ const LoginForm = () => {
             id="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className=".email-input border-b border-gray-300 rounded-none py-2 w-[320px]"
+            className="border-b border-gray-300 rounded-none py-2 w-[320px] bg-white text-black"
             style={{ fontSize: "1.6rem" }}
           />
         </div>

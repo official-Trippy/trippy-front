@@ -44,6 +44,7 @@ const Header = () => {
     loadUserInfo();
   }, [fetchUserInfo]);
 
+
   //수정 고려중
   // useEffect(() => {
   //   const EventSource = EventSourcePolyfill || NativeEventSource;

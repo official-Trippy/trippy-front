@@ -22,6 +22,7 @@ import SkeletonRecommendOotdPost from './SkeletonRecommendOotdPost';
 import Cookies from 'js-cookie';
 
 
+
 const TagContainer: React.FC<TagContainerProps> = ({ item }) => {
     const containerRef = useRef<HTMLDivElement | null>(null);
     const [visibleTags, setVisibleTags] = useState<string[]>(item.post.tags);
@@ -77,11 +78,11 @@ const TagContainer: React.FC<TagContainerProps> = ({ item }) => {
   
   const RecommendOotdPost = () => {
     const { userInfo, loading } = useUserStore((state) => ({
-        userInfo: state.userInfo,
-        loading: state.loading,
+      userInfo: state.userInfo,
+      loading: state.loading,
     }));
-
-    const [selectedInterest, setSelectedInterest] = useState(blogInterests[0]);
+  
+    const [selectedInterest, setSelectedInterest] = useState(blogInterests[0]); // 초기 관심사 설정
     const [likedPosts, setLikedPosts] = useState<number[]>([]);
     const [itemsPerSlide, setItemsPerSlide] = useState(4);
     const [filteredInterests, setFilteredInterests] = useState(blogInterests);
@@ -90,59 +91,81 @@ const TagContainer: React.FC<TagContainerProps> = ({ item }) => {
     const scrollRef = useRef<HTMLDivElement | null>(null);
     const swiperRef = useRef<SwiperRef | null>(null);
     const [currentSlide, setCurrentSlide] = useState(0);
-
+  
+    // 관심사에 따라 OOTD 데이터를 가져오기
     const { data, isLoading, refetch } = useQuery(
-        ['recommendOotdPost', selectedInterest],
-        () => fetchRecommendOotdPost(selectedInterest),
-        {
-            keepPreviousData: true,
-            onSuccess: () => {
-                // 데이터 로드 후 스크롤 버튼 체크
-                checkScroll();
-            },
-        }
+      ['recommendOotdPost', selectedInterest],
+      () => fetchRecommendOotdPost(selectedInterest),
+      {
+        keepPreviousData: true, // 데이터를 유지하면서 새 데이터를 가져옴
+       // selectedInterest가 설정되었을 때만 호출
+      }
     );
 
-    const totalCount = data?.result?.ootdList?.length ?? 0;
-    const totalSlides = Math.ceil(totalCount / itemsPerSlide);
-
+    useEffect(() => {
+        refetch();  // 관심사가 변경될 때마다 API를 다시 호출
+      }, [selectedInterest, refetch]); // selectedInterest가 변경될 때만 실행
+  
     useEffect(() => {
         if (userInfo) {
-            fetchLikedPosts().then(setLikedPosts);
-            fetchUserInterests();
+          fetchUserInterests(); // 유저 관심사 로딩
+          fetchLikedPosts().then(setLikedPosts); // 좋아요한 게시물 로딩
+          if (!selectedInterest) {
+            setSelectedInterest(blogInterests[0]);  // 유저 관심사가 없을 때 기본 관심사 설정
+          }
         }
-    }, [userInfo]);
-
+      }, [userInfo]); // userInfo가 변경될 때만 실행
+  
     const fetchUserInterests = async () => {
-        try {
-            const userInterests = userInfo?.koreanInterestedTypes || [];
-            const userName = userInfo?.nickName;
-            setUserName(userName);
-
-            if (userInterests.length > 0) {
-                setFilteredInterests(blogInterests.filter(interest => userInterests.includes(interest)));
-                setSelectedInterest(userInterests[0]);
-            } else {
-                setSelectedInterest(blogInterests[0]);
-            }
-        } catch (error) {
-            console.error('Error fetching user interests:', error);
+      try {
+        const userInterests = userInfo?.koreanInterestedTypes || [];
+        const userName = userInfo?.nickName;
+        setUserName(userName);
+  
+        if (userInterests.length > 0) {
+          setFilteredInterests(blogInterests.filter(interest => userInterests.includes(interest)));
+          setSelectedInterest(userInterests[0]); // 첫 번째 관심사로 설정
+        } else {
+          setSelectedInterest(blogInterests[0]); // 유저 관심사가 없으면 기본 설정
         }
+      } catch (error) {
+        console.error('Error fetching user interests:', error);
+      }
     };
+  
+    const totalCount = data?.result?.ootdList?.length ?? 0; // 전체 OOTD 개수
 
+    console.log(totalCount);
+    const totalSlides = Math.ceil(totalCount / itemsPerSlide); // 총 슬라이드 수
+  
     const updateItemsPerSlide = () => {
-        if (typeof window !== 'undefined') {
-            const width = window.innerWidth;
-            if (width < 700) {
-                setItemsPerSlide(2);
-            } else if (width < 1000) {
-                setItemsPerSlide(3);
-            } else {
-                setItemsPerSlide(4);
-            }
+      if (typeof window !== 'undefined') {
+        const width = window.innerWidth;
+        if (width < 700) {
+          setItemsPerSlide(2); // 화면 너비가 700px 이하일 때 2개씩
+        } else if (width < 1024) {
+          setItemsPerSlide(3); // 화면 너비가 1000px 이하일 때 3개씩
+        } else {
+          setItemsPerSlide(4); // 그 외에는 4개씩
         }
+      }
     };
-
+  
+    // 첫 번째 슬라이드인지 확인
+    const isAtFirstSlide = currentSlide === 0;
+  
+    // 마지막 슬라이드인지 확인 (마지막 슬라이드가 정확하게 나타나도록 수정)
+    const isAtLastSlide = currentSlide + itemsPerSlide >= totalCount;
+  
+    useEffect(() => {
+      updateItemsPerSlide();
+      window.addEventListener('resize', updateItemsPerSlide);
+  
+      return () => {
+        window.removeEventListener('resize', updateItemsPerSlide);
+      };
+    }, []);
+  
     useEffect(() => {
         updateItemsPerSlide();
         window.addEventListener('resize', updateItemsPerSlide);
@@ -153,72 +176,60 @@ const TagContainer: React.FC<TagContainerProps> = ({ item }) => {
     }, []);
 
     const [showScrollButtons, setShowScrollButtons] = useState(false);
-
+  
     // 스크롤 가능 여부를 확인하는 함수
     const checkScroll = () => {
-        if (scrollRef.current) {
-            const { scrollWidth, clientWidth } = scrollRef.current;
-            setShowScrollButtons(scrollWidth > clientWidth);
-        }
+      if (scrollRef.current) {
+        const { scrollWidth, clientWidth } = scrollRef.current;
+        setShowScrollButtons(scrollWidth > clientWidth);
+      }
     };
-
-    useEffect(() => {
-        // 컴포넌트가 처음 로드될 때, 그리고 데이터 로드 후 스크롤 가능 여부 체크
-        checkScroll();
-    }, [filteredInterests, data]); // 데이터 로드 후에도 스크롤 상태 체크
-
-    useEffect(() => {
-        setCurrentSlide(0);
-        refetch();
-        checkScroll();
-    }, [selectedInterest, refetch]);
-
+  
     const handleScrollEnd = () => {
-        checkScroll();
+      checkScroll();
     };
-
+  
     const handleScroll = (direction: string) => {
-        if (scrollRef.current) {
-            const scrollAmount = direction === 'left' ? -100 : 100;
-            scrollRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
-        }
+      if (scrollRef.current) {
+        const scrollAmount = direction === 'left' ? -100 : 100;
+        scrollRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+      }
     };
-
+  
     const handleDrag = (e: React.MouseEvent) => {
-        e.preventDefault();
-        const startX = e.clientX;
-        const scrollLeft = scrollRef.current!.scrollLeft;
-
-        const onMouseMove = (moveEvent: MouseEvent) => {
-            const x = moveEvent.clientX - startX;
-            scrollRef.current!.scrollLeft = scrollLeft - x;
-        };
-
-        const onMouseUp = () => {
-            document.removeEventListener('mousemove', onMouseMove);
-            document.removeEventListener('mouseup', onMouseUp);
-        };
-
-        document.addEventListener('mousemove', onMouseMove);
-        document.addEventListener('mouseup', onMouseUp);
+      e.preventDefault();
+      const startX = e.clientX;
+      const scrollLeft = scrollRef.current!.scrollLeft;
+  
+      const onMouseMove = (moveEvent: MouseEvent) => {
+        const x = moveEvent.clientX - startX;
+        scrollRef.current!.scrollLeft = scrollLeft - x;
+      };
+  
+      const onMouseUp = () => {
+        document.removeEventListener('mousemove', onMouseMove);
+        document.removeEventListener('mouseup', onMouseUp);
+      };
+  
+      document.addEventListener('mousemove', onMouseMove);
+      document.addEventListener('mouseup', onMouseUp);
     };
-
+  
     const handleOotdItemClick = (id: number) => {
-        router.push(`/ootd/${id}`);
+      router.push(`/ootd/${id}`);
     };
-
+  
     const handleWriteBtnClick = () => {
-        if (!userInfo) {
-            router.push("/login");
-        } else {
-            router.push('/write');
-        }
+      if (!userInfo) {
+        router.push("/login");
+      } else {
+        router.push('/write');
+      }
     };
-
+  
     const handleGoEditPage = () => {
-        router.push("/editProfile");
+      router.push("/editProfile");
     };
-
     const slides = [];
     if (data?.result?.ootdList) {
         for (let i = 0; i < data.result.ootdList.length; i += itemsPerSlide) {
@@ -238,9 +249,7 @@ const TagContainer: React.FC<TagContainerProps> = ({ item }) => {
         }
     };
 
-    const isAtFirstSlide = currentSlide === 0;
-    const isAtLastSlide = currentSlide === totalSlides - 1;
-    const shouldShowButtons = itemsPerSlide < totalCount;
+
 
     const [windowWidth, setWindowWidth] = useState<number | null>(null);
 
@@ -364,7 +373,7 @@ const TagContainer: React.FC<TagContainerProps> = ({ item }) => {
                     />
                 )}
             </div>
-            {!isAtFirstSlide && shouldShowButtons && (
+            {!isAtFirstSlide  &&  (
            <Image
            src={SwiperLeftButton}
            alt="Previous"
@@ -457,7 +466,7 @@ const TagContainer: React.FC<TagContainerProps> = ({ item }) => {
                     )}
                 </Swiper>
             </div>
-            {!isAtLastSlide && shouldShowButtons && (
+            {!isAtLastSlide  && (
                 <Image
                     src={SwiperRightButton}
                     alt="Next"
