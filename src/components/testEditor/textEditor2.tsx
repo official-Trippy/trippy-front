@@ -1,22 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Editor } from '@tinymce/tinymce-react';
 import { uploadImage } from '@/services/blog';
 
 interface editorProps {
     postRequest: any;
     setPostRequest: any;
-    onImageUpload: (imageUrl: string) => void; // 이미지 업로드 핸들러를 props로 추가
 }
 
 const inputAPI = process.env.NEXT_PUBLIC_INPUT_TEXT_API_KEY;
 
-const MyTinyMCEEditor = ({ postRequest, setPostRequest, onImageUpload }: editorProps) => {
-    const [contented, setContented] = useState('')
+const MyTinyMCEEditor = ({ postRequest, setPostRequest }: editorProps) => {
+    const editorRef = useRef<any>(null); // 에디터 참조 생성
 
     const handleEditorChange = (content: string) => {
-        setContented((prev: any) => ({ ...prev, body: content })); // 에디터 내용 업데이트
-
-        const imgTags = content.match(/<img[^>]*>/g) || [];
         let index = 1;
 
         // 이미지 태그를 인덱스로 대체
@@ -48,11 +44,25 @@ const MyTinyMCEEditor = ({ postRequest, setPostRequest, onImageUpload }: editorP
         }
     };
 
-    console.log(postRequest); // postRequest 확인
+    const renderBodyWithImages = (body: string, images: { accessUri: string }[]) => {
+        return body.replace(/imageData(\d+)/g, (match, index) => {
+            const imgIndex = parseInt(index) - 1; // imageData1 -> 0, imageData2 -> 1 등
+            const image = images[imgIndex]; // 해당 이미지 객체 가져오기
+            return image ? `<img src="${image.accessUri}" alt="Uploaded Image" width="600" />` : match; // 이미지가 있으면 img 태그 반환, 없으면 원래 문자열 반환
+        });
+    };
+
+    const handleSaveEditorContent = () => {
+        if (editorRef.current) {
+            const content = editorRef.current.getContent(); // 에디터 내용 가져오기
+            handleEditorChange(content); // 내용 업데이트
+        }
+    };
 
     return (
         <div>
             <Editor
+                ref={editorRef} // 에디터 참조 설정
                 initialValue="<p>여러분의 경험을 자유롭게 적어주세요.</p>"
                 apiKey={inputAPI}
                 init={{
@@ -81,8 +91,9 @@ const MyTinyMCEEditor = ({ postRequest, setPostRequest, onImageUpload }: editorP
                         'removeformat | undo redo',
                     images_upload_handler: handleImageUpload, // 이미지 업로드 핸들러 지정
                 }}
-                value={contented} // 에디터의 내용을 상태로 관리
+                value={renderBodyWithImages(postRequest.body, postRequest.images)} // 에디터의 내용을 상태로 관리
                 onEditorChange={handleEditorChange}
+                onBlur={handleSaveEditorContent} // 포커스 아웃 시 내용 저장
             />
         </div>
     );

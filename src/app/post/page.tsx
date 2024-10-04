@@ -420,7 +420,7 @@ function PostWrite() {
     return (
         <div className=''>
             {/* <Header /> */}
-            <div className='w-[90%] sm-700:w-[66%] mx-auto'>
+            <div className='w-[90%] sm-700:w-[50%] mx-auto'>
                 <div className='flex items-center mt-[5rem]'>
                     <button
                         onClick={() => handleButtonClick('#55FBAF', 0)}
@@ -449,8 +449,8 @@ function PostWrite() {
                     <button className='ml-auto flex bg-[#FB3463] text-white text-[1.6rem] font-semibold rounded-[1rem] px-[2.5rem] py-[0.5rem]' onClick={addPost}>올리기</button>
                 </div>
                 {typeof window !== 'undefined' && window.innerWidth > 600 ? (
-                    <div className='w-full h-[32rem] border border-[#D9D9D9] rounded-[1rem] flex mx-auto mt-[2rem]'>
-                        <div className={`w-[15.4rem] h-full bg-[${bgColor}] rounded-l-[1rem]`}></div>
+                    <div className='max-w-full h-[32rem] border border-[#D9D9D9] rounded-[1rem] flex mx-auto mt-[2rem]'>
+                        <div className={`w-full max-w-[4.7rem] min-w-[1.7rem] h-full bg-[${bgColor}] rounded-l-[1rem]`}></div>
                         <div className='w-full mt-[5rem] relative'>
                             <div className='flex justify-center'>
                                 <div>
@@ -495,7 +495,7 @@ function PostWrite() {
                                 </div>
                                 <div className='ml-[5rem]'>
                                     <h1 className='h-[9rem] text-[2rem] xl:text-[6rem] lg:text-[3rem] sm:text-[2rem] text-[#292929]  font-extrabold font-akira'>{result1?.result.isoAlp3}</h1>
-                                    <div className='w-[11rem] xl:w-[18rem] sm:w-[11rem] h-[3.6rem] px-[2rem] shadowall rounded-[0.8rem] flex mt-4'>
+                                    <div className='w-[11rem] xl:w-[18rem] lg:w-[11rem] h-[3.6rem] px-[2rem] shadowall rounded-[0.8rem] flex mt-4'>
                                         <input
                                             className='w-[5rem] xl:w-[12rem] sm:w-[5rem] text-[1.6rem] outline-none'
                                             type='text'
@@ -515,24 +515,24 @@ function PostWrite() {
                                 </div>
                             </div>
                             <div className='w-[95%] border-2 border-dashed border-[#CFCFCF] my-[3rem] mx-auto relative z-0' />
-                            <div className={`flex ml-[7rem] text-[1.4rem] font-extrabold font-akira`}
+                            <div className={`flex ml-[2rem] 2xl:ml-[7rem] lg:ml-[2rem] text-[1.4rem] font-extrabold font-akira`}
                                 style={{ color: bgColor || 'inherit' }}
                             >
-                                <span className='w-[17.2rem]'>PASSENGER</span>
-                                <span className='w-[25rem] ml-[1.5rem]'>DATE</span>
-                                <span className='w-[8rem]'>GROUP</span>
+                                <span className='w-full max-w-[17.2rem] min-w-[10rem]'>PASSENGER</span>
+                                <span className='w-full max-w-[25rem] min-w-[10rem] ml-[2.5rem]'>DATE</span>
+                                <span className='w-full max-w-[8rem] min-w-[2rem]'>GROUP</span>
                             </div>
-                            <div className={`flex ml-[7rem] text-[1.4rem] font-extrabold text-[#6B6B6B] relative`}>
-                                <span className='w-[17rem] flex mt-[0.3rem]'>{memberData?.result.nickName}</span>
+                            <div className={`flex ml-[2rem] 2xl:ml-[7rem] lg:ml-[2rem] text-[1.4rem] font-extrabold text-[#6B6B6B] relative`}>
+                                <span className='w-full max-w-[17.2rem] min-w-[6rem] flex mt-[0.3rem]'>{memberData?.result.nickName}</span>
                                 <DateInput2 onDateChange={handleDateChange} startDate={String(startDate)} endDate={String(endDate)} setEndDate={setEndDate} setStartDate={setStartDate} />
-                                <div className='w-[8rem] flex text-[1.6rem]'>
+                                <div className='w-full max-w-[8rem] min-w-[2rem] flex text-[1.6rem]'>
                                     <button className='text-[#FB3463] flex text-[2rem]' onClick={handleDecrease}>-</button>
                                     <span className='mx-[1rem] mt-[0.5rem]'>{passengerCount}</span>
                                     <button className='text-[#FB3463] flex text-[2rem]' onClick={handleIncrease}>+</button>
                                 </div>
                             </div>
                         </div>
-                        <div className={`w-[90%] max-w-[40rem] h-full bg-[${bgColor}] rounded-r-[1rem] flex ml-auto`}>
+                        <div className={`w-full max-w-[35rem] min-w-[20rem] h-full bg-[${bgColor}] rounded-r-[1rem] flex ml-auto`}>
                             <div className='absolute'>
                                 <div className='relative bg-white w-[4rem] h-[4rem] rounded-full -mt-[2rem] -ml-[2rem]'></div>
                                 <div className='relative bg-white w-[4rem] h-[4rem] rounded-full mt-[28rem] -ml-[2rem]'></div>
@@ -687,9 +687,6 @@ function PostWrite() {
                                 <MyTinyMCEEditor
                                     postRequest={postRequests}
                                     setPostRequest={setPostRequests}
-                                    onImageUpload={(imageUrl) => {
-                                        setImages((prevImages: any) => [...prevImages, imageUrl]); // 이미지 URL을 images 상태에 추가
-                                    }}
 
                                 />
 
