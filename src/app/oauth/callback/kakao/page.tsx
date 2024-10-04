@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
-import axios, { AxiosError } from "axios";  // AxiosError 추가
+import axios, { AxiosError } from "axios"; // AxiosError 추가
 import Image from "next/image";
 import LogoMain from "../../../../../public/LogoMain.svg";
 
@@ -27,7 +27,7 @@ export default function KakaoTalk() {
         const accessToken = res.data.data.access_token;
 
         console.log("Access token received:", accessToken);
-        console.log("data returned from api: ", data); 
+        console.log("data returned from api: ", data);
 
         const socialName = "kakao";
         const roleRes = await axios.post(
@@ -45,16 +45,7 @@ export default function KakaoTalk() {
         Cookies.set("role", role);
 
         console.log("User role received:", role);
-<<<<<<< HEAD
         if (role === "MEMBER" || role === "ADMIN") {
-=======
-
-        // 인증 후 경로를 업데이트하여 뒤로 가기를 눌러도 다시 인증 시도하지 않도록 처리
-        window.history.replaceState(null, "", "/blogRegister");
-
-        // role에 따라 페이지 이동
-        if (role === "MEMBER") {
->>>>>>> 8e40fc1572000fff9ffd95dc119acf65dce09a3e
           router.push("/");
           router.refresh();
           return;

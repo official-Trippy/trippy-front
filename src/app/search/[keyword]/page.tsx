@@ -8,6 +8,8 @@ import axios from "axios";
 import SortingBar from "@/components/search/sortingBar";
 import PostAllCard from "@/components/search/postAllCard";
 import MobilePopularSearch from "@/components/search/mobilePopularSearch";
+import SearchBar from "@/components/search/searchBar";
+import { IoIosArrowBack } from "react-icons/io";
 
 const SearchPage = () => {
   const [posts, setPosts] = useState<any[]>([]); // 보여줄 포스트
@@ -27,6 +29,7 @@ const SearchPage = () => {
   const RealKeyword = decodeURIComponent(keyword as string);
 
   const [isMobileView, setIsMobileView] = useState(false);
+  const [isMobileSearch, setIsMobileSearch] = useState(false);
 
   // 검색 결과 가져오기 (처음 4개 타입에 대해 요청)
   useEffect(() => {
@@ -41,7 +44,8 @@ const SearchPage = () => {
   // 화면 크기 확인
   useEffect(() => {
     const handleResize = () => {
-      setIsMobileView(window.innerWidth <= 1200);
+      setIsMobileView(window.innerWidth <= 1050);
+      setIsMobileSearch(window.innerWidth <= 1000);
     };
 
     handleResize(); // 초기 로드 시 체크
@@ -148,7 +152,7 @@ const SearchPage = () => {
 
   return (
     <div className="w-full min-h-screen bg-white">
-      <div className="w-[90%] lg:w-[100%] mx-auto mt-8 px-4 lg:px-10 max-w-[1250px]">
+      <div className="w-[100%] mx-auto mt-8 px-4 lg:px-10 max-w-[1250px]">
         <div className="mb-0">
           {isMobileView ? (
             <MobilePopularSearch popularSearches={popularSearches} />
@@ -158,13 +162,24 @@ const SearchPage = () => {
         </div>
         {/* 검색 결과 제목 */}
         <div className="flex flex-row justify-between  items-center">
-
           <h1 className="sm-700:text-[2rem] md-700:text-[3.6rem] text-[1.6rem] lg:text-3xl font-semibold mb-6 sm:min-w-[500px] min-w-[150px]">
             <span className="text-[#FB3463]">{RealKeyword}</span>에 대한{" "}
             <span className="text-[#FB3463]"> {count}</span>건의 검색
             결과입니다.
           </h1>
         </div>
+        {isMobileSearch ? (
+          <div className="flex items-center w-[100%]">
+            <IoIosArrowBack
+              className="text-gray-600 cursor-pointer mr-4"
+              size={24}
+              // 모달 닫기
+            />
+            <SearchBar />
+          </div>
+        ) : (
+          ""
+        )}
 
         {/* Sorting Bar */}
         <SortingBar
@@ -181,19 +196,19 @@ const SearchPage = () => {
         />
 
         {/* Posts Section */}
-        <div className="flex flex-col lg:flex-row mx-auto">
-          <div className="flex-grow w-full">
+        <div className="flex flex-col lg:flex-row mx-auto w-full">
+          <div className="w-full sm:w-[100%]">
             {isLoading ? (
-              <p></p>
+              <p>Loading...</p>
             ) : posts.length > 0 ? (
-              <div className="flex flex-wrap justify-start items-start gap-[15px] lg:gap-[25px]">
+              <div className="justify-start items-start gap-4 lg:gap-6">
                 <PostAllCard
                   posts={posts}
                   selectedSearchType={selectedSearchType}
                 />
               </div>
             ) : (
-              <div className="flex-grow max-w-full lg:max-w-[790px]">
+              <div className="max-w-full lg:max-w-[790px]">
                 <h1 className="text-lg lg:text-2xl font-semibold mb-6">
                   <span className="text-[#FB3463]">{RealKeyword}</span>에 대한
                   검색 결과가 없습니다
