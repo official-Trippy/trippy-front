@@ -11,6 +11,8 @@ interface INotification {
   senderNickName: string;
   createdAt: string;
   read: boolean;
+  postType: string;
+  postId: number;
 }
 
 const Notification: React.FC = () => {
@@ -20,6 +22,10 @@ const Notification: React.FC = () => {
   const queryClient = useQueryClient();
   const accessToken = Cookies.get("accessToken");
   const router = useRouter();
+
+  const goUserPage = (postType: string, postId: number) => {
+    router.push(`/${postType.toLowerCase()}/${postId}`);
+  };
 
   useEffect(() => {
     const handleResize = () => {
@@ -86,14 +92,12 @@ const Notification: React.FC = () => {
 
   const latestNotification = notifications[notifications.length - 1];
 
-
-
   if (isMobile) {
     return (
       <div
         className="fixed top-[7.4rem] left-[50%] translate-x-[-50%] bg-[rgba(49,49,49,0.95)] rounded-[10px] shadow-[0px_0px_10px_0px_rgba(0,0,0,0.08)] inline-flex items-center gap-[9px] px-[12px] py-[13px] w-[90%] h-[45px] z-50"
         onClick={() => {
-          router.push("/notifications");
+          goUserPage(latestNotification.postType, latestNotification.postId);
         }}
       >
         <img
@@ -124,6 +128,9 @@ const Notification: React.FC = () => {
           <div
             key={notification.notifyId}
             className="w-[337px] h-[60px] rounded-lg flex items-center p-4"
+            onClick={() => {
+              goUserPage(notification.postType, notification.postId);
+            }}
           >
             <img
               className="w-[60px] h-[60px] rounded-full flex-shrink-0"

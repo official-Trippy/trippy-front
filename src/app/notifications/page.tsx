@@ -15,6 +15,8 @@ interface INotification {
   createdAt: string;
   read: boolean;
   senderMemberId: string;
+  postId: number;
+  postType: string;
 }
 
 dayjs.extend(relativeTime);
@@ -81,8 +83,8 @@ const NotificationPage = () => {
 
   const notificationCount = notifications.length;
 
-  const goUserPage = (memberId: string) => {
-    router.push(`/user/${memberId}`);
+  const goUserPage = (postType: string, postId: number) => {
+    router.push(`/${postType.toLowerCase()}/${postId}`);
   };
   if (loading) {
     return (
@@ -106,13 +108,13 @@ const NotificationPage = () => {
       </div>
     );
   }
-  
+
   return (
     <div>
       <div className="header flex justify-between w-[90%] items-center sm-700:w-[50%] max-w-[800px] mx-auto relative">
         <h1 className="text-4xl font-bold">알림</h1>
       </div>
-  
+
       {/* 총 알림 개수 표시 */}
       <div className="sm-700:w-[50%] w-[90%] max-w-[800px] mx-auto my-4">
         {notificationCount > 0 ? (
@@ -124,7 +126,7 @@ const NotificationPage = () => {
           <h2 className="text-2xl font-semibold">새로운 알림이 없습니다.</h2>
         )}
       </div>
-  
+
       {/* 알림 리스트 표시 영역 */}
       <div className="sm-700:w-[50%] sm-700:mb-0 w-[90%] max-w-[800px] mx-auto my-8 flex justify-start mb-[80px]">
         {notificationCount === 0 ? (
@@ -135,12 +137,16 @@ const NotificationPage = () => {
               <div
                 key={notification.notifyId}
                 className="cursor-pointer flex items-center p-4 border rounded-lg shadow-sm bg-white w-full"
-                onClick={() => goUserPage(notification.senderMemberId)}
+                onClick={() =>
+                  goUserPage(notification.postType, notification.postId)
+                }
               >
                 {/* 프로필 이미지 */}
                 <div className="w-16 h-16 rounded-full overflow-hidden">
                   <img
-                    src={notification.senderProfileImgUri || "/default-image.png"}
+                    src={
+                      notification.senderProfileImgUri || "/default-image.png"
+                    }
                     alt={notification.senderNickName}
                     className="w-full h-full object-cover"
                   />
