@@ -31,6 +31,7 @@ import editPost from '@/services/board/patch/editPost'
 import editTicket from '@/services/board/patch/editTicket'
 import { PostAirSVG, PostBusSVG, PostBycicleSVG, PostCarSVG, PostTrainSVG } from '@/components/transportsvg/post'
 import DateInput2 from '@/components/board/DateInput2'
+import TextEditorEdits from '@/components/testEditor/textEditorEdits'
 
 interface CountryResult {
     countryIsoAlp2: string;
@@ -426,7 +427,7 @@ function PostEdit({ params }: { params: { editNum: number } }) {
     return (
         <div>
             {/* <Header /> */}
-            <div className='w-[90%] sm-700:w-[66%] mx-auto'>
+            <div className='w-[90%] sm-700:w-[50%] mx-auto'>
                 <div className='flex items-center mt-[5rem]'>
                     <button
                         onClick={() => handleButtonClick('#55FBAF', 0)}
@@ -456,11 +457,11 @@ function PostEdit({ params }: { params: { editNum: number } }) {
                 </div>
                 {typeof window !== 'undefined' && window.innerWidth > 600 ? (
                     <div className='w-full h-[32rem] border border-[#D9D9D9] rounded-[1rem] flex mx-auto mt-[2rem]'>
-                        <div className={`w-[15.4rem] h-full bg-[${bgColor}] rounded-l-[1rem]`}
+                        <div className={`w-full max-w-[4.7rem] min-w-[1.7rem] h-full bg-[${bgColor}] rounded-l-[1rem]`}
                             style={{ color: colorTicket[postData?.result.ticket.ticketColor] || 'inherit' }}></div>
-                        <div className='w-full mt-[5rem] relative'>
+                        <div className='w-full max-w-[60rem] min-w-[45rem] mt-[5rem] relative'>
                             <div className='flex justify-center'>
-                                <div className='ml-[5rem]'>
+                                <div className=''>
                                     <h1 className='h-[9rem] text-[6rem] font-extrabold font-akira'>{result1?.result?.isoAlp3 || postData?.result?.ticket?.departureCode}</h1>
                                     <div className='w-[18rem] h-[3.6rem] px-[2rem] shadowall rounded-[0.8rem] flex mt-4'>
                                         <input
@@ -480,19 +481,19 @@ function PostEdit({ params }: { params: { editNum: number } }) {
                                         </button>
                                     </div>
                                 </div>
-                                <div className='relative bg-white z-10 ml-[4%] mr-[11%]'>
+                                <div className='relative bg-white z-10 ml-full ml-[1rem] mr-[8rem]'>
                                     {
                                         isTransport ? (
-                                            <div className='w-[6rem] h-[28rem] absolute z-10 bg-white shadowall rounded-[3rem] flex items-center justify-center mt-[1.5rem] flex-col space-y-9'>
+                                            <div className='w-[6rem] h-[32rem] absolute z-10 bg-white shadowall rounded-[3rem] flex items-center justify-center mt-[1.5rem] flex-col space-y-2'>
                                                 {isImageIdx.slice(0, 5).map((item: any, index) => (
-                                                    <div key={index} onClick={() => selectTransport(item.imgsrc)}>
+                                                    <div key={index} onClick={() => selectTransport(item.imgsrc)} className='w-[6rem] p-[1rem]'>
                                                         {item.imgsrc}
                                                     </div>
                                                 ))}
                                             </div>
                                         ) : (
                                             <div
-                                                className='w-[6rem] h-[6rem] absolute shadowall rounded-full flex items-center justify-center mt-[1.5rem]'
+                                                className='w-[6rem] h-[6rem] absolute shadowall rounded-full flex items-center justify-center mt-[1.5rem] p-[1rem]'
                                                 onClick={() => setIsTransport(true)}
                                             >
                                                 {isImageIdx[0]?.imgsrc}
@@ -522,44 +523,16 @@ function PostEdit({ params }: { params: { editNum: number } }) {
                                 </div>
                             </div>
                             <div className='w-[95%] border-2 border-dashed border-[#CFCFCF] my-[3rem] mx-auto relative z-0' />
-                            <div className={`flex ml-[7rem] text-[1.4rem] font-extrabold font-akira`}
+                            <div className={`flex ml-[2rem] 2xl:ml-[7rem] lg:ml-[2rem] text-[1.4rem] font-extrabold font-akira`}
                                 style={{ color: bgColor || 'inherit' }}
                             >
                                 <span className='w-[16rem]'>PASSENGER</span>
                                 <span className='w-[25rem] ml-[1rem]'>DATE</span>
                                 <span className='w-[8rem]'>GROUP</span>
                             </div>
-                            <div className={`flex ml-[7rem] text-[1.4rem] font-extrabold text-[#6B6B6B] relative`}>
+                            <div className={`flex ml-[2rem] 2xl:ml-[7rem] lg:ml-[2rem] text-[1.4rem] font-extrabold text-[#6B6B6B] relative`}>
                                 <span className='w-[16rem] flex mt-[0.3rem]'>{postData?.result.member.nickName}</span>
-                                {dateOpen ? (
-                                    <div className='w-[25rem]'>
-                                        <DatePicker
-                                            selected={startDates || undefined}
-                                            onChange={(dates) => {
-                                                const [start, end] = dates;
-                                                setStartDates(start);
-                                                setEndDates(end);
-                                                if (start && end) {
-                                                    setDateOpen(false);
-                                                }
-                                            }}
-                                            startDate={startDates || undefined}
-                                            endDate={endDates || undefined}
-                                            selectsRange
-                                            inline
-                                            dateFormat="yyyy. MM. dd"
-                                        />
-                                    </div>
-                                ) : (
-                                    <div className='w-[25rem] flex items-center ml-[1rem]' onClick={() => setDateOpen(true)}>
-                                        <Image src={date} alt='' />
-                                        {startDates && endDates ? (
-                                            <span>{formatDateRange()}</span>
-                                        ) : (
-                                            <span>{postData?.result.ticket.startDate} - {postData?.result.ticket.endDate}</span>
-                                        )}
-                                    </div>
-                                )}
+                                <DateInput2 onDateChange={handleDateChange} startDate={String(startDate)} endDate={String(endDate)} setEndDate={setEndDate} setStartDate={setStartDate} />
 
                                 <div className='w-[8rem] flex text-[1.6rem]'>
                                     <button className='text-[#FB3463] flex text-[2rem]' onClick={handleDecrease}>-</button>
@@ -568,7 +541,7 @@ function PostEdit({ params }: { params: { editNum: number } }) {
                                 </div>
                             </div>
                         </div>
-                        <div className={`w-[60rem] h-full bg-[${bgColor}] rounded-r-[1rem] flex ml-auto`}>
+                        <div className={`w-full max-w-[23.5rem] min-w-[17rem] h-full bg-[${bgColor}] rounded-r-[1rem] flex ml-auto`}>
                             <div className='absolute'>
                                 <div className='relative bg-white w-[4rem] h-[4rem] rounded-full -mt-[2rem] -ml-[2rem]'></div>
                                 <div className='relative bg-white w-[4rem] h-[4rem] rounded-full mt-[28rem] -ml-[2rem]'></div>
@@ -577,7 +550,7 @@ function PostEdit({ params }: { params: { editNum: number } }) {
                                 {thumbnailPreview === null ? (
                                     <div className="flex flex-col m-auto">
                                         <Image
-                                            className="w-[23rem] h-[26rem] rounded-[1rem] object-cover"
+                                            className="w-full max-w-[18.8rem] min-w-[10rem] h-[26rem] rounded-[1rem] object-cover"
                                             src={postData?.result.ticket.image.accessUri}
                                             alt=""
                                             width={230}
@@ -586,7 +559,7 @@ function PostEdit({ params }: { params: { editNum: number } }) {
                                     </div>
                                 ) : (
                                     <div className='flex flex-col m-auto'>
-                                        <Image className=' w-[30rem] h-[25rem] rounded-[1rem] object-cover' src={thumbnailPreview} width={400} height={250} alt='' />
+                                        <Image className=' w-full max-w-[18.8rem] min-w-[10rem] h-[25rem] rounded-[1rem] object-cover' src={thumbnailPreview} width={400} height={250} alt='' />
                                     </div>
                                 )}
 
@@ -733,12 +706,9 @@ function PostEdit({ params }: { params: { editNum: number } }) {
                                     />
                                 </div>
                                 {/* <TextEditor /> */}
-                                <MyTinyMCEEditor
+                                <TextEditorEdits
                                     postRequest={postRequests}
                                     setPostRequest={setPostRequests}
-                                    onImageUpload={(imageUrl) => {
-                                        setImages((prevImages: any) => [...prevImages, imageUrl]); // 이미지 URL을 images 상태에 추가
-                                    }}
 
                                 />
                                 <textarea

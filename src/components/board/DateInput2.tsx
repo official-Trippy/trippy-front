@@ -73,7 +73,7 @@ const DateInput2: React.FC<DateInputProps> = ({
   };
 
   return (
-    <div className="relative ml-[1.7rem] w-fit lg:w-[22rem] sm-700:w-[12rem] h-[1.7rem] lg:h-[4rem] sm-700:h-[1.7rem] rounded-[8px] border border-[#cfcfcf] flex items-center text-[0.8rem] lg:text-lg sm-700:text-[0.8rem] mr-[3rem]">
+    <div className="relative w-fit lg:w-[22rem] sm-700:w-[12rem] h-[1.7rem] lg:h-[4rem] sm-700:h-[1.7rem] rounded-[8px] border border-[#cfcfcf] flex items-center text-[0.8rem] lg:text-lg sm-700:text-[0.8rem] mr-[3rem]">
       <input
         type="text"
         value={inputValue}
