@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
-import axios, { AxiosError } from "axios";  // AxiosError 추가
+import axios, { AxiosError } from "axios"; // AxiosError 추가
 import Image from "next/image";
 import LogoMain from "../../../../../public/LogoMain.svg";
 
@@ -27,8 +27,9 @@ export default function KakaoTalk() {
         const accessToken = res.data.data.access_token;
 
         console.log("Access token received:", accessToken);
-        console.log("data returned from api: ", data); 
-        
+
+        console.log("data returned from api: ", data);
+
 
         const socialName = "kakao";
         const roleRes = await axios.post(
@@ -45,7 +46,9 @@ export default function KakaoTalk() {
         Cookies.set("accessToken", roleRes.data.result.accessToken);
         Cookies.set("role", role);
 
+
         window.history.replaceState(null, "", "/blogRegister");
+
 
         console.log("User role received:", role);
         if (role === "MEMBER" || role === "ADMIN") {
