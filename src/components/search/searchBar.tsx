@@ -20,13 +20,13 @@ const SearchBar: React.FC = () => {
 
   return (
     <div className="w-full flex items-center justify-end px-6">
-      <div className="relative flex items-center w-full mx-auto max-w-[600px] min-w-[100px]]">
+      <div className="relative flex items-center w-full mx-auto max-w-[] min-w-[100px]]">
         <input
           type="text"
           value={query}
           onChange={handleInputChange}
           placeholder=""
-          className="w-full min-w-[100px] h-[32px] text-gray-800 border-none rounded-[16px] outline-none focus:ring-2 focus:ring-gray-300 pl-4" // Added padding-left here
+          className="w-full justify-start min-w-[100px] h-[32px] text-gray-800 border-none rounded-[16px] outline-none focus:ring-2 focus:ring-gray-300 pl-4" // Added padding-left here
           style={{
             backgroundColor: "#F5F5F5",
           }}
@@ -36,14 +36,14 @@ const SearchBar: React.FC = () => {
             }
           }}
         />
-         <Image
-            src={searchIcon}
-            alt="search"
-            width={18}
-            height={18}
-            onClick={handleSearch}
-            className="absolute right-3 text-gray-600 cursor-pointer"
-          />
+        <Image
+          src={searchIcon}
+          alt="search"
+          width={18}
+          height={18}
+          onClick={handleSearch}
+          className="absolute right-3 text-gray-600 cursor-pointer"
+        />
         {/* <FaSearch
           className="absolute right-3 text-gray-600 cursor-pointer"
           style={{
