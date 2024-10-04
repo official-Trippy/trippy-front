@@ -13,6 +13,7 @@ interface INotification {
   read: boolean;
   postType: string;
   postId: number;
+  senderMemberId: string;
 }
 
 const Notification: React.FC = () => {
@@ -23,8 +24,16 @@ const Notification: React.FC = () => {
   const accessToken = Cookies.get("accessToken");
   const router = useRouter();
 
-  const goUserPage = (postType: string, postId: number) => {
-    router.push(`/${postType.toLowerCase()}/${postId}`);
+  const goUserPage = (
+    postType: string | null,
+    postId: number,
+    senderMemberId: string
+  ) => {
+    if (postType) {
+      router.push(`/${postType.toLowerCase()}/${postId}`);
+    } else {
+      router.push(`/user/${senderMemberId}`);
+    }
   };
 
   useEffect(() => {
@@ -97,7 +106,11 @@ const Notification: React.FC = () => {
       <div
         className="fixed top-[7.4rem] left-[50%] translate-x-[-50%] bg-[rgba(49,49,49,0.95)] rounded-[10px] shadow-[0px_0px_10px_0px_rgba(0,0,0,0.08)] inline-flex items-center gap-[9px] px-[12px] py-[13px] w-[90%] h-[45px] z-50"
         onClick={() => {
-          goUserPage(latestNotification.postType, latestNotification.postId);
+          goUserPage(
+            latestNotification.postType,
+            latestNotification.postId,
+            latestNotification.senderMemberId
+          );
         }}
       >
         <img
@@ -129,7 +142,11 @@ const Notification: React.FC = () => {
             key={notification.notifyId}
             className="w-[337px] h-[60px] rounded-lg flex items-center p-4"
             onClick={() => {
-              goUserPage(notification.postType, notification.postId);
+              goUserPage(
+                notification.postType,
+                notification.postId,
+                notification.senderMemberId
+              );
             }}
           >
             <img

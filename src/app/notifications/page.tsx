@@ -83,9 +83,18 @@ const NotificationPage = () => {
 
   const notificationCount = notifications.length;
 
-  const goUserPage = (postType: string, postId: number) => {
-    router.push(`/${postType.toLowerCase()}/${postId}`);
+  const goUserPage = (
+    postType: string | null,
+    postId: number,
+    senderMemberId: string
+  ) => {
+    if (postType) {
+      router.push(`/${postType.toLowerCase()}/${postId}`);
+    } else {
+      router.push(`/user/${senderMemberId}`);
+    }
   };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-screen">
@@ -138,7 +147,11 @@ const NotificationPage = () => {
                 key={notification.notifyId}
                 className="cursor-pointer flex items-center p-4 border rounded-lg shadow-sm bg-white w-full"
                 onClick={() =>
-                  goUserPage(notification.postType, notification.postId)
+                  goUserPage(
+                    notification.postType,
+                    notification.postId,
+                    notification.senderMemberId
+                  )
                 }
               >
                 {/* 프로필 이미지 */}
