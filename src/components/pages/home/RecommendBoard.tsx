@@ -86,18 +86,16 @@ const RecommendBoard = () => {
     const [showScrollButtons, setShowScrollButtons] = useState(false);
     const [currentSlide, setCurrentSlide] = useState(0);
 
-    const { data, isLoading, error } = useQuery(['recommendOotdPost', selectedInterest], () => fetchRecommendBoard(selectedInterest), {
+
+    const { data, isLoading, error } = useQuery(['recommendPostPost', selectedInterest], () => fetchRecommendBoard(selectedInterest), {
         keepPreviousData: true,
     });
     console.log(data, selectedInterest)
     const totalCount = data?.result?.totalCnt;
 
 
-    const isAtFirstSlide = currentSlide === 0;
 
-    // 마지막 슬라이드인지 확인 (마지막 슬라이드가 정확하게 나타나도록 수정)
-    const isAtLastSlide = currentSlide + itemsPerSlide >= totalCount;
-
+    console.log(itemsPerSlide, totalCount)
     // 사용자 정보에서 관심사 가져오기
     const fetchUserInterests = async () => {
         try {
@@ -213,9 +211,9 @@ const RecommendBoard = () => {
     console.log(data)
     // 데이터 슬라이드 생성
     const slides = [];
-    if (data?.result?.ootdList) {
-        for (let i = 0; i < data.result.ootdList.length; i += itemsPerSlide) {
-            slides.push(data.result.ootdList.slice(i, i + itemsPerSlide));
+    if (data?.result?.postList) {
+        for (let i = 0; i < data.result.postList.length; i += itemsPerSlide) {
+            slides.push(data.result.postList.slice(i, i + itemsPerSlide));
         }
     }
 
@@ -223,13 +221,16 @@ const RecommendBoard = () => {
         if (swiperRef.current) {
             if (direction === 'left') {
                 swiperRef.current.swiper.slidePrev();
+                // 슬라이드 이동 후 currentSlide 업데이트
+                setCurrentSlide(prev => Math.max(prev - 1, 0));
             } else {
                 swiperRef.current.swiper.slideNext();
+                // 슬라이드 이동 후 currentSlide 업데이트
+                setCurrentSlide(prev => Math.max(prev + 1, 0));
             }
         }
     };
-
-
+    console.log(itemsPerSlide, totalCount, currentSlide)
 
     if (loading || showSkeleton || isLoading) {
         return <SkeletonRecBoard />;
@@ -251,7 +252,7 @@ const RecommendBoard = () => {
 
 
             <div className="flex items-center my-12 relative">
-                {(!userInfo || showScrollButtons) && (<Image
+                {!userInfo && currentSlide > 0 && (<Image
                     src={SwiperLeftButton}
                     alt="Previous"
                     width={25}
@@ -301,7 +302,7 @@ const RecommendBoard = () => {
                         )}
                     </div>
                 </div>
-                {(!userInfo || showScrollButtons) && data?.result?.postList?.length > 0 && (
+                {!userInfo && (
                     <Image
                         src={SwiperRightButton}
                         alt="Next"
@@ -320,7 +321,7 @@ const RecommendBoard = () => {
                     />
                 )}
             </div>
-            {!isAtFirstSlide && (
+            {currentSlide > 0 && (
                 <Image
                     src={SwiperLeftButton}
                     alt="Previous"
@@ -489,7 +490,7 @@ const RecommendBoard = () => {
                     )}
                 </Swiper>
             </div>
-            {!isAtLastSlide && (
+            {currentSlide <= (totalCount - 5) && (
                 <Image
                     src={SwiperRightButton}
                     alt="Next"
