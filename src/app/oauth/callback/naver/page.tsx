@@ -49,11 +49,13 @@ const NaverCallback = () => {
           window.history.replaceState(null, "", "/blogRegister");
 
           // role에 따라 페이지 이동
-          if (role === "MEMBER") {
-            router.push("/");
-          } else if (role === "GUEST") {
-            router.push("/blogRegister");
-          }
+          setTimeout(() => {
+            if (role === "MEMBER" || role === "ADMIN") {
+              router.push("/");
+            } else if (role === "GUEST") {
+              router.push("/blogRegister");
+            }
+          }, 100);
         } catch (error) {
           // 타입 가드 추가
           if (error instanceof AxiosError) {
