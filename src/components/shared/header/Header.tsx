@@ -44,7 +44,6 @@ const Header = () => {
     loadUserInfo();
   }, [fetchUserInfo]);
 
-
   //수정 고려중
   // useEffect(() => {
   //   const EventSource = EventSourcePolyfill || NativeEventSource;
@@ -345,16 +344,6 @@ const Header = () => {
             </div>
           )}
         </div>
-        {searchModalVisible && (
-          <div className="fixed inset-0 z-50 bg-white flex flex-col items-center pt-2 z-[9999]">
-            <div className="w-full max-w-[600px] flex justify-between items-center mb-4 px-4 py-2"></div>
-            <div className="w-full max-w-[600px] px-4">
-              <SearchBarMobileBar
-                setSearchModalVisible={setSearchModalVisible}
-              />
-            </div>
-          </div>
-        )}
       </div>
 
       {/* Mobile Layout */}
@@ -398,6 +387,14 @@ const Header = () => {
           {/* <div className="ml-[5px] my-auto">로그아웃</div> */}
         </div>
       </div>
+      {searchModalVisible && (
+        <div className="fixed inset-0 z-50 bg-white flex flex-col items-center pt-2 z-[9999]">
+          <div className="w-full max-w-[600px] flex justify-between items-center mb-4 px-4 py-2"></div>
+          <div className="w-full max-w-[600px] px-4">
+            <SearchBarMobileBar setSearchModalVisible={setSearchModalVisible} />
+          </div>
+        </div>
+      )}
     </header>
   );
 };

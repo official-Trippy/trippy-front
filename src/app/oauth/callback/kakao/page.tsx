@@ -30,7 +30,6 @@ export default function KakaoTalk() {
 
         console.log("data returned from api: ", data);
 
-
         const socialName = "kakao";
         const roleRes = await axios.post(
           `${backendUrl}/api/member/login/oauth2/${socialName}`,
@@ -46,18 +45,16 @@ export default function KakaoTalk() {
         Cookies.set("accessToken", roleRes.data.result.accessToken);
         Cookies.set("role", role);
 
-
         window.history.replaceState(null, "", "/blogRegister");
 
-
         console.log("User role received:", role);
-        if (role === "MEMBER" || role === "ADMIN") {
-          router.push("/");
-          router.refresh();
-          return;
-        } else if (role === "GUEST") {
-          router.push("/blogRegister");
-        }
+        setTimeout(() => {
+          if (role === "MEMBER" || role === "ADMIN") {
+            router.push("/");
+          } else if (role === "GUEST") {
+            router.push("/blogRegister");
+          }
+        }, 100);
       } catch (error) {
         // 타입 가드 추가
         if (error instanceof AxiosError) {
