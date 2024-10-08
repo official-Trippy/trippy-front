@@ -628,12 +628,13 @@ function PostWrite() {
                             >
                                 <span className='w-[5rem]'>PASSENGER</span>
                                 <span className='w-[9rem] ml-[2rem]'>DATE</span>
-                                <span className='w-[2rem] ml-[5.5rem]'>GROUP</span>
+                                <span className='w-[2rem] ml-[2rem]'>GROUP</span>
                             </div>
                             <div className={`flex text-[0.5rem] ml-[1rem] items-center font-extrabold text-[#6B6B6B] relative`}>
                                 <span className='w-[5rem] flex mt-[0.3rem]'>{memberData?.result.nickName}</span>
-                                <DateInput2 onDateChange={handleDateChange} startDate={String(startDate)} endDate={String(endDate)} setEndDate={setEndDate} setStartDate={setStartDate} />
-
+                                <div className='ml-[2rem]'>
+                                    <DateInput2 onDateChange={handleDateChange} startDate={String(startDate)} endDate={String(endDate)} setEndDate={setEndDate} setStartDate={setStartDate} />
+                                </div>
                                 <div className='w-[5rem] flex text-[0.8rem] items-center'>
                                     <button className='text-[#FB3463] flex text-[1.2rem] items-center -mt-[0.2rem]' onClick={handleDecrease}>-</button>
                                     <span className='mx-[0.5rem]'>{passengerCount}</span>
