@@ -739,7 +739,7 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
               if (images[imageIndex]) {
                 return (
                   <Image
-                    className="max-w-[60rem] max-h-[60rem]"
+                    className="w-full"
                     src={images[imageIndex].accessUri}
                     alt=""
                     key={index}

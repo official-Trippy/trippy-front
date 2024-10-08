@@ -73,18 +73,18 @@ const DateInput2: React.FC<DateInputProps> = ({
   };
 
   return (
-    <div className="relative w-fit lg:w-[22rem] sm-700:w-[12rem] h-[1.7rem] lg:h-[4rem] sm-700:h-[1.7rem] rounded-[8px] border border-[#cfcfcf] flex items-center text-[0.8rem] lg:text-lg sm-700:text-[0.8rem] mr-[3rem]">
+    <div className="relative w-fit lg:w-[22rem] sm-700:w-[14rem] h-[1.5rem] lg:h-[4rem] sm-700:h-[1.5rem] rounded-[8px] border border-[#cfcfcf] flex items-center text-[0.8rem] lg:text-lg sm-700:text-[0.4rem] mr-[3rem]">
       <input
         type="text"
         value={inputValue}
         readOnly // 직접 입력을 막기 위해 readOnly로 설정
-        className="datepicker-input h-full py-0 px-4 border-none text-[#cfcfcf] rounded-[8px] placeholder:text-[#cfcfcf]"
+        className="datepicker-input h-full py-0 px-2 border-none text-[#cfcfcf] text-[0.4rem] lg:text-[0.8rem] sm-700:text-[0.4rem] rounded-[8px] placeholder:text-[#cfcfcf]"
         placeholder="날짜 선택 (YYYYMMDD)"
       />
       <Image
         src={CalendarIcon}
         alt="Calendar Icon"
-        className="absolute right-2 cursor-pointer w-[2rem] lg:w-[4rem] sm-700:w-[2rem]"
+        className="absolute right-1 cursor-pointer w-[2rem] lg:w-[4rem] sm-700:w-[2rem]"
         onClick={handleCalendarClick} // 달력 아이콘 클릭 시 모달 열기
       />
 
