@@ -514,7 +514,7 @@ function PostWrite() {
                                     </div>
                                 </div>
                             </div>
-                            <div className='w-[95%] border-2 border-dashed border-[#CFCFCF] my-[3rem] mx-auto relative z-0' />
+                            <div className='w-[95%] border border-dashed border-[#CFCFCF] my-[3rem] mx-auto relative z-0' />
                             <div className={`flex ml-[2rem] 2xl:ml-[7rem] lg:ml-[2rem] text-[1.4rem] font-extrabold font-akira`}
                                 style={{ color: bgColor || 'inherit' }}
                             >
