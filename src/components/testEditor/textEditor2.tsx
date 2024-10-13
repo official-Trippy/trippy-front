@@ -13,15 +13,8 @@ const MyTinyMCEEditor = ({ postRequest, setPostRequest }: editorProps) => {
     const editorRef = useRef<any>(null); // 에디터 참조 생성
 
     const handleEditorChange = (content: string) => {
-        let index = 1;
-
-        // 이미지 태그를 인덱스로 대체
-        const cleanContent = content.replace(/<img[^>]*>/g, () => {
-            const imgIndex = "imageData" + index++;
-            return imgIndex.toString(); // 인덱스를 문자열로 반환
-        });
-
-        setPostRequest((prev: any) => ({ ...prev, body: cleanContent })); // 에디터 내용 업데이트
+        // 에디터 내용 업데이트
+        setPostRequest((prev: any) => ({ ...prev, body: content }));
     };
 
     const handleImageUpload = async (blobInfo: any) => {
@@ -48,7 +41,7 @@ const MyTinyMCEEditor = ({ postRequest, setPostRequest }: editorProps) => {
         return body.replace(/imageData(\d+)/g, (match, index) => {
             const imgIndex = parseInt(index) - 1; // imageData1 -> 0, imageData2 -> 1 등
             const image = images[imgIndex]; // 해당 이미지 객체 가져오기
-            return image ? `<img src="${image.accessUri}" alt="Uploaded Image" width="600" />` : match; // 이미지가 있으면 img 태그 반환, 없으면 원래 문자열 반환
+            return image ? `<img src="${image.accessUri}" alt="Uploaded Image" width="400" />` : match; // 이미지가 있으면 img 태그 반환, 없으면 원래 문자열 반환
         });
     };
 
@@ -92,7 +85,7 @@ const MyTinyMCEEditor = ({ postRequest, setPostRequest }: editorProps) => {
                     images_upload_handler: handleImageUpload, // 이미지 업로드 핸들러 지정
                 }}
                 value={renderBodyWithImages(postRequest.body, postRequest.images)} // 에디터의 내용을 상태로 관리
-                onEditorChange={handleEditorChange}
+                onEditorChange={handleEditorChange} // 텍스트 입력 시 내용 업데이트
                 onBlur={handleSaveEditorContent} // 포커스 아웃 시 내용 저장
             />
         </div>
