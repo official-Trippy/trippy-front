@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { Editor } from '@tinymce/tinymce-react';
 import { uploadImage } from '@/services/blog';
 
@@ -10,22 +10,13 @@ interface editorProps {
 const inputAPI = process.env.NEXT_PUBLIC_INPUT_TEXT_API_KEY;
 
 const TextEditorEdits = ({ postRequest, setPostRequest }: editorProps) => {
-    const [contented, setContented] = useState('');
+    const [editorInstance, setEditorInstance] = useState<any>(null);
 
     const handleEditorChange = (newContent: string) => {
-        // 이미지 태그를 인덱스로 대체
-        const imgTags = newContent.match(/<img[^>]*>/g) || [];
-        let index = 1;
-
-        const cleanContent = newContent.replace(/<img[^>]*>/g, () => {
-            const imgIndex = "imageData" + index++;
-            return imgIndex; // 인덱스를 문자열로 반환
-        });
-
-        setContented(cleanContent);
+        // 에디터 내용이 변경될 때마다 상태를 업데이트
         setPostRequest((prev: any) => ({
             ...prev,
-            body: cleanContent, // 텍스트 내용 업데이트
+            body: newContent, // 텍스트 내용 업데이트
         }));
     };
 
@@ -33,20 +24,20 @@ const TextEditorEdits = ({ postRequest, setPostRequest }: editorProps) => {
         const file = blobInfo.blob(); // blobInfo에서 파일 추출
 
         try {
-            const uploadedImage = await uploadImage(file);
-            const imageUrl = uploadedImage.result; // 업로드한 이미지의 URL
+            const uploadedImage = await uploadImage(file); // 이미지 업로드 함수 호출
+            const imageUrl = uploadedImage.result; // 업로드된 이미지 URL 가져오기
 
-            // 성공적인 업로드 후 URL을 배열에 추가
+            // 이미지 URL을 postRequest.images에 추가
             setPostRequest((prev: any) => ({
                 ...prev,
-                images: [...prev.images, { accessUri: imageUrl }], // 이미지 URL 추가
+                images: [...prev.images, imageUrl], // 이미지 URL 추가
             }));
 
             // 성공적인 업로드 후 URL을 반환
             return imageUrl;
         } catch (error) {
             console.error('Error uploading image:', error);
-            // failure('이미지 업로드에 실패했습니다.'); // 실패 시 에러 메시지
+            return ''; // 실패 시 빈 문자열 반환
         }
     };
 
@@ -56,6 +47,16 @@ const TextEditorEdits = ({ postRequest, setPostRequest }: editorProps) => {
             const image = images[imgIndex]; // 해당 이미지 객체 가져오기
             return image ? `<img src="${image.accessUri}" alt="Uploaded Image" width="400" height="300" />` : match; // 이미지가 있으면 img 태그 반환, 없으면 원래 문자열 반환
         });
+    };
+
+    const handleSaveEditorContent = () => {
+        if (editorInstance) {
+            const content = editorInstance.getContent(); // 에디터 내용 가져오기
+            setPostRequest((prev: any) => ({
+                ...prev,
+                body: content, // 내용 업데이트
+            }));
+        }
     };
 
     console.log(postRequest); // postRequest 확인
@@ -90,12 +91,10 @@ const TextEditorEdits = ({ postRequest, setPostRequest }: editorProps) => {
                         'image media codesample emoticons fullscreen preview | ' +
                         'removeformat | undo redo',
                     images_upload_handler: handleImageUpload, // 이미지 업로드 핸들러 지정
+
                 }}
                 value={renderBodyWithImages(postRequest.body, postRequest.images)} // 에디터의 내용을 상태로 관리
                 onEditorChange={handleEditorChange}
-            // dangerouslySetInnerHTML 사용하여 HTML을 직접 삽입
-            // 주의: XSS 공격 방지를 위해 신뢰할 수 있는 데이터만 사용해야 합니다.
-            // outputFormat="html" // HTML 형식으로 출력
             />
         </div>
     );
