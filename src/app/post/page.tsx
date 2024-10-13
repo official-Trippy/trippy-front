@@ -495,7 +495,7 @@ function PostWrite() {
                                 </div>
                                 <div className='ml-[5rem]'>
                                     <h1 className='h-[9rem] text-[2rem] xl:text-[6rem] lg:text-[3rem] sm:text-[2rem] text-[#292929]  font-extrabold font-akira'>{result1?.result.isoAlp3}</h1>
-                                    <div className='w-[11rem] xl:w-[18rem] lg:w-[11rem] h-[3.6rem] px-[2rem] shadowall rounded-[0.8rem] flex mt-4'>
+                                    <div className='w-[11rem] 2xl:w-[18rem] xl:w-[11rem] h-[3.6rem] px-[2rem] shadowall rounded-[0.8rem] flex mt-4'>
                                         <input
                                             className='w-[5rem] xl:w-[12rem] sm:w-[5rem] text-[1.6rem] outline-none'
                                             type='text'
@@ -518,12 +518,12 @@ function PostWrite() {
                             <div className={`flex ml-[2rem] 2xl:ml-[7rem] lg:ml-[2rem] text-[1.4rem] font-extrabold font-akira`}
                                 style={{ color: bgColor || 'inherit' }}
                             >
-                                <span className='w-full max-w-[17.2rem] min-w-[10rem]'>PASSENGER</span>
-                                <span className='w-full max-w-[25rem] min-w-[10rem] ml-[2.5rem]'>DATE</span>
+                                <span className='w-full max-w-[14.2rem] min-w-[10rem]'>PASSENGER</span>
+                                <span className='w-full max-w-[25rem] min-w-[10rem]'>DATE</span>
                                 <span className='w-full max-w-[8rem] min-w-[2rem]'>GROUP</span>
                             </div>
                             <div className={`flex ml-[2rem] 2xl:ml-[7rem] lg:ml-[2rem] text-[1.4rem] font-extrabold text-[#6B6B6B] relative`}>
-                                <span className='w-full max-w-[17.2rem] min-w-[6rem] flex mt-[0.3rem]'>{memberData?.result.nickName}</span>
+                                <span className='w-full max-w-[14.2rem] min-w-[6rem] flex mt-[0.3rem]'>{memberData?.result.nickName}</span>
                                 <DateInput2 onDateChange={handleDateChange} startDate={String(startDate)} endDate={String(endDate)} setEndDate={setEndDate} setStartDate={setStartDate} />
                                 <div className='w-full max-w-[8rem] min-w-[2rem] flex text-[1.6rem]'>
                                     <button className='text-[#FB3463] flex text-[2rem]' onClick={handleDecrease}>-</button>
