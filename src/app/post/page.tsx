@@ -449,15 +449,15 @@ function PostWrite() {
                     <button className='ml-auto flex bg-[#FB3463] text-white text-[1.6rem] font-semibold rounded-[1rem] px-[2.5rem] py-[0.5rem]' onClick={addPost}>올리기</button>
                 </div>
                 {typeof window !== 'undefined' && window.innerWidth > 600 ? (
-                    <div className='max-w-full h-[32rem] border border-[#D9D9D9] rounded-[1rem] flex mx-auto mt-[2rem]'>
-                        <div className={`w-full max-w-[4.7rem] min-w-[1.7rem] h-full bg-[${bgColor}] rounded-l-[1rem]`}></div>
+                    <div className='max-w-full h-[32rem] shadowall rounded-[1rem] flex mx-auto mt-[2rem]'>
+                        <div className={`w-full max-w-[4.7rem] min-w-[1.7rem] h-full bg-[${bgColor}] rounded-l-[1rem] shadowall`}></div>
                         <div className='w-full mt-[5rem] relative'>
                             <div className='flex justify-center'>
                                 <div>
-                                    <h1 className='h-[10rem] text-[2rem] xl:text-[6rem] lg:text-[3rem] sm:text-[2rem] text-[#292929]  font-extrabold font-akira'>{result?.result.isoAlp3}</h1>
-                                    <div className='w-[11rem] xl:w-[18rem] sm:w-[11rem] h-[3.6rem] px-[2rem] shadowall rounded-[0.8rem] flex'>
+                                    <h1 className='h-[10rem] text-[2rem] 2xl:text-[6rem] xl:text-[3rem] sm-1550:text-[2rem] text-[#292929]  font-extrabold font-akira items-center flex'>{result?.result.isoAlp3}</h1>
+                                    <div className='w-[8rem] 2xl:w-[18rem] sm-1200:sm-1550:sm:w-[8rem] h-[3.6rem] px-[2rem] shadowall rounded-[0.8rem] flex'>
                                         <input
-                                            className='w-[5rem] xl:w-[12rem] sm:w-[5rem] text-[1.6rem] outline-none'
+                                            className='w-[5rem] xl:w-[12rem] sm-1550:w-[5rem] text-[1.6rem] outline-none'
                                             type='text'
                                             placeholder='출발지'
                                             value={inputValue1} // 첫 번째 입력 값 상태
@@ -494,10 +494,10 @@ function PostWrite() {
                                     }
                                 </div>
                                 <div className='ml-[5rem]'>
-                                    <h1 className='h-[9rem] text-[2rem] xl:text-[6rem] lg:text-[3rem] sm:text-[2rem] text-[#292929]  font-extrabold font-akira'>{result1?.result.isoAlp3}</h1>
-                                    <div className='w-[11rem] 2xl:w-[18rem] xl:w-[11rem] h-[3.6rem] px-[2rem] shadowall rounded-[0.8rem] flex mt-4'>
+                                    <h1 className='h-[9rem] text-[2rem] 2xl:text-[6rem] xl:text-[3rem] sm-1550:text-[2rem] text-[#292929] items-center flex font-extrabold font-akira'>{result1?.result.isoAlp3}</h1>
+                                    <div className='w-[11rem] 2xl:w-[18rem] sm-1550:w-[11rem] h-[3.6rem] px-[2rem] shadowall rounded-[0.8rem] flex mt-4'>
                                         <input
-                                            className='w-[5rem] xl:w-[12rem] sm:w-[5rem] text-[1.6rem] outline-none'
+                                            className='w-[5rem] xl:w-[12rem] sm-1550:w-[5rem] text-[1.6rem] outline-none'
                                             type='text'
                                             placeholder='도착지'
                                             value={inputValue2} // 두 번째 입력 값 상태
@@ -532,7 +532,7 @@ function PostWrite() {
                                 </div>
                             </div>
                         </div>
-                        <div className={`w-full max-w-[35rem] min-w-[20rem] h-full bg-[${bgColor}] rounded-r-[1rem] flex ml-auto`}>
+                        <div className={`w-full max-w-[35rem] min-w-[20rem] h-full bg-[${bgColor}] rounded-r-[1rem] shadowall flex ml-auto`}>
                             <div className='absolute'>
                                 <div className='relative bg-white w-[4rem] h-[4rem] rounded-full -mt-[2rem] -ml-[2rem]'></div>
                                 <div className='relative bg-white w-[4rem] h-[4rem] rounded-full mt-[28rem] -ml-[2rem]'></div>
