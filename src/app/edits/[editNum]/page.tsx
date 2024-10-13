@@ -85,10 +85,7 @@ function PostEdit({ params }: { params: { editNum: number } }) {
         setTimeout(() => {
             if (postData) {
                 setTicketColor(colorTicket[postData.result.ticket.ticketColor]);
-                setPostRequests({
-                    body: postData.result.post.body || '',
-                    images: postData.result.post.images as string[], // 이미지 URL을 저장할 배열
-                });
+
                 setTransportStr(postData?.result.ticket.transport);
 
                 // transportStr에 따라 이미지 설정

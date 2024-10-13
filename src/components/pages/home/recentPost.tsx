@@ -204,24 +204,25 @@ function RecentPost({ allPosts, setAllPosts, boardData, boardRefetch, PAGE_SIZE,
                                     {window.innerWidth > 500 ? (
                                         <div className="flex w-full">
                                             <div className='w-[25rem]'>
-                                                <Image className="w-[25rem] h-[17rem] rounded-[0.8rem] object-cover object-center" src={posts.ticket.image.accessUri} alt="" width={170} height={170} />
+                                                <Image className="w-[25rem] h-[17rem] rounded-[0.8rem] object-cover object-center" src={posts.ticket.image.accessUri} alt="" width={250} height={170} />
                                             </div>
                                             <div className='flex flex-col w-full ml-[2.5rem]'>
                                                 <h1 className="text-[2rem] font-medium text-ellipsis overflow-hidden theboki font-['Pretendard']">{posts.post.title}</h1>
                                                 <span className="text-[1.6rem] mt-[0.4rem] h-[5rem] font-normal text-[#6B6B6B] text-ellipsis overflow-hidden theboki1 font-['Pretendard']">{bodyText}</span>
                                                 <div className="flex items-center overflow-hidden whitespace-nowrap">
-                                                    {posts?.post.tags.map((tagData: string, index: number) => (
+                                                    {posts?.post.tags.slice(0, 3).map((tagData: string, index: number) => (
                                                         <span
                                                             key={index}
-                                                            className={`w-fit px-[0.8rem] py-[0.4rem] mt-[1.2rem] mr-[0.5rem] bg-[#F5F5F5] text-[1.3rem] text-[#9d9d9d] rounded-[1.6rem] text-ellipsis overflow-hidden ${index > 0 ? 'hidden xl:block' : ''}`}
+                                                            className={`w-fit px-[0.8rem] py-[0.4rem] mt-[1.2rem] mr-[0.5rem] bg-[#F5F5F5] text-[1.3rem] text-[#9d9d9d] rounded-[1.6rem] text-ellipsis overflow-hidden`}
                                                         >
                                                             {tagData}
                                                         </span>
                                                     ))}
-                                                    {posts?.post.tags.length > 2 && (
+                                                    {posts?.post.tags.length > 3 && (
                                                         <span className="text-ellipsis overflow-hidden whitespace-nowrap">...</span>
                                                     )}
                                                 </div>
+
                                                 <div className="flex mt-[2rem]">
                                                     <div className="flex h-full text-[1.4rem] font-normal space-x-4 items-end mt-auto xl:appearance-none">
                                                         <Image

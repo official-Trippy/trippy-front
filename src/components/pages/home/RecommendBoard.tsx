@@ -403,9 +403,9 @@ const RecommendBoard = () => {
                                                 </div>
                                             </div>
                                         ) : (
-                                            <div className={`relative w-full rounded-xl ${colorTicket[item.ticket.ticketColor] ? `bg-[${colorTicket[item.ticket.ticketColor]}]` : ''}`} style={{ objectFit: 'cover', aspectRatio: '304 / 349', display: 'flex', justifyContent: 'center', alignItems: 'center', overflow: 'hidden' }}>
+                                            <div className={`relative w-full p-[1.5rem] rounded-xl ${colorTicket[item.ticket.ticketColor] ? `bg-[${colorTicket[item.ticket.ticketColor]}]` : ''}`} style={{ objectFit: 'cover', aspectRatio: '304 / 349', display: 'flex', justifyContent: 'center', alignItems: 'center', overflow: 'hidden' }}>
                                                 <Image
-                                                    className="rounded-xl w-full h-full p-[1.5rem]"
+                                                    className="rounded-xl w-full h-full "
                                                     src={item.ticket.image?.accessUri}
                                                     alt="TICKET"
                                                     width={270}
