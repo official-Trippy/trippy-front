@@ -54,7 +54,7 @@ const TextEditorEdits = ({ postRequest, setPostRequest }: editorProps) => {
         return body.replace(/imageData(\d+)/g, (match, index) => {
             const imgIndex = parseInt(index) - 1; // imageData1 -> 0, imageData2 -> 1 등
             const image = images[imgIndex]; // 해당 이미지 객체 가져오기
-            return image ? `<img src="${image.accessUri}" alt="Uploaded Image" />` : match; // 이미지가 있으면 img 태그 반환, 없으면 원래 문자열 반환
+            return image ? `<img src="${image.accessUri}" alt="Uploaded Image" width="400" height="300" />` : match; // 이미지가 있으면 img 태그 반환, 없으면 원래 문자열 반환
         });
     };
 
