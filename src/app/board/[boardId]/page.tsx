@@ -735,6 +735,24 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
                         }
 
                         // 이미지 데이터가 있는 경우
+                        if (trimmedItem.startsWith('imageData')) {
+                            const imageIndex = parseInt(trimmedItem.replace('imageData', '')) - 1; // imageData1 -> 0, imageData2 -> 1 등
+                            if (images[imageIndex]) {
+                                return (
+                                    <div key={index} className="w-full">
+                                        <img
+                                            className="max-w-[60rem] max-h-[60rem]"
+                                            src={images[imageIndex].accessUri}
+                                            alt=""
+                                            width={900}
+                                            height={900}
+                                        />
+                                    </div>
+                                );
+                            }
+                        }
+
+                        // <div> 태그가 포함된 경우
                         const divMatch = trimmedItem.match(/<div>(.*?)<\/div>/);
                         if (divMatch) {
                             const innerHtml = divMatch[1];
