@@ -637,9 +637,9 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
                             </div>
                         </div>
                     </div>
-                    <div className="w-full h-[11rem] xl:h-[32rem] lg:h-[20rem] sm:h-[11rem] border border-[#D9D9D9] rounded-[1rem] flex mt-[5rem] shadowall">
+                    <div className="w-full h-[11rem] xl:h-[32rem] lg:h-[20rem] sm:h-[11rem] rounded-[1rem] flex mt-[5rem] shadowall">
                         <div
-                            className={`w-[1.4rem] xl:w-[5rem] lg:w-[3rem] sm:w-[1.4rem] h-full ${colorTicket[postData.result.ticket.ticketColor] ? `bg-[${colorTicket[postData.result.ticket.ticketColor]}]` : ""} rounded-l-[1rem]`}
+                            className={`w-[1.4rem] xl:w-[5rem] lg:w-[3rem] sm:w-[1.4rem] h-full shadowall ${colorTicket[postData.result.ticket.ticketColor] ? `bg-[${colorTicket[postData.result.ticket.ticketColor]}]` : ""} rounded-l-[1rem]`}
                         ></div>
                         <div className="w-full mt-[1.7rem] xl:mt-[5rem] lg:mt-[3rem] sm:mt-[0.7rem] relative">
                             <div className="flex justify-center">
@@ -706,7 +706,7 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
                             </div>
                         </div>
                         <div
-                            className={`w-[15rem] xl:w-[40rem] lg:w-[20rem] sm:w-[15rem] h-full ${colorTicket[postData.result.ticket.ticketColor] ? `bg-[${colorTicket[postData.result.ticket.ticketColor]}]` : ""}  rounded-r-[1rem] ml-auto`}
+                            className={`w-[15rem] xl:w-[40rem] lg:w-[20rem] sm:w-[15rem] h-full shadowall ${colorTicket[postData.result.ticket.ticketColor] ? `bg-[${colorTicket[postData.result.ticket.ticketColor]}]` : ""}  rounded-r-[1rem] ml-auto`}
                         >
                             <div className="absolute">
                                 <div className="relative bg-white w-[1.3rem] xl:w-[4rem] sm:w-[1.3rem] h-[1.3rem] xl:h-[4rem] sm:h-[1.3rem] rounded-full -mt-[0.6rem] xl:-mt-[2rem] sm:-mt-[0.6rem] -ml-[0.8rem] xl:-ml-[2rem] sm:-ml-[0.8rem]"></div>
