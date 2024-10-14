@@ -423,7 +423,7 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
         setReplyNickname(nickName);
         setReplyMemId(memberId);
     };
-    // console.log(postData);
+    console.log(postData);
 
     const getTransportImage = (transport: string, ticketColor: any) => {
         switch (transport) {
@@ -639,12 +639,12 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
                     </div>
                     <div className="w-full h-[11rem] xl:h-[32rem] lg:h-[20rem] sm:h-[11rem] rounded-[1rem] flex mt-[5rem] shadowall">
                         <div
-                            className={`w-[1.4rem] xl:w-[5rem] lg:w-[3rem] sm:w-[1.4rem] h-full shadowall ${colorTicket[postData.result.ticket.ticketColor] ? `bg-[${colorTicket[postData.result.ticket.ticketColor]}]` : ""} rounded-l-[1rem]`}
+                            className={`w-[1.4rem] xl:w-[5rem] lg:w-[3rem] sm:w-[1.4rem] h-full shadowall ${colorTicket[postData?.result.ticket.ticketColor] ? `bg-[${colorTicket[postData?.result.ticket.ticketColor]}]` : ""} rounded-l-[1rem]`}
                         ></div>
-                        <div className="w-full mt-[1.7rem] xl:mt-[5rem] lg:mt-[3rem] sm:mt-[0.7rem] relative">
+                        <div className="w-full mt-[0.7rem] xl:mt-[5rem] lg:mt-[3rem] sm:mt-[0.7rem] relative">
                             <div className="flex justify-center">
                                 <div className="w-[5rem] 2xl:w-[16rem] xl:w-[10rem] sm-700:w-[5rem]">
-                                    <h1 className="w-[5rem] 2xl:w-[16rem] xl:w-[10rem] lg:w-[5rem] h-[4rem] xl:h-[8rem] md-1000:h-[4rem] flex justify-center items-center text-[6rem] 2xl:text-[6rem] xl:text-[3rem] sm-700:text-[2rem] text-[#292929] font-extrabold font-akira">
+                                    <h1 className="w-[10rem] xl:w-[16rem] sm-1500:w-[10rem] h-[4rem] xl:h-[8rem] sm-1500:h-[4rem] flex items-center text-[2rem] 2xl:text-[6rem] xl:text-[3rem] sm-1550:text-[2rem] text-[#292929] font-extrabold font-akira">
                                         {postData?.result.ticket.departureCode}
                                     </h1>
                                     <div className="w-[5rem] 2xl:w-[16rem] xl:w-[10rem] md-1000:w-[5rem] rounded-[0.8rem] flex justify-center">
@@ -654,7 +654,7 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
                                         </span>
                                     </div>
                                 </div>
-                                <div className="relative flex bg-white mt-[0.7rem] xl:mt-[2.8rem] lg:mt-[1rem] sm:mt-[0.7rem] w-[1.7rem] lg:w-[3.2rem] sm:w-[1.7rem] h-[1.7rem] lg:h-[2.8rem] sm:h-[3.7rem] z-10 ml-[10%] mr-[8%]">
+                                <div className="relative flex bg-white mt-[1rem] xl:mt-[2.8rem] sm:mt-[1rem] w-[1.7rem] lg:w-[3.2rem] sm:w-[1.7rem] h-[1.7rem] lg:h-[2.8rem] sm:h-[3.7rem] z-10 ml-[10%] mr-[8%]">
                                     {getTransportImage(
                                         postData?.result.ticket.transport,
                                         postData?.result.ticket.ticketColor
@@ -664,7 +664,7 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
                                     <h1 className="w-[10rem] xl:w-[16rem] sm-1500:w-[10rem] h-[4rem] xl:h-[8rem] sm-1500:h-[4rem] flex justify-center items-center text-[2rem] 2xl:text-[6rem] xl:text-[3rem] sm-1550:text-[2rem] text-[#292929] font-extrabold font-akira">
                                         {postData?.result.ticket.destinationCode}
                                     </h1>
-                                    <div className="w-[5rem] xl:w-[16rem] lg:w-[10rem] sm:w-[10rem] rounded-[0.8rem] flex justify-center">
+                                    <div className="w-[10rem] xl:w-[16rem] lg:w-[10rem] sm:w-[10rem] rounded-[0.8rem] flex justify-center">
                                         <span className={`text-[#9D9D9D] text-[0.8rem] font-semibold ${postData?.result.ticket.destination?.length > 5 || postData?.result.ticket.departure?.length > 5 ? 'text-[2rem]' : 'xl:text-[2rem] lg:text-[1.6rem] sm:text-[0.8rem]'}`}>
                                             {postData?.result.ticket.destination}
                                         </span>
@@ -706,7 +706,7 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
                             </div>
                         </div>
                         <div
-                            className={`w-[15rem] xl:w-[40rem] lg:w-[20rem] sm:w-[15rem] h-full shadowall ${colorTicket[postData.result.ticket.ticketColor] ? `bg-[${colorTicket[postData.result.ticket.ticketColor]}]` : ""}  rounded-r-[1rem] ml-auto`}
+                            className={`w-[15rem] xl:w-[40rem] lg:w-[20rem] sm:w-[15rem] h-full shadowall ${colorTicket[postData?.result.ticket.ticketColor] ? `bg-[${colorTicket[postData?.result.ticket.ticketColor]}]` : ""}  rounded-r-[1rem] ml-auto`}
                         >
                             <div className="absolute">
                                 <div className="relative bg-white w-[1.3rem] xl:w-[4rem] sm:w-[1.3rem] h-[1.3rem] xl:h-[4rem] sm:h-[1.3rem] rounded-full -mt-[0.6rem] xl:-mt-[2rem] sm:-mt-[0.6rem] -ml-[0.8rem] xl:-ml-[2rem] sm:-ml-[0.8rem]"></div>
@@ -726,7 +726,7 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
                         </div>
                     </div>
                 </div>
-                <div className="py-[5rem] min-h-[100rem] ">
+                <div className="w-full py-[5rem] ">
                     {bodyWithImages.split(/<\/?p>/).filter(Boolean).map((item: string, index: number) => {
                         const trimmedItem = item.trim(); // 공백 제거
 
@@ -741,11 +741,11 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
                                 return (
                                     <div key={index} className="w-full">
                                         <img
-                                            className="max-w-[60rem] max-h-[60rem]"
+                                            className="w-full"
                                             src={images[imageIndex].accessUri}
                                             alt=""
-                                            width={900}
-                                            height={900}
+                                            width={400}
+                                            height={300}
                                         />
                                     </div>
                                 );
@@ -764,7 +764,7 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
                                 return (
                                     <div key={index} className="w-full">
                                         <img
-                                            className="max-w-[60rem] max-h-[60rem]"
+                                            className="w-full max-w-[50rem]"
                                             src={imgSrc}
                                             alt=""
                                             width={900}
@@ -775,15 +775,23 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
                             }
                         }
 
+                        // HTML 태그 제거: &lt; 및 &gt;를 실제 '<' 및 '>'로 변환
+                        const cleanText = trimmedItem
+                            .replace(/&lt;/g, '<')
+                            .replace(/&gt;/g, '>')
+                            .replace(/&nbsp;/g, '')
+                            .replace(/<\/?[^>]+(>|$)/g, ""); // 모든 HTML 태그 제거
+
                         // 텍스트인 경우
                         return (
                             <p key={index} className="text-[1.6rem] font-medium">
-                                {trimmedItem}
+                                {cleanText}
                             </p>
                         );
                     })}
-
                 </div>
+
+
 
                 <div className="flex flex-wrap">
                     {postData?.result.post.tags.map((tagData: string, index: number) => (

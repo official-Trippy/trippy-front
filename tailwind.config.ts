@@ -32,6 +32,7 @@ const config: Config = {
 
         'xs-400': '400px',
         'md': '800px',
+        'sm-640': '640px',
         'sm-700': '700px',
         'md-850': '850px',
         'md-1000': '1000px',
