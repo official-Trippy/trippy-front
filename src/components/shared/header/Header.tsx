@@ -349,7 +349,7 @@ const Header = () => {
       {/* Mobile Layout */}
       <div className="flex mt-[20px] mb-[20px] sm-700:hidden sm-700:justify-between sm-700:items-center w-[90%] mx-auto">
         <div className="flex-shrink-0">
-          <Link href="/">
+          <Link href="/ootd">
             <Image
               src={LogoHeader}
               alt="Logo"
