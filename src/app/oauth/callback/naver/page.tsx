@@ -51,7 +51,7 @@ const NaverCallback = () => {
           // role에 따라 페이지 이동
           setTimeout(() => {
             if (role === "MEMBER" || role === "ADMIN") {
-              router.push("/");
+              router.push("/ootd");
             } else if (role === "GUEST") {
               router.push("/blogRegister");
             }
@@ -65,7 +65,7 @@ const NaverCallback = () => {
             if (error.response?.status === 401) {
               Cookies.remove("accessToken");
               Cookies.remove("role");
-              router.push("/");
+              router.push("/ootd");
             }
           } else {
             console.error("Unexpected error:", error);

@@ -31,7 +31,7 @@ const BlogRegisterThird = () => {
 
     // 로그인이 되었지만 role이 MEMBER 또는 ADMIN인 경우 리다이렉트
     if (role === "MEMBER" || role === "ADMIN") {
-      router.push("/");
+      router.push("/ootd");
       return;
     }
   };

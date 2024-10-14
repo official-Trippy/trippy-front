@@ -22,7 +22,7 @@ const BlogRegisterSecond = () => {
         Cookies.remove("accessToken");
         Cookies.remove("refreshToken");
         Cookies.remove("role");
-        router.push("/");
+        router.push("/ootd");
       };
   
       // 창 닫기 또는 새로 고침 이벤트 처리
@@ -55,7 +55,7 @@ const BlogRegisterSecond = () => {
 
     // 로그인이 되었지만 role이 MEMBER 또는 ADMIN인 경우 리다이렉트
     if (role === "MEMBER" || role === "ADMIN") {
-      router.push("/");
+      router.push("/ootd");
       return;
     }
   };

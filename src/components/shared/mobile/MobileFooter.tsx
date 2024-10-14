@@ -14,7 +14,10 @@ import EditorActiveIcon from '../../../../public/mobile_editor_active.svg';
 import MyIcon from '../../../../public/mobile_my_inactive.svg';
 import MyActiveIcon from '../../../../public/mobile_my_active.svg';
 import postwriteImg from "@/dummy/postwrite.svg";
+import TicketInactive from '../../../../public/Ticket3.svg';
+import TicketActive from '../../../../public/Ticket2.svg';
 import ootdWrite from "../../../../public/ootdWrite.svg"; 
+
 
 const MobileFooter = () => {
   const router = useRouter();
@@ -63,25 +66,25 @@ const MobileFooter = () => {
     <>
       <div className="sm-700:hidden z-[9999] fixed bottom-0 py-[10px] flex items-center bg-black border-t border-gray100 bg-white w-full">
         <div
-          onClick={() => router.push('/')}
+          onClick={() => router.push('/ootd')}
           className="flex-1 flex flex-col gap-1 items-center">
           <div>
             <Image
-              src={pathname === '/' ? HomeActiveIcon : HomeIcon}
-              alt="홈"
+              src={pathname === '/ootd' ? OotdActiveIcon : OotdIcon}
+              alt="OOTD"
               width={24}
               height={40}
             />
           </div>
         </div>
         <div
-          onClick={() => router.push('/ootd')}
+          onClick={() => router.push('/')}
           className="flex-1 flex flex-col gap-1 items-center">
           <div>
             <Image
-              src={pathname.includes('/ootd') ? OotdActiveIcon : OotdIcon}
-              alt="OOTD"
-              width={24}
+              src={pathname ==='/' ? TicketActive : TicketInactive}
+              alt="TICKET"
+              width={28}
               height={40}
             />
           </div>

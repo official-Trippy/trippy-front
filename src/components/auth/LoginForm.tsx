@@ -36,11 +36,11 @@ const LoginForm = () => {
       Cookies.remove("accessToken");
       Cookies.remove("refreshToken");
       Cookies.remove('role');
-      router.push("/");
+      router.push("/ootd");
       router.refresh();
     }
     if (accessToken && refreshToken) {
-      router.push("/");
+      router.push("/ootd");
     }
   };
 
@@ -75,7 +75,7 @@ const LoginForm = () => {
         // 전역 상태에 유저 정보 저장
         await fetchUserInfo(); // 전역 상태에 유저 정보를 업데이트
 
-        router.push("/");
+        router.push("/ootd");
       }
       router.refresh();
     } catch (error) {

@@ -122,7 +122,7 @@ const BlogRegisterFirst = () => {
         Cookies.remove("accessToken");
         Cookies.remove("refreshToken");
         Cookies.remove("role");
-        router.push("/");
+        router.push("/ootd");
         return;
       }
 
@@ -144,7 +144,7 @@ const BlogRegisterFirst = () => {
               Cookies.remove("accessToken");
               Cookies.remove("refreshToken");
               Cookies.remove("role");
-              router.push("/");
+              router.push("/ootd");
               break;
             } else {
               console.error(`${socialType} 다른 에러 발생:`, error);
@@ -210,7 +210,7 @@ const BlogRegisterFirst = () => {
     }
 
     if (role === "MEMBER" || role === "ADMIN") {
-      router.push("/");
+      router.push("/ootd");
       return;
     }
   };

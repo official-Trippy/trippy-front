@@ -46,7 +46,7 @@ const SocialLoginForm = () => {
       console.log(response);
       console.log(response.data.result);
       console.log(accessToken);
-      router.push("/");
+      router.push("/ootd");
       console.log("Redirecting to login page...");
     } catch (error) {
       console.error("Error during social login:", error);

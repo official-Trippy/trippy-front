@@ -37,7 +37,7 @@ const OnBoradingPage = () => {
   }, []);
 
   const homeRoute = () => {
-    router.push(`/`)
+    router.push(`/ootd`)
   }
 
   return (
