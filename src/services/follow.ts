@@ -15,7 +15,7 @@ export async function showFollows(memberId: string, accessToken: any) {
         },
       }
     );
-    console.log(response.data);
+    // console.log(response.data);
     return response.data;
   } catch (error) {
     throw new Error(`Error during showFollowers: ${error}`);
@@ -32,7 +32,7 @@ export async function showFollowings(memberId: string, accessToken: any) {
         },
       }
     );
-    console.log(response.data);
+    // console.log(response.data);
     return response.data;
   } catch (error) {
     throw new Error(`Error during showFollowings: ${error}`);
@@ -74,7 +74,7 @@ export async function unfollow(targetMemberId: string) {
     const response = await axios.delete(
       `${backendUrl}/api/member/follow?type=following&targetMemberId=${targetMemberId}`
     );
-    console.log("Unfollow response:", response.data);
+    // console.log("Unfollow response:", response.data);
 
     if (response.data.isSuccess) {
       const newFollowings = followingStore.following.followings.filter(
@@ -85,17 +85,17 @@ export async function unfollow(targetMemberId: string) {
         followings: newFollowings,
       };
       followingStore.setFollowing(newFollowing);
-      console.log(
-        "Unfollow successful, updated following state:",
-        newFollowing
-      );
+      // console.log(
+      // "Unfollow successful, updated following state:",
+      //   newFollowing
+      // );
     } else {
-      console.error("Unfollow API call failed:", response.data.message);
+      // console.error("Unfollow API call failed:", response.data.message);
     }
 
     return response.data;
   } catch (error) {
-    console.error("Error during unfollow:", error);
+    // console.error("Error during unfollow:", error);
     throw new Error(`Error during unfollow: ${error}`);
   } finally {
     followingStore.setLoading(false);

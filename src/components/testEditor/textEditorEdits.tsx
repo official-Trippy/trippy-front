@@ -59,7 +59,7 @@ const TextEditorEdits = ({ postRequest, setPostRequest }: editorProps) => {
         }
     };
 
-    console.log(postRequest); // postRequest 확인
+    // console.log(postRequest); // postRequest 확인
 
     return (
         <div>

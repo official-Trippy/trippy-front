@@ -19,7 +19,7 @@ export default function GoogleLogin() {
 
     const urlParams = new URLSearchParams(window.location.search);
     const authCode = urlParams.get("code");
-    console.log("authCode :", authCode);
+    // console.log("authCode :", authCode);
 
     const loginHandler = async (code: string | string[]) => {
       try {
@@ -27,8 +27,8 @@ export default function GoogleLogin() {
         const data = res.data;
         const accessToken = res.data.data.access_token;
 
-        console.log("Access token received:", accessToken);
-        console.log("data returned from api: ", data);
+        // console.log("Access token received:", accessToken);
+        // console.log("data returned from api: ", data);
 
         const socialName = "google";
         const roleRes = await axios.post(
@@ -45,7 +45,7 @@ export default function GoogleLogin() {
         Cookies.set("accessToken", roleRes.data.result.accessToken);
         Cookies.set("role", role);
 
-        console.log("User role received:", role);
+        // console.log("User role received:", role);
 
         // 인증 후 경로를 업데이트하여 뒤로 가기를 눌러도 다시 인증 시도하지 않도록 처리
         window.history.replaceState(null, "", "/blogRegister");

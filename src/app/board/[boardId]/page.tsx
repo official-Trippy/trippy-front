@@ -146,7 +146,7 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
         toggleEdit(index); // 수정 상태 다시 토글
     };
 
-    console.log(editingIndexes);
+    // console.log(editingIndexes);
 
     const { data: postData, refetch: postRefetch, isLoading: postLoading } = useQuery({
         queryKey: ["postData"],
@@ -164,7 +164,7 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
     const [rreplyOpen, setRreplyOpen] = useState(
         Array(postCommentData?.result.length).fill(false)
     );
-    console.log(replyOpen, postCommentData);
+    // console.log(replyOpen, postCommentData);
 
     const { data: postLikeData, refetch: LikeRefetch } = useQuery({
         queryKey: ["postLikeData"],
@@ -190,10 +190,10 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
         enabled: !!Number(params.boardId),
     });
 
-    console.log(bookmark);
+    // console.log(bookmark);
 
-    console.log(postData?.result.member.memberId);
-    console.log(memberDatas);
+    // console.log(postData?.result.member.memberId);
+    // console.log(memberDatas);
     const postMemberId = postData?.result.member.memberId;
     const userMemberId = memberDatas?.result.memberId;
 
@@ -204,7 +204,7 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
             fetchFollowing(userMemberId);
         }
     }, [postData]);
-    console.log(following);
+    // console.log(following);
 
     const handleGoProfile = (memberId: string) => {
         if (memberId) {
@@ -220,16 +220,16 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
             (follow) => follow.memberId === postData?.result.member.memberId
         );
 
-    console.log("Post Member ID:", postMemberId);
-    console.log("Is Following:", following);
-    console.log(isFollowing);
+    // console.log("Post Member ID:", postMemberId);
+    // console.log("Is Following:", following);
+    // console.log(isFollowing);
 
     const followHandler = async (memberId: string | undefined) => {
         if (!memberId) return; // memberId가 undefined인 경우 함수를 종료
         if (!isFollowing) {
             try {
                 const response = await doFollow(memberId);
-                console.log("Follow response:", response);
+                // console.log("Follow response:", response);
                 if (accessToken) {
                     fetchFollowing(postMemberId);
                 }
@@ -252,7 +252,7 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
     const formattedDate = formatDate(createdAt);
 
     const handleProfileClick = () => {
-        console.log("click");
+        // console.log("click");
         if (postData.result.member.memberId == userInfo.memberId) {
             router.push("/mypage");
         } else {
@@ -260,7 +260,7 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
         }
     };
 
-    console.log(postData, userInfo);
+    // console.log(postData, userInfo);
 
     const LikeHandler = async () => {
         try {
@@ -285,7 +285,7 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
             status: "PUBLIC",
         };
         try {
-            console.log(commentData);
+            // console.log(commentData);
             await postComments(commentData);
             setComment("");
             commentRefetch();
@@ -317,7 +317,7 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
         };
 
         try {
-            console.log(commentData);
+            // console.log(commentData);
             await postComments(commentData);
             setReplyComment("");
             setReplyOpen(Array(postCommentData?.result.length).fill(false));
@@ -374,7 +374,7 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
             }
         });
     };
-    console.log(userInfo);
+    // console.log(userInfo);
     const deleteReplyHandler = async (replyIdx: number) => {
         await deleteReply(replyIdx);
         Swal.fire({
@@ -423,7 +423,7 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
         setReplyNickname(nickName);
         setReplyMemId(memberId);
     };
-    console.log(postData);
+    // console.log(postData);
 
     const getTransportImage = (transport: string, ticketColor: any) => {
         switch (transport) {
@@ -472,7 +472,7 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
     const handleTagClick = (tag: string) => {
         router.push(`/search/${encodeURIComponent(tag)}`);
     };
-    console.log(postCommentData)
+    // console.log(postCommentData)
 
 
     const itemsPerPage = 18;
@@ -1096,7 +1096,7 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
                                                                     const openEditing =
                                                                         myUpdateReply[childData.id] || false;
 
-                                                                    console.log(childData, isEditing);
+                                                                    // console.log(childData, isEditing);
                                                                     return (
                                                                         <div
                                                                             className={`bg-[#F5F5F5] w-[95%] pt-[2rem] ${isEditing ? "pb-[4rem]" : "pb-[2rem] "} px-[1.6rem] mx-[4rem] rounded-[0.8rem]`}

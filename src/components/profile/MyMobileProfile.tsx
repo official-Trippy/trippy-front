@@ -54,7 +54,7 @@ const MyMobileProfile: React.FC<{ setActiveTab: (tab: string) => void }> = ({ se
   const userData = data?.result;
 
   const handleGoEditPage = () => {
-    console.log("하하하하");
+    // console.log("하하하하");
     router.push("/editProfile");
   };
 

@@ -28,9 +28,9 @@ const SendSessionToServer = () => {
             }
           );
 
-          console.log("세션 정보 전송 완료", response.data);
+          // console.log("세션 정보 전송 완료", response.data);
         } catch (error) {
-          console.error("세션 정보 전송 실패:", error);
+          // console.error("세션 정보 전송 실패:", error);
         }
       };
 

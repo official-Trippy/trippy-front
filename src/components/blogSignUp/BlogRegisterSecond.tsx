@@ -24,7 +24,7 @@ const BlogRegisterSecond = () => {
         Cookies.remove("role");
         router.push("/ootd");
       };
-  
+
       // 창 닫기 또는 새로 고침 이벤트 처리
       const handleBeforeUnload = (e: BeforeUnloadEvent) => {
         // 창을 닫거나 새로 고침할 때 토큰 제거
@@ -32,10 +32,10 @@ const BlogRegisterSecond = () => {
         Cookies.remove("refreshToken");
         Cookies.remove("role");
       };
-  
+
       window.addEventListener("popstate", handlePopState); // 뒤로 가기 이벤트 리스너 추가
       window.addEventListener("beforeunload", handleBeforeUnload); // 창 닫기 및 새로 고침 이벤트 리스너 추가
-  
+
       return () => {
         window.removeEventListener("popstate", handlePopState); // 컴포넌트 언마운트 시 이벤트 리스너 제거
         window.removeEventListener("beforeunload", handleBeforeUnload); // 창 닫기 이벤트 리스너 제거
@@ -76,16 +76,16 @@ const BlogRegisterSecond = () => {
     selectedInterests.length >= 2 && selectedInterests.length <= 5;
 
   const handleSubmit = async () => {
-    console.log(sortedSelectedInterests);
+    // console.log(sortedSelectedInterests);
     try {
       const result = await submitInterests(sortedSelectedInterests);
       if (result.success) {
-        console.log("Successfully submitted interests!");
+        // console.log("Successfully submitted interests!");
       } else {
-        console.error(result.message);
+        // console.error(result.message);
       }
     } catch (error) {
-      console.error("Error submitting interests:", error);
+      // console.error("Error submitting interests:", error);
     }
   };
 
@@ -108,11 +108,10 @@ const BlogRegisterSecond = () => {
             {blogInterests.map((interest, index) => (
               <button
                 key={index}
-                className={`favorite-btn-font ${
-                  selectedInterests.includes(interest)
+                className={`favorite-btn-font ${selectedInterests.includes(interest)
                     ? "favorite-btn-active"
                     : "favorite-btn-inactive"
-                }`}
+                  }`}
                 onClick={() => toggleInterest(interest)}
                 disabled={
                   !selectedInterests.includes(interest) &&
@@ -130,9 +129,8 @@ const BlogRegisterSecond = () => {
           <Link href="/blogRegister3">
             <button
               type="submit"
-              className={`mx-auto w-full ${
-                isButtonActive ? "bg-btn-color" : "bg-[#cfcfcf]"
-              } sm-700:w-[120px] h-[44px] mt-[2rem] mb-[2rem] text-white py-2 rounded-xl flex justify-center items-center`}
+              className={`mx-auto w-full ${isButtonActive ? "bg-btn-color" : "bg-[#cfcfcf]"
+                } sm-700:w-[120px] h-[44px] mt-[2rem] mb-[2rem] text-white py-2 rounded-xl flex justify-center items-center`}
               onClick={handleSubmit}
               style={{ fontSize: "1.2rem" }}
               disabled={!isButtonActive}

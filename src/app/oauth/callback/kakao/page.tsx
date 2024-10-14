@@ -18,7 +18,7 @@ export default function KakaoTalk() {
     executedRef.current = true;
 
     const authCode = new URL(window.location.href).searchParams.get("code");
-    console.log("authCode :", authCode);
+    // console.log("authCode :", authCode);
 
     const loginHandler = async (code: string | string[]) => {
       try {
@@ -26,9 +26,9 @@ export default function KakaoTalk() {
         const data = res.data;
         const accessToken = res.data.data.access_token;
 
-        console.log("Access token received:", accessToken);
+        // console.log("Access token received:", accessToken);
 
-        console.log("data returned from api: ", data);
+        // console.log("data returned from api: ", data);
 
         const socialName = "kakao";
         const roleRes = await axios.post(
@@ -47,7 +47,7 @@ export default function KakaoTalk() {
 
         window.history.replaceState(null, "", "/blogRegister");
 
-        console.log("User role received:", role);
+        // console.log("User role received:", role);
         setTimeout(() => {
           if (role === "MEMBER" || role === "ADMIN") {
             router.push("/ootd");
@@ -58,7 +58,7 @@ export default function KakaoTalk() {
       } catch (error) {
         // 타입 가드 추가
         if (error instanceof AxiosError) {
-          console.error("Error fetching access token:", error);
+          // console.error("Error fetching access token:", error);
 
           // 401 에러 처리
           if (error.response?.status === 401) {
@@ -67,7 +67,7 @@ export default function KakaoTalk() {
             router.push("/ootd");
           }
         } else {
-          console.error("Unexpected error:", error);
+          // console.error("Unexpected error:", error);
         }
       }
     };

@@ -9,7 +9,7 @@ export async function searchTag(tag: string) {
     const response = await axios.get(
       `${backendUrl}//api/search/tag?tags=${tag}&postType=OOTD&page=0&size=1`
     );
-    console.log("API Response tag~:", response.data);
+    // console.log("API Response tag~:", response.data);
 
     const postsData = response.data.result;
   } catch (error) {

@@ -14,7 +14,7 @@ export async function POST(req: NextRequest) {
     );
 
     const data = res.data;
-    console.log("Access token response data:", data);
+    // console.log("Access token response data:", data);
 
     return NextResponse.json({
       data: data,

@@ -71,7 +71,7 @@ function RecentPost({ allPosts, setAllPosts, boardData, boardRefetch, PAGE_SIZE,
         (tab === "ALL" ? isFollowingLoading : isFollowingPostsLoading);
 
 
-    console.log(followingData, followingPostsData)
+    // console.log(followingData, followingPostsData)
 
     function formatDate(dateString: any) {
         const date = new Date(dateString);
@@ -145,7 +145,7 @@ function RecentPost({ allPosts, setAllPosts, boardData, boardRefetch, PAGE_SIZE,
         setOrderTypes(value);
         setPage(0);
     };
-    console.log(followingData)
+    // console.log(followingData)
     return (
         <div className='w-[90%] sm-700:w-[66%] mx-auto py-[5rem]'>
             <div>

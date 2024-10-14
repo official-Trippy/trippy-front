@@ -90,12 +90,12 @@ const RecommendBoard = () => {
     const { data, isLoading, error } = useQuery(['recommendPostPost', selectedInterest], () => fetchRecommendBoard(selectedInterest), {
         keepPreviousData: true,
     });
-    console.log(data, selectedInterest)
+    // console.log(data, selectedInterest)
     const totalCount = data?.result?.totalCnt;
 
 
 
-    console.log(itemsPerSlide, totalCount)
+    // console.log(itemsPerSlide, totalCount)
     // 사용자 정보에서 관심사 가져오기
     const fetchUserInterests = async () => {
         try {
@@ -110,7 +110,7 @@ const RecommendBoard = () => {
                 setSelectedInterest(blogInterests[0]); // 유저가 관심사를 설정하지 않았으면 기본값 유지
             }
         } catch (error) {
-            console.error('Error fetching user interests:', error);
+            // console.error('Error fetching user interests:', error);
         }
     };
 
@@ -208,7 +208,7 @@ const RecommendBoard = () => {
     // if (loading || isLoading) return null;
     if (error) return null;
 
-    console.log(data)
+    // console.log(data)
     // 데이터 슬라이드 생성
     const slides = [];
     if (data?.result?.postList) {
@@ -230,7 +230,7 @@ const RecommendBoard = () => {
             }
         }
     };
-    console.log(itemsPerSlide, totalCount, currentSlide)
+    // console.log(itemsPerSlide, totalCount, currentSlide)
 
     if (loading || showSkeleton || isLoading) {
         return <SkeletonRecBoard />;
@@ -363,7 +363,7 @@ const RecommendBoard = () => {
                                         return null; // 기본값 또는 대체 이미지
                                 }
                             };
-                            console.log(item)
+                            // console.log(item)
                             return (
                                 <SwiperSlide key={item.post.id} className="flex flex-col w-full  cursor-pointer relative shadowall1 rounded-xl mb-[3rem]">
                                     <div onClick={() => handleOotdItemClick(item.post.id)}>

@@ -28,7 +28,7 @@ export const fetchIsBookmarked = async (postId: number): Promise<boolean> => {
       `${backendUrl}/api/bookmark/isBookMarked`,
       { params: { postId } }
     );
-    console.log("Bookmark status:", response.data.result);
+    // console.log("Bookmark status:", response.data.result);
     return response.data.result;
   } catch (error) {
     console.error(`북마크 여부를 확인하는 중 오류가 발생했습니다: ${error}`);

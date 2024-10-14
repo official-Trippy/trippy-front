@@ -58,7 +58,7 @@ const MyBookmark = () => {
     }
   );
 
-  console.log(postData)
+  // console.log(postData)
 
   const handlePageClick = (pageIndex: number) => {
     setPageOotd(pageIndex);
@@ -135,7 +135,7 @@ const MyBookmark = () => {
                   }
                 };
 
-                console.log(colorTicket[ticektDatas.ticket.ticketColor])
+                // console.log(colorTicket[ticektDatas.ticket.ticketColor])
                 return (
                   <div key={ticektDatas.ticket.id} className={`flex-1 cursor-pointer `} onClick={() => { handleBoardLink(ticektDatas.post.id) }} >
                     {/* {ticektDatas.post.images.length > 0 && ( */}

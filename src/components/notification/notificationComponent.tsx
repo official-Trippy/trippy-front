@@ -75,13 +75,13 @@ const Notification: React.FC = () => {
           setNotifications((prev) => prev.slice(1)); // 오래된 알림 하나씩 제거
         }, 5000);
       } catch (error) {
-        console.log("Invalid JSON data:", event.data);
+        // console.log("Invalid JSON data:", event.data);
       }
     });
 
     return () => {
       eventSource.close();
-      console.log("SSE CLOSED");
+      // console.log("SSE CLOSED");
     };
   }, [accessToken]);
 

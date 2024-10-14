@@ -9,8 +9,8 @@ export async function checkNickNameDuplicate(nickName: string) {
       `${backendUrl}/api/member/isDuplicated?nickName=${nickName}`
     );
     const data = response.data;
-    console.log(response);
-    console.log(data);
+    // console.log(response);
+    // console.log(data);
     if (data.isSuccess && data.result && data.result.duplicated) {
       return { duplicated: true };
     } else {
@@ -27,8 +27,8 @@ export async function checkBlogNameDuplicate(blogName: string) {
       `${backendUrl}/api/member/isDuplicated?blogName=${blogName}`
     );
     const data = response.data;
-    console.log(response);
-    console.log(data);
+    // console.log(response);
+    // console.log(data);
     if (data.isSuccess && data.result && data.result.duplicated) {
       return { duplicated: true };
     } else {
@@ -49,7 +49,7 @@ export async function signupCommon(data: {
       `${backendUrl}/api/member/signup/common`,
       data
     );
-    console.log(response);
+    // console.log(response);
     return response.data;
   } catch (error) {
     throw new Error(`Error signing up: ${error}`);
@@ -84,13 +84,13 @@ export const uploadImage = async (file: File) => {
     });
 
     if (response.data.isSuccess) {
-      console.log(response.data);
+      // console.log(response.data);
       return response.data;
     } else {
       throw new Error(response.data.message || "Image upload failed");
     }
   } catch (error) {
-    console.error("Image upload failed:", error);
+    // console.error("Image upload failed:", error);
     throw error;
   }
 };

@@ -23,7 +23,7 @@ import { getByteLength } from "@/constants/getByteLength";
 import OOtdDeleteImage from '../../../public/ootdImageDelete.svg';
 import Cropper, { Area } from "react-easy-crop";
 import { getCroppedImg } from "@/utils/getCroppedImg";
-import { debounce } from 'lodash';  
+import { debounce } from 'lodash';
 import Cookies from "js-cookie";
 
 const EditInfo = () => {
@@ -33,7 +33,7 @@ const EditInfo = () => {
 
   const handleImageUploadClick = () => {
     if (inputFileRef.current) {
-      inputFileRef.current.click(); 
+      inputFileRef.current.click();
     }
   };
 
@@ -41,7 +41,7 @@ const EditInfo = () => {
     accessUri: string;
     authenticateId: string;
     imgUrl: string;
-  } | null>(null); 
+  } | null>(null);
 
   const [nickName, setNickName] = useState<string>('');
   const [nickNameError, setNickNameError] = useState<string>('');
@@ -65,8 +65,8 @@ const EditInfo = () => {
   const [isBlogImageChanged, setIsBlogImageChanged] = useState(false);
   const [warningMessage, setWarningMessage] = useState('');
 
-   // 초기 이미지 저장
-   const [initialProfileImage, setInitialProfileImage] = useState<{
+  // 초기 이미지 저장
+  const [initialProfileImage, setInitialProfileImage] = useState<{
     accessUri: string;
     authenticateId: string;
     imgUrl: string;
@@ -90,7 +90,7 @@ const EditInfo = () => {
 
   const fetchUserInfo = async () => {
     try {
-      const data = await getMyInfo(); 
+      const data = await getMyInfo();
       const profileImgData = data.profileImageUrl || null;
       const blogImgData = data.blogTitleImgUrl || null;
       setInitialProfileImage(profileImgData); // 처음 유저 이미지를 저장
@@ -109,7 +109,7 @@ const EditInfo = () => {
       setFollowScope(data.followScope || "public");
       updateUserInfo(data); // 전역 상태를 최신화
     } catch (error) {
-      console.error('내 정보 조회 중 오류 발생:', error);
+      // console.error('내 정보 조회 중 오류 발생:', error);
       router.push("/login");
     }
   };
@@ -118,10 +118,10 @@ const EditInfo = () => {
     fetchUserInfo(); // 컴포넌트가 마운트될 때 유저 정보 불러옴
   }, []);
 
-  console.log('유저 사진:', profileImage);
-  console.log('유저 블로그사진:', blogImage);
-  console.log('유저 닉네임:', nickName);
-  
+  // console.log('유저 사진:', profileImage);
+  // console.log('유저 블로그사진:', blogImage);
+  // console.log('유저 닉네임:', nickName);
+
 
   const router = useRouter();
 
@@ -131,7 +131,7 @@ const EditInfo = () => {
       lowerValue.includes(swearWord)
     );
   };
-  
+
   // Debounce 적용: 2초 동안 입력이 없을 때 중복 체크
   const debouncedNickNameCheck = useRef(
     debounce(async (value: string) => {
@@ -139,75 +139,75 @@ const EditInfo = () => {
       await handleNickNameBlur(value);
     }, 1000)
   ).current;
-  
+
   const debouncedBlogNameCheck = useRef(
     debounce(async (value: string) => {
       if (!validateBlogName(value)) return; // 형식이 맞지 않으면 중복 체크 호출 방지
       await handleBlogNameBlur(value);
     }, 1000)
   ).current;
-  
+
   const [isNickNameTouched, setIsNickNameTouched] = useState(false); // 닉네임 수정 여부
   const [isBlogNameTouched, setIsBlogNameTouched] = useState(false); // 블로그 이름 수정 여부
-  
+
   // 닉네임 입력 핸들러
   const handleNickName = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-  
+
     const byteLength = getByteLength(value);
     if (byteLength > 16) return;
-  
+
     setNickName(value);
     setIsNickNameTouched(true); // 닉네임 필드가 수정되었음을 추적
-  
+
     // 욕설 체크
     if (checkSwearWords(value)) {
       setNickNameError("욕설이 포함되었습니다. 다시 입력해주세요.");
       return;
     }
-  
+
     // 닉네임 형식 체크
     if (!validateNickName(value)) {
-      console.log(validateNickName);
+      // console.log(validateNickName);
       setNickNameError("형식이 올바르지 않습니다. 다시 입력해 주세요.");
       debouncedNickNameCheck.cancel();
       return; // 형식이 맞지 않으면 중복 체크 중단
     }
-  
-    console.log(validateNickName); 
+
+    // console.log(validateNickName); 
     // 형식이 맞는 경우 중복 체크 실행
     setNickNameError(""); // 형식이 맞으면 에러 초기화
     debouncedNickNameCheck(value); // 2초 후 중복 체크 실행
   };
-  
+
   // 블로그 이름 입력 핸들러
   const handleBlogName = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-  
+
     const byteLength = getByteLength(value);
     if (byteLength > 30) return;
-  
+
     setBlogName(value);
     setIsBlogNameTouched(true); // 블로그 이름 필드가 수정되었음을 추적
-  
+
     // 욕설 체크
     if (checkSwearWords(value)) {
       setBlogNameError("욕설이 포함되었습니다. 다시 입력해주세요.");
       return;
     }
-  
+
     // 블로그 이름 형식 체크
     if (!validateBlogName(value)) {
       setBlogNameError("형식이 올바르지 않습니다. 다시 입력해 주세요.");
       debouncedBlogNameCheck.cancel();
       return; // 형식이 맞지 않으면 중복 체크 중단
     }
-  
+
     // 형식이 맞는 경우 중복 체크 실행
     setBlogNameError(""); // 형식이 맞으면 에러 초기화
     debouncedBlogNameCheck(value); // 2초 후 중복 체크 실행
   };
-  
+
   // 닉네임 중복 체크 함수
   const handleNickNameBlur = async (value: string) => {
     try {
@@ -218,19 +218,19 @@ const EditInfo = () => {
         setNickNameError("사용 가능한 닉네임입니다.");
       }
     } catch (error) {
-      console.error("Error checking nickname duplication:", error);
+      // console.error("Error checking nickname duplication:", error);
       setNickNameError("서버에서 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
     }
   };
-  
+
   const validateNickName = (nickName: string) => {
     const regex = /^(?=.*[a-z0-9가-힣])[a-z0-9가-힣 ]{2,16}$/; // 한글 자음/모음, 초성 허용 안함 + 공백 허용
     const incompleteKoreanCharRegex = /[ㄱ-ㅎㅏ-ㅣ]/; // 자음, 모음만 입력되었는지 체크
     if (incompleteKoreanCharRegex.test(nickName)) return false; // 자음/모음만 있는 경우 false
     return regex.test(nickName); // 정규식이 일치하면 true 반환
-};
+  };
 
-  
+
   // 블로그 이름 중복 체크 함수
   const handleBlogNameBlur = async (value: string) => {
     try {
@@ -241,11 +241,11 @@ const EditInfo = () => {
         setBlogNameError("사용 가능한 블로그 이름입니다.");
       }
     } catch (error) {
-      console.error("Error checking blog name duplication:", error);
+      // console.error("Error checking blog name duplication:", error);
       setBlogNameError("서버에서 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
     }
   };
-  
+
   // 블로그 이름 형식 체크 함수
   const validateBlogName = (blogName: string) => {
     const regex = /^[가-힣a-zA-Z0-9 ]{2,28}$/; // 한글, 영문, 숫자, 공백만 허용
@@ -254,18 +254,18 @@ const EditInfo = () => {
     return regex.test(blogName); // 정규 표현식이 일치하면 true 반환
   };
 
-  const isFormValid = 
-  (!isNickNameTouched && !isBlogNameTouched) || // 처음에는 필드 수정 여부에 상관없이 활성화
-  (isNickNameTouched && nickNameError === "사용 가능한 닉네임입니다." && // 닉네임이 사용 가능한 상태이고
-  (!isBlogNameTouched || blogNameError === "사용 가능한 블로그 이름입니다.")) || // 블로그 이름도 사용 가능해야 함 (수정된 경우에만 체크)
-  (isBlogNameTouched && blogNameError === "사용 가능한 블로그 이름입니다." && // 블로그 이름이 사용 가능한 상태이고
-  (!isNickNameTouched || nickNameError === "사용 가능한 닉네임입니다.")); // 닉네임도 사용 가능해야 함 (수정된 경우에만 체크)
+  const isFormValid =
+    (!isNickNameTouched && !isBlogNameTouched) || // 처음에는 필드 수정 여부에 상관없이 활성화
+    (isNickNameTouched && nickNameError === "사용 가능한 닉네임입니다." && // 닉네임이 사용 가능한 상태이고
+      (!isBlogNameTouched || blogNameError === "사용 가능한 블로그 이름입니다.")) || // 블로그 이름도 사용 가능해야 함 (수정된 경우에만 체크)
+    (isBlogNameTouched && blogNameError === "사용 가능한 블로그 이름입니다." && // 블로그 이름이 사용 가능한 상태이고
+      (!isNickNameTouched || nickNameError === "사용 가능한 닉네임입니다.")); // 닉네임도 사용 가능해야 함 (수정된 경우에만 체크)
 
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0];
-      
+
       // 이미지 크롭을 위한 모달을 표시하기 위해 FileReader 사용
       const reader = new FileReader();
       reader.onload = () => {
@@ -278,23 +278,23 @@ const EditInfo = () => {
 
   const handleCropImage = async () => {
     if (!imageSrc || !croppedAreaPixels) return;
-  
+
     try {
       const croppedBlob = await getCroppedImg(imageSrc, croppedAreaPixels); // 크롭된 이미지 가져오기
-  
+
       if (croppedBlob) {
         const fileName = 'croppedImage.jpg'; // 파일 이름 지정
         const croppedFile = new File([croppedBlob], fileName, { type: 'image/jpeg' });
-  
+
         // 크롭된 이미지 업로드
-        const response = await uploadImage(croppedFile); 
+        const response = await uploadImage(croppedFile);
         setProfileImage(response.result); // 업로드된 이미지를 상태에 설정
         setIsProfileImageChanged(true); // 이미지 변경됨 설정
         setIsImageModalOpen(false); // 모달 닫기
       }
     } catch (error) {
-      console.error("Image upload failed:", error);
-  
+      // console.error("Image upload failed:", error);
+
       if (error instanceof AxiosError) {
         if (error.response && error.response.status === 413) {
           Swal.fire({
@@ -352,7 +352,7 @@ const EditInfo = () => {
   const handleBlogImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0];
-  
+
       // 이미지 크롭을 위한 모달을 표시하기 위해 FileReader 사용
       const reader = new FileReader();
       reader.onload = () => {
@@ -362,26 +362,26 @@ const EditInfo = () => {
       reader.readAsDataURL(file);
     }
   };
-  
+
   const handleCropBlogImage = async () => {
     if (!blogImageSrc || !croppedBlogAreaPixels) return;
-  
+
     try {
       const croppedBlob = await getCroppedImg(blogImageSrc, croppedBlogAreaPixels); // 크롭된 이미지 가져오기
-  
+
       if (croppedBlob) {
         const fileName = 'croppedBlogImage.jpg'; // 파일 이름 지정
         const croppedFile = new File([croppedBlob], fileName, { type: 'image/jpeg' });
-  
+
         // 크롭된 이미지 업로드
-        const response = await uploadImage(croppedFile); 
+        const response = await uploadImage(croppedFile);
         setBlogImage(response.result); // 업로드된 이미지를 상태에 설정
         setIsBlogImageChanged(true); // 이미지 변경됨 설정
         setIsBlogImageModalOpen(false); // 모달 닫기
       }
     } catch (error: unknown) {
-      console.error("Image upload failed:", error);
-  
+      // console.error("Image upload failed:", error);
+
       if (error instanceof AxiosError) {
         if (error.response && error.response.status === 413) {
           Swal.fire({
@@ -423,33 +423,33 @@ const EditInfo = () => {
       }
     }
   };
-  
+
 
   const handleBlogImageDelete = () => {
     setBlogImage(null); // 블로그 이미지를 초기화
     setIsBlogImageChanged(true);
   };
 
-const handleBlogIntroduce = (e: React.ChangeEvent<HTMLInputElement>) => {
-  const value = e.target.value;
+  const handleBlogIntroduce = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
 
-  // 20글자 초과 시 더 이상 입력되지 않도록 막음
-  if (value.length > 20) {
-    return; // 입력 자체를 차단
-  }
+    // 20글자 초과 시 더 이상 입력되지 않도록 막음
+    if (value.length > 20) {
+      return; // 입력 자체를 차단
+    }
 
-  // 입력값을 항상 업데이트
-  setBlogIntroduce(value);
+    // 입력값을 항상 업데이트
+    setBlogIntroduce(value);
 
-  // 욕설 체크
-  if (checkSwearWords(value)) {
-    setBlogIntroduceError("욕설이 포함되었습니다. 다시 입력해주세요.");
-    return;
-  }
+    // 욕설 체크
+    if (checkSwearWords(value)) {
+      setBlogIntroduceError("욕설이 포함되었습니다. 다시 입력해주세요.");
+      return;
+    }
 
-  // 에러가 없을 때 에러 메시지 초기화
-  setBlogIntroduceError("");
-};
+    // 에러가 없을 때 에러 메시지 초기화
+    setBlogIntroduceError("");
+  };
 
   const handleInterestClick = (interest: string) => {
     setSelectedInterests((prevSelected) => {
@@ -464,7 +464,7 @@ const handleBlogIntroduce = (e: React.ChangeEvent<HTMLInputElement>) => {
   };
 
   useEffect(() => {
-    console.log('Selected Interests:', selectedInterests);
+    // console.log('Selected Interests:', selectedInterests);
   }, [selectedInterests]);
 
 
@@ -475,7 +475,7 @@ const handleBlogIntroduce = (e: React.ChangeEvent<HTMLInputElement>) => {
         icon: 'success',
         title: `회원 정보를 성공적으로<br/>업데이트하였습니다!`,
         confirmButtonText: '확인',
-        confirmButtonColor: '#FB3463', 
+        confirmButtonColor: '#FB3463',
         customClass: {
           popup: 'swal-custom-popup',
           icon: 'swal-custom-icon'
@@ -491,7 +491,7 @@ const handleBlogIntroduce = (e: React.ChangeEvent<HTMLInputElement>) => {
         icon: 'error',
         title: '회원 정보 업데이트에 실패했습니다. 다시 시도해주세요.',
         confirmButtonText: '확인',
-        confirmButtonColor: '#FB3463', 
+        confirmButtonColor: '#FB3463',
         customClass: {
           popup: 'swal-custom-popup',
           icon: 'swal-custom-icon'
@@ -517,7 +517,7 @@ const handleBlogIntroduce = (e: React.ChangeEvent<HTMLInputElement>) => {
       const sortedInterests = blogInterests.filter((interest) => tempSelectedInterests.includes(interest));
       setSelectedInterests(sortedInterests);
       setIsModalOpen(false);
-      setWarningMessage(''); 
+      setWarningMessage('');
     }
   };
 
@@ -525,7 +525,7 @@ const handleBlogIntroduce = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTempSelectedInterests(tempSelectedInterests);
     setIsModalOpen(false);
   };
-  
+
   const handleTempInterestClick = (interest: string) => {
     setTempSelectedInterests((prevSelected) => {
       if (prevSelected.includes(interest)) {
@@ -623,8 +623,8 @@ const handleBlogIntroduce = (e: React.ChangeEvent<HTMLInputElement>) => {
 
   const handleSubmit = () => {
     const data: UpdateMemberInfoRequest = {
-      nickName, 
-      blogName, 
+      nickName,
+      blogName,
       blogIntroduce,
       koreanInterestedTypes: selectedInterests,
       ...(isProfileImageChanged && { profileImage }), // 이미지가 수정된 경우에만 추가
@@ -638,93 +638,93 @@ const handleBlogIntroduce = (e: React.ChangeEvent<HTMLInputElement>) => {
       badgeScope,
       followScope,
     };
-  
-    console.log('Updated Data:', data); 
-  
+
+    // console.log('Updated Data:', data); 
+
     updateUserInfoMutation.mutate(data);
     updateUserInfo(data); // 전역 상태를 업데이트
   };
-  
-  
- 
+
+
+
   const onCropComplete = useCallback((croppedArea: Area, croppedAreaPixels: Area) => {
     setCroppedAreaPixels(croppedAreaPixels);
   }, []);
-  
+
 
 
   return (
     <>
-  <div className="relative w-full h-[240px]">
-  {/* Blog Image */}
-  {blogImage ? (
-    <Image
-      src={(typeof blogImage === 'string' ? blogImage : blogImage?.accessUri) || backgroundImg}
-      alt="Background"
-      objectFit="cover"
-      layout="fill"
-      className="z-0"
-    />
-  ) : (
-    <Image
-      src={backgroundImg}
-      alt="Backgrounded"
-      objectFit="cover"
-      layout="fill"
-      className="z-0"
-    />
-  )}
+      <div className="relative w-full h-[240px]">
+        {/* Blog Image */}
+        {blogImage ? (
+          <Image
+            src={(typeof blogImage === 'string' ? blogImage : blogImage?.accessUri) || backgroundImg}
+            alt="Background"
+            objectFit="cover"
+            layout="fill"
+            className="z-0"
+          />
+        ) : (
+          <Image
+            src={backgroundImg}
+            alt="Backgrounded"
+            objectFit="cover"
+            layout="fill"
+            className="z-0"
+          />
+        )}
 
-  {/* Dark Overlay */}
-  <div className="absolute inset-0 bg-black bg-opacity-50 z-10" />
+        {/* Dark Overlay */}
+        <div className="absolute inset-0 bg-black bg-opacity-50 z-10" />
 
-  {/* Text and Upload Section */}
-  <div className="absolute inset-0 flex flex-col items-center justify-center z-20">
-    <input
-      type="file"
-      accept="image/*"
-      ref={inputFileRef}
-      style={{ display: 'none' }}
-      onChange={handleBlogImageUpload}
-    />
-    <div
-      className="flex flex-col cursor-pointer justify-center items-center mt-[30px]"
-      onClick={handleImageUploadClick}
-    >
-      <Image
-        src={backgroundAddIcon}
-        alt="Add Blog Image Icon"
-        width={50}
-        height={50}
-        className="cursor-pointer"
-      />
-      <div
-        className="text-white text-2xl font-semibold font-['Pretendard'] mt-[10px] cursor-pointer"
-        onClick={handleImageUploadClick}
-      >
-        대표사진 추가
-      </div>
-      <div
-        className="text-white text-base font-semibold font-['Pretendard'] mt-[5px] cursor-pointer"
-        onClick={handleImageUploadClick}
-      >
-        최적치수 1920 x 240 px
-      </div>
-    </div>
-    <div className="h-[30px]">
-      {blogImage && (
-        <Image
-          src={OOtdDeleteImage}
-          alt="블로그이미지 삭제"
-          width={20}
-          height={20}
-          className="cursor-pointer mt-[10px]"
-          onClick={handleBlogImageDelete}
-        />
-      )}
-    </div>
-  </div>
-    </div><div className="w-[90%] mb-[60px] mx-auto sm-700:max-w-[400px] sm-700:mb-0">
+        {/* Text and Upload Section */}
+        <div className="absolute inset-0 flex flex-col items-center justify-center z-20">
+          <input
+            type="file"
+            accept="image/*"
+            ref={inputFileRef}
+            style={{ display: 'none' }}
+            onChange={handleBlogImageUpload}
+          />
+          <div
+            className="flex flex-col cursor-pointer justify-center items-center mt-[30px]"
+            onClick={handleImageUploadClick}
+          >
+            <Image
+              src={backgroundAddIcon}
+              alt="Add Blog Image Icon"
+              width={50}
+              height={50}
+              className="cursor-pointer"
+            />
+            <div
+              className="text-white text-2xl font-semibold font-['Pretendard'] mt-[10px] cursor-pointer"
+              onClick={handleImageUploadClick}
+            >
+              대표사진 추가
+            </div>
+            <div
+              className="text-white text-base font-semibold font-['Pretendard'] mt-[5px] cursor-pointer"
+              onClick={handleImageUploadClick}
+            >
+              최적치수 1920 x 240 px
+            </div>
+          </div>
+          <div className="h-[30px]">
+            {blogImage && (
+              <Image
+                src={OOtdDeleteImage}
+                alt="블로그이미지 삭제"
+                width={20}
+                height={20}
+                className="cursor-pointer mt-[10px]"
+                onClick={handleBlogImageDelete}
+              />
+            )}
+          </div>
+        </div>
+      </div><div className="w-[90%] mb-[60px] mx-auto sm-700:max-w-[400px] sm-700:mb-0">
         <div className="mt-[4rem]">
           <div className="">
             <div className="sign-up-info">프로필 사진</div>
@@ -772,7 +772,7 @@ const handleBlogIntroduce = (e: React.ChangeEvent<HTMLInputElement>) => {
                 <button
                   onClick={handleImageDelete}
                   className="absolute mt-2 text-[1rem] text-gray-500 hover:text-gray-900"
-                  style={{ top: '76px', left: '165px' }} 
+                  style={{ top: '76px', left: '165px' }}
                 >
                   이미지 삭제
                 </button>
@@ -793,8 +793,8 @@ const handleBlogIntroduce = (e: React.ChangeEvent<HTMLInputElement>) => {
                 {nickNameError && (
                   <p
                     className={`mt-2 ${nickNameError.includes("사용 가능한 닉네임입니다.")
-                        ? "text-green-500"
-                        : "text-red-500"}`}
+                      ? "text-green-500"
+                      : "text-red-500"}`}
                   >
                     {nickNameError}
                   </p>
@@ -815,8 +815,8 @@ const handleBlogIntroduce = (e: React.ChangeEvent<HTMLInputElement>) => {
                 {blogNameError && (
                   <p
                     className={`mt-2 ${blogNameError.includes("사용 가능한 블로그 이름입니다.")
-                        ? "text-green-500"
-                        : "text-red-500"}`}
+                      ? "text-green-500"
+                      : "text-red-500"}`}
                   >
                     {blogNameError}
                   </p>
@@ -841,16 +841,16 @@ const handleBlogIntroduce = (e: React.ChangeEvent<HTMLInputElement>) => {
 
               <div className="mt-[3rem]">
                 <div className="flex">
-                <label htmlFor="interests" className="sign-up-info block">
-                  관심 분야
-                </label>
-                <div className='flex ml-auto' onClick={() => handleOpenModal()}>
-                  <div
+                  <label htmlFor="interests" className="sign-up-info block">
+                    관심 분야
+                  </label>
+                  <div className='flex ml-auto' onClick={() => handleOpenModal()}>
+                    <div
                       className="pr-1 py-2 rounded-full text-[#9d9d9d] cursor-pointer"
                     >
-                    설정하기
-                  </div>
-                  <Image src={RightIcon} alt="setting" width={8} height={14} />
+                      설정하기
+                    </div>
+                    <Image src={RightIcon} alt="setting" width={8} height={14} />
                   </div>
                 </div>
                 <div className="mt-[2rem] flex flex-wrap">
@@ -903,9 +903,8 @@ const handleBlogIntroduce = (e: React.ChangeEvent<HTMLInputElement>) => {
                   <label className="block my-auto w-[150px] text-lg">티켓</label>
                   <div className="relative">
                     <div
-                      className={`w-40 rounded-lg shadow-lg text-[#6b6b6b] text-base focus:outline-none cursor-pointer ${
-                        isTicketOpen ? 'border border-[#FB3463]' : ''
-                      }`} 
+                      className={`w-40 rounded-lg shadow-lg text-[#6b6b6b] text-base focus:outline-none cursor-pointer ${isTicketOpen ? 'border border-[#FB3463]' : ''
+                        }`}
                       style={{
                         borderRadius: "8px",
                         height: "3rem",
@@ -945,45 +944,44 @@ const handleBlogIntroduce = (e: React.ChangeEvent<HTMLInputElement>) => {
                 <div className="flex mb-8">
                   <label className="block my-auto w-[150px] text-lg">OOTD</label>
                   <div className="relative">
-                  <div
-                     className={`w-40 rounded-lg shadow-lg text-[#6b6b6b] text-base focus:outline-none cursor-pointer ${
-                      isOotdOpen ? 'border border-[#FB3463]' : ''
-                    }`} 
-                    style={{
-                      borderRadius: "8px",
-                      height: "3rem",
-                      padding: "0.5rem 1rem",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "space-between"
-                    }}
-                    onClick={() => setIsOotdOpen(!isOotdOpen)}
-                  >
-                    {options.find((option) => option.value === ootdScope)?.label}
+                    <div
+                      className={`w-40 rounded-lg shadow-lg text-[#6b6b6b] text-base focus:outline-none cursor-pointer ${isOotdOpen ? 'border border-[#FB3463]' : ''
+                        }`}
+                      style={{
+                        borderRadius: "8px",
+                        height: "3rem",
+                        padding: "0.5rem 1rem",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "space-between"
+                      }}
+                      onClick={() => setIsOotdOpen(!isOotdOpen)}
+                    >
+                      {options.find((option) => option.value === ootdScope)?.label}
+                      {isOotdOpen && (
+                        <Image src={UpIcon} alt="upIcon" width={16} height={28} />
+                      )}
+                      {!isOotdOpen && (
+                        <Image src={DownIcon} alt="downIcon" width={16} height={28} />
+                      )}
+                    </div>
                     {isOotdOpen && (
-                      <Image src={UpIcon} alt="upIcon" width={16} height={28} />
-                    )}
-                    {!isOotdOpen && (
-                      <Image src={DownIcon} alt="downIcon" width={16} height={28} />
+                      <div
+                        className="absolute mt-1 w-full rounded-lg shadow-lg bg-white"
+                        style={{ zIndex: 10 }}
+                      >
+                        {options.map((option) => (
+                          <div
+                            key={option.value}
+                            className="px-4 py-3 cursor-pointer hover:bg-neutral-100 text-[#6b6b6b]"
+                            onClick={() => handleOotdSelect(option.value)}
+                          >
+                            {option.label}
+                          </div>
+                        ))}
+                      </div>
                     )}
                   </div>
-                  {isOotdOpen && (
-                    <div
-                      className="absolute mt-1 w-full rounded-lg shadow-lg bg-white"
-                      style={{ zIndex: 10 }}
-                    >
-                      {options.map((option) => (
-                        <div
-                          key={option.value}
-                          className="px-4 py-3 cursor-pointer hover:bg-neutral-100 text-[#6b6b6b]"
-                          onClick={() => handleOotdSelect(option.value)}
-                        >
-                          {option.label}
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
                 </div>
 
                 {/* <div className="flex mb-8">
@@ -1030,130 +1028,127 @@ const handleBlogIntroduce = (e: React.ChangeEvent<HTMLInputElement>) => {
                 </div>
                 </div> */}
 
-              <div className="flex mb-8">
-                <label className="block my-auto w-[150px] text-lg">팔로워 / 팔로잉</label>
-                <div className="relative">
-                  <div
-                     className={`w-40 rounded-lg shadow-lg text-[#6b6b6b] text-base focus:outline-none cursor-pointer ${
-                      isFollowOpen ? 'border border-[#FB3463]' : ''
-                    }`} 
-                    style={{
-                      borderRadius: "8px",
-                      height: "3rem",
-                      padding: "0.5rem 1rem",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "space-between"
-                    }}
-                    onClick={() => setIsFollwOpen(!isFollowOpen)}
-                  >
-                    {options.find((option) => option.value === followScope)?.label}
+                <div className="flex mb-8">
+                  <label className="block my-auto w-[150px] text-lg">팔로워 / 팔로잉</label>
+                  <div className="relative">
+                    <div
+                      className={`w-40 rounded-lg shadow-lg text-[#6b6b6b] text-base focus:outline-none cursor-pointer ${isFollowOpen ? 'border border-[#FB3463]' : ''
+                        }`}
+                      style={{
+                        borderRadius: "8px",
+                        height: "3rem",
+                        padding: "0.5rem 1rem",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "space-between"
+                      }}
+                      onClick={() => setIsFollwOpen(!isFollowOpen)}
+                    >
+                      {options.find((option) => option.value === followScope)?.label}
+                      {isFollowOpen && (
+                        <Image src={UpIcon} alt="upIcon" width={16} height={28} />
+                      )}
+                      {!isFollowOpen && (
+                        <Image src={DownIcon} alt="downIcon" width={16} height={28} />
+                      )}
+                    </div>
                     {isFollowOpen && (
-                      <Image src={UpIcon} alt="upIcon" width={16} height={28} />
-                    )}
-                    {!isFollowOpen && (
-                      <Image src={DownIcon} alt="downIcon" width={16} height={28} />
+                      <div
+                        className="absolute mt-1 w-full rounded-lg shadow-lg bg-white"
+                        style={{ zIndex: 10 }}
+                      >
+                        {options.map((option) => (
+                          <div
+                            key={option.value}
+                            className="px-4 py-3 cursor-pointer hover:bg-neutral-100 text-[#6b6b6b]"
+                            onClick={() => handleFollowSelect(option.value)}
+                          >
+                            {option.label}
+                          </div>
+                        ))}
+                      </div>
                     )}
                   </div>
-                  {isFollowOpen && (
-                    <div
-                      className="absolute mt-1 w-full rounded-lg shadow-lg bg-white"
-                      style={{ zIndex: 10 }}
-                    >
-                      {options.map((option) => (
-                        <div
-                          key={option.value}
-                          className="px-4 py-3 cursor-pointer hover:bg-neutral-100 text-[#6b6b6b]"
-                          onClick={() => handleFollowSelect(option.value)}
-                        >
-                          {option.label}
-                        </div>
-                      ))}
-                    </div>
-                  )}
                 </div>
               </div>
-            </div>
-            <div className="mt-[40px] text-[#FB3463] cursor-pointer" onClick={handleWithdraw}>회원 탈퇴하기</div>
+              <div className="mt-[40px] text-[#FB3463] cursor-pointer" onClick={handleWithdraw}>회원 탈퇴하기</div>
             </div>
             <div className="w-[90%] max-w-[400px] mx-auto mt-[50px]">
-            <div className="text-center">
-            <button
-              type="submit"
-              className={`mx-auto w-[120px] h-[44px] mt-[2rem] mb-[2rem] text-white py-2 rounded-xl flex justify-center items-center ${
-                isFormValid
-                  ? "bg-btn-color cursor-pointer"
-                  : "cursor-not-allowed bg-[#cfcfcf] hover:bg-[#cfcfcf]"
-              }`}
-              onClick={handleSubmit}
-              style={{ fontSize: "1.2rem" }}
-              disabled={!isFormValid} // 조건이 충족되지 않으면 비활성화
-            >
-              수정
-            </button>
-            </div>
+              <div className="text-center">
+                <button
+                  type="submit"
+                  className={`mx-auto w-[120px] h-[44px] mt-[2rem] mb-[2rem] text-white py-2 rounded-xl flex justify-center items-center ${isFormValid
+                      ? "bg-btn-color cursor-pointer"
+                      : "cursor-not-allowed bg-[#cfcfcf] hover:bg-[#cfcfcf]"
+                    }`}
+                  onClick={handleSubmit}
+                  style={{ fontSize: "1.2rem" }}
+                  disabled={!isFormValid} // 조건이 충족되지 않으면 비활성화
+                >
+                  수정
+                </button>
+              </div>
             </div>
           </div>
         </div>
         {isModalOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-8 rounded-lg w-[80%] max-w-[400px]">
-            <h2 className="text-2xl font-bold mb-2 text-[#292929]">관심 분야 설정</h2>
-            <p className="text-sm text-[#6b6b6b] mb-4">관심분야를 2개 이상 선택해주세요. (최대 5개까지)</p>
-            <div className="grid grid-cols-5 gap-2 justify-center">
-              {blogInterests.map((interest, index) => (
-                <div
-                  key={index}
-                  className={`px-2 py-4 rounded-xl cursor-pointer text-center ${
-                    tempSelectedInterests.includes(interest)
-                      ? "bg-[#FB3463] text-white"
-                      : "bg-neutral-100 text-[#9d9d9d]"
-                  }`}
-                  onClick={() => handleTempInterestClick(interest)}
+          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+            <div className="bg-white p-8 rounded-lg w-[80%] max-w-[400px]">
+              <h2 className="text-2xl font-bold mb-2 text-[#292929]">관심 분야 설정</h2>
+              <p className="text-sm text-[#6b6b6b] mb-4">관심분야를 2개 이상 선택해주세요. (최대 5개까지)</p>
+              <div className="grid grid-cols-5 gap-2 justify-center">
+                {blogInterests.map((interest, index) => (
+                  <div
+                    key={index}
+                    className={`px-2 py-4 rounded-xl cursor-pointer text-center ${tempSelectedInterests.includes(interest)
+                        ? "bg-[#FB3463] text-white"
+                        : "bg-neutral-100 text-[#9d9d9d]"
+                      }`}
+                    onClick={() => handleTempInterestClick(interest)}
+                  >
+                    {interest}
+                  </div>
+                ))}
+              </div>
+              {warningMessage && (
+                <p className="text-red-500 text-sm mt-4">{warningMessage}</p>
+              )}
+              <div className="mt-8 flex ml-auto justify-end">
+                <button
+                  onClick={handleCloseModal}
+                  className="w-[68px] px-4 py-2 bg-neutral-100 text-[#292929] rounded-lg mr-2"
                 >
-                  {interest}
-                </div>
-              ))}
+                  취소
+                </button>
+                <button
+                  onClick={handleConfirm}
+                  className="w-[68px] px-4 py-2 bg-[#FB3463] text-white rounded-lg"
+                >
+                  확인
+                </button>
+              </div>
             </div>
-            {warningMessage && (
-              <p className="text-red-500 text-sm mt-4">{warningMessage}</p>
-            )}
-            <div className="mt-8 flex ml-auto justify-end">
-              <button
-                onClick={handleCloseModal}
-                className="w-[68px] px-4 py-2 bg-neutral-100 text-[#292929] rounded-lg mr-2"
-              >
-                취소
-              </button>
-              <button
-                onClick={handleConfirm}
-                className="w-[68px] px-4 py-2 bg-[#FB3463] text-white rounded-lg"
-              >
-                확인
-              </button>
-            </div>
-          </div>
           </div>
         )}
         {isImageModalOpen && (
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-        <div className="bg-white py-4 px-8 rounded-lg shadow-lg">
-          <h3 className="mb-4 text-center">이미지 영역 선택</h3>
-          <div className="relative w-[300px] h-[300px] bg-gray-200">
-            {imageSrc && (
-              <Cropper
-                image={imageSrc}
-                crop={crop}
-                zoom={zoom}
-                aspect={1} // 1:1 비율로 설정
-                onCropChange={setCrop}
-                onCropComplete={onCropComplete}
-                onZoomChange={setZoom}
-                objectFit="cover" // 이미지 여백을 없애고 화면에 맞춤
-              />
-            )}
-          </div>
-          <div className="flex justify-end mt-4">
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+            <div className="bg-white py-4 px-8 rounded-lg shadow-lg">
+              <h3 className="mb-4 text-center">이미지 영역 선택</h3>
+              <div className="relative w-[300px] h-[300px] bg-gray-200">
+                {imageSrc && (
+                  <Cropper
+                    image={imageSrc}
+                    crop={crop}
+                    zoom={zoom}
+                    aspect={1} // 1:1 비율로 설정
+                    onCropChange={setCrop}
+                    onCropComplete={onCropComplete}
+                    onZoomChange={setZoom}
+                    objectFit="cover" // 이미지 여백을 없애고 화면에 맞춤
+                  />
+                )}
+              </div>
+              <div className="flex justify-end mt-4">
                 <div className="bg-btn-color text-white px-4 py-2 font-medium font-['Pretendard'] rounded mr-2 cursor-pointer" onClick={handleCropImage}>
                   완료
                 </div>
@@ -1161,28 +1156,28 @@ const handleBlogIntroduce = (e: React.ChangeEvent<HTMLInputElement>) => {
                   취소
                 </div>
               </div>
-        </div>
-      </div>
-    )}
-    {isBlogImageModalOpen && (
-  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-    <div className="bg-white py-4 px-8 rounded-lg shadow-lg">
-      <h3 className="mb-4 text-center">이미지 영역 선택</h3>
-      <div className="relative w-[300px] h-[300px] bg-gray-200">
-        {blogImageSrc && (
-          <Cropper
-            image={blogImageSrc} // 이미지 소스 전달
-            crop={blogCrop}
-            zoom={blogZoom}
-            aspect={16 / 9} // 블로그 대표사진 비율 (예: 16:9)
-            onCropChange={setBlogCrop}
-            onCropComplete={(croppedArea, croppedAreaPixels) => setCroppedBlogAreaPixels(croppedAreaPixels)} // 크롭 완료 시 호출
-            onZoomChange={setBlogZoom}
-            objectFit="cover" // 이미지 여백을 없애고 화면에 맞춤
-          />
+            </div>
+          </div>
         )}
-      </div>
-      <div className="flex justify-end mt-4">
+        {isBlogImageModalOpen && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+            <div className="bg-white py-4 px-8 rounded-lg shadow-lg">
+              <h3 className="mb-4 text-center">이미지 영역 선택</h3>
+              <div className="relative w-[300px] h-[300px] bg-gray-200">
+                {blogImageSrc && (
+                  <Cropper
+                    image={blogImageSrc} // 이미지 소스 전달
+                    crop={blogCrop}
+                    zoom={blogZoom}
+                    aspect={16 / 9} // 블로그 대표사진 비율 (예: 16:9)
+                    onCropChange={setBlogCrop}
+                    onCropComplete={(croppedArea, croppedAreaPixels) => setCroppedBlogAreaPixels(croppedAreaPixels)} // 크롭 완료 시 호출
+                    onZoomChange={setBlogZoom}
+                    objectFit="cover" // 이미지 여백을 없애고 화면에 맞춤
+                  />
+                )}
+              </div>
+              <div className="flex justify-end mt-4">
                 <div className="bg-btn-color text-white px-4 py-2 font-medium font-['Pretendard'] rounded mr-2 cursor-pointer" onClick={handleCropBlogImage}>
                   완료
                 </div>
@@ -1190,9 +1185,9 @@ const handleBlogIntroduce = (e: React.ChangeEvent<HTMLInputElement>) => {
                   취소
                 </div>
               </div>
-    </div>
-  </div>
-)}
+            </div>
+          </div>
+        )}
       </div></>
   );
 };

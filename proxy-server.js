@@ -45,7 +45,7 @@ const server = http.createServer((req, res) => {
 
 const PORT = 8081;
 server.listen(PORT, () => {
-  console.log(`Proxy server listening on port ${PORT}`);
+  // console.log(`Proxy server listening on port ${PORT}`);
 });
 
 // 에러 핸들링

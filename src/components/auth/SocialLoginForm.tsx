@@ -18,7 +18,7 @@ const SocialLoginForm = () => {
     // 세션 값이 로그인 상태인 경우
     if (session) {
       // 여기에 사용자를 구별하고 필요한 작업을 수행하는 코드 작성
-      console.log("사용자 정보:", session.user);
+      // console.log("사용자 정보:", session.user);
       // console.log("사용자 정보:", session.user?.email);
     }
   }, [session]);
@@ -30,7 +30,7 @@ const SocialLoginForm = () => {
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/member/login/oauth2/${socialName}`
       );
       const accessToken = tokenResponse.data.accessToken;
-  
+
       // accessToken을 헤더에 포함하여 요청을 보내도록 수정
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/member/login/oauth2/${socialName}`,
@@ -41,20 +41,20 @@ const SocialLoginForm = () => {
           }
         }
       );
-  
-      console.log(response.data);
-      console.log(response);
-      console.log(response.data.result);
-      console.log(accessToken);
+
+      // console.log(response.data);
+      // console.log(response);
+      // console.log(response.data.result);
+      // console.log(accessToken);
       router.push("/ootd");
-      console.log("Redirecting to login page...");
+      // console.log("Redirecting to login page...");
     } catch (error) {
       console.error("Error during social login:", error);
     }
   };
-  
-  
-  
+
+
+
 
   const handleSocial = async (name: string) => {
     try {
@@ -79,8 +79,8 @@ const SocialLoginForm = () => {
         });
       }
     } catch (error) {
-      console.log("소셜 토큰 주기 실패");
-      console.log(error);
+      // console.log("소셜 토큰 주기 실패");
+      // console.log(error);
     }
   };
   return (

@@ -56,7 +56,7 @@ const EmailVerification = () => {
       } catch (error) {
         console.error("이메일 중복 확인 오류:", error);
         setDuplicateMessage("이메일 중복 확인에 실패했습니다.");
-      }      
+      }
     } else {
       setDuplicateMessage("");
     }
@@ -70,9 +70,9 @@ const EmailVerification = () => {
       try {
         const response = await emailSend(email);
         if (response.isSuccess) {
-          console.log('Resend success');
+          // console.log('Resend success');
         } else {
-          console.error("Failed to resend email.");
+          // console.error("Failed to resend email.");
         }
       } catch (error) {
         console.error("Error resending email:", error);
@@ -93,7 +93,7 @@ const EmailVerification = () => {
         setCodeMessage('인증이 완료되었습니다.');
         setIsCodeVerified(true);
       } else {
-        console.log(isCodeVerified);
+        // console.log(isCodeVerified);
         setCodeMessage('인증에 실패하였습니다. 다시 입력해주세요.');
       }
     } catch (error) {

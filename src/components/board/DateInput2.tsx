@@ -65,7 +65,7 @@ const DateInput2: React.FC<DateInputProps> = ({
     onDateChange([formattedStart, formattedEnd]);
 
     // 상태 업데이트 후 콘솔 로그
-    console.log(formattedStart, formattedEnd);
+    // console.log(formattedStart, formattedEnd);
   };
 
   const handleCalendarClick = () => {

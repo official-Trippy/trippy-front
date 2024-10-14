@@ -65,7 +65,7 @@ function PostWrite() {
         body: '',
         images: [] as string[], // 이미지 URL을 저장할 배열
     });
-    console.log(postRequests)
+    // console.log(postRequests)
     const [result, setResult] = useState<ApiResponse | null>(null);
     const [result1, setResult1] = useState<ApiResponse | null>(null);
     const [transportStr, setTransportStr] = useState('');
@@ -136,7 +136,7 @@ function PostWrite() {
         queryFn: () => MemberInfo(accessToken),
         onError: (error) => {
             // 에러 처리 로직
-            console.error(error);
+            // console.error(error);
         },
     });
 
@@ -159,7 +159,7 @@ function PostWrite() {
         setTicketColor(selectedColor);
     };
 
-    console.log(memberData)
+    // console.log(memberData)
 
 
     const selectTransport = (imgSrc: JSX.Element) => {
@@ -191,7 +191,7 @@ function PostWrite() {
                         setTransportStr('Car');
                     }
                 } else {
-                    console.warn('No valid src found in updatedState[0]'); // 디버깅: src가 없을 경우 경고
+                    // console.warn('No valid src found in updatedState[0]'); // 디버깅: src가 없을 경우 경고
                 }
             }
             setIsTransport(false); // transport 상태를 false로 설정
@@ -212,19 +212,19 @@ function PostWrite() {
 
         try {
             const uploadedImage = await uploadImage(file);
-            console.log(uploadedImage.result);
+            // console.log(uploadedImage.result);
             setImages([...images, uploadedImage.result]);
-            console.log(images);
+            // console.log(images);
             setIsImages([...images, uploadedImage.result]);
         } catch (error) {
-            console.error('Error uploading image:', error);
+            // console.error('Error uploading image:', error);
         }
     };
 
 
     const displayImages = images.map(image => image.accessUri);
 
-    console.log(thumbnailPreview)
+    // console.log(thumbnailPreview)
     const addPost = async () => {
 
         if (inputValue1 === '' || inputValue2 === '') {
@@ -246,7 +246,7 @@ function PostWrite() {
                 confirmButtonText: '확인',
                 confirmButtonColor: '#FB3463',
             });
-            console.log(postRequests)
+            // console.log(postRequests)
             return;
         }
 
@@ -338,7 +338,7 @@ function PostWrite() {
                 }
             });
 
-            console.log(postRequest, ticketRequest);
+            // console.log(postRequest, ticketRequest);
             await postBoard(postRequest, ticketRequest);
 
             // 로딩 완료 후 성공 메시지
@@ -369,7 +369,7 @@ function PostWrite() {
     };
 
 
-    console.log(images)
+    // console.log(images)
 
     // URL 객체 해제
     useEffect(() => {
@@ -379,7 +379,7 @@ function PostWrite() {
             }
         };
     }, [thumbnailPreview]);
-    console.log(formatDates(startDate), formatDates(endDate))
+    // console.log(formatDates(startDate), formatDates(endDate))
 
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -416,7 +416,7 @@ function PostWrite() {
     }
 
 
-    console.log(transportStr)
+    // console.log(transportStr)
     return (
         <div className=''>
             {/* <Header /> */}
