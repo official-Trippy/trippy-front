@@ -24,7 +24,7 @@ export default function RootLayout({
   const pathname = usePathname();  // 현재 페이지 경로 가져오기
 
   // 특정 페이지에서만 Header를 숨기기 (예시: "/login"과 "/signup"에서 Header 숨김)
-  const hideHeaderPages = ["/login", "/signUp", "/blogRegister" ,"/blogRegister2", "/blogRegister3", , "/findAccount", , "/findPassword", , "/privacy"];
+  const hideHeaderPages = ["/login", "/signUp", "/blogRegister", "/blogRegister2", "/blogRegister3", "/findAccount", "/findPassword", "/privacy"];
   const shouldShowHeader = !hideHeaderPages.includes(pathname);
 
   return (
