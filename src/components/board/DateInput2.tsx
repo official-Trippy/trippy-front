@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { format, parse, isValid } from 'date-fns';
-import Image from 'next/image';
-import CalendarIcon from '../../../public/icon_calendar.svg';
-import CalendarModal2 from './CalendarModal2';
+import React, { useState, useEffect } from "react";
+import { format, parse, isValid } from "date-fns";
+import Image from "next/image";
+import CalendarIcon from "../../../public/icon_calendar.svg";
+import CalendarModal2 from "./CalendarModal2";
 
 interface DateInputProps {
   onDateChange: any; // 날짜 배열 전달
@@ -21,18 +21,20 @@ const DateInput2: React.FC<DateInputProps> = ({
   setStartDate,
   setEndDate,
 }) => {
-  const [selectedDates, setSelectedDates] = useState<[Date | null, Date | null]>([null, null]);
+  const [selectedDates, setSelectedDates] = useState<
+    [Date | null, Date | null]
+  >([null, null]);
   const [isModalOpen, setIsModalOpen] = useState(false); // 모달 상태 관리
-  const [inputValue, setInputValue] = useState<string>(''); // 입력된 값 관리
+  const [inputValue, setInputValue] = useState<string>(""); // 입력된 값 관리
 
   useEffect(() => {
     if (initialDate) {
-      const parsedDate = parse(initialDate, 'yyyyMMdd', new Date());
+      const parsedDate = parse(initialDate, "yyyyMMdd", new Date());
       if (isValid(parsedDate)) {
         setSelectedDates([parsedDate, null]); // 시작일만 설정
         setInputValue(initialDate); // 초기 날짜 값 설정
       } else {
-        console.error('Invalid date format:', initialDate);
+        console.error("Invalid date format:", initialDate);
       }
     }
   }, [initialDate]);
@@ -44,8 +46,8 @@ const DateInput2: React.FC<DateInputProps> = ({
     setSelectedDates([start, end]);
 
     // 시작 날짜와 종료 날짜 설정
-    const formattedStart = start ? format(start, 'yyyyMMdd') : null;
-    const formattedEnd = end ? format(end, 'yyyyMMdd') : null;
+    const formattedStart = start ? format(start, "yyyyMMdd") : null;
+    const formattedEnd = end ? format(end, "yyyyMMdd") : null;
 
     setStartDate(start);
     setEndDate(end);
@@ -58,7 +60,7 @@ const DateInput2: React.FC<DateInputProps> = ({
     } else if (end) {
       setInputValue(String(formattedEnd));
     } else {
-      setInputValue('');
+      setInputValue("");
     }
 
     // 날짜 변경 콜백 호출
@@ -73,7 +75,7 @@ const DateInput2: React.FC<DateInputProps> = ({
   };
 
   return (
-    <div className="relative w-fit lg:w-[22rem] sm-700:w-[14rem] h-[1.5rem] lg:h-[4rem] sm-700:h-[1.5rem] rounded-[8px] border border-[#cfcfcf] flex items-center text-[0.8rem] lg:text-lg sm-700:text-[0.4rem] mr-[3rem]">
+    <div className="relative w-fit lg:w-[18rem] sm-700:w-[14rem] h-[1.5rem] lg:h-[4rem] sm-700:h-[1.5rem] rounded-[8px] border border-[#cfcfcf] flex items-center text-[0.8rem] lg:text-lg sm-700:text-[0.4rem] mr-[3rem]">
       <input
         type="text"
         value={inputValue}
