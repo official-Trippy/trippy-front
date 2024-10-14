@@ -1,7 +1,7 @@
-import React from 'react';
-import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
-import { ko } from 'date-fns/locale';
+import React from "react";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import { ko } from "date-fns/locale";
 
 interface CalendarModalProps {
   isOpen: boolean;
@@ -18,7 +18,7 @@ const CalendarModal2: React.FC<CalendarModalProps> = ({
   selectedDates,
   onDateChange,
   startDate,
-  endDate
+  endDate,
 }) => {
   if (!isOpen) return null;
 
@@ -39,6 +39,22 @@ const CalendarModal2: React.FC<CalendarModalProps> = ({
           inline
           dateFormat="yyyy. MM. dd"
           maxDate={today} // 오늘 날짜 이후 선택 불가
+          renderCustomHeader={({ date, decreaseMonth, increaseMonth }) => (
+            <div className="flex justify-center items-center">
+              <button className="mr-[1rem]" onClick={decreaseMonth}>
+                &lt;
+              </button>
+              <span className="mt-[0.25rem]">
+                {date.toLocaleString("default", {
+                  month: "long",
+                  year: "numeric",
+                })}
+              </span>
+              <button className="ml-[1rem]" onClick={increaseMonth}>
+                &gt;
+              </button>
+            </div>
+          )}
         />
 
         {/* 선택 및 취소 버튼 */}

@@ -25,7 +25,7 @@ const UserInformation: React.FC<{ setActiveTab: (tab: string) => void }> = ({
 
   useEffect(() => {
     if (!accessToken) {
-      router.push('/login');
+      router.push("/login");
     }
   }, [accessToken, router]);
 
@@ -76,23 +76,31 @@ const UserInformation: React.FC<{ setActiveTab: (tab: string) => void }> = ({
               }}
             />
           </div>
-          <h1 className="text-4xl font-bold mt-[10px] text-center">{userData?.nickName}</h1>
+          <h1 className="text-4xl font-bold mt-[10px] text-center">
+            {userData?.nickName}
+          </h1>
           <span
             style={{
-              overflowWrap: 'break-word',
-              wordBreak: 'break-word'
+              overflowWrap: "break-word",
+              wordBreak: "break-word",
             }}
             className="text-xl text-gray-600 mt-[5px] text-center"
           >
             {userData?.email}
           </span>
           <div className="mt-[10px] flex px-4">
-            <span className="text-base text-[#9d9d9d] cursor-pointer" onClick={() => setActiveTab(TABS.FOLLOWER)}>
+            <span
+              className="text-base text-[#9d9d9d] cursor-pointer"
+              onClick={() => setActiveTab(TABS.FOLLOWER)}
+            >
               팔로워
               <span className="text-[#6b6b6b]"> {userData?.followerCnt}</span>
             </span>
             <span className="text-base text-[#9d9d9d]">&ensp;|&ensp;</span>
-            <span className="text-base text-[#9d9d9d] cursor-pointer" onClick={() => setActiveTab(TABS.FOLLOWING)}>
+            <span
+              className="text-base text-[#9d9d9d] cursor-pointer"
+              onClick={() => setActiveTab(TABS.FOLLOWING)}
+            >
               팔로잉
               <span className="text-[#6b6b6b]"> {userData?.followingCnt}</span>
             </span>
