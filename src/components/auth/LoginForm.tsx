@@ -36,11 +36,11 @@ const LoginForm = () => {
       Cookies.remove("accessToken");
       Cookies.remove("refreshToken");
       Cookies.remove('role');
-      router.push("/ootd");
+      router.push("/");
       router.refresh();
     }
     if (accessToken && refreshToken) {
-      router.push("/ootd");
+      router.push("/");
     }
   };
 
@@ -75,7 +75,7 @@ const LoginForm = () => {
         // 전역 상태에 유저 정보 저장
         await fetchUserInfo(); // 전역 상태에 유저 정보를 업데이트
 
-        router.push("/ootd");
+        router.push("/");
       }
       router.refresh();
     } catch (error) {
@@ -87,7 +87,7 @@ const LoginForm = () => {
   return (
     <div className="mx-auto">
       <form onSubmit={handleSubmit} className="flex flex-col items-center">
-        <Link href="/ootd">
+        <Link href="/">
           <Image src={LogoMain} alt="Logo" className="" />
         </Link>
         <div className="flex flex-col mt-[6rem]">

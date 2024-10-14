@@ -212,7 +212,7 @@ const SignUpForm = () => {
   return (
     <form onSubmit={handleSubmit} className="min-h-[calc(100dvh-60px)] flex flex-col justify-between flex-col-reverse mb-[60px] sm:flex-col sm-700:min-h-[100vh] sm-700:justify-center sm-700:mb-0 items-center w-full">
       <div className="w-[90%] max-w-[400px] mx-auto">
-        <Link href="/ootd">
+        <Link href="/">
           <Image src={LogoMain} alt="Logo" className="mx-auto mt-[2rem]" width={130} height={40} />
         </Link>
 

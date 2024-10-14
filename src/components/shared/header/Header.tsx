@@ -148,7 +148,7 @@ const Header = () => {
       <div className="hidden mt-[20px] mb-[20px] sm-700:flex sm-700:justify-between sm-700:items-center sm-700:w-[66%] sm-700:mx-auto sm-700:relative">
         <div className="flex items-center gap-10">
           <div className="flex-shrink-0">
-            <Link href="/ootd">
+            <Link href="/">
               <Image
                 src={LogoHeader}
                 alt="Logo"
@@ -157,20 +157,20 @@ const Header = () => {
             </Link>
           </div>
           <div className="flex text-lg">
-            <Link href="/ootd">
-              <div
-                className={`text-gray-800 no-underline font-['Pretendard'] ${pathname === "/ootd" ? "font-bold" : ""}`}
-                style={{ fontSize: "1.4rem" }}
-              >
-                OOTD
-              </div>
-            </Link>
             <Link href="/">
               <div
-                className={`text-gray-800  pl-8 no-underline font-['Pretendard'] ${pathname === "/" ? "font-bold" : ""}`}
+                className={`text-gray-800 no-underline font-['Pretendard'] ${pathname === "/" ? "font-bold" : ""}`}
                 style={{ fontSize: "1.4rem" }}
               >
                 TICKET
+              </div>
+            </Link>
+            <Link href="/ootd">
+              <div
+                className={`text-gray-800  pl-8 no-underline font-['Pretendard'] ${pathname === "/ootd" ? "font-bold" : ""}`}
+                style={{ fontSize: "1.4rem" }}
+              >
+                OOTD
               </div>
             </Link>
           </div>
@@ -349,7 +349,7 @@ const Header = () => {
       {/* Mobile Layout */}
       <div className="flex mt-[20px] mb-[20px] sm-700:hidden sm-700:justify-between sm-700:items-center w-[90%] mx-auto">
         <div className="flex-shrink-0">
-          <Link href="/ootd">
+          <Link href="/">
             <Image
               src={LogoHeader}
               alt="Logo"

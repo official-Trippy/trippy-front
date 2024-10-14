@@ -122,7 +122,7 @@ const BlogRegisterFirst = () => {
         Cookies.remove("accessToken");
         Cookies.remove("refreshToken");
         Cookies.remove("role");
-        router.push("/ootd");
+        router.push("/");
         return;
       }
 
@@ -144,7 +144,7 @@ const BlogRegisterFirst = () => {
               Cookies.remove("accessToken");
               Cookies.remove("refreshToken");
               Cookies.remove("role");
-              router.push("/ootd");
+              router.push("/");
               break;
             }
           }
@@ -208,7 +208,7 @@ const BlogRegisterFirst = () => {
     }
 
     if (role === "MEMBER" || role === "ADMIN") {
-      router.push("/ootd");
+      router.push("/");
       return;
     }
   };

@@ -53,7 +53,7 @@ export default function GoogleLogin() {
         // role에 따라 페이지 이동
         setTimeout(() => {
           if (role === "MEMBER" || role === "ADMIN") {
-            router.push("/ootd");
+            router.push("/");
           } else if (role === "GUEST") {
             router.push("/blogRegister");
           }
@@ -67,7 +67,7 @@ export default function GoogleLogin() {
           if (error.response?.status === 401) {
             Cookies.remove("accessToken");
             Cookies.remove("role");
-            router.push("/ootd");
+            router.push("/");
           }
         } else {
           console.error("Unexpected error:", error);

@@ -50,7 +50,7 @@ export default function KakaoTalk() {
         // console.log("User role received:", role);
         setTimeout(() => {
           if (role === "MEMBER" || role === "ADMIN") {
-            router.push("/ootd");
+            router.push("/");
           } else if (role === "GUEST") {
             router.push("/blogRegister");
           }
@@ -64,7 +64,7 @@ export default function KakaoTalk() {
           if (error.response?.status === 401) {
             Cookies.remove("accessToken");
             Cookies.remove("role");
-            router.push("/ootd");
+            router.push("/");
           }
         } else {
           // console.error("Unexpected error:", error);
