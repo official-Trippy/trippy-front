@@ -4,7 +4,7 @@ import axios from "axios";
 export async function POST(req: NextRequest) {
   const url = new URL(req.url);
   const code = url.searchParams.get("code");
-  console.log("Authorization code:", code);
+  // console.log("Authorization code:", code);
 
   if (!code) {
     return NextResponse.json({ data: "Authorization code not provided" });
@@ -29,7 +29,7 @@ export async function POST(req: NextRequest) {
     );
 
     const data = response.data;
-    console.log("Response data:", data);
+    // console.log("Response data:", data);
 
     return NextResponse.json({ data });
   } catch (error) {

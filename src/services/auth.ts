@@ -29,7 +29,7 @@ export async function signUp(formData: any, authToken: string) {
       `${backendUrl}/api/member/signup?authToken=${authToken}`,
       formData
     );
-    console.log(response.data);
+    // console.log(response.data);
     return response.data;
   } catch (error) {
     throw new Error(`Error during signup: ${error}`);
@@ -43,7 +43,7 @@ export async function checkSocial(memberId: string) {
       `${backendUrl}/api/member/isNewMember=${memberId}`
     );
     const data = response.data.memberId;
-    console.log(data);
+    // console.log(data);
     return data;
   } catch (error) {
     throw new Error("Error data");
@@ -57,7 +57,7 @@ export async function Login(memberId: string, password: string) {
       password,
     });
     accessToken = response.data.result.accessToken;
-    console.log(response.headers['Set-Cookie']);
+    // console.log(response.headers['Set-Cookie']);
     return response.data;
   } catch (error) {
     throw new Error(`Error during login: ${error}`);
@@ -89,8 +89,8 @@ export async function checkEmailDuplicate(email: string) {
       `${backendUrl}/api/member/isDuplicated?email=${email}`
     );
     const data = response.data.result.duplicated;
-    console.log(response.data);
-    console.log(data);
+    // console.log(response.data);
+    // console.log(data);
     return response.data;
   } catch (error) {
     throw new Error(`Error sending email: ${error}`);
@@ -103,8 +103,8 @@ export async function emailSend(email: string) {
       `${backendUrl}/api/email/send?email=${email}`
     );
     const data = response.data.result;
-    console.log(response);
-    console.log(data);
+    // console.log(response);
+    // console.log(data);
     if (data) {
       return { isSuccess: true };
     } else {
@@ -122,8 +122,8 @@ export async function confirmEmail(email: string, authNumber: string) {
       { email, authNumber }
     );
     const data = response.data.result;
-    console.log(response);
-    console.log(data);
+    // console.log(response);
+    // console.log(data);
     return data;
   } catch (error) {
     throw new Error(`Error confirming email: ${error}`);
@@ -134,10 +134,10 @@ export async function getMyInfo() {
   try {
     const response = await axios.get(`${backendUrl}/api/member`);
     const data = response.data.result;
-    console.log(data);
+    // console.log(data);
     return data;
   } catch (error) {
-    console.log(isLoggedIn);
+    // console.log(isLoggedIn);
     throw new Error(`Error getting my info: ${error}`);
   }
 }
@@ -202,7 +202,7 @@ export async function withdrawMember() {
 
     return response.data;
   } catch (error) {
-    console.error('회원 탈퇴 중 오류 발생:', error);
+    // console.error('회원 탈퇴 중 오류 발생:', error);
     throw error; // 컴포넌트에서 에러 처리를 위해 다시 던짐
   }
 }

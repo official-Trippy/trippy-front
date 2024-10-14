@@ -56,7 +56,7 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
     }
   );
 
-  console.log("Current post id:", id);
+  // console.log("Current post id:", id);
 
   const {
     data: recommendedSpots,
@@ -76,14 +76,14 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
   useEffect(() => {
     const checkIfBookmarked = async () => {
       const accessToken = Cookies.get('accessToken');
-  
+
       // accessToken이 존재할 때만 실행
       if (accessToken && data?.result?.post?.id) {
         const bookmarked = await fetchIsBookmarked(data.result.post.id);
         setIsBookmarked(bookmarked);
       }
     };
-  
+
     checkIfBookmarked();
   }, [data]); // data가 변경될 때만 실행
   const handleBookmarkClick = async () => {
@@ -99,7 +99,7 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
       }
       await refetch();
     } catch (error) {
-      console.error("북마크 처리 중 오류가 발생했습니다:", error);
+      // console.error("북마크 처리 중 오류가 발생했습니다:", error);
     }
   };
 
@@ -146,7 +146,7 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
       if (ootdItem.member.memberId == userInfo?.memberId) {
         router.push("/mypage");
       } else {
-        console.log(ootdItem.member.memberId);
+        // console.log(ootdItem.member.memberId);
         router.push(`/user/${ootdItem.member.memberId}`);
       }
     } else {
@@ -344,7 +344,7 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
                         {" "}l {formatDate(ootdItem.ootd.date)}
                       </>
                     )}
-                </span>
+                  </span>
                 </div>
               </div>
             </div>
@@ -460,10 +460,10 @@ const OotdDetail: React.FC<OotdDetailProps> = ({ id }) => {
         {isSpotsLoading ? (
           <SkeletonOotdDetailRecommend />
         ) : (
-          <RecommendedSpot 
-          recommendedSpots={recommendedSpots?.result || []}
-          location={formattedLocation}
-        />
+          <RecommendedSpot
+            recommendedSpots={recommendedSpots?.result || []}
+            location={formattedLocation}
+          />
         )}
       </div>
     </>

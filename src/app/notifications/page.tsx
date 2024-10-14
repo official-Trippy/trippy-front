@@ -48,7 +48,7 @@ const NotificationPage = () => {
     fetchNotifications();
   }, [accessToken]);
 
-  console.log("전체알림 정보", notifications);
+  // console.log("전체알림 정보", notifications);
 
   const handleDeleteNotification = async (notifyId: number) => {
     try {

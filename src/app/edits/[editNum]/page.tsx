@@ -111,7 +111,7 @@ function PostEdit({ params }: { params: { editNum: number } }) {
                 if (selectedImage) {
                     setIsImageIdx([selectedImage]); // 선택된 이미지로 업데이트
                 } else {
-                    console.warn('No matching transport image found'); // 디버깅: 일치하는 이미지가 없을 경우 경고
+                    // console.warn('No matching transport image found'); // 디버깅: 일치하는 이미지가 없을 경우 경고
                 }
             }
         }, 1000);
@@ -175,7 +175,7 @@ function PostEdit({ params }: { params: { editNum: number } }) {
         setTicketColor(selectedColor);
     };
 
-    console.log(ticketColor, bgColor)
+    // console.log(ticketColor, bgColor)
 
     const handleDateChange = (date: string) => {
         setDate(date);
@@ -209,7 +209,7 @@ function PostEdit({ params }: { params: { editNum: number } }) {
                         setTransportStr('Car');
                     }
                 } else {
-                    console.warn('No valid src found in updatedState[0]'); // 디버깅: src가 없을 경우 경고
+                    // console.warn('No valid src found in updatedState[0]'); // 디버깅: src가 없을 경우 경고
                 }
             }
             setIsTransport(false); // transport 상태를 false로 설정
@@ -229,20 +229,20 @@ function PostEdit({ params }: { params: { editNum: number } }) {
 
         try {
             const uploadedImage = await uploadImage(file);
-            console.log(uploadedImage.result);
+            // console.log(uploadedImage.result);
             setImages([...images, uploadedImage.result]);
-            console.log(images);
+            // console.log(images);
             setIsImages([...images, uploadedImage.result]);
         } catch (error) {
-            console.error('Error uploading image:', error);
+            // console.error('Error uploading image:', error);
         }
     };
 
-    console.log(postData)
+    // console.log(postData)
 
     const displayImages = images.map(image => image.accessUri);
 
-    console.log(postData?.result.post.id)
+    // console.log(postData?.result.post.id)
     const addPost = async () => {
 
         if (inputValue1 === '' || inputValue2 === '') {
@@ -264,7 +264,7 @@ function PostEdit({ params }: { params: { editNum: number } }) {
                 confirmButtonText: '확인',
                 confirmButtonColor: '#FB3463',
             });
-            console.log(postRequests)
+            // console.log(postRequests)
             return;
         }
 
@@ -346,7 +346,7 @@ function PostEdit({ params }: { params: { editNum: number } }) {
                 }
             });
 
-            console.log(postRequest, ticketRequest)
+            // console.log(postRequest, ticketRequest)
             await editPost(postRequest);
             await editTicket(ticketRequest)
 
@@ -377,7 +377,7 @@ function PostEdit({ params }: { params: { editNum: number } }) {
         }
     }
 
-    console.log(startDate)
+    // console.log(startDate)
 
     // URL 객체 해제
     useEffect(() => {
@@ -387,7 +387,7 @@ function PostEdit({ params }: { params: { editNum: number } }) {
             }
         };
     }, [thumbnailPreview]);
-    // console.log(formatDates(startDate), formatDates(endDate))
+    console.log(formatDates(startDate), formatDates(endDate))
 
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -420,7 +420,7 @@ function PostEdit({ params }: { params: { editNum: number } }) {
     }
 
 
-    console.log(result)
+    // console.log(result)
     return (
         <div>
             {/* <Header /> */}

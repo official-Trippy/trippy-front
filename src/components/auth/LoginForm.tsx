@@ -15,7 +15,7 @@ const LoginForm = () => {
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const router = useRouter();
-  
+
   // 전역 상태에서 fetchUserInfo 호출하기 위해 상태 불러오기
   const { fetchUserInfo } = useUserStore();
 
@@ -48,7 +48,7 @@ const LoginForm = () => {
     e.preventDefault();
     try {
       const response = await Login(memberId, password);
-      console.log(response);
+      // console.log(response);
       const { accessToken, refreshToken, role } = response.result;
 
       if (role === "GUEST") {
@@ -62,7 +62,7 @@ const LoginForm = () => {
           title: '기존에 회원가입을 \n완료하지 않았습니다.',
           text: '블로그 설정 페이지로 이동합니다.',
           confirmButtonText: '확인',
-          confirmButtonColor: '#FB3463', 
+          confirmButtonColor: '#FB3463',
         }).then(() => {
           router.push("/blogRegister");
         });
@@ -88,7 +88,7 @@ const LoginForm = () => {
     <div className="mx-auto">
       <form onSubmit={handleSubmit} className="flex flex-col items-center">
         <Link href="/ootd">
-          <Image src={LogoMain} alt="Logo" className=""/>
+          <Image src={LogoMain} alt="Logo" className="" />
         </Link>
         <div className="flex flex-col mt-[6rem]">
           <label htmlFor="email" className="login-info mb-2">

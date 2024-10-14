@@ -31,13 +31,13 @@ const UserProfile: React.FC<UserProfileProps> = ({
     }
   );
   const userInfo = useUserStore((state) => state.userInfo);
-  console.log(data);
+  // console.log(data);
   const targetMemberId = data?.result?.email;
-  console.log(" check", data); // Ensure safe navigation
+  // console.log(" check", data); // Ensure safe navigation
   const userMemberId = userInfo?.memberId;
-  console.log(targetMemberId);
-  console.log(userMemberId);
-  console.log("받은 데이터", memberId);
+  // console.log(targetMemberId);
+  // console.log(userMemberId);
+  // console.log("받은 데이터", memberId);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 

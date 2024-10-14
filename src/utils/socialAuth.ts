@@ -8,10 +8,10 @@ export async function checkSocial(email: string) {
       `${backendUrl}/api/member/isNewMember=${email}`
     );
     const data = response.data.result;
-    console.log("CheckSocial response data:", data);
+    // console.log("CheckSocial response data:", data);
     return data.isNewMember;
   } catch (error) {
-    console.error("Error checking social status:", error);
+    // console.error("Error checking social status:", error);
     throw new Error("Error data");
   }
 }
@@ -31,8 +31,8 @@ export async function signUp({
       email,
       password,
     });
-    console.log("SignUp response:", response.data);
+    // console.log("SignUp response:", response.data);
   } catch (error) {
-    console.error("Error signing up:", error);
+    // console.error("Error signing up:", error);
   }
 }

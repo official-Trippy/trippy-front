@@ -10,10 +10,10 @@ export const fetchOotdPostCount = async (): Promise<number> => {
     const response = await axios.get<{ result: number }>(
       `${backendUrl}/api/post/count/my?type=OOTD`
     );
-    console.log(response.data);
+    // console.log(response.data);
     return response.data.result;
   } catch (error) {
-    console.error(`전체 OOTD 데이터 개수를 가져오는 중 오류가 발생했습니다: ${error}`);
+    // console.error(`전체 OOTD 데이터 개수를 가져오는 중 오류가 발생했습니다: ${error}`);
     throw error;
   }
 };
@@ -23,10 +23,10 @@ export const fetchAllOotdPostCount = async (): Promise<number> => {
     const response = await axios.get<{ result: number }>(
       `${backendUrl}/api/post/count/all?type=OOTD`
     );
-    console.log(response.data);
+    // console.log(response.data);
     return response.data.result;
   } catch (error) {
-    console.error(`전체 OOTD 데이터 개수를 가져오는 중 오류가 발생했습니다: ${error}`);
+    // console.error(`전체 OOTD 데이터 개수를 가져오는 중 오류가 발생했습니다: ${error}`);
     throw error;
   }
 };
@@ -41,10 +41,10 @@ export const fetchOotdPosts = async (page?: number, size?: number): Promise<Ootd
       `${backendUrl}/api/ootd/my`,
       { params }
     );
-    console.log(response.data);
+    // console.log(response.data);
     return response.data;
   } catch (error) {
-    console.error(`OOTD 데이터를 가져오는 중 오류가 발생했습니다: ${error}`);
+    // console.error(`OOTD 데이터를 가져오는 중 오류가 발생했습니다: ${error}`);
     throw error;
   }
 };
@@ -54,10 +54,10 @@ export const fetchOotdPostDetail = async (id: number): Promise<OotdDetailGetResp
     const response = await axios.get<OotdDetailGetResponse>(
       `${backendUrl}/api/ootd/info/${id}`
     );
-    console.log(response.data);
-    return response.data; 
+    // console.log(response.data);
+    return response.data;
   } catch (error) {
-    console.error(`OOTD 게시글 상세 정보를 가져오는 중 오류가 발생했습니다: ${error}`);
+    // console.error(`OOTD 게시글 상세 정보를 가져오는 중 오류가 발생했습니다: ${error}`);
     throw error;
   }
 };
@@ -65,15 +65,15 @@ export const fetchOotdPostDetail = async (id: number): Promise<OotdDetailGetResp
 export const deleteOotdPost = async (postId: number): Promise<void> => {
   try {
     const response = await axios.delete(`${backendUrl}/api/post/${postId}`);
-    console.log(response.data);
-    
+    // console.log(response.data);
+
     if (response.data.isSuccess) {
       return response.data.result;
     } else {
       throw new Error(response.data.message);
     }
   } catch (error) {
-    console.error(`게시물을 삭제하는 중 오류가 발생했습니다: ${error}`);
+    // console.error(`게시물을 삭제하는 중 오류가 발생했습니다: ${error}`);
     throw error;
   }
 };
@@ -81,16 +81,16 @@ export const deleteOotdPost = async (postId: number): Promise<void> => {
 
 export const fetchAllOotdPosts = async (page?: number, size?: number, orderType: string = 'LATEST'): Promise<OotdGetResponse> => {
   try {
-      const params: { page?: number; size?: number; orderType?: string } = { orderType };
-      if (page !== undefined) params.page = page;
-      if (size !== undefined) params.size = size;
+    const params: { page?: number; size?: number; orderType?: string } = { orderType };
+    if (page !== undefined) params.page = page;
+    if (size !== undefined) params.size = size;
 
-      const response = await axios.get<OotdGetResponse>(`${backendUrl}/api/ootd/all`, { params });
-      console.log(response.data);
-      return response.data;
+    const response = await axios.get<OotdGetResponse>(`${backendUrl}/api/ootd/all`, { params });
+    // console.log(response.data);
+    return response.data;
   } catch (error) {
-      console.error(`OOTD 데이터를 가져오는 중 오류가 발생했습니다: ${error}`);
-      throw error;
+    // console.error(`OOTD 데이터를 가져오는 중 오류가 발생했습니다: ${error}`);
+    throw error;
   }
 }
 
@@ -119,14 +119,14 @@ export const fetchUserOotdPosts = async (memberId: string, page: number, size: n
     });
     return response.data;
   } catch (error) {
-    console.error(`Error fetching user OOTD posts: ${error}`);
+    // console.error(`Error fetching user OOTD posts: ${error}`);
     throw error;
   }
 };
 
 export const fetchUserProfile = async (memberId: string) => {
   const response = await axios.get(`${backendUrl}/api/member/profile?memberId=${memberId}`);
-  console.log('유저정보 api: ', response)
+  // console.log('유저정보 api: ', response)
   return response.data;
 };
 
@@ -186,23 +186,23 @@ export const fetchOotdFollowPostCount = async (): Promise<number> => {
     const response = await axios.get<{ result: number }>(
       `${backendUrl}/api/post/count/follow?type=OOTD`
     );
-    console.log(response.data);
+    // console.log(response.data);
     return response.data.result;
   } catch (error) {
-    console.error(`팔로우 유저 OOTD 데이터 개수를 가져오는 중 오류가 발생했습니다: ${error}`);
+    // console.error(`팔로우 유저 OOTD 데이터 개수를 가져오는 중 오류가 발생했습니다: ${error}`);
     throw error;
   }
 };
 
 export const getUserTotalOotdCount = async (memberId: string): Promise<number> => {
   try {
-      const response = await axios.get<{ result: number }>(
-          `${backendUrl}/api/post/count/by-member?type=OOTD&memberId=${memberId}`
-      );
-      return response.data.result;
+    const response = await axios.get<{ result: number }>(
+      `${backendUrl}/api/post/count/by-member?type=OOTD&memberId=${memberId}`
+    );
+    return response.data.result;
   } catch (error) {
-      console.error(`전체 OOTD 데이터 개수를 가져오는 중 오류가 발생했습니다: ${error}`);
-      throw error;
+    // console.error(`전체 OOTD 데이터 개수를 가져오는 중 오류가 발생했습니다: ${error}`);
+    throw error;
   }
 };
 
@@ -214,10 +214,10 @@ export const fetchRecommendOotdPost = async (interestType: string) => {
         postType: 'OOTD'
       }
     });
-    console.log('Received data:', response.data);
+    // console.log('Received data:', response.data);
     return response.data; // Always return data
   } catch (error) {
-    console.error(`Error fetching OOTD posts for interest ${interestType}:`, error);
+    // console.error(`Error fetching OOTD posts for interest ${interestType}:`, error);
 
     if (axios.isAxiosError(error)) {
       // AxiosError 타입 체크 후 처리
@@ -237,15 +237,15 @@ export const fetchRecommendOotdPost = async (interestType: string) => {
 };
 
 export const fetchRecommendedSpots = async (postId: number) => {
-  console.log(`Fetching recommended spots for postId: ${postId}`);
+  // console.log(`Fetching recommended spots for postId: ${postId}`);
   try {
     const response = await axios.get(
       `${backendUrl}/api/recommend/spot?postId=${postId}`
     );
-    console.log('추천 장소 데이터:', response.data);  // 데이터를 콘솔에 출력
+    // console.log('추천 장소 데이터:', response.data);  // 데이터를 콘솔에 출력
     return response.data;        // 받은 데이터를 반환
   } catch (error) {
-    console.error(`추천 장소 정보를 가져오는 중 오류가 발생했습니다: ${error}`);
+    // console.error(`추천 장소 정보를 가져오는 중 오류가 발생했습니다: ${error}`);
     throw error;
   }
 };

@@ -26,7 +26,7 @@ export default function KakaoLogin() {
     if (Kakao) {
       if (!Kakao.isInitialized()) {
         Kakao.init(process.env.NEXT_PUBLIC_KAKAO_JS_KEY);
-        console.log("Kakao SDK Initialized: ", Kakao.isInitialized());
+        // console.log("Kakao SDK Initialized: ", Kakao.isInitialized());
       }
     }
   }, []);
@@ -44,7 +44,7 @@ export default function KakaoLogin() {
       const Kakao = (window as any)?.Kakao;
       if (Kakao && !Kakao.isInitialized()) {
         Kakao.init(process.env.NEXT_PUBLIC_KAKAO_JS_KEY);
-        console.log("Kakao SDK Initialized: ", Kakao.isInitialized());
+        // console.log("Kakao SDK Initialized: ", Kakao.isInitialized());
       }
     };
 
@@ -62,7 +62,7 @@ export default function KakaoLogin() {
         redirectUri: kakaoRedirectUri,
         scope: kakaoScope,
       });
-      console.log("Kakao Logging in");
+      // console.log("Kakao Logging in");
       router.refresh();
     }
   };

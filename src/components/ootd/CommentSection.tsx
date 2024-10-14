@@ -52,9 +52,9 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
     // 댓글의 멘션 사용자 이름을 replyToNickname에 설정
     const mention = comment.content.split(' ').find(word => word.startsWith('@'));
     if (mention) {
-        setReplyToNickname(mention.substring(1)); // '@'를 제거하고 설정
+      setReplyToNickname(mention.substring(1)); // '@'를 제거하고 설정
     }
-};
+  };
   const menuRefs = useRef<{ [key: number]: HTMLDivElement | null }>({}); // 각 메뉴의 ref
 
   // 메뉴 열기/닫기
@@ -90,25 +90,25 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, initialLikeCoun
     };
   }, [isMenuOpen]);
 
-// 수정 제출 시 멘션 추가
-const handleEditSubmit = () => {
+  // 수정 제출 시 멘션 추가
+  const handleEditSubmit = () => {
     setIsMenuOpen({});
     if (editedComment.trim() && editCommentId !== null) {
-        // replyToNickname이 없으면 기본값으로 설정하거나 예외처리
-        const mention = replyToNickname ? `@${replyToNickname}` : ''; // replyToNickname이 없으면 빈 문자열
-        const updatedContent = `${mention} ${editedComment}`.trim(); // 수정된 내용에 멘션 추가
-        // 수정 API 호출
-        editCommentMutation.mutate({
-            id: editCommentId,
-            content: updatedContent,
-        });
-        setEditCommentId(null); // 수정 모드 종료
-        setEditedComment(''); // 입력란 비우기
-        setReplyToNickname(''); // 멘션 초기화
+      // replyToNickname이 없으면 기본값으로 설정하거나 예외처리
+      const mention = replyToNickname ? `@${replyToNickname}` : ''; // replyToNickname이 없으면 빈 문자열
+      const updatedContent = `${mention} ${editedComment}`.trim(); // 수정된 내용에 멘션 추가
+      // 수정 API 호출
+      editCommentMutation.mutate({
+        id: editCommentId,
+        content: updatedContent,
+      });
+      setEditCommentId(null); // 수정 모드 종료
+      setEditedComment(''); // 입력란 비우기
+      setReplyToNickname(''); // 멘션 초기화
     }
-};
+  };
 
-  
+
   const editCommentMutation = useMutation(
     ({ id, content }: { id: number; content: string }) => updateComment(id, content),
     {
@@ -118,7 +118,7 @@ const handleEditSubmit = () => {
       },
     }
   );
-    
+
 
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 18;
@@ -167,7 +167,7 @@ const handleEditSubmit = () => {
           setLikeList([]);
         }
       } catch (error) {
-        console.error('Error fetching like list:', error);
+        // console.error('Error fetching like list:', error);
         setLikeList([]);
       }
       setIsLoadingLikes(false);
@@ -191,13 +191,13 @@ const handleEditSubmit = () => {
   );
 
   const replyMutation = useMutation(
-    ({ content, parentId, mentionMemberId, mentionMemberNickName, mentionCommentId }: { 
-        content: string, 
-        parentId: number, 
-        mentionMemberId: string, 
-        mentionMemberNickName: string, 
-        mentionCommentId: number 
-      }) => createReply(postId, content, parentId, mentionMemberId, mentionMemberNickName, mentionCommentId), 
+    ({ content, parentId, mentionMemberId, mentionMemberNickName, mentionCommentId }: {
+      content: string,
+      parentId: number,
+      mentionMemberId: string,
+      mentionMemberNickName: string,
+      mentionCommentId: number
+    }) => createReply(postId, content, parentId, mentionMemberId, mentionMemberNickName, mentionCommentId),
     {
       onSuccess: () => {
         refetch();
@@ -208,8 +208,8 @@ const handleEditSubmit = () => {
       },
     }
   );
-  
-  
+
+
 
   const likeMutation = useMutation(
     () => likePost(postId),
@@ -219,7 +219,7 @@ const handleEditSubmit = () => {
           setIsLiked(true); // 좋아요 상태 변경
           setLikeCount((prevCount) => prevCount + 1); // 좋아요 수 증가
           refetchPostDetail(); // 상위 데이터 다시 불러오기
-          
+
           // 좋아요 리스트에 현재 유저 추가 (즉각 반영)
           setLikeList((prevList) => [
             ...prevList,
@@ -232,7 +232,7 @@ const handleEditSubmit = () => {
       },
     }
   );
-  
+
   const unlikeMutation = useMutation(
     () => unlikePost(postId),
     {
@@ -241,7 +241,7 @@ const handleEditSubmit = () => {
           setIsLiked(false); // 좋아요 취소 상태 변경
           setLikeCount((prevCount) => Math.max(prevCount - 1, 0)); // 좋아요 수 감소
           refetchPostDetail(); // 상위 데이터 다시 불러오기
-  
+
           // 좋아요 리스트에서 현재 유저 제거 (즉각 반영)
           setLikeList((prevList) =>
             prevList.filter((user) => user.nickName !== userInfo.nickName)
@@ -259,75 +259,75 @@ const handleEditSubmit = () => {
   };
 
   useEffect(() => {
-    console.log('댓글 데이터:', comments);
+    // console.log('댓글 데이터:', comments);
   }, [comments]);
 
-    // 재귀적으로 commentId에 해당하는 댓글을 찾는 함수
-    const findCommentById = (comments: Comment[], commentId: number): Comment | undefined => {
-      for (const comment of comments) {
-        if (comment.id === commentId) {
-          return comment;
-        }
-    
-        // children에 대댓글이 있다면, 대댓글에서도 검색
-        if (comment.children && comment.children.length > 0) {
-          const found = findCommentById(comment.children, commentId);
-          if (found) return found;
-        }
+  // 재귀적으로 commentId에 해당하는 댓글을 찾는 함수
+  const findCommentById = (comments: Comment[], commentId: number): Comment | undefined => {
+    for (const comment of comments) {
+      if (comment.id === commentId) {
+        return comment;
       }
-    
-      // 찾지 못하면 undefined 반환
-      return undefined;
-    };
-    
 
-    const handleReplySubmit = () => {
-      if (replyComment.trim() && replyTo !== null) {
-        const currentReplyTarget = findCommentById(comments, replyTo); // 재귀 함수로 댓글 찾기
-        console.log(replyTo);
-        console.log(currentReplyTarget);
-    
-        if (!currentReplyTarget) {
-          console.log('댓글을 찾을 수 없습니다.');
-          return;
-        }
-    
-        const mentionCommentId = replyTo;  // 대댓글의 ID
-        const mentionMemberId = currentReplyTarget.member?.memberId || ''; // 대댓글 작성자의 ID
-        const mentionMemberNickName = currentReplyTarget.member?.nickName || ''; // 대댓글 작성자의 닉네임
-    
-        // 대댓글의 parentId는 원본 댓글의 ID가 되어야 함
-        const parentId = currentReplyTarget.parentId || replyTo; 
-    
-        const formattedReply = `@${mentionMemberNickName} ${replyComment}`;
-    
-        // API 요청 전송
-        replyMutation.mutate({
-          content: formattedReply,
-          parentId,  // 원본 댓글의 ID
-          mentionMemberId,  // 대댓글 작성자의 ID
-          mentionMemberNickName,  // 대댓글 작성자의 닉네임
-          mentionCommentId,  // 대댓글 ID
-        });
-        setIsMenuOpen({});
-      } else {
-        console.log('댓글 내용을 입력해주세요.');
+      // children에 대댓글이 있다면, 대댓글에서도 검색
+      if (comment.children && comment.children.length > 0) {
+        const found = findCommentById(comment.children, commentId);
+        if (found) return found;
       }
-    };
-    
-  
+    }
 
-    const handleReplyClick = (commentId: number, nickName: string) => {
-      if (replyTo === commentId) {
-        // 이미 열린 상태면 닫음 (취소)
-        setReplyTo(null);
-        setReplyToNickname(null);
-      } else {
-        // 답글 입력 레이아웃 열기
-        setReplyTo(commentId);
-        setReplyToNickname(nickName);
+    // 찾지 못하면 undefined 반환
+    return undefined;
+  };
+
+
+  const handleReplySubmit = () => {
+    if (replyComment.trim() && replyTo !== null) {
+      const currentReplyTarget = findCommentById(comments, replyTo); // 재귀 함수로 댓글 찾기
+      // console.log(replyTo);
+      // console.log(currentReplyTarget);
+
+      if (!currentReplyTarget) {
+        // console.log('댓글을 찾을 수 없습니다.');
+        return;
       }
-    };
+
+      const mentionCommentId = replyTo;  // 대댓글의 ID
+      const mentionMemberId = currentReplyTarget.member?.memberId || ''; // 대댓글 작성자의 ID
+      const mentionMemberNickName = currentReplyTarget.member?.nickName || ''; // 대댓글 작성자의 닉네임
+
+      // 대댓글의 parentId는 원본 댓글의 ID가 되어야 함
+      const parentId = currentReplyTarget.parentId || replyTo;
+
+      const formattedReply = `@${mentionMemberNickName} ${replyComment}`;
+
+      // API 요청 전송
+      replyMutation.mutate({
+        content: formattedReply,
+        parentId,  // 원본 댓글의 ID
+        mentionMemberId,  // 대댓글 작성자의 ID
+        mentionMemberNickName,  // 대댓글 작성자의 닉네임
+        mentionCommentId,  // 대댓글 ID
+      });
+      setIsMenuOpen({});
+    } else {
+      // console.log('댓글 내용을 입력해주세요.');
+    }
+  };
+
+
+
+  const handleReplyClick = (commentId: number, nickName: string) => {
+    if (replyTo === commentId) {
+      // 이미 열린 상태면 닫음 (취소)
+      setReplyTo(null);
+      setReplyToNickname(null);
+    } else {
+      // 답글 입력 레이아웃 열기
+      setReplyTo(commentId);
+      setReplyToNickname(nickName);
+    }
+  };
 
   const handleLikeClick = () => {
     if (isLiked) {
@@ -350,7 +350,7 @@ const handleEditSubmit = () => {
   const handleLogin = () => {
     router.push('/login');
   };
-  
+
 
   const handleDelete = async (commentId: number) => {
     const result = await Swal.fire({
@@ -366,7 +366,7 @@ const handleEditSubmit = () => {
         icon: 'swal-custom-icon'
       }
     });
-  
+
     if (result.isConfirmed) {
       try {
         await deleteComment(commentId);
@@ -387,7 +387,7 @@ const handleEditSubmit = () => {
           '댓글 삭제 중 문제가 발생했습니다. 다시 시도해주세요.',
           'error'
         );
-        console.error('댓글 삭제 실패:', error);
+        // console.error('댓글 삭제 실패:', error);
       }
     }
   };
@@ -405,7 +405,7 @@ const handleEditSubmit = () => {
     }
   };
 
-  console.log('댓글 데이터 구조:', commentData?.result)
+  // console.log('댓글 데이터 구조:', commentData?.result)
 
 
   const renderComments = (comments: Comment[], depth = 0) => {
@@ -415,12 +415,12 @@ const handleEditSubmit = () => {
         <div className='comment-section p-4 rounded-lg'>
           <div className='flex flex-row items-center'>
             <div className="relative w-[28px] h-[28px]">
-              <Image 
-                src={comment.member.profileUrl || DefaultImage} 
-                alt="사용자 프로필" 
-                layout="fill" 
-                objectFit="cover" 
-                className="rounded-full cursor-pointer" 
+              <Image
+                src={comment.member.profileUrl || DefaultImage}
+                alt="사용자 프로필"
+                layout="fill"
+                objectFit="cover"
+                className="rounded-full cursor-pointer"
                 onClick={() => handleProfileClick(comment.member?.memberId)}
               />
             </div>
@@ -431,7 +431,7 @@ const handleEditSubmit = () => {
               <div className='ml-[10px] bg-[#FFE3EA] text-xs text-[#FB3463] border border-[#FB3463] px-2 py-1 rounded-xl'>블로그 주인</div>
             )}
             {userInfo.memberId === comment.member.memberId && (
-              <div className='relative ml-auto min-w-[10px] cursor-pointer'  onClick={() => handleCabapIconClick(comment.id)}>
+              <div className='relative ml-auto min-w-[10px] cursor-pointer' onClick={() => handleCabapIconClick(comment.id)}>
                 <Image
                   src={CabapIcon}
                   alt="cabap"
@@ -439,72 +439,72 @@ const handleEditSubmit = () => {
                   height={10}
                   className="mx-auto cursor-pointer"
                 />
-             {isMenuOpen[comment.id] && (
-            <div 
-              ref={(el) => {
-                menuRefs.current[comment.id] = el; // 반환하지 않음
-              }} 
-              className="absolute w-[60px] right-[4px] mt-[5px] bg-white rounded shadow-lg z-10"
-            >
-              <div className="pt-3 pb-2 px-4 text-[#fa3463] font-bold cursor-pointer text-center flex-shrink-0" onClick={() => handleDelete(comment.id)}>
-                삭제
-              </div>
-              <div className="border-t border-gray-300 my-2" /> 
-              <div className="pt-2 pb-3 px-4 text-neutral-900 dark:text-white font-bold cursor-pointer text-center flex-shrink-0" onClick={() => handleEditClick(comment)}>
-                수정
-              </div>
-            </div>
-          )}
+                {isMenuOpen[comment.id] && (
+                  <div
+                    ref={(el) => {
+                      menuRefs.current[comment.id] = el; // 반환하지 않음
+                    }}
+                    className="absolute w-[60px] right-[4px] mt-[5px] bg-white rounded shadow-lg z-10"
+                  >
+                    <div className="pt-3 pb-2 px-4 text-[#fa3463] font-bold cursor-pointer text-center flex-shrink-0" onClick={() => handleDelete(comment.id)}>
+                      삭제
+                    </div>
+                    <div className="border-t border-gray-300 my-2" />
+                    <div className="pt-2 pb-3 px-4 text-neutral-900 dark:text-white font-bold cursor-pointer text-center flex-shrink-0" onClick={() => handleEditClick(comment)}>
+                      수정
+                    </div>
+                  </div>
+                )}
               </div>
             )}
           </div>
           <div className="ml-[3.7rem] items-center mr-0 mt-1">
             {editCommentId === comment.id ? ( // 수정 중인 댓글이면
               <div className='flex flex-col'>
-              <div className='flex-1 flex gap-2 mt-2 items-center'>
-              <input
-                type="text"
-                className="p-2 rounded-lg flex-1  border border-[#cfcfcf]"
-                value={editedComment}
-                onChange={(e) => setEditedComment(e.target.value)} 
-                placeholder={`@${replyToNickname || ''}에게 답글쓰기`}
-              />
-            </div>
-            <div className='flex justify-end gap-2 mt-2'>
-            <button
-                onClick={handleEditSubmit}
-                className="mt-auto mb-[2px] px-8 py-1 rounded-lg justify-center items-center inline-flex text-center text-base font-semibold bg-[#fa3463] text-white flex-shrink-0"
-              >
-                수정
-              </button>
-              <button
-                onClick={() => setEditCommentId(null)}
-                className="mt-auto mb-[2px] px-8 py-1 rounded-lg justify-center items-center inline-flex text-center text-base font-semibold border border-[#cfcfcf] text-[#cfcfcf] flex-shrink-0"
-              >
-                취소
-              </button>
-            </div>
+                <div className='flex-1 flex gap-2 mt-2 items-center'>
+                  <input
+                    type="text"
+                    className="p-2 rounded-lg flex-1  border border-[#cfcfcf]"
+                    value={editedComment}
+                    onChange={(e) => setEditedComment(e.target.value)}
+                    placeholder={`@${replyToNickname || ''}에게 답글쓰기`}
+                  />
+                </div>
+                <div className='flex justify-end gap-2 mt-2'>
+                  <button
+                    onClick={handleEditSubmit}
+                    className="mt-auto mb-[2px] px-8 py-1 rounded-lg justify-center items-center inline-flex text-center text-base font-semibold bg-[#fa3463] text-white flex-shrink-0"
+                  >
+                    수정
+                  </button>
+                  <button
+                    onClick={() => setEditCommentId(null)}
+                    className="mt-auto mb-[2px] px-8 py-1 rounded-lg justify-center items-center inline-flex text-center text-base font-semibold border border-[#cfcfcf] text-[#cfcfcf] flex-shrink-0"
+                  >
+                    취소
+                  </button>
+                </div>
               </div>
             ) : (
               <><div className='sm-700:mr-[2rem] break-words'>
-                  {comment.content.split(' ').map((word) => {
-                    return word.startsWith('@') ? (
-                      <span key={word} className="text-[#FB3463]">{word} </span>
-                    ) : (
-                      `${word} `
-                    );
-                  })}
-                </div><div className='flex flex-row my-2'>
-                    <div className="text-gray-600">{formatTimetoDays(comment.createDateTime)}</div>
-                    <div>&nbsp;&nbsp;|&nbsp;&nbsp;</div>
-                    <button onClick={() => handleReplyClick(comment.id, comment.member?.nickName || '')} className="text-gray-500">
-                      {replyTo === comment.id ? '답글취소' : '답글쓰기'}
-                    </button>
-                  </div></>
+                {comment.content.split(' ').map((word) => {
+                  return word.startsWith('@') ? (
+                    <span key={word} className="text-[#FB3463]">{word} </span>
+                  ) : (
+                    `${word} `
+                  );
+                })}
+              </div><div className='flex flex-row my-2'>
+                  <div className="text-gray-600">{formatTimetoDays(comment.createDateTime)}</div>
+                  <div>&nbsp;&nbsp;|&nbsp;&nbsp;</div>
+                  <button onClick={() => handleReplyClick(comment.id, comment.member?.nickName || '')} className="text-gray-500">
+                    {replyTo === comment.id ? '답글취소' : '답글쓰기'}
+                  </button>
+                </div></>
             )}
           </div>
         </div>
-  
+
         {/* 답글쓰기 입력창 */}
         {replyTo === comment.id && (
           <div className={`flex flex-col p-4 mt-2 bg-white rounded-lg shadow-md border border-[#cfcfcf] ${depth === 0 ? 'mx-4 sm-700:mx-12' : ''}`}>
@@ -531,14 +531,14 @@ const handleEditSubmit = () => {
               <button
                 onClick={handleReplySubmit}
                 className={`ml-auto mt-auto mb-[2px] px-8 py-1 rounded-lg justify-center items-center inline-flex text-center text-base font-semibold ${replyComment.trim() ? 'bg-[#fa3463] text-white' : 'bg-neutral-100 text-zinc-800'}`}
-                disabled={!replyComment.trim()} 
+                disabled={!replyComment.trim()}
               >
                 입력
               </button>
             </div>
           </div>
         )}
-  
+
         {/* 대댓글이 있는 경우 */}
         {comment.children.length > 0 && (
           <div className="mr-4 ml-4 sm-700:ml-12 sm-700:mr-12 mb-4 bg-neutral-100 rounded-lg">
@@ -571,44 +571,44 @@ const handleEditSubmit = () => {
 
     return (
       <div className="w-full bg-white rounded-lg shadow-md py-4 mt-8">
-      <div className="grid grid-cols-2 xs-400:grid-cols-3 gap-0">
-        {paginatedLikes.map((like, index) => (
-          <div key={index} className="my-4 like-section px-4 py-0 sm-700:px-4 sm-700:py-4">
-            <div className="flex items-center ml-[20px] xs-400:justify-center xs-400:ml-0 py-2 cursor-pointer" onClick={() => handleGoProfile(like.memberId)}>
-              <div className="min-w-12 min-h-12 w-12 h-12 sm-700:w-16 sm-700:h-16 relative mr-4">
-                <Image
-                  src={like.profileUrl || userInfo.profileImageUrl}
-                  alt="프로필 이미지"
-                  layout="fill"
-                  objectFit="cover"
-                  className="rounded-full"
-                />
-              </div>
-              <div>
-              <div className="text-gray-800 text-sm sm:text-base truncate whitespace-nowrap overflow-hidden">
-                {like.nickName}
-              </div>
+        <div className="grid grid-cols-2 xs-400:grid-cols-3 gap-0">
+          {paginatedLikes.map((like, index) => (
+            <div key={index} className="my-4 like-section px-4 py-0 sm-700:px-4 sm-700:py-4">
+              <div className="flex items-center ml-[20px] xs-400:justify-center xs-400:ml-0 py-2 cursor-pointer" onClick={() => handleGoProfile(like.memberId)}>
+                <div className="min-w-12 min-h-12 w-12 h-12 sm-700:w-16 sm-700:h-16 relative mr-4">
+                  <Image
+                    src={like.profileUrl || userInfo.profileImageUrl}
+                    alt="프로필 이미지"
+                    layout="fill"
+                    objectFit="cover"
+                    className="rounded-full"
+                  />
+                </div>
+                <div>
+                  <div className="text-gray-800 text-sm sm:text-base truncate whitespace-nowrap overflow-hidden">
+                    {like.nickName}
+                  </div>
+                </div>
               </div>
             </div>
+          ))}
+        </div>
+
+        {/* 페이지네이션 버튼 */}
+        {totalPages > 1 && (
+          <div className="flex justify-center mt-4">
+            {pages.map((pageNumber) => (
+              <button
+                key={pageNumber}
+                onClick={() => handlePageChange(pageNumber)}
+                className={`px-4 py-2 mx-1 rounded ${currentPage === pageNumber ? 'text-[#fa3463] font-semibold' : 'text-[#cfcfcf] font-normal'}`}
+              >
+                {pageNumber}
+              </button>
+            ))}
           </div>
-        ))}
+        )}
       </div>
-    
-      {/* 페이지네이션 버튼 */}
-      {totalPages > 1 && (
-      <div className="flex justify-center mt-4">
-        {pages.map((pageNumber) => (
-          <button
-            key={pageNumber}
-            onClick={() => handlePageChange(pageNumber)}
-            className={`px-4 py-2 mx-1 rounded ${currentPage === pageNumber ? 'text-[#fa3463] font-semibold' : 'text-[#cfcfcf] font-normal'}`}
-          >
-            {pageNumber}
-          </button>
-        ))}
-      </div>
-      )}
-    </div>
     );
   };
 
@@ -697,30 +697,30 @@ const handleEditSubmit = () => {
             <div className='w-[90%] flex flex-col'>
               <div className='w-full flex-1'>
                 <div className='flex flex-row items-center'>
-                    <><div className="relative w-[28px] h-[28px]">
-                      <Image
-                        src={userInfo?.profileImageUrl || DefaultImage}
-                        alt="사용자"
-                        layout="fill"
-                        objectFit="cover"
-                        className="rounded-full" />
-                    </div></>
+                  <><div className="relative w-[28px] h-[28px]">
+                    <Image
+                      src={userInfo?.profileImageUrl || DefaultImage}
+                      alt="사용자"
+                      layout="fill"
+                      objectFit="cover"
+                      className="rounded-full" />
+                  </div></>
                   <div className="text-[#292929] font-semibold ml-[8px]">{userInfo?.nickName}</div>
                 </div>
               </div>
               <div className="flex-1 ml-12 mr-1">
-              <input
-                type="text"
-                className="mt-2 p-2 rounded w-[97%] sm-700:w-full focus:outline-normal"
-                value={newComment}
-                onChange={(e) => setNewComment(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' && newComment.trim()) {
-                    handleCommentSubmit();
-                  }
-                }}
-                placeholder="블로그가 훈훈해지는 댓글 부탁드립니다."
-              />
+                <input
+                  type="text"
+                  className="mt-2 p-2 rounded w-[97%] sm-700:w-full focus:outline-normal"
+                  value={newComment}
+                  onChange={(e) => setNewComment(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' && newComment.trim()) {
+                      handleCommentSubmit();
+                    }
+                  }}
+                  placeholder="블로그가 훈훈해지는 댓글 부탁드립니다."
+                />
               </div>
             </div>
             <button
@@ -732,18 +732,18 @@ const handleEditSubmit = () => {
             </button>
           </div>
           <div
-          className={`comment-section w-full bg-white rounded-lg shadow-md items-center mt-16 ${comments.length > 0 ? 'pb-4' : ''}`}
-        >
-          {isLoading ? (
-            <div></div>
-          ) : (
-            comments.length === 0 ? (
-              <div className='pb-0'></div>
+            className={`comment-section w-full bg-white rounded-lg shadow-md items-center mt-16 ${comments.length > 0 ? 'pb-4' : ''}`}
+          >
+            {isLoading ? (
+              <div></div>
             ) : (
-              renderComments(comments)
-            )
-          )}
-        </div>
+              comments.length === 0 ? (
+                <div className='pb-0'></div>
+              ) : (
+                renderComments(comments)
+              )
+            )}
+          </div>
         </>
       )}
       {showLikes && (

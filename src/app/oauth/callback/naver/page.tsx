@@ -25,7 +25,7 @@ const NaverCallback = () => {
 
       if (accessToken && state) {
         try {
-          console.log("Access token received:", accessToken);
+          // console.log("Access token received:", accessToken);
 
           const socialName = "naver";
           const roleRes: AxiosResponse<RoleResponse> = await axios.post(
@@ -41,7 +41,7 @@ const NaverCallback = () => {
           Cookies.set("accessToken", roleRes.data.result.accessToken);
 
           const role = roleRes.data.result.role;
-          console.log("User role received:", role);
+          // console.log("User role received:", role);
 
           Cookies.set("role", role);
 
@@ -59,7 +59,7 @@ const NaverCallback = () => {
         } catch (error) {
           // 타입 가드 추가
           if (error instanceof AxiosError) {
-            console.error("Error fetching access token:", error);
+            // console.error("Error fetching access token:", error);
 
             // 401 에러 처리
             if (error.response?.status === 401) {
@@ -68,7 +68,7 @@ const NaverCallback = () => {
               router.push("/ootd");
             }
           } else {
-            console.error("Unexpected error:", error);
+            // console.error("Unexpected error:", error);
           }
         }
       }

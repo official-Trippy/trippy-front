@@ -12,10 +12,10 @@ export async function checkSocial(email: string) {
       `${backendUrl}/api/member/isNewMember=${email}`
     );
     const data = response.data.result;
-    console.log("CheckSocial response data:", data);
+    // console.log("CheckSocial response data:", data);
     return data.isNewMember;
   } catch (error) {
-    console.error("Error checking social status:", error);
+    // console.error("Error checking social status:", error);
     throw new Error("Error data");
   }
 }
@@ -35,9 +35,9 @@ async function signUp({
       email,
       password,
     });
-    console.log("SignUp response:", response.data);
+    // console.log("SignUp response:", response.data);
   } catch (error) {
-    console.error("Error signing up:", error);
+    // console.error("Error signing up:", error);
   }
 }
 
@@ -70,12 +70,12 @@ const CheckUserRegistration: React.FC = () => {
               router.push("/home");
             }
           } catch (error) {
-            console.error("Error checking user:", error);
+            // console.error("Error checking user:", error);
           }
         };
         checkUser();
       } else {
-        console.error("User is not authenticated or email is missing");
+        // console.error("User is not authenticated or email is missing");
       }
     }
   }, [isRouterReady, session, status]);

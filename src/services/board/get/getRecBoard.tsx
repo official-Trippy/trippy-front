@@ -10,7 +10,7 @@ export const fetchRecommendBoard = async (interestType: string) => {
                 postType: 'POST'
             }
         });
-        console.log('Received data:', response.data);
+        // console.log('Received data:', response.data);
         return response.data;
     } catch (error) {
         console.error(`Error fetching POST for interest ${interestType}:`, error);

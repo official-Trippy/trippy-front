@@ -133,26 +133,24 @@ const BlogRegisterFirst = () => {
             const res = await axios.get(
               `${backendUrl}/api/member/login/oauth2/${socialType}`
             );
-            console.log(`${socialType} API 호출 성공:`, res.data);
+            // console.log(`${socialType} API 호출 성공:`, res.data);
             break; // 성공 시 다른 타입에 대해 호출하지 않음
           } catch (error: any) {
             // 401 Unauthorized 처리
             if (error.response && error.response.status === 401) {
-              console.log(
-                `${socialType} 401 에러 발생, 쿠키 삭제 및 홈으로 이동`
-              );
+              // console.log(
+              // `${socialType} 401 에러 발생, 쿠키 삭제 및 홈으로 이동`
+              // );
               Cookies.remove("accessToken");
               Cookies.remove("refreshToken");
               Cookies.remove("role");
               router.push("/ootd");
               break;
-            } else {
-              console.error(`${socialType} 다른 에러 발생:`, error);
             }
           }
         }
       } catch (error) {
-        console.error("Error in handleBackNavigation:", error);
+        // console.error("Error in handleBackNavigation:", error);
       }
     };
 
@@ -205,7 +203,7 @@ const BlogRegisterFirst = () => {
     const role = Cookies.get("role");
 
     if (accessToken && role === "GUEST") {
-      console.log("게스트네요");
+      // console.log("게스트네요");
       return;
     }
 
@@ -438,7 +436,7 @@ const BlogRegisterFirst = () => {
       setUserInfo(data); // 유저 정보를 상태에 저장
 
       const response = await signupCommon(data); // 서버에 제출
-      console.log("Signup success:", response);
+      // console.log("Signup success:", response);
 
       router.push("/blogRegister2"); // 성공 시 다음 페이지로 이동
     } catch (error) {
@@ -523,9 +521,8 @@ const BlogRegisterFirst = () => {
                 <div className="h-[1.7rem]">
                   {nickNameError && (
                     <p
-                      className={`text-${
-                        nickNameError.includes("사용 가능") ? "green" : "red"
-                      }-500`}
+                      className={`text-${nickNameError.includes("사용 가능") ? "green" : "red"
+                        }-500`}
                     >
                       {nickNameError}
                     </p>
@@ -550,9 +547,8 @@ const BlogRegisterFirst = () => {
                 <div className="h-[1.7rem]">
                   {blogNameError && (
                     <p
-                      className={`text-${
-                        blogNameError.includes("사용 가능") ? "green" : "red"
-                      }-500`}
+                      className={`text-${blogNameError.includes("사용 가능") ? "green" : "red"
+                        }-500`}
                     >
                       {blogNameError}
                     </p>
@@ -588,13 +584,12 @@ const BlogRegisterFirst = () => {
         <div className="text-center">
           <button
             type="submit"
-            className={`mx-auto w-full sm-700:w-[120px] h-[44px] mt-[2rem] mb-[2rem] text-white py-2 rounded-xl flex justify-center items-center ${
-              !nickNameError.includes("사용 가능") ||
+            className={`mx-auto w-full sm-700:w-[120px] h-[44px] mt-[2rem] mb-[2rem] text-white py-2 rounded-xl flex justify-center items-center ${!nickNameError.includes("사용 가능") ||
               !blogNameError.includes("사용 가능") ||
               !imageUploaded
-                ? "cursor-not-allowed bg-[#cfcfcf] hover:bg-[#cfcfcf]"
-                : "bg-btn-color"
-            }`}
+              ? "cursor-not-allowed bg-[#cfcfcf] hover:bg-[#cfcfcf]"
+              : "bg-btn-color"
+              }`}
             onClick={handleSubmit}
             style={{ fontSize: "1.2rem" }}
             disabled={

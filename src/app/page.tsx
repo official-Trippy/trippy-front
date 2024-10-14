@@ -29,7 +29,7 @@ export default function Home() {
       router.push("/onBoarding"); // 쿠키가 없으면 /onBoarding 페이지로 이동
     } else {
       // 쿠키가 존재할 경우
-      console.log("Join token exists:", joinToken);
+      // console.log("Join token exists:", joinToken);
     }
   }, [joinToken, router]);
 
@@ -58,7 +58,7 @@ export default function Home() {
     queryFn: () => getBoard(PAGE_SIZE, pages),
   });
 
-  console.log(boardData);
+  // console.log(boardData);
   return (
     <div>
       <RecommendBoard />

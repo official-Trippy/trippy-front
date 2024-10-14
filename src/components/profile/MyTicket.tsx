@@ -40,7 +40,7 @@ const MyTicket = ({ totalBoardCount }: ticketProps) => {
 
 
 
-  console.log(myTicketData)
+  // console.log(myTicketData)
   return (
     <div>
       <div className="grid grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-12">
@@ -63,7 +63,7 @@ const MyTicket = ({ totalBoardCount }: ticketProps) => {
             }
           };
 
-          console.log(colorTicket[ticektDatas.ticket.ticketColor])
+          // console.log(colorTicket[ticektDatas.ticket.ticketColor])
           return (
             <div key={ticektDatas.ticket.id} className={`flex-1 cursor-pointer `} onClick={() => { handleBoardLink(ticektDatas.post.id) }} >
               {/* {ticektDatas.post.images.length > 0 && ( */}

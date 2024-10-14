@@ -30,7 +30,7 @@ const TABS = {
 const UserPage = ({ params }: { params: { id: string } }) => {
   const { id } = params;
   const decodedId = decodeURIComponent(params.id);
-  console.log("id param", decodedId);
+  // console.log("id param", decodedId);
   const [activeTab, setActiveTab] = useState(() => {
     if (typeof window !== "undefined") {
       const savedTab = sessionStorage.getItem(`activeTab_${decodedId}`);
@@ -62,8 +62,8 @@ const UserPage = ({ params }: { params: { id: string } }) => {
     },
   });
 
-  console.log("유저아이디", decodedId);
-  console.log("데이터", data);
+  // console.log("유저아이디", decodedId);
+  // console.log("데이터", data);
 
   const emailData = data && data.result.email;
 
@@ -100,11 +100,11 @@ const UserPage = ({ params }: { params: { id: string } }) => {
   }
 
   const userData = data && data.result;
-  console.log('유저데이터', userData);
+  // console.log('유저데이터', userData);
   const memberEmail = userData?.email;
   const userBlogImg = userData?.blogTitleImgUrl;
 
-  console.log(userBoardCount)
+  // console.log(userBoardCount)
   return (
     <>
       {/* <Header /> */}

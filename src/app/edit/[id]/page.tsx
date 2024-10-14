@@ -41,7 +41,7 @@ const EditOotd: React.FC = () => {
 
   const formatDateString = (dateString: string | null) => {
     if (!dateString) return ''; // null이나 undefined일 경우 빈 문자열 반환
-  
+
     // dateString이 'yyyy-MM-dd' 형식일 경우에만 변환
     const dateParts = dateString.split('-');
     if (dateParts.length === 3) {
@@ -53,7 +53,7 @@ const EditOotd: React.FC = () => {
 
   const formatDateForApi = (dateString: string | null) => {
     if (!dateString) return ''; // null이나 undefined일 경우 빈 문자열 반환
-  
+
     // 'yyyyMMdd' 형식의 문자열을 'yyyy-MM-dd' 형식으로 변환
     const year = dateString.slice(0, 4);
     const month = dateString.slice(4, 6);
@@ -74,7 +74,7 @@ const EditOotd: React.FC = () => {
         setPost(postData.body);
         setTags(postData.tags);
         setLocation(postData.location);
-        setDate(formatDateString(ootdData.date || '')); 
+        setDate(formatDateString(ootdData.date || ''));
         setWeather({
           status: ootdData.weatherStatus,
           avgTemp: ootdData.weatherTemp,
@@ -94,13 +94,13 @@ const EditOotd: React.FC = () => {
   }, [data]);
 
   useEffect(() => {
-    console.log('렌더링된 이미지 상태: ', images); // 상태 업데이트 후의 이미지 상태를 로그합니다.
+    // console.log('렌더링된 이미지 상태: ', images); // 상태 업데이트 후의 이미지 상태를 로그합니다.
   }, [images]);
-  
+
   // 비동기적으로 상태가 설정되었는지 확인
   useEffect(() => {
     if (images.length > 0) {
-      console.log('렌더링된 이미지 상태 (비동기 확인): ', images);
+      // console.log('렌더링된 이미지 상태 (비동기 확인): ', images);
     }
   }, [images]);
 
@@ -165,7 +165,7 @@ const EditOotd: React.FC = () => {
           icon: 'success',
           title: 'OOTD 게시글을 수정하였습니다.',
           confirmButtonText: '확인',
-          confirmButtonColor: '#FB3463', 
+          confirmButtonColor: '#FB3463',
           customClass: {
             popup: 'swal-custom-popup',
             icon: 'swal-custom-icon'
@@ -180,7 +180,7 @@ const EditOotd: React.FC = () => {
           title: '게시글 수정 오류',
           text: '게시글을 수정하는 중 오류가 발생했습니다.',
           confirmButtonText: '확인',
-          confirmButtonColor: '#FB3463', 
+          confirmButtonColor: '#FB3463',
         });
       },
     }
@@ -195,7 +195,7 @@ const EditOotd: React.FC = () => {
       });
       return;
     }
-  
+
     if (images.length === 0) {
       Swal.fire({
         icon: 'error',
@@ -206,7 +206,7 @@ const EditOotd: React.FC = () => {
       });
       return;
     }
-  
+
     if (post.trim() === '') {
       Swal.fire({
         icon: 'error',
@@ -217,7 +217,7 @@ const EditOotd: React.FC = () => {
       });
       return;
     }
-  
+
     if (tags.length < 3) {
       Swal.fire({
         icon: 'error',
@@ -228,9 +228,9 @@ const EditOotd: React.FC = () => {
       });
       return;
     }
-  
+
     const formattedDateForApi = formatDateForApi(date);
-  
+
     const postRequest: PostRequest = {
       title: 'ootd 게시물',
       body: post,
@@ -244,7 +244,7 @@ const EditOotd: React.FC = () => {
       tags,
       memberId: data?.result.member.memberId || '',
     };
-  
+
     const ootdRequest: OotdRequest = {
       area: weather?.area || '',
       weatherStatus: weather?.status || '',
@@ -252,7 +252,7 @@ const EditOotd: React.FC = () => {
       detailLocation: location,
       date: formattedDateForApi,
     };
-  
+
     updatePostMutation.mutate({ postRequest, ootdRequest });
   };
 
@@ -290,56 +290,56 @@ const EditOotd: React.FC = () => {
           <button
             onClick={handleUpdatePost}
             className="bg-[#fa3463] rounded-lg flex justify-center items-center px-10 py-2 text-white text-lg"
-            >
-              수정하기
-            </button>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <ImageChanger onImagesChange={setImages} initialImages={images} />
-            <div className="">
-              <PostInput
-                onPostChange={setPost}
-                onTagsChange={setTags}
-                tags={tags}
-                initialPost={post}
+          >
+            수정하기
+          </button>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <ImageChanger onImagesChange={setImages} initialImages={images} />
+          <div className="">
+            <PostInput
+              onPostChange={setPost}
+              onTagsChange={setTags}
+              tags={tags}
+              initialPost={post}
+            />
+            <div className="space-y-4">
+              <LocationInput
+                onLocationChange={handleLocationChange}
+                selectedLocationName={location}
               />
-              <div className="space-y-4">
-                <LocationInput
-                  onLocationChange={handleLocationChange}
-                  selectedLocationName={location}
-                />
-                <DateInput onDateChange={handleDateChange} initialDate={date} />
-                {weather ? (
-                  <div className="w-full bg-neutral-100 rounded-lg flex justify-center items-center py-4 text-neutral-500 text-lg">
-                    <div>
-                      {weather.avgTemp === '정보 없음'
-                        ? '정보 없음'
-                        : `${weather.avgTemp}°C, ${getWeatherStatusInKorean(
-                          weather.status
-                        )}`}
-                    </div>
+              <DateInput onDateChange={handleDateChange} initialDate={date} />
+              {weather ? (
+                <div className="w-full bg-neutral-100 rounded-lg flex justify-center items-center py-4 text-neutral-500 text-lg">
+                  <div>
+                    {weather.avgTemp === '정보 없음'
+                      ? '정보 없음'
+                      : `${weather.avgTemp}°C, ${getWeatherStatusInKorean(
+                        weather.status
+                      )}`}
                   </div>
-                ) : (
-                  <button
-                    onClick={handleFetchWeather}
-                    className="w-full bg-neutral-100 rounded-lg flex justify-center items-center py-4 text-neutral-500 text-lg"
-                  >
-                    날씨 불러오기
-                  </button>
-                )}
-              </div>
+                </div>
+              ) : (
+                <button
+                  onClick={handleFetchWeather}
+                  className="w-full bg-neutral-100 rounded-lg flex justify-center items-center py-4 text-neutral-500 text-lg"
+                >
+                  날씨 불러오기
+                </button>
+              )}
             </div>
           </div>
         </div>
-  
-        {/* Weather Modal 컴포넌트 */}
-        <WeatherModal
-          isOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
-          onSave={handleSaveWeather}
-        />
-      </>
-    );
-  };
-  
-  export default EditOotd;
+      </div>
+
+      {/* Weather Modal 컴포넌트 */}
+      <WeatherModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSave={handleSaveWeather}
+      />
+    </>
+  );
+};
+
+export default EditOotd;
