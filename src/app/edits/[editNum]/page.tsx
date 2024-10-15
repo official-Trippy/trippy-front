@@ -376,7 +376,7 @@ function PostEdit({ params }: { params: { editNum: number } }) {
         }
     }
 
-    // console.log(startDate)
+    console.log(postData)
 
     // URL 객체 해제
     useEffect(() => {
