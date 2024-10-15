@@ -103,7 +103,6 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
                     setLikeList([]);
                 }
             } catch (error) {
-                console.error('Error fetching like list:', error);
                 setLikeList([]);
             }
             setIsLoadingLikes(false);
@@ -180,7 +179,6 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
         queryFn: () => MemberInfo(accessToken),
         onError: (error) => {
             // 에러 처리 로직
-            console.error(error);
         },
     });
 
@@ -234,7 +232,7 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
                     fetchFollowing(postMemberId);
                 }
             } catch (error) {
-                console.error("Error following member:", error);
+                // console.error("Error following member:", error);
             }
         } else {
             try {
@@ -243,7 +241,7 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
                     fetchFollowing(postMemberId);
                 }
             } catch (error) {
-                console.error("Error unfollowing member:", error);
+                // console.error("Error unfollowing member:", error);
             }
         }
     };
@@ -356,7 +354,7 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
 
         return doc.body.innerHTML; // 변환된 HTML 반환
     };
-    console.log(postCommentData)
+    // console.log(postCommentData)
     const deleteBoardHandler = async () => {
         await deleteBoard(params.boardId);
         Swal.fire({
@@ -423,7 +421,7 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
         setReplyNickname(nickName);
         setReplyMemId(memberId);
     };
-    console.log(postData);
+    // console.log(postData);
 
     const getTransportImage = (transport: string, ticketColor: any) => {
         switch (transport) {
