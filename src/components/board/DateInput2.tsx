@@ -86,7 +86,7 @@ const DateInput2: React.FC<DateInputProps> = ({
       <Image
         src={CalendarIcon}
         alt="Calendar Icon"
-        className="absolute right-1 cursor-pointer w-[1.5rem] lg:w-[4rem] sm-700:w-[1.5rem]"
+        className="absolute right-1 cursor-pointer w-[1.5rem] lg:w-[3rem] sm-700:w-[1.5rem]"
         onClick={handleCalendarClick} // 달력 아이콘 클릭 시 모달 열기
       />
 

@@ -157,7 +157,6 @@ function PostEdit({ params }: { params: { editNum: number } }) {
 
 
 
-
     const handleIncrease = () => {
         setPassengerCount(passengerCount + 1);
     };
