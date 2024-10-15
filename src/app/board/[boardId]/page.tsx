@@ -890,7 +890,7 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
                                                 </span>
                                             </div>
                                             <input
-                                                className="w-full outline-none ml-[4.5rem] text-[1.4rem] font-normal"
+                                                className="w-[80%] ml-[4.5rem] text-[1.4rem] font-normal"
                                                 type="text"
                                                 value={comment}
                                                 onChange={(e) => setComment(e.target.value)}
@@ -994,11 +994,11 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
                                                                             <button
                                                                                 className="ml-auto hover:bg-[#292929] hover:text-white bg-[#FB3463] text-white rounded-[0.8rem] text-[1.6rem] font-semibold w-[6.6rem] h-[2.5rem] flex mr-[1.4rem] items-center justify-center"
                                                                                 onClick={() => {
-                                                                                    commentReplyHandler(
-                                                                                        replymemId,
-                                                                                        replyNickname,
-                                                                                        replyId
-                                                                                    );
+                                                                                    // commentReplyHandler(
+                                                                                    //     replymemId,
+                                                                                    //     replyNickname,
+                                                                                    //     replyId
+                                                                                    // );
                                                                                     commentEditHandler(coData.id);
                                                                                 }}
                                                                             >
@@ -1007,11 +1007,11 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
                                                                             <button
                                                                                 className="hover:bg-[#292929] hover:text-white bg-[#9D9D9D] text-white rounded-[0.8rem] text-[1.6rem] font-semibold w-[6.6rem] h-[2.5rem] flex mr-[1.4rem] items-center justify-center"
                                                                                 onClick={() => {
-                                                                                    commentReplyHandler(
-                                                                                        replymemId,
-                                                                                        replyNickname,
-                                                                                        replyId
-                                                                                    );
+                                                                                    // commentReplyHandler(
+                                                                                    //     replymemId,
+                                                                                    //     replyNickname,
+                                                                                    //     replyId
+                                                                                    // );
                                                                                     handleEditContent(
                                                                                         coData.id,
                                                                                         coData.content
@@ -1070,7 +1070,7 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
                                                                             </div>
                                                                             <div className="relative">
                                                                                 <input
-                                                                                    className="w-[70%] outline-none ml-[2.5rem] text-[1.4rem] font-normal pl-[1.5rem]"
+                                                                                    className="w-[80%]  ml-[4rem] text-[1.4rem] font-normal"
                                                                                     type="text"
                                                                                     placeholder={`${coData.member.nickName}에게 답글쓰기`}
                                                                                     value={replyComment}
