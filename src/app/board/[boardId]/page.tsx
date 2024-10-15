@@ -202,7 +202,6 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
             fetchFollowing(userMemberId);
         }
     }, [postData]);
-    // console.log(following);
 
     const handleGoProfile = (memberId: string) => {
         if (memberId) {
@@ -652,7 +651,7 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
                                         </span>
                                     </div>
                                 </div>
-                                <div className="relative flex bg-white mt-[1rem] xl:mt-[2.8rem] sm:mt-[1rem] w-[1.7rem] lg:w-[3.2rem] sm:w-[1.7rem] h-[1.7rem] lg:h-[2.8rem] sm:h-[3.7rem] z-10 ml-[10%] mr-[8%]">
+                                <div className="relative flex bg-white mt-[1rem] xl:mt-[2.8rem] sm:mt-[1rem] w-[1.7rem] lg:w-[3.2rem] sm:w-[1.7rem] h-[1.7rem] lg:h-[2.8rem] sm:h-[3.7rem] z-10 ml-[10%] mr-0 2xl:mr-[10%]">
                                     {getTransportImage(
                                         postData?.result.ticket.transport,
                                         postData?.result.ticket.ticketColor
@@ -728,6 +727,16 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
                     {bodyWithImages.split(/<\/?p>/).filter(Boolean).map((item: string, index: number) => {
                         const trimmedItem = item.trim(); // 공백 제거
 
+                        const parseStyle = (styleString: string) => {
+                            return styleString.split(';').reduce((acc: any, style: string) => {
+                                const [key, value] = style.split(':').map((s: string) => s.trim());
+                                if (key && value) {
+                                    acc[key] = value;
+                                }
+                                return acc;
+                            }, {});
+                        };
+
                         if (!trimmedItem || trimmedItem === '&nbsp;') {
                             return null; // 아무것도 렌더링하지 않음
                         }
@@ -750,47 +759,36 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
                             }
                         }
 
-                        // <div> 태그가 포함된 경우
-                        const divMatch = trimmedItem.match(/<div>(.*?)<\/div>/);
-                        if (divMatch) {
-                            const innerHtml = divMatch[1];
+                        // 이미지 태그를 포함한 경우
+                        const imgMatch = trimmedItem.match(/<img[^>]+src="([^"]+)"[^>]*style="([^"]*)"(?:\s+width="([^"]*)")?(?:\s+height="([^"]*)")?[^>]*>/);
+                        if (imgMatch) {
+                            const imgSrc = imgMatch[1];
+                            const imgStyle = imgMatch[2];
+                            const imgWidth = imgMatch[3] || 400; // width 속성
+                            const imgHeight = imgMatch[4] || 300; // height 속성
 
-                            // <img> 태그를 React 요소로 변환
-                            const imgMatch = innerHtml.match(/<img[^>]*src="([^"]*)"[^>]*>/);
-                            if (imgMatch) {
-                                const imgSrc = imgMatch[1];
-                                return (
-                                    <div key={index} className="w-full">
-                                        <img
-                                            className="w-full max-w-[50rem]"
-                                            src={imgSrc}
-                                            alt=""
-                                            width={900}
-                                            height={900}
-                                        />
-                                    </div>
-                                );
-                            }
+                            return (
+                                <div key={index} className="w-full">
+                                    <img
+                                        src={imgSrc}
+                                        alt=""
+                                        style={imgStyle ? { ...parseStyle(imgStyle) } : {}} // 스타일 적용
+                                        width={imgWidth} // width 속성 사용
+                                        height={imgHeight} // height 속성 사용
+                                    />
+                                </div>
+                            );
                         }
 
-                        // HTML 태그 제거: &lt; 및 &gt;를 실제 '<' 및 '>'로 변환
-                        const cleanText = trimmedItem
-                            .replace(/&lt;/g, '<')
-                            .replace(/&gt;/g, '>')
-                            .replace(/&nbsp;/g, '')
-                            .replace(/<\/?[^>]+(>|$)/g, ""); // 모든 HTML 태그 제거
-
-                        // 텍스트인 경우
+                        // HTML 태그를 그대로 보여주기 위해 dangerouslySetInnerHTML 사용
                         return (
-                            <p key={index} className="text-[1.6rem] font-medium">
-                                {cleanText}
-                            </p>
+                            <div key={index} className="text-[1.6rem] font-medium" dangerouslySetInnerHTML={{ __html: trimmedItem }} />
                         );
                     })}
+
+
+
                 </div>
-
-
-
                 <div className="flex flex-wrap">
                     {postData?.result.post.tags.map((tagData: string, index: number) => (
                         <span

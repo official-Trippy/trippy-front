@@ -390,11 +390,9 @@ function PostWrite() {
     if (e.key === "Enter" && inputValue.trim() !== "") {
       const trimmedInput = inputValue.trim();
 
-      // 중복 태그 체크 (부분 포함 검사 추가)
+      // 중복 태그 체크 (정확한 비교)
       const isDuplicate = tags.some(
-        (tag) =>
-          tag.toLowerCase() === trimmedInput.toLowerCase() ||
-          trimmedInput.toLowerCase().includes(tag.toLowerCase())
+        (tag) => tag.toLowerCase() === trimmedInput.toLowerCase()
       );
 
       if (!isDuplicate) {
