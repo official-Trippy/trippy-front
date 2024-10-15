@@ -356,7 +356,7 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
 
         return doc.body.innerHTML; // 변환된 HTML 반환
     };
-
+    console.log(postCommentData)
     const deleteBoardHandler = async () => {
         await deleteBoard(params.boardId);
         Swal.fire({
@@ -902,16 +902,17 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
                                             />
                                         </div>
                                         <button
-                                            className="hover:bg-[#292929] hover:text-white bg-[#F5F5F5] text-[#292929] rounded-[0.8rem] text-[1.6rem] font-semibold w-[8.6rem] h-[3.5rem] flex ml-auto mr-[1.4rem] items-center justify-center"
+                                            className="hover:bg-[#292929] hover:text-white bg-[#F5F5F5] text-[#292929] rounded-[0.8rem] text-[1.6rem] font-semibold w-[8.6rem] h-[3.5rem] flex ml-auto mt-[3rem] mr-[1.4rem] items-center justify-center"
                                             onClick={commentHandler}
                                         >
                                             입력
                                         </button>
                                     </div>
                                 )}
-                                {postCommentData?.result.length !== 0 && (
+                                {postCommentData?.result && (
+
                                     <div
-                                        className={`w-full h-full shadowall px-[2rem] lg:px-[4.7rem] sm:px-[2rem] py-[1.4rem] my-[3.5rem] flex flex-col rounded-[0.8rem]`}
+                                        className={`w-full h-full ${Object.keys(postCommentData.result).length > 0 ? "shadowall" : ""} px-[2rem] lg:px-[4.7rem] sm:px-[2rem] py-[1.4rem] my-[3.5rem] flex flex-col rounded-[0.8rem]`}
                                     >
                                         {postCommentData?.result &&
                                             Object.entries(postCommentData.result).map(
@@ -947,21 +948,12 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
                                                                                 />
                                                                                 {openEditing && (
                                                                                     <div
-                                                                                        className="absolute flex flex-col ml-auto bg-white shadow-md rounded-md -ml-[4.5rem] mt-[2.3rem] animate-dropdown z-20 rounded-[0.8rem]"
+                                                                                        className="absolute flex flex-col bg-white shadow-md mt-[2.3rem] animate-dropdown -ml-[4.5rem] z-20 rounded-[0.8rem]"
                                                                                         style={{
                                                                                             opacity: 0,
                                                                                             transform: "translateY(-10px)",
                                                                                         }}
                                                                                     >
-                                                                                        <span
-                                                                                            className="px-[2rem] py-[1rem] cursor-pointer text-red-500"
-                                                                                            onClick={() => {
-                                                                                                deleteReplyHandler(coData.id);
-                                                                                                toggleMyEdit(coData.id);
-                                                                                            }}
-                                                                                        >
-                                                                                            삭제
-                                                                                        </span>
                                                                                         <span
                                                                                             className="px-[2rem] py-[1rem] cursor-pointer"
                                                                                             onClick={() => {
@@ -974,6 +966,16 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
                                                                                         >
                                                                                             수정
                                                                                         </span>
+                                                                                        <span
+                                                                                            className="px-[2rem] py-[1rem] cursor-pointer text-red-500"
+                                                                                            onClick={() => {
+                                                                                                deleteReplyHandler(coData.id);
+                                                                                                toggleMyEdit(coData.id);
+                                                                                            }}
+                                                                                        >
+                                                                                            삭제
+                                                                                        </span>
+
                                                                                     </div>
                                                                                 )}
                                                                             </div>
@@ -1083,7 +1085,7 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
                                                                             </div>
                                                                         </div>
                                                                         <button
-                                                                            className="hover:bg-[#292929] hover:text-white bg-[#F5F5F5] text-[#292929] rounded-[0.8rem] text-[1.6rem] font-semibold w-[8.6rem] h-[3.5rem] flex ml-auto mr-[1.4rem] items-center justify-center"
+                                                                            className="hover:bg-[#292929] hover:text-white bg-[#F5F5F5] text-[#292929] rounded-[0.8rem] text-[1.6rem] font-semibold w-[8.6rem] h-[3.5rem] flex ml-auto mr-[1.4rem] mt-[3rem] items-center justify-center"
                                                                             onClick={() =>
                                                                                 commentReplyHandler(
                                                                                     replymemId,
@@ -1136,7 +1138,7 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
                                                                                             />
                                                                                             {openEditing && (
                                                                                                 <div
-                                                                                                    className="absolute flex flex-col ml-auto bg-white shadow-md rounded-md -ml-[4.5rem] mt-[2.3rem] animate-dropdown z-20 rounded-[0.8rem]"
+                                                                                                    className="absolute flex flex-col bg-white shadow-md -ml-[4.5rem] mt-[2.3rem] animate-dropdown z-20 rounded-[0.8rem]"
                                                                                                     style={{
                                                                                                         opacity: 0,
                                                                                                         transform: "translateY(-10px)",
