@@ -537,7 +537,7 @@ function PostEdit({ params }: { params: { editNum: number } }) {
                                 </div>
                             </div>
                         </div>
-                        <div className={`w-full max-w-[15.5rem] min-w-[14rem] h-full bg-[${bgColor}] rounded-r-[1rem] flex ml-auto`}>
+                        <div className={`w-full max-w-[15.5rem] 2xl:max-w-[23.5rem] xl-1400:max-w-[15.5rem] min-w-[14rem] h-full bg-[${bgColor}] rounded-r-[1rem] flex ml-auto`}>
                             <div className='absolute'>
                                 <div className='relative bg-white w-[4rem] h-[4rem] rounded-full -mt-[2rem] -ml-[2rem]'></div>
                                 <div className='relative bg-white w-[4rem] h-[4rem] rounded-full mt-[28rem] -ml-[2rem]'></div>
