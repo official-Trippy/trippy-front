@@ -177,7 +177,7 @@ function RecentPost({ allPosts, setAllPosts, boardData, boardRefetch, PAGE_SIZE,
             </div>
             {ticketList.length > 0 ? (
                 <div>
-                    <div className="grid grid-cols-1 lg:grid-cols-1 2xl:grid-cols-2 gap-x-[8rem] gap-y-[1rem]">
+                    <div className="grid grid-cols-1 lg:grid-cols-1 2xl:grid-cols-2 gap-x-[8rem] gap-y-[6rem] xl-1400:gap-y-[1rem] sm-700:gap-y-[6rem]">
                         {ticketList?.map((posts: any, index: number) => {
                             const BoardId = posts.post.id;
 

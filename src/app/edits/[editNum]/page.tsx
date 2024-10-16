@@ -477,7 +477,7 @@ function PostEdit({ params }: { params: { editNum: number } }) {
                                         </button>
                                     </div>
                                 </div>
-                                <div className='relative bg-white z-10 ml-full ml-[1rem] mr-[8rem]'>
+                                <div className='relative bg-white z-10 ml-full ml-[6%] mr-[16%]'>
                                     {
                                         isTransport ? (
                                             <div className='w-[4rem] 2xl:w-[6rem] xl-1400:w-[4rem] h-[13rem] 2xl:h-[32rem] xl-1400:h-[13rem] absolute z-10 bg-white shadowall rounded-[3rem] flex items-center justify-center mt-[1.5rem] flex-col'>
@@ -644,7 +644,7 @@ function PostEdit({ params }: { params: { editNum: number } }) {
                             <div className={`flex text-[0.5rem] ml-[1rem] items-center font-extrabold text-[#6B6B6B] relative`}>
                                 <span className='w-[5rem] flex mt-[0.3rem]'>{postData?.result.member.nickName}</span>
                                 <DateInput2 onDateChange={handleDateChange} startDate={String(startDate)} endDate={String(endDate)} setEndDate={setEndDate} setStartDate={setStartDate} />
-                                <div className='w-[5rem] flex text-[0.8rem] items-center'>
+                                <div className='w-[5rem] flex text-[0.8rem] items-center ml-[4.5rem]'>
                                     <button className='text-[#FB3463] flex text-[1.2rem] items-center -mt-[0.2rem]' onClick={handleDecrease}>-</button>
                                     <span className='mx-[0.5rem]'>{passengerCount}</span>
                                     <button className='text-[#FB3463] flex text-[1.2rem] items-center -mt-[0.2rem]' onClick={handleIncrease}>+</button>
