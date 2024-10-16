@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { Editor } from '@tinymce/tinymce-react';
 import { uploadImage } from '@/services/blog';
 
@@ -11,30 +11,29 @@ const inputAPI = process.env.NEXT_PUBLIC_INPUT_TEXT_API_KEY;
 
 const TextEditorEdits = ({ postRequest, setPostRequest }: editorProps) => {
     const [editorInstance, setEditorInstance] = useState<any>(null);
-
+    console.log(postRequest)
     const handleEditorChange = (newContent: string) => {
-        // 에디터 내용이 변경될 때마다 상태를 업데이트
         setPostRequest((prev: any) => ({
             ...prev,
-            body: newContent, // 텍스트 내용 업데이트
+            body: newContent,
         }));
     };
 
     const handleImageUpload = async (blobInfo: any) => {
-        const file = blobInfo.blob(); // blobInfo에서 파일 추출
+        const file = blobInfo.blob();
 
         try {
-            const uploadedImage = await uploadImage(file); // 이미지 업로드 함수 호출
-            const imageUrl = uploadedImage.result; // 업로드된 이미지 URL 가져오기
+            const uploadedImage = await uploadImage(file);
+            const imageUrl = uploadedImage.result; // 올바른 URL을 가져옴
 
             // 이미지 URL을 postRequest.images에 추가
             setPostRequest((prev: any) => ({
                 ...prev,
-                images: [...prev.images, imageUrl], // 이미지 URL 추가
+                images: [...prev.images, imageUrl], // 객체 형태로 추가
             }));
 
-            // 성공적인 업로드 후 URL을 반환
-            return imageUrl;
+            // TinyMCE에 이미지 URL 반환
+            return imageUrl.accessUri; // 올바른 URL 반환
         } catch (error) {
             console.error('Error uploading image:', error);
             return ''; // 실패 시 빈 문자열 반환
@@ -42,10 +41,9 @@ const TextEditorEdits = ({ postRequest, setPostRequest }: editorProps) => {
     };
 
     const renderBodyWithImages = (body: string, images: { accessUri: string }[]) => {
-        return body.replace(/imageData(\d+)/g, (match, index) => {
-            const imgIndex = parseInt(index) - 1; // imageData1 -> 0, imageData2 -> 1 등
-            const image = images[imgIndex]; // 해당 이미지 객체 가져오기
-            return image ? `<img src="${image.accessUri}" alt="Uploaded Image" width="400" height="300" />` : match; // 이미지가 있으면 img 태그 반환, 없으면 원래 문자열 반환
+        return body.replace(/<img src="([^"]+)"/g, (match, src) => {
+            const image = images.find(img => img.accessUri === src); // 이미지 객체 찾기
+            return image ? match.replace(src, image.accessUri) : match; // URL이 있으면 교체
         });
     };
 
@@ -58,8 +56,6 @@ const TextEditorEdits = ({ postRequest, setPostRequest }: editorProps) => {
             }));
         }
     };
-
-    // console.log(postRequest); // postRequest 확인
 
     return (
         <div>
@@ -90,10 +86,9 @@ const TextEditorEdits = ({ postRequest, setPostRequest }: editorProps) => {
                         'lists table link charmap searchreplace | ' +
                         'image media codesample emoticons fullscreen preview | ' +
                         'removeformat | undo redo',
-                    images_upload_handler: handleImageUpload, // 이미지 업로드 핸들러 지정
-
+                    images_upload_handler: handleImageUpload,
                 }}
-                value={renderBodyWithImages(postRequest.body, postRequest.images)} // 에디터의 내용을 상태로 관리
+                value={renderBodyWithImages(postRequest.body, postRequest.images)}
                 onEditorChange={handleEditorChange}
             />
         </div>

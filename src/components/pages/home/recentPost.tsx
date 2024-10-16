@@ -301,17 +301,22 @@ function RecentPost({ allPosts, setAllPosts, boardData, boardRefetch, PAGE_SIZE,
                             );
                         })}
                     </div>
-                    <div className="flex w-full justify-center my-16 mt-[10rem]">
-                        {Array.from({ length: totalPages }, (_, index) => (
-                            <button
-                                key={index}
-                                onClick={() => handlePageClick(index)}
-                                className={`mx-1 py-2 px-4 ${pages === index ? 'text-[#fa3463] font-semibold' : 'text-[#cfcfcf] font-normal'}`}
-                            >
-                                {index + 1}
-                            </button>
-                        ))}
-                    </div>
+                    <>
+                        {totalPages > 1 && (
+                            <div className="flex w-full justify-center my-16 mt-[10rem]">
+                                {Array.from({ length: totalPages }, (_, index) => (
+                                    <button
+                                        key={index}
+                                        onClick={() => handlePageClick(index)}
+                                        className={`mx-1 py-2 px-4 ${pages === index ? 'text-[#fa3463] font-semibold' : 'text-[#cfcfcf] font-normal'}`}
+                                    >
+                                        {index + 1}
+                                    </button>
+                                ))}
+                            </div>
+                        )}
+
+                    </>
                 </div>
             ) : (
                 <div className="h-full flex flex-col text-[2rem] text-neutral-900 dark:text-white  my-auto items-center justify-center font-medium font-['Pretendard'] py-[50px]">

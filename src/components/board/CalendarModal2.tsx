@@ -26,7 +26,7 @@ const CalendarModal2: React.FC<CalendarModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="bg-white p-4 rounded-lg w-[300px] max-h-[80vh] overflow-y-auto">
+      <div className="bg-white p-4 rounded-lg w-[300px] h-[26rem] overflow-y-auto">
         <DatePicker
           selected={startDate} // 시작 날짜 선택
           onChange={(dates) => {

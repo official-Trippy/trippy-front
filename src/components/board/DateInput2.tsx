@@ -75,7 +75,7 @@ const DateInput2: React.FC<DateInputProps> = ({
   };
 
   return (
-    <div className="relative w-fit lg:w-[18rem] sm-700:w-[14rem] h-[1.5rem] lg:h-[4rem] sm-700:h-[1.5rem] rounded-[8px] border border-[#cfcfcf] flex items-center text-[0.8rem] lg:text-lg sm-700:text-[0.4rem] mr-[3rem]">
+    <div className="relative w-[12rem] 2xl:w-[18rem] xl-1400:w-[12rem] sm-700:w-[12rem] h-[1.5rem] 2xl:h-[4rem] xl-1400:h-[1.5rem] sm-700:h-[1.5rem] rounded-[8px] border border-[#cfcfcf] flex items-center text-[0.8rem] lg:text-lg sm-700:text-[0.4rem]">
       <input
         type="text"
         value={inputValue}
@@ -86,7 +86,7 @@ const DateInput2: React.FC<DateInputProps> = ({
       <Image
         src={CalendarIcon}
         alt="Calendar Icon"
-        className="absolute right-1 cursor-pointer w-[1.5rem] lg:w-[3rem] sm-700:w-[1.5rem]"
+        className="absolute right-1 cursor-pointer w-[1.5rem] 2xl:w-[3rem] xl-1400:w-[1.5rem] sm-700:w-[1.5rem]"
         onClick={handleCalendarClick} // 달력 아이콘 클릭 시 모달 열기
       />
 

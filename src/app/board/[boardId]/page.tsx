@@ -56,6 +56,7 @@ import { fetchRecommendedSpots } from "@/services/ootd.ts/ootdGet";
 import SkeletonOotdDetailRecommend from "@/components/pages/ootd/SkeletonOotdDetailRecommend";
 import RecommendedSpot from "@/components/ootd/RecommendedSpot";
 import SkeletonBoardDetail from "@/components/pages/home/SkeletonBoardDetail";
+import { RecommendedSpotsResponse } from "@/types/recommend";
 
 
 
@@ -188,7 +189,19 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
         enabled: !!Number(params.boardId),
     });
 
-    // console.log(bookmark);
+    const {
+        data: recommendedSpots,
+        isLoading: isSpotsLoading,
+        error: spotsError,
+    } = useQuery<RecommendedSpotsResponse>(
+        ["recommendedSpots", Number(params.boardId)],
+        () => fetchRecommendedSpots(Number(params.boardId)),
+        {
+            enabled: !!Number(params.boardId),
+            refetchOnWindowFocus: false,
+        }
+    );
+    console.log(recommendedSpots);
 
     // console.log(postData?.result.member.memberId);
     // console.log(memberDatas);
@@ -535,7 +548,7 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
     }
 
     return (
-        <div>
+        <div className="mb-[10rem]">
             {/* {window.innerWidth > 600 && (<Header />)} */}
             <div className="w-[90%] sm-700:w-[50%] mx-auto ">
                 <div className="flex text-[#6B6B6B] font-semibold text-[2rem]">
@@ -871,7 +884,7 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
                     )}
                 </div>
                 {accessToken ? (
-                    <div className="mb-[10rem]">
+                    <div className="">
                         {isReplyOpen && (
                             <div>
                                 {userInfo && (
@@ -890,7 +903,7 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
                                                 </span>
                                             </div>
                                             <input
-                                                className="w-[80%] ml-[4.5rem] text-[1.4rem] font-normal"
+                                                className="w-[80%] ml-[4.5rem] text-[1.4rem] font-normal mt-[1rem]"
                                                 type="text"
                                                 value={comment}
                                                 onChange={(e) => setComment(e.target.value)}
@@ -898,17 +911,18 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
                                             />
                                         </div>
                                         <button
-                                            className="hover:bg-[#292929] hover:text-white bg-[#F5F5F5] text-[#292929] rounded-[0.8rem] text-[1.6rem] font-semibold w-[8.6rem] h-[3.5rem] flex ml-auto mt-[3rem] mr-[1.4rem] items-center justify-center"
+                                            className={`${comment ? 'bg-[#FB3463] text-white' : 'bg-[#F5F5F5]'} text-[#292929] rounded-[0.8rem] text-[1.6rem] font-semibold w-[8.6rem] h-[3.5rem] flex ml-auto mt-[3rem] mr-[1.4rem] items-center justify-center`}
                                             onClick={commentHandler}
                                         >
                                             입력
                                         </button>
+
                                     </div>
                                 )}
                                 {postCommentData?.result && (
 
                                     <div
-                                        className={`w-full h-full ${Object.keys(postCommentData.result).length > 0 ? "shadowall" : ""} px-[2rem] lg:px-[4.7rem] sm:px-[2rem] py-[1.4rem] my-[3.5rem] flex flex-col rounded-[0.8rem]`}
+                                        className={`w-full h-full ${Object.keys(postCommentData.result).length > 0 ? "shadowall py-[1.4rem]" : ""} px-[2rem] lg:px-[4.7rem] sm:px-[2rem] my-[3.5rem] flex flex-col rounded-[0.8rem]`}
                                     >
                                         {postCommentData?.result &&
                                             Object.entries(postCommentData.result).map(
@@ -1081,7 +1095,7 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
                                                                             </div>
                                                                         </div>
                                                                         <button
-                                                                            className="hover:bg-[#292929] hover:text-white bg-[#F5F5F5] text-[#292929] rounded-[0.8rem] text-[1.6rem] font-semibold w-[8.6rem] h-[3.5rem] flex ml-auto mr-[1.4rem] mt-[3rem] items-center justify-center"
+                                                                            className={`${replyComment ? "bg-[#FB3463] text-white" : "bg-[#F5F5F5] text-[#292929]"} rounded-[0.8rem] text-[1.6rem] font-semibold w-[8.6rem] h-[3.5rem] flex ml-auto mr-[1.4rem] mt-[3rem] items-center justify-center`}
                                                                             onClick={() =>
                                                                                 commentReplyHandler(
                                                                                     replymemId,
@@ -1363,14 +1377,14 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
                     </div>
                 )}
             </div>
-            {/* {isSpotsLoading ? (
-          <SkeletonOotdDetailRecommend />
-        ) : (
-          <RecommendedSpot 
-          recommendedSpots={recommendedSpots?.result || []}
-          location={formattedLocation}
-        />
-        )} */}
+            {isSpotsLoading ? (
+                <SkeletonOotdDetailRecommend />
+            ) : (
+                <RecommendedSpot
+                    recommendedSpots={recommendedSpots?.result || []}
+                    location={postData?.result.ticket.destination}
+                />
+            )}
         </div>
     );
 }
