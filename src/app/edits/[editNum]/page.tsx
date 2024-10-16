@@ -452,18 +452,18 @@ function PostEdit({ params }: { params: { editNum: number } }) {
                     <button className='ml-auto flex bg-[#FB3463] text-white text-[1.6rem] font-semibold rounded-[1rem] px-[2.5rem] py-[0.5rem]' onClick={addPost}>올리기</button>
                 </div>
                 {typeof window !== 'undefined' && window.innerWidth > 600 ? (
-                    <div className='w-full h-[32rem] border border-[#D9D9D9] rounded-[1rem] flex mx-auto mt-[2rem]'>
-                        <div className={`w-full max-w-[4.7rem] min-w-[1.7rem] h-full bg-[${bgColor}] rounded-l-[1rem]`}
+                    <div className='w-full h-[11rem] 2xl-1600:h-[32rem] 2xl:h-[24rem] xl-1300:h-[11rem] shadowall rounded-[1rem] flex mx-auto mt-[2rem]'>
+                        <div className={`w-full max-w-[4.7rem] min-w-[1.7rem] h-full shadowall bg-[${bgColor}] rounded-l-[1rem]`}
                             style={{ color: colorTicket[postData?.result.ticket.ticketColor] || 'inherit' }}></div>
-                        <div className='w-full max-w-[60rem] min-w-[45rem] mt-[5rem] relative'>
+                        <div className='w-full mt-0 2xl-1600:mt-[5rem] 2xl:mt-0 2xl: relative'>
                             <div className='flex justify-center'>
                                 <div className=''>
-                                    <h1 className='h-[9rem] text-[6rem] font-extrabold font-akira'>{result1?.result?.isoAlp3 || postData?.result?.ticket?.departureCode}</h1>
-                                    <div className='w-[18rem] h-[3.6rem] px-[2rem] shadowall rounded-[0.8rem] flex mt-4'>
+                                    <h1 className='h-[4rem] 2xl:h-[9rem] xl-1300:h-[3rem] text-[2rem] 2xl-1600:text-[6rem] 2xl:text-[3rem] xl-1300:text-[2rem] flex justify-center items-center font-extrabold font-akira'>{result1?.result?.isoAlp3 || postData?.result?.ticket?.departureCode}</h1>
+                                    <div className='w-[10rem] 2xl-1600:w-[18rem] 2xl:w-[10rem] h-[1.6rem] 2xl:h-[3.6rem] xl-1400:h-[1.6rem] px-[1rem] shadowall rounded-[0.8rem] flex mt-0'>
                                         <input
-                                            className='w-[12rem] text-[1.6rem] outline-none'
+                                            className='w-[4rem] 2xl-1600:w-[12rem] 2xl:w-[4rem] text-[1rem] 2xl-1600:text-[1.6rem] xl-1400:text-[1rem] outline-none'
                                             type='text'
-                                            placeholder='검색 2'
+                                            placeholder='검색 1'
                                             value={inputValue2} // 두 번째 입력 값 상태
                                             onChange={(e) => setInputValue2(e.target.value)} // 입력 값 변경 시 핸들러
                                             onKeyDown={(e) => {
@@ -472,7 +472,7 @@ function PostEdit({ params }: { params: { editNum: number } }) {
                                                 }
                                             }}
                                         />
-                                        <button className='ml-auto' onClick={() => searchCountry1(inputValue2)} >
+                                        <button className='ml-auto w-[1.5rem] h-[1.6rem] 2xl:w-[3rem] 2xl:h-[3.1rem] xl-1400:w-[1.5rem] xl-1400:h-[1.6rem]' onClick={() => searchCountry1(inputValue2)} >
                                             <Image src={searchicon} alt='' />
                                         </button>
                                     </div>
@@ -480,16 +480,16 @@ function PostEdit({ params }: { params: { editNum: number } }) {
                                 <div className='relative bg-white z-10 ml-full ml-[1rem] mr-[8rem]'>
                                     {
                                         isTransport ? (
-                                            <div className='w-[6rem] h-[32rem] absolute z-10 bg-white shadowall rounded-[3rem] flex items-center justify-center mt-[1.5rem] flex-col space-y-2'>
+                                            <div className='w-[4rem] 2xl:w-[6rem] xl-1400:w-[4rem] h-[13rem] 2xl:h-[32rem] xl-1400:h-[13rem] absolute z-10 bg-white shadowall rounded-[3rem] flex items-center justify-center mt-[1.5rem] flex-col'>
                                                 {isImageIdx.slice(0, 5).map((item: any, index) => (
-                                                    <div key={index} onClick={() => selectTransport(item.imgsrc)} className='w-[6rem] p-[1rem]'>
+                                                    <div key={index} onClick={() => selectTransport(item.imgsrc)} className='w-[4rem] h-[4rem] 2xl:w-[6rem] xl-1400:w-[3rem] 2xl:h-[6rem] xl-1400:h-[4rem] px-[1rem] mt-[0.7rem]'>
                                                         {item.imgsrc}
                                                     </div>
                                                 ))}
                                             </div>
                                         ) : (
                                             <div
-                                                className='w-[6rem] h-[6rem] absolute shadowall rounded-full flex items-center justify-center mt-[1.5rem] p-[1rem]'
+                                                className='w-[4rem] h-[4rem] 2xl:w-[6rem] xl-1400:w-[4rem] 2xl:h-[6rem] xl-1400:h-[4rem] absolute shadowall rounded-full flex items-center justify-center mt-[1.5rem] p-[1rem]'
                                                 onClick={() => setIsTransport(true)}
                                             >
                                                 {isImageIdx[0]?.imgsrc}
@@ -498,12 +498,12 @@ function PostEdit({ params }: { params: { editNum: number } }) {
                                     }
                                 </div>
                                 <div>
-                                    <h1 className='h-[10rem] text-[6rem] font-extrabold font-akira'>{result?.result?.isoAlp3 || postData?.result?.ticket?.departureCode}</h1>
-                                    <div className='w-[18rem] h-[3.6rem] px-[2rem] shadowall rounded-[0.8rem] flex'>
+                                    <h1 className='h-[4rem] 2xl:h-[9rem] xl-1300:h-[4rem] text-[2rem] 2xl-1600:text-[6rem] 2xl:text-[3rem] xl-1300:text-[2rem] flex justify-center items-center font-extrabold font-akira'>{result?.result?.isoAlp3 || postData?.result?.ticket?.departureCode}</h1>
+                                    <div className='w-[10rem] 2xl-1600:w-[18rem] 2xl:w-[10rem] h-[1.6rem] 2xl:h-[3.6rem] xl-1400:h-[1.6rem] px-[1rem] shadowall rounded-[0.8rem] flex mt-0'>
                                         <input
-                                            className='w-[12rem] text-[1.6rem] outline-none'
+                                            className='w-[4rem] 2xl-1600:w-[12rem] 2xl:w-[4rem] text-[1rem] 2xl-1600:text-[1.6rem] xl-1400:text-[1rem] outline-none'
                                             type='text'
-                                            placeholder='검색 1'
+                                            placeholder='검색 2'
                                             value={inputValue1} // 첫 번째 입력 값 상태
                                             onChange={(e) => setInputValue1(e.target.value)} // 입력 값 변경 시 핸들러
                                             onKeyDown={(e) => {
@@ -512,32 +512,32 @@ function PostEdit({ params }: { params: { editNum: number } }) {
                                                 }
                                             }}
                                         />
-                                        <button className='ml-auto' onClick={() => searchCountry(inputValue1)} >
+                                        <button className='ml-auto w-[1.5rem] h-[1.6rem] 2xl:w-[3rem] 2xl:h-[3.1rem] xl-1400:w-[1.5rem] xl-1400:h-[1.6rem]' onClick={() => searchCountry(inputValue1)} >
                                             <Image src={searchicon} alt='' />
                                         </button>
                                     </div>
                                 </div>
                             </div>
-                            <div className='w-[95%] border-2 border-dashed border-[#CFCFCF] my-[3rem] mx-auto relative z-0' />
-                            <div className={`flex ml-[2rem] 2xl:ml-[7rem] lg:ml-[2rem] text-[1.4rem] font-extrabold font-akira`}
+                            <div className='w-[95%] border border-dashed border-[#CFCFCF] my-[1rem] 2xl-1600:my-[3rem] 2xl:my-[1.5rem] xl-1400:my-[1rem] mx-auto relative z-0' />
+                            <div className={`flex ml-[2rem] 2xl:ml-[7rem] lg:ml-[2rem] text-[0.8rem] 2xl:text-[1.4rem] xl-1400:text-[0.8rem] font-extrabold font-akira`}
                                 style={{ color: bgColor || 'inherit' }}
                             >
-                                <span className='w-[16rem]'>PASSENGER</span>
-                                <span className='w-[25rem] ml-[1rem]'>DATE</span>
-                                <span className='w-[8rem]'>GROUP</span>
+                                <span className='w-[8rem] 2xl:w-[16rem] xl-1400:w-[8rem]'>PASSENGER</span>
+                                <span className='w-[12rem] 2xl:w-[20rem] xl-1400:w-[12rem] ml-[1rem]'>DATE</span>
+                                <span className='w-[4rem] 2xl:w-[8rem] xl-1400:w-[4rem] ml-[1rem]'>GROUP</span>
                             </div>
-                            <div className={`flex ml-[2rem] 2xl:ml-[7rem] lg:ml-[2rem] text-[1.4rem] font-extrabold text-[#6B6B6B] relative`}>
-                                <span className='w-[16rem] flex mt-[0.3rem]'>{postData?.result.member.nickName}</span>
+                            <div className={`flex ml-[2rem] 2xl:ml-[7rem] lg:ml-[2rem] text-[1rem] 2xl:text-[1.4rem] xl-1400:text-[1rem] font-extrabold text-[#6B6B6B] relative`}>
+                                <span className='w-[8rem] 2xl:w-[16rem] xl-1400:w-[8rem] flex mt-[0.3rem]'>{postData?.result.member.nickName}</span>
                                 <DateInput2 onDateChange={handleDateChange} startDate={String(startDate)} endDate={String(endDate)} setEndDate={setEndDate} setStartDate={setStartDate} />
 
-                                <div className='w-[8rem] flex text-[1.6rem]'>
-                                    <button className='text-[#FB3463] flex text-[2rem]' onClick={handleDecrease}>-</button>
-                                    <span className='mx-[1rem] mt-[0.5rem]'>{passengerCount || postData?.result.ticket.memberNum}</span>
-                                    <button className='text-[#FB3463] flex text-[2rem]' onClick={handleIncrease}>+</button>
+                                <div className='w-[4rem] 2xl:w-[8rem] xl-1400:w-[4rem] flex text-[1rem] 2xl:text-[1.4rem] xl-1400:text-[1rem] ml-[2rem] 2xl:ml-[4rem] xl-1400:ml-[2rem]'>
+                                    <button className='text-[#FB3463] flex text-[1.4rem] 2xl:text-[2rem] xl-1400:text-[1.4rem]' onClick={handleDecrease}>-</button>
+                                    <span className='mx-[1rem] 2xl:mt-[0.5rem] xl-1400:mt-[0.3rem]'>{passengerCount || postData?.result.ticket.memberNum}</span>
+                                    <button className='text-[#FB3463] flex text-[1.4rem] 2xl:text-[2rem] xl-1400:text-[1.4rem]' onClick={handleIncrease}>+</button>
                                 </div>
                             </div>
                         </div>
-                        <div className={`w-full max-w-[23.5rem] min-w-[17rem] h-full bg-[${bgColor}] rounded-r-[1rem] flex ml-auto`}>
+                        <div className={`w-full max-w-[15.5rem] min-w-[14rem] h-full bg-[${bgColor}] rounded-r-[1rem] flex ml-auto`}>
                             <div className='absolute'>
                                 <div className='relative bg-white w-[4rem] h-[4rem] rounded-full -mt-[2rem] -ml-[2rem]'></div>
                                 <div className='relative bg-white w-[4rem] h-[4rem] rounded-full mt-[28rem] -ml-[2rem]'></div>
@@ -546,7 +546,7 @@ function PostEdit({ params }: { params: { editNum: number } }) {
                                 {thumbnailPreview === null ? (
                                     <div className="flex flex-col m-auto">
                                         <Image
-                                            className="w-full max-w-[18.8rem] min-w-[10rem] h-[26rem] rounded-[1rem] object-cover"
+                                            className="w-full max-w-[18.8rem] min-w-[8rem] h-[10rem] 2xl-1600:h-[26rem] 2xl:h-[20rem] xl-1400:h-[10rem] rounded-[1rem] object-cover"
                                             src={postData?.result.ticket.image.accessUri}
                                             alt=""
                                             width={230}
@@ -651,7 +651,7 @@ function PostEdit({ params }: { params: { editNum: number } }) {
                                 </div>
                             </div>
                         </div>
-                        <div className={`w-[10rem] h-full bg-[${bgColor}] rounded-r-[1rem] flex ml-auto`}>
+                        <div className={`w-[10rem] h-full shadowall bg-[${bgColor}] rounded-r-[1rem] flex ml-auto`}>
                             <div className='absolute'>
                                 <div className='relative bg-white w-[1.3rem] sm:w-[1.3rem] h-[1.3rem] rounded-full -mt-[0.6rem] -ml-[0.8rem]'></div>
                                 <div className='relative bg-white w-[1.3rem] h-[1.3rem] rounded-full mt-[9.4rem] -ml-[0.8rem]'></div>
