@@ -352,7 +352,7 @@ function PostEdit({ params }: { params: { editNum: number } }) {
             // 로딩 완료 후 성공 메시지
             Swal.fire({
                 icon: 'success',
-                title: 'TICKET 게시글을 올렸습니다.',
+                title: 'TICKET 게시글 수정되었습니다.',
                 confirmButtonText: '확인',
                 confirmButtonColor: '#FB3463',
                 customClass: {
@@ -361,7 +361,7 @@ function PostEdit({ params }: { params: { editNum: number } }) {
                 }
             }).then((result) => {
                 if (result.isConfirmed) {
-                    router.push('/');
+                    router.push(`/`);
                 }
             });
         } catch (e: any) {
@@ -376,7 +376,7 @@ function PostEdit({ params }: { params: { editNum: number } }) {
         }
     }
 
-    console.log(postData)
+    // console.log(postData)
 
     // URL 객체 해제
     useEffect(() => {
