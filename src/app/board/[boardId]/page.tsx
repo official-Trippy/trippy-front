@@ -56,6 +56,7 @@ import { fetchRecommendedSpots } from "@/services/ootd.ts/ootdGet";
 import SkeletonOotdDetailRecommend from "@/components/pages/ootd/SkeletonOotdDetailRecommend";
 import RecommendedSpot from "@/components/ootd/RecommendedSpot";
 import SkeletonBoardDetail from "@/components/pages/home/SkeletonBoardDetail";
+import { RecommendedSpotsResponse } from "@/types/recommend";
 
 
 
@@ -188,7 +189,19 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
         enabled: !!Number(params.boardId),
     });
 
-    // console.log(bookmark);
+    const {
+        data: recommendedSpots,
+        isLoading: isSpotsLoading,
+        error: spotsError,
+    } = useQuery<RecommendedSpotsResponse>(
+        ["recommendedSpots", Number(params.boardId)],
+        () => fetchRecommendedSpots(Number(params.boardId)),
+        {
+            enabled: !!Number(params.boardId),
+            refetchOnWindowFocus: false,
+        }
+    );
+    console.log(recommendedSpots);
 
     // console.log(postData?.result.member.memberId);
     // console.log(memberDatas);
@@ -535,7 +548,7 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
     }
 
     return (
-        <div>
+        <div className="mb-[10rem]">
             {/* {window.innerWidth > 600 && (<Header />)} */}
             <div className="w-[90%] sm-700:w-[50%] mx-auto ">
                 <div className="flex text-[#6B6B6B] font-semibold text-[2rem]">
@@ -871,7 +884,7 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
                     )}
                 </div>
                 {accessToken ? (
-                    <div className="mb-[10rem]">
+                    <div className="">
                         {isReplyOpen && (
                             <div>
                                 {userInfo && (
@@ -909,7 +922,7 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
                                 {postCommentData?.result && (
 
                                     <div
-                                        className={`w-full h-full ${Object.keys(postCommentData.result).length > 0 ? "shadowall" : ""} px-[2rem] lg:px-[4.7rem] sm:px-[2rem] py-[1.4rem] my-[3.5rem] flex flex-col rounded-[0.8rem]`}
+                                        className={`w-full h-full ${Object.keys(postCommentData.result).length > 0 ? "shadowall py-[1.4rem]" : ""} px-[2rem] lg:px-[4.7rem] sm:px-[2rem] my-[3.5rem] flex flex-col rounded-[0.8rem]`}
                                     >
                                         {postCommentData?.result &&
                                             Object.entries(postCommentData.result).map(
@@ -1364,14 +1377,14 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
                     </div>
                 )}
             </div>
-            {/* {isSpotsLoading ? (
-          <SkeletonOotdDetailRecommend />
-        ) : (
-          <RecommendedSpot 
-          recommendedSpots={recommendedSpots?.result || []}
-          location={formattedLocation}
-        />
-        )} */}
+            {isSpotsLoading ? (
+                <SkeletonOotdDetailRecommend />
+            ) : (
+                <RecommendedSpot
+                    recommendedSpots={recommendedSpots?.result || []}
+                    location={postData?.result.ticket.destination}
+                />
+            )}
         </div>
     );
 }
