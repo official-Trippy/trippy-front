@@ -37,7 +37,8 @@ const OnBoradingPage = () => {
   }, []);
 
   const homeRoute = () => {
-    router.push(`/ootd`)
+    // console.log("Button clicked!");
+    router.push(`/`)
   }
 
   return (
@@ -47,7 +48,7 @@ const OnBoradingPage = () => {
         <FirstBg className="page slide-up-animation">
           <div className="w-[66%] flex mx-auto">
             <div className="pt-[10rem]">
-              <h1 className="text-[4rem] font-bold text-btn-color">나만의 여행을<br />기록할 수 있어요</h1>
+              <h1 className="text-[3rem] xl-1400:text-[4rem] sm-700:text-[3rem] font-bold text-btn-color">나만의 여행을<br />기록할 수 있어요</h1>
               <span className="text-[2rem] font-normal text-btn-color">소중한 순간들을 나만의 스타일로 특별하게 기록해보세요</span>
             </div>
           </div>
@@ -55,7 +56,7 @@ const OnBoradingPage = () => {
         <SecondBg className={`page ${showSecondAnimation ? 'slide-up-animation' : ''}`}>
           <div className="w-[66%] flex mx-auto">
             <div className="pt-[10rem] flex flex-col ml-auto">
-              <h1 className="text-[4rem] font-bold text-white flex flex-col ml-auto">서로의 여행 기록을<a className="flex ml-auto">공유할 수 있어요</a></h1>
+              <h1 className="text-[3rem] xl-1400:text-[4rem] sm-700:text-[3rem] font-bold text-white flex flex-col ml-auto">서로의 여행 기록을<a className="flex ml-auto">공유할 수 있어요</a></h1>
               <span className="text-[2rem] font-normal text-white">서로의 이야기를 통해 각자의 여행을 더욱 뜻깊게 만들어보세요</span>
             </div>
           </div>
@@ -63,10 +64,10 @@ const OnBoradingPage = () => {
         <ThirdBg className="page slide-up-animation">
           <div className="w-[66%] flex flex-col relative z-10 mx-auto my-auto">
             <div className="pt-[10rem] flex flex-col mx-auto text-center">
-              <h1 className="text-[4rem] font-bold text-white flex mx-auto">나만의 특별한 OOTD와<br />정보를 공유할 수 있어요</h1>
+              <h1 className="text-[2.6rem] xl-1400:text-[4rem] sm-700:text-[2.6rem] font-bold text-white flex mx-auto">나만의 특별한 OOTD와<br />정보를 공유할 수 있어요</h1>
               <span className="text-[2rem] font-normal text-white">여행 중 나의 특별한 OOTD를 공유하며 소통해보세요</span>
             </div>
-            <button className="w-[32rem] mt-[6rem] py-[1.2rem] bg-btn-color mx-auto font-semibold text-white text-[1.6rem] rounded-[0.4rem] hover:bg-btn-color/85" onClick={homeRoute}>시작하기</button>
+            <button className="w-[32rem] mt-[6rem] py-[1.2rem] bg-btn-color mx-auto font-semibold text-white text-[1.6rem] rounded-[0.4rem] hover:bg-btn-color/85 z-10" onTouchEnd={homeRoute} onClick={homeRoute}>시작하기</button>
           </div>
         </ThirdBg>
       </div>

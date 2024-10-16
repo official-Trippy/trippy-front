@@ -548,7 +548,7 @@ function PostWrite() {
               <div
                 className={`flex ml-[2rem] 2xl:ml-[7rem] lg:ml-[2rem] text-[1.4rem] font-extrabold text-[#6B6B6B] relative`}
               >
-                <span className="w-full max-w-[14.2rem] min-w-[6rem] flex mt-[0.3rem]">
+                <span className="w-full max-w-[14.2rem] min-w-[6rem] flex mt-[0.3rem] mr-[2rem]">
                   {memberData?.result.nickName}
                 </span>
                 <DateInput2
@@ -558,7 +558,7 @@ function PostWrite() {
                   setEndDate={setEndDate}
                   setStartDate={setStartDate}
                 />
-                <div className="w-full max-w-[8rem] min-w-[2rem] flex text-[1.6rem]">
+                <div className="w-full max-w-[8rem] min-w-[2rem] flex text-[1.6rem] ml-[3rem]">
                   <button
                     className="text-[#FB3463] flex text-[2rem]"
                     onClick={handleDecrease}
