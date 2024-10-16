@@ -890,7 +890,7 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
                                                 </span>
                                             </div>
                                             <input
-                                                className="w-[80%] ml-[4.5rem] text-[1.4rem] font-normal"
+                                                className="w-[80%] ml-[4.5rem] text-[1.4rem] font-normal mt-[1rem]"
                                                 type="text"
                                                 value={comment}
                                                 onChange={(e) => setComment(e.target.value)}
@@ -898,11 +898,12 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
                                             />
                                         </div>
                                         <button
-                                            className="hover:bg-[#292929] hover:text-white bg-[#F5F5F5] text-[#292929] rounded-[0.8rem] text-[1.6rem] font-semibold w-[8.6rem] h-[3.5rem] flex ml-auto mt-[3rem] mr-[1.4rem] items-center justify-center"
+                                            className={`${comment ? 'bg-[#FB3463] text-white' : 'bg-[#F5F5F5]'} text-[#292929] rounded-[0.8rem] text-[1.6rem] font-semibold w-[8.6rem] h-[3.5rem] flex ml-auto mt-[3rem] mr-[1.4rem] items-center justify-center`}
                                             onClick={commentHandler}
                                         >
                                             입력
                                         </button>
+
                                     </div>
                                 )}
                                 {postCommentData?.result && (
@@ -1081,7 +1082,7 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
                                                                             </div>
                                                                         </div>
                                                                         <button
-                                                                            className="hover:bg-[#292929] hover:text-white bg-[#F5F5F5] text-[#292929] rounded-[0.8rem] text-[1.6rem] font-semibold w-[8.6rem] h-[3.5rem] flex ml-auto mr-[1.4rem] mt-[3rem] items-center justify-center"
+                                                                            className={`${replyComment ? "bg-[#FB3463] text-white" : "bg-[#F5F5F5] text-[#292929]"} rounded-[0.8rem] text-[1.6rem] font-semibold w-[8.6rem] h-[3.5rem] flex ml-auto mr-[1.4rem] mt-[3rem] items-center justify-center`}
                                                                             onClick={() =>
                                                                                 commentReplyHandler(
                                                                                     replymemId,
