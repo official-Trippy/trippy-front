@@ -201,7 +201,7 @@ export default function BoardPage({ params }: { params: { boardId: number } }) {
             refetchOnWindowFocus: false,
         }
     );
-    console.log(recommendedSpots);
+    // console.log(recommendedSpots);
 
     // console.log(postData?.result.member.memberId);
     // console.log(memberDatas);

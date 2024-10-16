@@ -11,7 +11,7 @@ const inputAPI = process.env.NEXT_PUBLIC_INPUT_TEXT_API_KEY;
 
 const MyTinyMCEEditor = ({ postRequest, setPostRequest }: editorProps) => {
   const [editorInstance, setEditorInstance] = useState<any>(null); // 에디터 인스턴스 상태 추가
-  console.log(postRequest)
+  // console.log(postRequest)
   const handleEditorChange = (content: string) => {
     // 에디터 내용 업데이트
     setPostRequest((prev: any) => ({ ...prev, body: content }));

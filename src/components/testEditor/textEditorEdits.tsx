@@ -11,7 +11,7 @@ const inputAPI = process.env.NEXT_PUBLIC_INPUT_TEXT_API_KEY;
 
 const TextEditorEdits = ({ postRequest, setPostRequest }: editorProps) => {
     const [editorInstance, setEditorInstance] = useState<any>(null);
-    console.log(postRequest)
+    // console.log(postRequest)
     const handleEditorChange = (newContent: string) => {
         setPostRequest((prev: any) => ({
             ...prev,
