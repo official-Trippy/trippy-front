@@ -709,7 +709,7 @@ function PostWrite() {
               >
                 <span className="w-[5rem]">PASSENGER</span>
                 <span className="w-[9rem] ml-[2rem]">DATE</span>
-                <span className="w-[2rem] ml-[2rem]">GROUP</span>
+                <span className="w-[2rem] ml-[4rem]">GROUP</span>
               </div>
               <div
                 className={`flex text-[0.5rem] ml-[1rem] items-center font-extrabold text-[#6B6B6B] relative`}
@@ -726,7 +726,7 @@ function PostWrite() {
                     setStartDate={setStartDate}
                   />
                 </div>
-                <div className="w-[5rem] flex text-[0.8rem] items-center">
+                <div className="w-[5rem] flex text-[0.8rem] items-center ml-[1rem]">
                   <button
                     className="text-[#FB3463] flex text-[1.2rem] items-center -mt-[0.2rem]"
                     onClick={handleDecrease}
