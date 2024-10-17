@@ -462,12 +462,12 @@ function PostWrite() {
             <div className="w-full mt-[5rem] relative">
               <div className="flex justify-center">
                 <div>
-                  <h1 className="h-[10rem] text-[2rem] 2xl:text-[6rem] xl:text-[3rem] sm-1550:text-[2rem] text-[#292929]  font-extrabold font-akira items-center flex">
+                  <h1 className="h-[10rem] text-[2rem] 2xl-1700:text-[5rem] xl-1400:text-[4rem] md-1000:text-[2rem] text-[#292929]  font-extrabold font-akira items-center justify-center flex">
                     {result?.result.isoAlp3}
                   </h1>
-                  <div className="w-[8rem] 2xl:w-[18rem] sm-1200:sm-1550:sm:w-[8rem] h-[3.6rem] px-[2rem] shadowall rounded-[0.8rem] flex">
+                  <div className="w-[12rem] 2xl-1700:w-[15rem] lg-1550:w-[12rem] md-1000:w-[8rem] h-[3.6rem] px-[1rem] shadowall rounded-[0.8rem] flex">
                     <input
-                      className="w-[5rem] xl:w-[12rem] sm-1550:w-[5rem] text-[1.6rem] outline-none"
+                      className="w-[5rem] 2xl-1700:w-[10rem] lg-1550:w-[5rem] md-1000:w-[3rem] text-[1.6rem] outline-none"
                       type="text"
                       placeholder="출발지"
                       value={inputValue1} // 첫 번째 입력 값 상태
@@ -509,12 +509,12 @@ function PostWrite() {
                   )}
                 </div>
                 <div className="ml-[5rem]">
-                  <h1 className="h-[9rem] text-[2rem] 2xl:text-[6rem] xl:text-[3rem] sm-1550:text-[2rem] text-[#292929] items-center flex font-extrabold font-akira">
+                  <h1 className="h-[10rem] text-[2rem] 2xl-1700:text-[5rem] xl-1400:text-[4rem] md-1000:text-[2rem] text-[#292929] items-center justify-center flex font-extrabold font-akira">
                     {result1?.result.isoAlp3}
                   </h1>
-                  <div className="w-[11rem] 2xl:w-[18rem] sm-1550:w-[11rem] h-[3.6rem] px-[2rem] shadowall rounded-[0.8rem] flex mt-4">
+                  <div className="w-[12rem] 2xl-1700:w-[15rem] lg-1550:w-[12rem] md-1000:w-[8rem] h-[3.6rem] px-[2rem] shadowall rounded-[0.8rem] flex">
                     <input
-                      className="w-[5rem] xl:w-[12rem] sm-1550:w-[5rem] text-[1.6rem] outline-none"
+                      className="w-[5rem] 2xl-1700:w-[10rem] lg-1550:w-[5rem] md-1000:w-[3rem] text-[1.6rem] outline-none"
                       type="text"
                       placeholder="도착지"
                       value={inputValue2} // 두 번째 입력 값 상태
@@ -536,7 +536,7 @@ function PostWrite() {
               </div>
               <div className="w-[95%] border border-dashed border-[#CFCFCF] my-[3rem] mx-auto relative z-0" />
               <div
-                className={`flex ml-[2rem] 2xl:ml-[7rem] lg:ml-[2rem] text-[1.4rem] font-extrabold font-akira`}
+                className={`flex ml-[2rem] 2xl-1700:ml-[7rem] 2xl-1600:ml-[2rem] lg:ml-[2rem] text-[1.4rem] font-extrabold font-akira`}
                 style={{ color: bgColor || "inherit" }}
               >
                 <span className="w-full max-w-[14.2rem] min-w-[10rem]">
@@ -546,9 +546,9 @@ function PostWrite() {
                 <span className="w-full max-w-[8rem] min-w-[2rem]">GROUP</span>
               </div>
               <div
-                className={`flex ml-[2rem] 2xl:ml-[7rem] lg:ml-[2rem] text-[1.4rem] font-extrabold text-[#6B6B6B] relative`}
+                className={`flex ml-[2rem] 2xl-1700:ml-[7rem] 2xl-1600:ml-[2rem] text-[1.4rem] font-extrabold text-[#6B6B6B] relative`}
               >
-                <span className="w-full max-w-[14.2rem] min-w-[6rem] flex mt-[0.3rem] mr-[2rem]">
+                <span className="w-full max-w-[11.2rem] min-w-[6rem] flex mt-[0.3rem] mr-[2rem]">
                   {memberData?.result.nickName}
                 </span>
                 <DateInput2
